@@ -1,0 +1,1029 @@
+TODO
+
+Synchronizer::syncEvent
+
+  - what should SYNC_START do with SyncState?  we set the external
+    pulse to 0, should we warp the pulse frame too?
+
+  - what should CONTINUE do to SyncState, old stuff recalculates
+    the external pulse but not the pulse frame
+
+
+ 
+
+----------------------------------------------------------------------
+
+Don't like using track priority for track sync master to get
+the events posted before the slave tracks need them.  Better to do
+mulitple passes?  In general I'm dislking the Recorder abstraction,
+it serves little purpose.
+
+Need a new synchronized recording mode where recording begins
+IMMEDIATELY then rounds at the end to make it fit the external loop.
+This is apparently how the EDP works but the tradeoff is that the
+logical start point for the loop is in the middle.  This isn't hard for
+track sync but for external sync we will need an accurate measurement
+for frames per pulse.
+
+The general handling of sync events, resetting the iterator, and
+interleaving them with loop events is too complicated.  Need to revisit
+the MIDI input event buffer offsets.
+
+getRecordUnitFrames/scheduleSimpleRecordStop
+
+  Used only by Loop::scheduleSimpleRecordStop if we're slave syncing.
+  Try to pull more of the Loop logic into synchronizer since it is
+  closely related.  Frames are being rate adjusted!
+  !! what the hell is going on with the tempo rounding, that can't be right?
+
+  Something like getSyncRecordEndFrame.
+
+syncEvent
+  if an MS_START comes in from external MIDI we have been setting
+  the external pulse counter to zero, how does this fit with SyncLoop?
+  shouldn't we be warping the pulseFrame?
+
+  SYNC_TYPE_CONTINUE needs to set SyncLoop pulse state.
+
+syncPulseWaiting
+
+  Not sure I like how Quantize mode effects this, 
+  shouldn't MIDI_BEAT just do beats without using Quantize?
+  IN can use Quantize since it is ambiguous.
+
+
+----------------------------------------------------------------------
+Record Lifecycle
+----------------------------------------------------------------------
+
+Record Start
+
+  If Synchronzier::isRecordSynchronized is true, then we enter Synchronize
+  mode, schedule a pending Record event and wait for a relevant pulse.
+
+  If AutoRecord was used we also schedule a RecordStop event at the 
+  pre-calculated frame.
+
+Synchronize Pulses
+
+  Synchronizer::syncPulseWaiting called for each pulse, usually this
+  is the next pulse but for "bar" modes or track sync we could wait
+  for several.
+
+  Synchronizer::checkPulseWait
+    - see comments, need something different for track sync events?
+
+Sync Record Ready
+
+    - activate the RecordStart event
+
+      - sets the start frame to now, or adds a latency delay if
+        isPulseLatencyAdjust is true.
+      - sets mode to Play (necessary if we're doing latency adjust),
+        immediately changed to Record if not
+
+   - call getBarPulses to calculate the number of pulses in one cycle
+      !! this doesn't work if we're rate shifting before or during recording
+         an alternative here would be to calculate the approximate number
+         of frames per cycle to use when bumping the cycle count
+         during recording, but then recalculate it at the end incase
+         it rounds up or down
+      - in general start/stop should always be pulsed, it is the
+        detection of cycles and the rouding we might to at the end
+        that is sensitive      
+
+   - SyncLoop::startRecording
+
+      - Capture syncMode, recordCyclePulses, and set a flag to start
+        counting pulses.  If we're latency delaying the RecordStart 
+        we still count pulses that may come in before, the end will
+        be delayed too.
+        
+   - old sync state reset
+      pulseReset
+         - zero all pulse state on the loop including external pulse state
+      save syncMode and  recordCyclePulses on the loop
+
+!! step 1 remove Loop storage of syncMode and recordCyclePulses
+
+Loop::recordEvent
+
+  - called when the deferred event we activated is reached, this is 
+    immediately after a pulse unlse there is a latency adjust
+
+  - Loop immediately calls Synchronizer::loopStartRecord
+    - note that this happens before the current recording if any is stopped
+      and the layers are cleaned up
+
+  - stops the current recording, initializes layers
+
+  - if a stop event is pending then calls Loop::setRecordCycles to 
+    set the bar count stored in the stop event, I think this is only
+    for AutoRecord
+  
+  - !! this should be in Record.cpp except that switchEvent uses it
+
+Synchronizer::loopStartRecord
+
+  - always called at a RecordStartEvent
+
+  - SyncLoop::startRecording if we haven't done it already, this
+    only happens for Out mode, we still capture the starting syncMode
+    but recordCyclePulses is not relevant
+ 
+  - maintain the old pulse counter, call pulseReset and preserve
+    recoreCyclePulses
+
+Synchronizer::syncPulseRecording
+
+  - SyncLoop::pulse
+     - inc pulse counter and advance the frame 
+       !! not enough, need to follow some of the old logic
+
+  - if eventSyncType=Track
+      increment pulse
+    else if syncMode=Out
+      ignore, we apparently get these during track sync recording
+   else if basePulseFrames > 0
+      were in the rouding period after knowing the record end
+      !! need to bump the pulse counter with wrapping
+   else 
+       increment pulse
+       if syncMode == MIDI_BEAT
+          wait for SYNC_UNIT_MIDI_BEAT  
+          !! why?
+
+  - checkPulseWait (for scripts)
+
+  - if ready checkRecordStop
+
+
+Record::invoke during synchronized recording
+  - if already recording and recording is synchronized
+    Loop::scheduleRecordStop
+      Loop::scheduleSimpleRecordStop
+        Synchronzier::scheduleRecordStop
+
+Synchronizer::scheduleRecordStop
+  - if record stop pulsed schedule pending event
+  - else      
+      Synchronzier::getRecordUnitFrames to get "unit frames"
+      compare unit frames to current loop frame and round up to the
+      next unit
+      schedule event
+
+Synchronizer::getRecordUnitFrames
+  - here is the MIDI input sync tempo rouding magic!
+  - there is general logic here for tempo based rounding but most
+    of it is used, the calculated frame count is ONLY used for MIDI in modes
+
+  - !! there is a rate adjustment in the frame count, 
+    figure out what it means to be changing rates dynamically as
+    you record, can we handle that or do we just say that sync 
+    becomes unreliable?
+
+
+Synchronizer::checkRecordStop
+
+Two methods: exact pulse wait, and precalculated end based on tempo.
+Also round up to an even number of frames so Divide doesn't lose a frame?
+
+
+  - if RecordStop event is already scheduled and NOT pending, bump pulse frame
+    - SyncLoop should handle this already?
+  - else
+    - calculate the number of filled cycles, may be one less than the 
+      actual number unless we're exactly on a cycle boundary defined
+      by the external pulse and RecordCyclePulses
+      !! why wouldn't we be?
+
+    - if RecordStop event is scheduled but pending
+      - check conditions to see if we're really ready to stop
+      - if AutoRecord
+        The StopEvent has a number of "units" we wait until the number
+        of "recordedCycles" equals this.  
+        For TrackSync we have to adjust the number of recorded units    
+        for Loop and SubCycle sync.
+
+      - else if track sync event
+        we get pulse every subcycle but have to round to cycle or loop events
+
+      - else if syncMode=In or syncMode=HostBar
+        ignore unless we're on a cycle boundary calculated with:
+          cycleBoundary = ((pulse % cyclePulses) == 0);
+          
+
+    - if the RecordStop is not ready
+      - bump the Loop cycle count of we reached a cycle boundary
+    - else if track sync
+      stopTrackSyncRecording()
+    - else
+      stopRecording()
+
+Synchronizer::stopRecording
+
+  - activateRecordStopEvent
+      call Loop::prepareLoop to set the final frame count and begin preplay
+      actiate the RecordStop event and schedule it for the final frame
+
+  - calculate pulseFrames from final loop frame count divided by pulses,
+    reset sync state
+      
+  - call SyncLoop::endReocrding
+
+Synchronizer::stopTrackSyncRecording
+
+  - activateRecordStopEvent
+
+  - Lots of complex crap to carry over the out sync drift from master
+    to slave.  This is to drift retrigger slaves by watching timer
+    drift rather than watching the master track.  
+
+    * NEW WAY*
+      Whenever the master track drift retriggers, retrigger all the
+      slave tracks by the same amount.  
+
+      Should slave tracks point to their original master track or
+      should they follow the current master track?
+  
+      Slave tracks just freewheel, no pulse counting!
+      When dividing or cutting may want to round to match the
+      master track cycle length.
+
+Loop::recordStopEvent
+
+  - call Loop::prepareLoop if not already
+  - Loop::finishRecording
+      turn off recording flag, set fade overrides, set play or rehearse mode
+      * call Synchronizer::loopFinishRecord
+      shift layers
+      handle Insert alternate ending
+      restore feedback in safe mode
+      set frame & play frame
+      shift events
+      twiddle mute and pause flags
+
+Synchronizer::loopFinishRecord
+  -  starting Out sync clocks is deferred until here (after input latency)
+     * better to start these earlier but complicated
+
+  - assign out sync master
+  - if we are the out sync master
+    - initMasterTempo
+    - if syncMode=Out
+        start internal transport
+      else
+        start sending clocks at the current tempo but don't send START
+
+  - else if sync mode is not off
+     - if we're slave syncing
+       * isn't this redundant?
+       - if the record stop was NOT pulsed
+         stopRecording was never called so we have to reverse engineer
+         the pulse state *this sucks*
+         
+         - when we schedule the RecordStop event we can pre calculate
+           the final pulses and get SyncLoop going with an offset (if necessary)
+
+----------------------------------------------------------------------
+Play Lifecycle
+----------------------------------------------------------------------
+
+Get a play pulse whenever loop is empty or Loop::isSyncPlaying is true.
+
+	mPlay != NULL || (mMode == RecordMode && mPrePlay != NULL)
+
+Synchronizer::syncPulsePlaying
+
+There are three things we do here:
+
+  - Check pending Realign events
+  - Check "external start point" events
+  - Check sync drift
+
+if track sync pulse
+   if realign pending
+      if on the right boundary
+         doRelign
+else 
+  incPulses
+  if not realign event
+     if on a sync boundary
+        checkDrift
+  else if realign pending
+     if on sync boundary
+         doRealign
+
+  if external start point
+     activate "Wait start" script event
+     activate QuantMidiStartPoint event
+
+  checkPulseWait
+
+
+!! we're not doing checkPulseWait for track sync events should we?
+Currently have to ignore internal MIDI timer events in track sync mode,
+in the new world will just suppress those events.
+!! need more convenient track sync flag in SyncLoop
+
+
+Synchronizer::isSyncBoundary
+
+  Calculates whether we've crossed an interesting boundary for drift
+  checking or realign.
+
+  See if we can work this into SyncLoop::advance
+
+  !! If SyncLoop only tracks the "external loop" and not the actual Loop
+  size, will need more complex logic here if waiting for the loop start point.
+
+Synchronzer::incPulses
+
+  inc external pulses
+  inc pulseFrame and pulseLoopFrame
+  lots of complex logic to reset pulseFrame using last known drift
+  logic to defer wrapping if we're in an extension mode
+  recalculate sync drift
+  save pulseFrameWrapped on Loop
+
+  The pulseFrame maintenance gets much simpler.  Still need to remember
+  wrapping though.
+
+Synchronizer::checkDrift
+
+  calculate drift
+  calculate suppression
+     when not in play, mute, and confirm modes
+     when applying feedback
+     when pending script event that isn't Wait driftCheckPoint or Wait pulse
+     when any pending non-script event
+     when any non-pending return event
+
+  if not suppressed
+    inc syncDriftChecks counter
+    if exceeds threshold
+        inc syncRealigns count
+        Loop::setPreRealignFrame     
+        moveLoopFrame
+    
+    activate pending Wait driftCheck event
+    
+Synchronizer::moveLoopFrame
+  if jumping backwards have to force a layer shift 
+  set frame and recalculate play frame
+
+
+Synchronizer::doRealign
+
+  if out sync master and realign mode is "start song"
+    send start song
+
+  else if track sync
+     realignSlave()
+
+  else 
+     recalculate pulse frame and loop frame
+     pulseJump to adjust pulseFrame
+       - simpler now?
+     setPreRealignFrame and moveLoopFrame to change loop
+
+
+  if event function was MuteRealign
+     Loop::cancelSyncMute
+     !! would be nice to bring this into Synchronizer but it's also
+     needed by startSongEvent
+
+  remove the realign event, finish script wait and free
+  activate pending "Wait realign" event
+
+Synchronizer::realignSlave
+
+   some tricky logic to calculate the new frame from the master frame,
+     - not sure if this gets any easier
+   moveLoopFrame
+
+----------------------------------------------------------------------
+Loop Sync Callbacks
+----------------------------------------------------------------------
+
+loopReset
+  reset pulse state
+  assign new sync master
+
+loopPause
+  if outSyncMaster
+      muteMidiStop
+
+loopResume
+  if outSyncMaster
+      initMasterTempo
+      transport->midiStart or midiContinue
+      pulseJump
+
+loopMute
+  if outSyncMaster
+    if muteMode=muteStart
+       muteMidiStop
+
+Synchronzer::loopMidiStop
+    transport->stop with "do clocks" or "do transport" flags
+    this is probably okay, revisit the options to make sure we
+    can do things beyond what the EDP does
+
+loopRetrigger
+  if outSyncMaster
+      if at the start point
+         restartSyncOut
+      else
+         pulseJump
+         !! this can probably be removed
+  else if external syncing
+    pulseJUmp
+    !! this can probably be removed
+
+
+  In general, we still need to handle transport if we're outSyncMaster
+  but all the pulse jumping is no longer required.  Retrigger simply
+  dealigns from the external loop.
+
+
+loopChangePosition
+  if external syncing
+    pulseJump
+
+  !! this should be a complete noop now
+
+loopStartSong
+  if outSyncMaster
+      restartSyncOut
+
+loopStopSong
+  if outSyncMaster
+     transport stop
+
+loopLocalStartPoint
+   if outSyncMaster
+      if realignMode=startSong
+          if pending realign
+              doRealign
+
+loopStartExtension
+    pulse junk, should all be gone
+
+loopEndMultiply
+
+  if mOutSyncMaster and unrounded
+     unroundedSyncAdjust
+     if syncMode not outUserStart        
+        sendStartResetPulse
+
+  else lots of pulseJumping that all goes away
+
+
+loopEndDivide
+
+  if isExternalSyncing
+      if cycle length changed
+          unroundedSyncAdjust
+
+  and some pulseJumping that can go away
+
+  !! when dividing results in a rounding error of 1, need to
+  adjust the size so we try to preserve a multiple of the
+  original cycle length
+
+loopEndInsert
+  if externalSyncing and unrounded
+      unroundedSyncAdjust
+
+loopEndStutter
+  noop now
+
+
+Synchronizer::unroundedSyncAdjust
+  if outSyncMaster
+      if unroundedSyncAdjust=tempo
+          adjustMasterTempo
+
+
+loopChangeDirection
+  noop
+
+loopChangeStartPoint
+  if outSyncMaster and syncMode not outUserStart
+      sendStartResetPulse
+
+  else pulseJumping that goes away
+
+loopShiftLayer
+  noop
+
+loopChageLayer
+  if outSyncMaster and unroundedSyncAdjust=tempo
+    adjustMasterTempo
+
+loopChangeLoop
+   pass starting syncMode to the next loop
+   calculate current amount of sync drift
+
+   if next loop is empty
+       carry over the external pulse count and position so we can
+       pretend like we're playing
+
+   else
+       if current loop is empty
+           carry over drift and pulse frame and set pulseFrames
+           to -1 to make it be recalculated
+           !! don't need to do this now, just wrap the external pulse
+           frame if necessary and recalculate the loopFrame from the
+           current drift
+
+       else
+           if next loop basePulseFrames is zero
+              must be a new loop created with loop or time copy
+              carry over basePulseFrames
+
+           recalculate pulseFrames/pulseFrame based on rate differences
+
+           recalculate externalPulses/externalPulse
+           
+           if outSyncMaster
+                if switchSyncAdjust=tempo       
+                    adjustMasterTempo
+                    
+                if syncRetrigger
+                   restartSyncOut
+
+       
+           if current loop is empty     
+              remove pulse state we carried over from the prevous loop, 
+              shouldn't be necessary in the new world
+
+loopCopy
+    carry over externalPulse and externalPulses
+    seems to be called before loopChangeLoop
+
+loopTrackCopy
+    does nothing currently
+
+loopChangeRate
+
+  if outSyncMaster and speedSyncAdjust=tempo    
+      adjustMasterTempo
+
+  else a bunch of pulseJumping we don't need
+
+
+----------------------------------------------------------------------
+Sync=Out Change Loop Length (unrounded sync adjust)
+----------------------------------------------------------------------
+
+After: unrounded multiply, unrounded insert, divide, undo/redo
+
+Loop changes in a way that alters the fundamental cycle length.
+
+undo/redo only applies if you're changing loops that have had
+a umult, uinsert, or divide.
+
+On any loop length change:
+  - determine if the new loop is an even multiple (or fraction?)
+    of the "external loop"
+
+  - external loop length is usually the same as the internal loop
+    cycle length but may be different
+
+  - external cycle length defines the tempo, not the loop cycle length?
+     - loop rate can adjust, but changes in multiple do not?
+
+  - could have some kind of multipleSyncAdjust mode that adjusts
+    the tempo according to changes in the loop length but this
+    seems less useful
+
+
+----------------------------------------------------------------------
+Sync Pulse Quantization
+----------------------------------------------------------------------
+
+Each Loop has a SyncState object.  SyncState maintains two
+virtual loop cursors, the "pulse loop" which advances with
+every timing pulse and the "stream loop" which advances 
+by the nunber of frames processed in each audio interrupt.
+The difference between the pulse loop frame and the stream
+loop frame is the amount of drift.   Drift is not affected
+by changes to the actual audio loops being played, except when
+SyncMode=Out and loop rate and size changes can affect the tempo
+of the internal timer.
+
+SyncMode=Out
+
+Clocks are started in loopFinishRecording *after* the input latency
+delay to end the recodring.  Technically we should start them before
+the latency delay, when we begin buffering output.
+
+If we do that and we start the external loop audio counter, it will
+always lag the loop frame by input latency.
+
+Assume audio blocks of 256 and a MIDI pulse width of 256.  In the
+diagram the beginning of each block is indicated with a number, 
+timer pulses are indicated with a 't' and the actual time a pulse
+event is processed is indicated with an 'e'.
+
+
+0    1    2    3    4    5    6    7    8    9
+  t    t    t    t   
+  e       e    e    e
+
+The loop is finished at offset 100 into block zero.  We send MS_START
+and the first MS_CLOCK and start the timer.  Note that in real-time
+the timer starts very close to the beginning of the block, it should
+be no more than a millisecond later than the block timestamp.  Although
+we have moved the loop cursor forward by 100 frames, this happens
+instantly.  
+
+Because pulses are processed on the next audio block, they
+will effectively be quantized.  This can be seen in the time
+shift from each 't' to the corresponding 'e' below.
+
+The second sync pulse will be recieved in the middle of block 1 and
+processed at the beginning of block 2.  The stream frame will have
+been advanced for the portion of block 0 after the first pulse was sent
+(256-100=156) pulse all of block 1 for a total of 256+156=412 frames.
+
+The pulse frame however has only advanced to 256.  Drift
+is calculated by subtracting the pulse frame from the stream frame
+giving a drift of 156.  A positive drift means the stream loop
+ahead of the pulse loop.
+
+In practice, with the usual testing configuration the block offset of
+the first pulse should be 33.  Keyboard events are all quantized to
+the start of the next block and input latency is 289.  The record
+ending is scheduled after input latency relative to the beginning of
+the block where the record function is processed.  One full block of
+256 will elapse, followed by 33 frames of the next.  Because the first
+pulse is not quantized, this will result in an "extra" advance of the
+stream frame by 256-33=223 frames which will be the initial drift at
+the second pulse.  Assming no jitter the loop should end with a drift
+of 223.  If the final pulse arrives one block early, the pulse loop
+will advance an extra 256 which will put it 33 beyond the stream frame
+for a drift of -33.  This is commonly seen in trace.
+
+In general, drift should jitter around between -256 and 256 but
+not exceed it.  If it grows in either direction there is a slight
+mismatch in the timer tempo and the size of the audio loop.
+
+THEORY: An alternative that will result in more accurate drift calculations
+would be to defer to the processing of the first pulse until the start
+of the next block so that it is effectively quantized like the others.
+This should make the drift at the second pulse close to 0 which should
+then carry forward to the end.  We don't want to delay the sending of
+the MIDI clock though, the only adjustment that needs to be made is
+the advancement of the stream frame so that it does not include the
+second half of the first block.  This is done by setting the stream
+frame negative by the amount remaining in the first block, when
+advanced on the next pulse it will appear as though the advance was
+relative to the start of the second block which is what we want.
+
+RESULT: Actually it made it worse sometimes, in one run drift was
+almost doubled.  In another around 80 bpm it bounced around between
+-5 and -239 but always negative.  Pulse frames were 1306 which would
+be 5.101 blocks per pulse.  In another test at a sprightly 215 bpm
+we got the desired result, drift of 0 most of the time with an occasional
+-256.  Most tests tended to show negative drift but the amount was
+never more than one block size (256).  
+
+A worse side effect is that the dealign with the actual loop was
+calculated as -223 since we can't make a corresponding adjustment
+in the loop frame.  This is more serious, we don't depend on this but
+it's nice to have an accurate notion of the amount of alighment as
+this could be useful in scripts.
+
+CONCLUSION: As long as the tempo and the loop length match, it really
+doesn't matter how closely we try to get the initial drift.  It will
+jitter around +/- 256 no matter where it starts.  In some respects it's
+actually better to have it start out positive since the range will
+tend to float around 0 and not swing to the 256 or -256 edges.  
+
+It is absolutly vital that driftResyncFrames not be less than the 
+block size since this defines the range of expected jitter.  
+
+THEORY: Use the millisecond timer to timestamp pulses and offset
+them into the block so they are processed at a location close
+to where they would have been in the block they were actually received in.
+
+0    1    2    3    4    5    6    7    8    9
+  t    t    t    t   
+  e         e    e    e
+
+
+This makes the initial drift worse since the stream frame distance
+between the first and second pulses are wider.  Again we could try
+to offset the first pulse:
+
+0    1    2    3    4    5    6    7    8    9
+  t    t    t    t   
+       e    e    e    e
+
+But there will still be +/- 256 jitter unless the pulse width is
+an exact multiple of the block size.  There is no advantage to this
+other than perhaps a marginally more accurate drift calculation.
+
+If we say that minimum drift resync should be twice the block size
+this should be plenty of headroom for jitter and the initial
+drift inaccuracy.  
+
+The initial drift may become more interesting at the point where we do
+have a drift retrigger.  If we wanted to have the external loop (drum
+machine, whatever) and the Mobius loop have the same phase
+relationship as they did when they were first recorded, we would want
+to retrigger the loop slightly after the start point since the pulse
+at which we retrigger will be quantized to the start of the next
+block.  I'm not going to work out the exact calculations for this
+since I don't think it's useful, the amount of dealignment will be
+within 256 of the original and since they're drifting you would be
+hearing phase shift anyway.  And further, this is only interesting if
+the external and internal loops have the same waveforms, otherwise the
+phase shift is not really dectable as phase shift, at worst it may
+have a subtly different "flam" for rhythmic material.
+
+CONCLUSION: For Sync=Out, we don't need any fancy adjustments of the
+pulse and stream frame counters.  Drift will always jitter around +/-
+256.  In the unlikely event of drift retrigger, the loop may not go
+back exactly in it's original phase with the external loop but this
+will be inaudible in practice.
+
+SyncMode=HostBeat, HostBar
+
+Here life is pretty good since the plugin host is supposed to be
+timestamping these with "stream time" and giving them to us
+with buffer offsets. 
+
+We have historically not done latency compensation on the record
+start/end pulses.  It feels like we should but I can't work out the
+reason.  Host pulses aren't in response to external stimulus like
+MIDI, though if we start recording as soon as the host transport
+starts and the transport was started with MIDI then it would be
+similar to a MIDI function binding.
+
+The host is asking the plugin to render a buffer in advance
+of when it will be played (output latency)  and it is receiving
+audio that was recorded in the past (input latency).  It is unclear
+which timeline "bars" are relative to:
+
+  - The bar is in the input buffer, this would presumably be latency
+    compensated since the plugin is making recording decisions based on it.
+
+  - The bar is in the output buffer, this would be ahead of "real time"
+    by the amount of output latency so recording would have to have
+    started/stopped *before* we got the host event.  This seems unlikely.
+
+  - The bar is "real time", it behaves like a MIDI event and recording
+    has to be compensated by the amount of input latency.
+
+
+While we're making notes, we should have more than one set of 
+latency values, one for standalone and one for plugins.  Usually they
+are the same but you might have higher latency in a host if you needed
+it to run other plugins.
+
+If we do latency compensation, isPulseLatencyAdjust will have to return
+true and we'll have to make sure pulse counting works right.  Both
+the old and new pulse trackers start watching the audio stream so if
+we delay there will be an immediate dealign of the external/internal
+loop by InputLatency.
+
+If SyncMode=HostBar it could be the case that the bar length is
+not an even division of the bar length due to round off (e.g. 
+101 frames per bar, 25 frames per beat).  The issues are the same
+as those for TrackSyncMode=subCycle, see below for a discussion.
+
+Similarly if a bar loop of 101 frames is created then the loop 
+is divided by 2, the resulting 50 frame loop will gradually go out
+of phase with the host bar.  This issue is also the same with
+track sync.
+
+SyncMode=Track
+
+Pulses are only relevant for the starting and stopping of the
+initial recording.  Pulses have exact block offsets relative
+to the sync points in the master track, no adjustments are needed.
+
+Pulses are relative to the "record stream" of the master track 
+(Loop.mFrame) so it will already be latency adjusted for recording.
+Pulses do not need to be latency delayed.
+
+Pulse monitoring after recording could be used in cases where the
+child loop is not an exact mulitple (or more likely an exact subdvision)
+of the master loop.
+
+  masterLoop has 101 frames
+  subCycles is 4
+  subcycle 1-3 are 25 frames, subcycle 4 is 26
+  track sync mode is subcycle
+  child loop is 25 frames
+
+The child loop will drift (lag) by one frame every 4 cycles.  But with the
+new audio loop this won't be detected as drift?  No there would be one
+pulse with a pulse width of 25.  The *dealign* would grow by 1.
+
+Master track pulses are also unreliable after recording because there
+may have been deliberate dealign (pause, reverse, whatever).  
+
+We would have to make the sync audio loop the same size as
+the "entire" master loop and monitor dealign instead of pulse drift.
+
+Or have an option to keep slave tracks aligned with the master, 
+this is simple as long as the master is just playing but if it is
+being rate shifted or reversed it gets complicated, would the slave
+tracks follow rate/reverse as well?  If not would forced alignment
+automatically turn off as soon as it becomes unreliable?
+
+Similar issues if you record a slave track with an odd number of frames
+and divide it by 2.  It will dealign by 1 every 2 plays.  
+
+This is really quite a mess, would be simpler to force recordings to
+be a multiple of 8 or 16 frames.  This doesn't work for divisors
+greater than 16 or odd divisors, but should handle the most common
+cases.
+
+AUTO ALIGN
+
+Monitor alignment between the master and slave loop (possibly between
+the slave and the sync loop) and automatically retrigger if the dealign
+grows beyond the drift resync frames.  This is disabled as soon as
+something is done to force them out of alignment (rate shift, reverse).
+It can be re-enabled if we ever sync up again, e.g. after falling
+out of rate shift if we find we're within driftResyncFrames of where
+we should be, we can start auto realigning again.
+
+Feels complicated, so many modes and functions to think about
+to determine if auto-align needs to be disabled.
+
+AUTO ADJUST
+
+In SyncState, remember the length of the master cycle and from this 
+calculate a) the number of iterations of the child loop necessary
+to equal one master loop cycle and b) the number of frames of adjustment
+that needs to be applied after this many iterations to bring the
+child loop back in sync with the master.
+
+For example, asume a master cycle of 101 frames, TrackSyncMode=subCycle
+and subCycles=4.  A child loop will be created with 25 frames.
+
+Divide the master cycle frames by 25 to give 4 iterations with
+a modulo of 1 for the adjustment.  At the end of every 4 iterations
+of the child loop we need to inject 1 frame into the stream without
+advancing the child loop frame.  
+
+This adjustment is only necessary when the child loop is a division
+of the master loop that could result in roundoff errors.  If it is
+a multiple it will always be an even multiple.
+
+Compared to Auto Align, this feels easier since state is all
+maintained in SyncState and we don't need special awareness of every
+function/mode.  The master and slave tracks can freely go out of
+alignment but they will remain in phase due to the auto adjust.
+
+A similar problem can happen if TrackSyncMode=Cycle but you later use
+Divide or quantized remultiply to reduce the size of the loop.
+Originally there was no adjust, but after dividing the child loop may
+go out of phase with the master
+
+For example assume a master cycle of 101 frames and a slave loop
+created with 101 frames.  They play in phase forever.  Now do an
+instant divide by 2 of the child loop, the resulting length is 50
+frames.  Every two iterations of the loop we need to inject one extra
+frame into the stream to keep the loops in phase.
+
+A more pronounced adjustment would be a master loop of 99 resulting
+in a child loop of 24 with an adjustment of 3.  
+
+This adjustment calculation needs to happen whenever the length of the
+child loop changes.  It can also be done whenever the length of the
+master loop changes.  If the master loop were also divided by two we
+would want to cancel the adjustment since master and child would now
+be exactly the same size.
+
+A sync adjust is also possible if the master track is changed,
+though this seems more obscure.  
+
+Example: master cycle 101, child loop 50, adjust 1 ever 2 iterations.
+Change master track to a loop of 200 we no longer need the adjustment.
+This is similar to a resize of the master track, should be able
+to handle these the same.
+
+Same thing could be applied to loops created with TrackCopy where the
+source loop is the "master".  This is more complicated since
+the notion of what the master is could conflict with track sync
+if that is also enabled.
+
+Of course, we could ignore this and just let them drift.  In the
+worst case of a 3 frame roundoff error, 5.8 msec per 256 frames
+it would take 1,470 iterations for the loops to drift 1/10 second apart.
+That's a pretty large drift 1/100 second is probably noticeable as
+phase shift and flamming, that would be 147 iterations which is 
+more likely.
+
+Generalizing "stream injection" is a good thing it can be used not
+only for roundoff sync adjust but also for major drift retrigger.
+This would be more gradual than a sudden jump.
+
+DRIFT RETRIGGER
+
+Drift retrigger is disabled for child loops.  When the master
+loop drift is detected, all current child loops are retriggered
+with the same amount of adjustment applied to the master loop.
+
+SyncMode=MIDI
+
+Here it gets complicated.  Each pulse needs to be offset by input
+latency but they're always being quantized to the next block boundary.
+The quantization can result in subtle differences in the external/internal
+loop lengths that WILL add up over time.  
+
+Using the millisecond timestamp to shift the events forward within the
+next block would result in a more accurate loop length at the expense
+of a less accurate (laggier) start and end point relative to the live
+audio.
+
+Since pulses are so jittery anyway, in theory the best solution is
+to start recording on a pulse (adjusted for latency and buffer offsets)
+then end the recording by calculating the number of ideal frames
+the loop should be based on the smoothed tempo calculated during recording.
+The end of the loop may then be ahead of or behind the final pulse.  
+
+If several tracks are recorded with SyncMode=MIDI rather than using
+track sync, then we should try to make them all multiples of the beat
+length if they're close.  
+
+----------------------------------------------------------------------
+Loop Switch
+----------------------------------------------------------------------
+
+SyncMode=Out
+
+Switching between loops of different sizes should optionally
+adjust the tempo.  This is relatively unlikely when genering
+clock sync you would tend to create loops of exact multiples
+to keep the rhythm going.
+
+Switching to an empty loop with AutoRecord=On  currently stops
+the clock and restarts it when the new loop finishes.  This seems
+reasonable, an alternative would be to keep the current clocks
+going while the new loop records, this may give a false sense
+of synchronization though.  The drum pattern or whatever is still
+audible, the recording starts at a random location, and ends as soon
+as record is pressed again, it is not pulsed.  This may result
+in a loop that is close to but not exactly the same size as the
+original resulting in a slight tempo shift.
+
+An alternative would be to treat the internal timer pulses 
+of the first loop as like Sync=In and pulse the transition
+to the next loop and the ending of the recording.  This would
+be sort of like "quantized" recording, similar to host beat
+or MIDI beat but finer grained.  
+
+Or we could automatically drop into a "relative record" where
+we start recording immediately then round off to be an even
+multiple of the first loop.
+
+Switching to an empty loop with AutoRecord=Off currently stops
+the clock.  It could be better to just continue the current tempo
+and only stop when we start a new recording.  That way if you
+did an accidental transition to an empty loop, or passed through
+one on your way to another loop we could keep the rhythm going.
+The odd thing about this though is that if you do eventuallky
+return to a full loop it will start playing out of alignment
+with the external loop.  This would be an interesting auto-realign
+option:
+
+    - When transitioning from an empty loop to a full loop
+      with ContinuousSync=On (sync continues when entering
+      an empty loop) trigger the new loop from a position that
+      matches the current sync loop pulse frame so that it will
+      be close to realigned with the external loop.
+
+I'm really liking the potential workflow here:
+
+   1) record initial loop, sets tempo and starts drum machine
+   2) switch to empty loop, loop stops but drums keep going
+   3) start recording of the "b" loop, the start is quantized
+      to the start (or some division of) the initial loop 
+      *as if it were still playing and behaving as the track 
+      sync master*
+   4) end recording of the b loop, quantized to a boundary from
+      the original loop
+   5) b loop plays in sync with the drum machine
+
+
+This is close to how it would work recording each section on 
+different tracks, but only requires one track.  
+    
+
+
+
+
+
+
+         
+  
+

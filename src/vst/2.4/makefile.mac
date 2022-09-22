@@ -1,0 +1,82 @@
+#
+# VST 2.4 simplified Mac build
+#
+# This is a reorganization of the VST core source code and one
+# functioning example, stripped of the phenomenolly complex Xcode
+# garbage so you can actually see what's going on.
+#
+# See macnotes.txt for details on the compiler and linker
+# options used by the Xcode samples.
+#
+# NOTE: Bidule caches plugin information based on the compiled
+# in UniqueID.  If you want to change the vendor string (and possibly
+# other things?) you have have to change the id.
+#
+# libvst is the core VST SDK without VSTGUI
+# again is the simplest example from the distro
+#
+
+default: libvst again bundles
+
+include ../../make/common.osx
+
+######################################################################
+#
+# libvst
+#
+######################################################################
+
+# Making a library with vstplugmain.o seems to be pointless
+# since nothing will reference it so it won't be linked.
+# have to build it and include the .o file in the application?
+
+LIBVST_O = \
+	audioeffect.o audioeffectx.o vstplugmain.o 
+
+VSTMAIN_O = vstplugmain.o 
+
+libvst.a: $(LIBVST_O) $(VSTMAIN_O)
+	 libtool -static -o libvst.a $(LIBVST_O)
+
+libvst: libvst.a
+
+######################################################################
+#
+# again
+#
+######################################################################
+
+# doesn't work, have to include all the .o files
+#	g++ $(LDFLAGS) -g -bundle -o again again.o -L. -lvst
+
+# -bundle is the magic option here
+
+again: libvst.a again.o
+	g++ $(LDFLAGS) -g -bundle -o again again.o $(VSTMAIN_O) -L. -lvst
+
+bundles: again
+	rm -rf bundles
+	mkdir bundles
+	mkdir bundles/again.vst
+	mkdir bundles/again.vst/Contents
+	mkdir bundles/again.vst/Contents/MacOS
+	cp again bundles/again.vst/Contents/MacOS
+	cp mac/Info.plist bundles/again.vst/Contents
+	cp mac/PkgInfo bundles/again.vst/Contents
+
+install: bundles
+	rm -rf /Library/Audio/Plug-Ins/VST/again.vst
+	cp -r bundles/again.vst /Library/Audio/Plug-Ins/VST
+
+######################################################################
+#
+# General
+#
+######################################################################
+
+.PHONY: clean
+clean: commonclean
+	@-rm -rf bundles
+	@-rm -f again
+	@-rm -f *.o
+	@-rm -f *.a

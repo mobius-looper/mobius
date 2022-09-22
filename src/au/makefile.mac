@@ -1,0 +1,147 @@
+#
+# Makefile for the AU library and examples
+# 
+
+default: libau mtunit
+
+# necessary for common.osx
+INCLUDES = -I../util -ICoreAudio/PublicUtility -ICoreAudio/AudioUnits/AUPublic/Utility -ICoreAudio/AudioUnits/AUPublic/AUBase -ICoreAudio/AudioUnits/AUPublic/AUViewBase -ICoreAudio/AudioUnits/AUPublic/OtherBases -ICoreAudio/AudioUnits/AUPublic/AUCarbonViewBase
+
+FRAMEWORKS = -framework Carbon -framework AudioToolbox -framework AudioUnit -framework CoreServices -framework CoreFoundation
+
+include ../make/common.osx
+
+######################################################################
+#
+# libau
+#
+######################################################################
+
+#
+# Core component files
+#
+LIBCORE_O = \
+	CoreAudio/PublicUtility/CAAudioChannelLayout.o \
+	CoreAudio/PublicUtility/CAHostTimeBase.o \
+	CoreAudio/PublicUtility/CADebugMacros.o\
+	CoreAudio/PublicUtility/CADebugPrintf.o\
+	CoreAudio/PublicUtility/CADebugger.o\
+	CoreAudio/PublicUtility/CAStreamBasicDescription.o \
+	CoreAudio/PublicUtility/CAVectorUnit.o \
+	CoreAudio/AudioUnits/AUPublic/Utility/AUBuffer.o \
+	CoreAudio/AudioUnits/AUPublic/AUBase/AUBase.o \
+	CoreAudio/AudioUnits/AUPublic/AUBase/AUDispatch.o \
+	CoreAudio/AudioUnits/AUPublic/AUBase/AUInputElement.o \
+	CoreAudio/AudioUnits/AUPublic/AUBase/AUOutputElement.o \
+	CoreAudio/AudioUnits/AUPublic/AUBase/AUScopeElement.o \
+	CoreAudio/AudioUnits/AUPublic/AUBase/ComponentBase.o \
+	CoreAudio/AudioUnits/AUPublic/OtherBases/AUEffectBase.o \
+	CoreAudio/AudioUnits/AUPublic/OtherBases/AUMIDIBase.o \
+	CoreAudio/AudioUnits/AUPublic/OtherBases/AUMIDIEffectBase.o \
+	CoreAudio/AudioUnits/AUPublic/OtherBases/MusicDeviceBase.o
+
+
+# Carbon view framework
+# ComponentBase would be here too if building a view-only library
+#
+LIBVIEW_O = \
+	CoreAudio/PublicUtility/CAAUParameter.o \
+	CoreAudio/AudioUnits/AUPublic/AUCarbonViewBase/AUCarbonViewBase.o \
+	CoreAudio/AudioUnits/AUPublic/AUCarbonViewBase/AUCarbonViewControl.o \
+	CoreAudio/AudioUnits/AUPublic/AUCarbonViewBase/AUCarbonViewDispatch.o \
+	CoreAudio/AudioUnits/AUPublic/AUCarbonViewBase/AUControlGroup.o \
+	CoreAudio/AudioUnits/AUPublic/AUCarbonViewBase/CarbonEventHandler.o
+
+LIBAU_O = $(LIBCORE_O) $(LIBVIEW_O)
+
+
+libau.a: $(LIBAU_O)
+	 libtool -static -o libau.a $(LIBAU_O)
+
+libau: libau.a
+
+######################################################################
+#
+# audiotest
+#
+######################################################################
+
+autest: libau.a autest.o 
+	g++ $(LDFLAGS) -g $(FRAMEWORKS) -o audiotest audiotest.o -I../midi -I../util -L. -laudio $(PA_LIBS) -L../midi -lmidi -L../util -lutil
+
+
+######################################################################
+#
+# multitap
+#
+######################################################################
+
+MTUNIT_O = CoreAudio/AudioUnits/MultitapDelayAU/MultitapAU.o \
+	 CoreAudio/AudioUnits/MultitapDelayAU/ViewComponentShim.o
+
+MTVIEW_O = CoreAudio/AudioUnits/MultitapDelayAU/MultitapAUView.o
+
+MTUNIT_EXP = CoreAudio/AudioUnits/MultitapDelayAU/MultitapAU.exp
+MTVIEW_EXP = CoreAudio/AudioUnits/MultitapDelayAU/MultitapAUView.exp
+
+# not sure these are necessary but the hosts may expect?
+AU_COMPAT = -compatibility_version 1 -current_version 1
+
+# example uses this, not sure what it does but it looks important
+# -L/Developer/Examples/CoreAudio/AudioUnits/MultitapDelayAU/build/Development
+# -F/Developer/Examples/CoreAudio/AudioUnits/MultitapDelayAU/build/Development
+
+# WTF!!!
+# -install_name /Library/Audio/Plug-Ins/Components/MultitapAU.component/Contents/MacOS/MultitapAUView
+
+MultitapAUView: $(MTVIEW_O)
+	g++ $(LDFLAGS) $(FRAMEWORKS) -dynamiclib -exported_symbols_list $(MTVIEW_EXP) $(AU_COMPAT) -o MultitapAUView -L. -lau $(MTVIEW_O)
+
+MultitapAU: $(MTUNIT_O)
+	g++ $(LDFLAGS) $(FRAMEWORKS) -dynamiclib -exported_symbols_list $(MTUNIT_EXP) $(AU_COMPAT) -o MultitapAU -L. -lau $(MTUNIT_O)
+
+
+MTUNIT_RES = CoreAudio/AudioUnits/MultitapDelayAU/MultitapAU.r
+MTUNIT_RES_I = CoreAudio/AudioUnits/MultitapDelayAU/MultitapAU.r
+
+MultitapAU-phase1.rsrc: $(MTUNIT_RES)
+	/Developer/Tools/Rez -o MultitapAU-phase1.rsrc -d SystemSevenOrLater=1 -useDF -script Roman -d i386_$i386 -I /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -arch ppc -arch i386 -isysroot /Developer/SDKs/MacOSX10.4u.sdk $(MTUNIT_RES)
+
+MultitapAU.rsrc: MultitapAU-phase1.rsrc
+	/Developer/Tools/ResMerger MultitapAU-phase1.rsrc -dstIs DF -o MultitapAU.rsrc
+
+MultitapAU.component: MultitapAUView MultitapAU MultitapAU.rsrc
+	rm -rf MultitapAU.component
+	mkdir MultitapAU.component
+	mkdir MultitapAU.component/Contents
+	mkdir MultitapAU.component/Contents/MacOS
+	mkdir MultitapAU.component/Contents/Resources
+	cp MultitapAUView MultitapAU.component/Contents/MacOS
+	cp MultitapAU MultitapAU.component/Contents/MacOS
+	cp MultitapAU.rsrc MultitapAU.component/Contents/Resources
+	cp CoreAudio/AudioUnits/MultitapDelayAU/Info.plist MultitapAU.component/Contents
+
+
+mtunit: MultitapAU.component
+
+export:
+	rm -rf /Library/Audio/Plug-Ins/Components/MultitapAU.component
+	cp -r MultitapAU.component /Library/Audio/Plug-Ins/Components
+
+
+######################################################################
+#
+# General
+#
+######################################################################
+
+.PHONY: clean
+clean: commonclean
+	@-rm $(LIBAU_O)
+	@-rm $(MTUNIT_O)
+	@-rm $(MTVIEW_O)
+	@-rm MultitapAU
+	@-rm MultitapAUView
+	@-rm *.rsrc
+	@-rm -rf MultitapAU.component
+	

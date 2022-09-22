@@ -1,0 +1,8 @@
+I bought a new machine recently and have learned that my old instructions for where things are found in Windows is wrong if you use default Windows settings and don't turn off all of the various "security" settings in Vista and Windows 7.  The first thing I did when I got Vista was lobotomize every security setting I could find to make it work more like Windows XP.  Unfortunately most people don't do this.  The biggest difference is that when running with normal Vista/7 security settings user writable application data will not be seen in "c:\Program Files\Mobius 2" or "c:\Program Files (x86)\Mobius 2".  Instead it will exist in:
+
+   c:\Users\<yourname>\AppData\Local\VirtualStore\Program Files\Mobius 2
+or
+   c:\Users\<yourname>\AppData\Local\VirtualStore\Program Files (x86)\Mobius 2
+
+The installer will put the default values in c:\Program Files... but once you start modifying them they are redirected to c:\Users....
+

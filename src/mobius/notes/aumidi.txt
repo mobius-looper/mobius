@@ -1,0 +1,79 @@
+Apple Store Mac iPod + iTunes iPhone Downloads Support
+
+
+	
+
+ 
+[Date Prev][Date Next][Thread Prev][Thread Next][Date Index][Thread Index]
+Re: Can Audio Units be MIDI processors?
+
+Subject: Re: Can Audio Units be MIDI processors?
+From: William Stewart <email@hidden>
+Date: Tue, 13 Mar 2007 12:14:44 -0700
+Delivered-to: email@hidden
+Delivered-to: email@hidden
+We've just added an AU property for this for Leopard - here's a preview of how this looks:
+
+	@constant		kAudioUnitProperty_MIDIOutputCallback
+						Scope:				Global
+						Value Type:			AUMIDIOutputCallbackStruct
+						Access:				write
+
+The host sets this property on the audio unit with the callback (and its user data) set
+appropriately.
+
+Operational Parameters:
+In the render call, just as is the expected usage of the AUHostCallbacks, the audio unit can
+call the provided callback to provide MIDI data to the host that it will associate with the
+current AudioUnitRender call in process.
+
+The audio unit in the callback provides:
+- the user data provided by the host when the callback was established
+- the AudioTimeStamp that was provided to the audio unit for this particular call of
+AudioUnitRender
+- the output number to associate this MIDI data with
+- a MIDI Packet List containing MIDI data. The time stamp values contained within the
+MIDIPackets in this list are **sample offsets*** from the AudioTimeStamp provided.
+This allows MIDI data to be time-stamped with a sample offset that is directly associated
+with the audio data it is generating in the current call to the AudioUnitRender function
+
+There is no implied or expected association between the number (or position) of an audio unit's
+audio or MIDI outputs.
+
+
+/*
+@typedef	 AUMIDIOutputCallback
+@abstract	 A callback used by an audio unit to provide MIDI data to a host application
+*/
+typedef OSStatus
+(*AUMIDIOutputCallback)(void *	 userData,
+const AudioTimeStamp *	 timeStamp,
+UInt32	 midiOutNum,
+const struct MIDIPacketList *	pktlist);
+
+/*!
+@struct	 AUMIDIOutputCallbackStruct
+@abstract	 Set by host application to provide the callback and user data for an audio
+unit that provides MIDI output
+*/
+typedef struct AUMIDIOutputCallbackStruct {
+AUMIDIOutputCallback	midiOutputCallback;
+void*	 userData;
+} AUMIDIOutputCallbackStruct;
+
+
+On 01/03/2007, at 3:21 PM, Stephen Kay wrote:
+
+Hi, I came late to the game, sorry if this is a stupid question, I've been
+looking at the docs a little and it's not clear to me...
+
+I'd like to know if an AU can be written that takes MIDI In, and spits more
+MIDI out in real-time, like an arpeggiator, with the idea that the plug-in
+produces no Audio of its own, but simply generates MIDI to be routed to
+other plug-ins.
+
+If so, any pointers to some relevant example source or documentation would
+be truly helpful.
+
+Thanks!
+- Stephen

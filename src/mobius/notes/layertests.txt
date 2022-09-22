@@ -1,0 +1,178 @@
+
+Fundamental Layer/Audio Test Plan
+
+Perform these tests after any significant change to the Layer, Audio,
+or AudioCursor models or in the way blocks of frames are processed by
+Track, Loop, and Stream.
+
+TODO: When we apply deferred fades on an Undo, could instead try to set
+up dynamic fades like segments do, so when we redo we can return 
+to seamless audio.
+
+
+Initial State:
+  - layer flattening off
+  - reverse off
+  - speed off
+
+Status:
+
+   normal/reverse/speed/continuous feedback
+   OK/OK/OK
+
+* Record
+  Basic record from a sample, check for fades on both ends.
+  Check QuickSave.
+  OK/OK/OK
+
+* Overdub
+  Overdub one or two isolated regions.  Check for fades on edges.
+  Check QuickSave and project layer save.
+  OK/OK/OK
+
+* Record/Overdub
+  End record with overdub, defer fade.
+  OK/OK/OK
+  bug: half speed color overrides overdub color in thermometer
+  BUG: click in CF mode
+
+* Record/Overdub/Undo/Redo
+  Undo and apply fade, redo and recalculate segment fades.
+  Will no longer have a seamless overdub.
+  Reverse: Also undo while playing in the opposite of the record direction.
+  OK/OK/OK
+
+* Replace Center
+  Check edge fades.
+  OK/OK/OK
+
+* Substitute Center
+  Check edge fades.
+  OK/OK/OK
+
+* Replace Overlapping
+  Start a replace toward the end and let it continue into the next layer.
+  Should be like a seamless overdub.  Check Undo & Redo
+  Undo/Redo will cause a bump because the deferred fade is applied.
+  OK/OK/OK
+
+* Substitute Overlapping
+  Start a substitute toward the end and let it continue into the next layer.
+  Should be like a seamless overdub.  Check Undo & Redo
+  OK/OK/OK
+
+* Replace Occlusion Fade Left
+  Use an overlapping replace to create seamless content over the loop boundary.
+  Do an overdub to add another layer to push the deferred fades back
+  another level.  Perform a quantized replace to occlude the end of the layer.
+  Must force a segment fade at the start.
+  OK/OK/OK
+
+* Replace Occlusion Fade Right
+  Same setup as before but replace on the left.
+  This uncovered a very complicated problem with fade tails and the need
+  to maitain an offset.  
+  OK/OK/OK
+
+* Multiply
+  Basic multiply, with and without overdubs.
+  OK/OK/OK
+  BUG: In CF, getting permanent at the multiply end point.  Was in
+  expert mode, but I don't think it matters.
+
+* ReMultiply
+  Remultiply to splice out cycles.
+  OK/OK/OK
+
+* Unrounded Multiply, Trim Start, Trim End
+  Splice out one cycle.  
+  OK/OK/OK
+
+* Insert
+  Basic insert, watch for fades on edges.  Check with loop quant.
+  OK/OK/OK
+
+* Unrounded Insert
+  bug: Getting new layer on each insert.  Need to accumulate these
+  till the layer plays to the end, like Replace.
+  OK/OK/OK
+ 
+* Stutter
+  Basic stutter, check for fades.
+  OK/OK/OK
+
+* StartPoint
+  Basic start point, check fades.
+  OK/OK/OK
+
+* SUSMute
+  Do lots of short mutes.
+  OK/OK/OK
+  BUG: It's hard to reproduce but if we come out of mute almost exactly
+  on the loop boundary, get a click.
+
+* Record/NextLoop
+  End recording with NextLoop.  Recording fades, enter reset.
+  OK/OK/OK
+
+* Record/NextLoop, AutoRecord=On
+  End recording with NextLoop.  Make sure initial fade applied.
+  OK/OK/OK
+
+* Record/NextLoop, LoopCopy=Sound
+  Make sure initial and trailing fades applied.
+  OK/OK/OK
+
+* Record/NextLoop, LoopCopy=Timing
+  Initial loop faded properly.  Next cycle set correctly.
+  OK/OK/OK
+
+* Trigger
+  Modify a layer, once with structure, once with simple overdub.
+  Any form of retrigger or loop switch must shift before switching.
+
+* Feedback
+  Make a basic recording a lower feedback.  New layers are created,
+  but they all reference the original audio.
+  OK/OK/OK
+
+
+Again in Reverse!
+Again in Half Speed!
+
+----------------------------------------------------------------------
+Complex Tests
+
+* Retrigger before the flattening finishes, make sure ending feedback
+  is stored in the Segments and applied properly.
+
+* Retrigger before the flattening finishes, but within the tail fade range.
+  Complete the feedback copy even though we didn't advance to the end.
+
+* Reverse direction during overdub
+
+* unrounded multily (trim) forces deferred fade
+
+* go from Overdub into Multiply/Insert then back to Overdub, local
+  recording needs to carry over seamlessly
+
+* create a layer with deferred head/tail, then multiply and insert
+  make sure fades are deferred if continuous and applied if discontinuous
+
+* end a loop in overdub and begin an Insert on frame 0, this should
+  defer fades between the two layers, but is this ok if we're going
+  to immediately insert a cycle?
+
+* end a loop in overdub and begin a Multiply on frame 0, this should
+  defer fades between the two layers, but is this ok if we're going
+  to immediately multiply a cycle?
+
+* In Test19 getting a bump at the start of each stutter because
+  we're capturing a fade tail after jumping from the end of cycle 2
+  to the start of cycle 1.  Since cycle 3 has a fast attack, we hear this
+  on each stutter.  This only happens during recording, not in the resulting
+  loop.  Difficult to prevent this since we don't know for sure if the
+  end of any given cycle fades to zero.  Will have to keep track of the
+  last "played" frame and only if they were all zero can we skip the fade
+  tail.  This should be handled by OutputStream.
+

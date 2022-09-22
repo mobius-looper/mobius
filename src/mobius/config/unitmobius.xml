@@ -1,0 +1,233 @@
+<MobiusConfig midiInput='nanoKONTROL' midiOutput='UltraLite' audioInput='ASIO:MOTU Audio ASIO' audioOutput='ASIO:MOTU Audio ASIO' quickSave='mobiusloop' unitTests='d:/dev/mobiustest' noiseFloor='13' suggestedLatencyMsec='5' inputLatency='0' outputLatency='0' maxSyncDrift='2048' tracks='8' trackGroups='2' maxLoops='4' longPress='500' pluginPins='16' shiftRange='48' tracePrintLevel='1' traceDebugLevel='2' driftCheckPoint='loop' dualPluginWindow='true' preset='Default'>
+  <ScriptConfig>
+    <ScripRef file='D:\dev\mobiustest'/>
+  </ScriptConfig>
+  <Preset name='Default'
+    loopCount='4'
+    subcycles='4'
+    multiplyMode='normal'
+    shuffleMode='reverse'
+    altFeedbackEnable='false'
+    emptyLoopAction='none'
+    emptyTrackAction='none'
+    muteMode='continue'
+    muteCancel='edit'
+    muteSyncMode='transport'
+    overdubQuantized='false'
+    recordTransfer='follow'
+    overdubTransfer='follow'
+    reverseTransfer='follow'
+    rateTransfer='follow'
+    pitchTransfer='follow'
+    quantize='off'
+    bounceQuantize='loop'
+    recordResetsFeedback='false'
+    rateRecord='false'
+    roundingOverdub='true'
+    switchLocation='restore'
+    returnLocation='restore'
+    switchDuration='permanent'
+    switchQuantize='off'
+    timeCopyMode='insert'
+    soundCopyMode='multiply'
+    recordThreshold='0'
+    switchVelocity='false'
+    maxUndo='0'
+    maxRedo='1'
+    autoRecordTempo='120'
+    autoRecordBeats='4'
+    autoRecordBars='1'
+    noFeedbackUndo='false'
+    noLayerFlattening='false'
+    rateSequence='5 12 0'
+    rateShiftRetrigger='false'
+    pitchSequence='5 12 0'
+    pitchShiftRetrigger='false'
+    slipMode='subCycle'
+    slipTime='0'/>
+  <Setup name='Default' active='0'>
+    <SetupTrack input='127' output='127' feedback='127' altFeedback='127' pan='64'/>
+    <SetupTrack input='127' output='127' feedback='127' altFeedback='127' pan='64'/>
+    <SetupTrack input='127' output='127' feedback='127' altFeedback='127' pan='64'/>
+    <SetupTrack input='127' output='127' feedback='127' altFeedback='127' pan='64'/>
+    <SetupTrack input='127' output='127' feedback='127' altFeedback='127' pan='64'/>
+    <SetupTrack input='127' output='127' feedback='127' altFeedback='127' pan='64'/>
+    <SetupTrack input='127' output='127' feedback='127' altFeedback='127' pan='64'/>
+    <SetupTrack input='127' output='127' feedback='127' altFeedback='127' pan='64'/>
+  </Setup>
+  <BindingConfig number='0'>
+    <Binding target='function' name='NextTrack' trigger='key' value='39'/>
+    <Binding target='function' name='PrevTrack' trigger='key' value='37'/>
+    <Binding target='function' name='Reset' trigger='key' value='112'/>
+    <Binding target='function' name='TrackReset' trigger='key' value='123'/>
+    <Binding target='function' name='Record' trigger='key' value='82'/>
+    <Binding target='function' name='Overdub' trigger='key' value='79'/>
+    <Binding target='function' name='Multiply' trigger='key' value='77'/>
+    <Binding target='function' name='Insert' trigger='key' value='73'/>
+    <Binding target='function' name='Replace' trigger='key' value='80'/>
+    <Binding target='function' name='Substitute' trigger='key' value='83'/>
+    <Binding target='function' name='Mute' trigger='key' value='85'/>
+    <Binding target='function' name='Undo' trigger='key' value='8'/>
+    <Binding target='function' name='NextLoop' trigger='key' value='40'/>
+    <Binding target='function' name='PrevLoop' trigger='key' value='38'/>
+    <Binding target='function' name='Speed' trigger='key' value='72'/>
+    <Binding target='function' name='Reverse' trigger='key' value='86'/>
+    <Binding target='function' name='StartPoint' trigger='key' value='1107'/>
+    <Binding target='function' name='LoopTrigger1' trigger='key' value='49'/>
+    <Binding target='function' name='LoopTrigger2' trigger='key' value='50'/>
+    <Binding target='function' name='LoopTrigger3' trigger='key' value='51'/>
+    <Binding target='function' name='LoopTrigger4' trigger='key' value='52'/>
+    <Binding target='function' name='LoopTrigger5' trigger='key' value='53'/>
+    <Binding target='function' name='LoopTrigger6' trigger='key' value='54'/>
+    <Binding target='function' name='LoopTrigger7' trigger='key' value='55'/>
+    <Binding target='function' name='LoopTrigger8' trigger='key' value='56'/>
+    <Binding target='uiControl' name='nextParameter' trigger='key' value='98'/>
+    <Binding target='uiControl' name='prevParameter' trigger='key' value='104'/>
+    <Binding target='uiControl' name='incParameter' trigger='key' value='102'/>
+    <Binding target='uiControl' name='decParameter' trigger='key' value='100'/>
+    <Binding target='uiControl' name='spaceDrag' trigger='key' value='90'/>
+    <Binding target='function' name='Sample1' trigger='key' value='609'/>
+    <Binding target='function' name='Sample2' trigger='key' value='610'/>
+    <Binding target='function' name='Sample3' trigger='key' value='611'/>
+    <Binding target='function' name='Sample4' trigger='key' value='612'/>
+    <Binding target='function' name='Sample5' trigger='key' value='613'/>
+    <Binding target='function' name='Sample6' trigger='key' value='614'/>
+    <Binding target='function' name='Sample7' trigger='key' value='615'/>
+    <Binding target='function' name='Sample8' trigger='key' value='616'/>
+    <Binding target='function' name='Record' trigger='note' value='0' channel='0'/>
+    <Binding target='function' name='Overdub' trigger='note' value='1' channel='0'/>
+    <Binding target='function' name='Multiply' trigger='note' value='2' channel='0'/>
+    <Binding target='function' name='Insert' trigger='note' value='3' channel='0'/>
+    <Binding target='function' name='Replace' trigger='note' value='4' channel='0'/>
+    <Binding target='function' name='Undo' trigger='note' value='5' channel='0'/>
+    <Binding target='function' name='Mute' trigger='note' value='6' channel='0'/>
+    <Binding target='function' name='Reverse' trigger='note' value='7' channel='0'/>
+    <Binding target='function' name='Speed' trigger='note' value='8' channel='0'/>
+    <Binding target='function' name='NextLoop' trigger='note' value='9' channel='0'/>
+    <Binding target='function' name='LoopTrigger1' trigger='note' value='48' channel='0'/>
+    <Binding target='function' name='LoopTrigger2' trigger='note' value='50' channel='0'/>
+    <Binding target='function' name='LoopTrigger3' trigger='note' value='52' channel='0'/>
+    <Binding target='function' name='LoopTrigger4' trigger='note' value='53' channel='0'/>
+    <Binding target='function' name='LoopTrigger5' trigger='note' value='55' channel='0'/>
+    <Binding target='function' name='LoopTrigger6' trigger='note' value='57' channel='0'/>
+    <Binding target='function' name='LoopTrigger7' trigger='note' value='59' channel='0'/>
+    <Binding target='function' name='LoopTrigger8' trigger='note' value='60' channel='0'/>
+    <Binding target='parameter' name='input' trigger='host' value='0'/>
+    <Binding target='parameter' name='output' trigger='host' value='1'/>
+    <Binding target='parameter' name='feedback' trigger='host' value='2'/>
+    <Binding target='parameter' name='altFeedback' trigger='host' value='3'/>
+    <Binding target='parameter' name='pan' trigger='host' value='4'/>
+    <Binding target='parameter' name='selectedTrack' trigger='host' value='5'/>
+    <Binding target='parameter' name='quantize' trigger='host' value='6'/>
+    <Binding target='parameter' name='switchQuant' trigger='host' value='7'/>
+  </BindingConfig>
+  <Samples>
+    <Sample path='d:/dev/mobiustest/base.wav'/>
+    <Sample path='d:/dev/mobiustest/medium.wav'/>
+    <Sample path='d:/dev/mobiustest/medium2.wav'/>
+    <Sample path='d:/dev/mobiustest/short1.wav'/>
+    <Sample path='d:/dev/mobiustest/short2.wav'/>
+    <Sample path='d:/dev/mobiustest/long.wav'/>
+    <Sample path='d:/dev/mobiustest/gcloop.wav'/>
+  </Samples>
+  <HostConfigs>
+    <HostConfig product='Usine' ppqPosTransport='true'/>
+    <HostConfig product='Cubase' rewindsOnResume='true'/>
+  </HostConfigs>
+  <FocusLockFunctions>
+    <String>Reset</String>
+    <String>TrackReset</String>
+    <String>Clear</String>
+    <String>Record</String>
+    <String>AutoRecord</String>
+    <String>Rehearse</String>
+    <String>Play</String>
+    <String>Overdub</String>
+    <String>OverdubOn</String>
+    <String>OverdubOff</String>
+    <String>Multiply</String>
+    <String>InstantMultiply</String>
+    <String>InstantMultiply2</String>
+    <String>InstantMultiply3</String>
+    <String>InstantMultiply4</String>
+    <String>Divide</String>
+    <String>Divide2</String>
+    <String>Divide3</String>
+    <String>Divide4</String>
+    <String>Insert</String>
+    <String>Stutter</String>
+    <String>Replace</String>
+    <String>Substitute</String>
+    <String>Shuffle</String>
+    <String>Mute</String>
+    <String>MuteOn</String>
+    <String>MuteOff</String>
+    <String>Pause</String>
+    <String>Solo</String>
+    <String>Undo</String>
+    <String>ShortUndo</String>
+    <String>LongUndo</String>
+    <String>UndoOnly</String>
+    <String>Redo</String>
+    <String>Speed</String>
+    <String>FullSpeed</String>
+    <String>HalfSpeed</String>
+    <String>RateDown</String>
+    <String>RateUp</String>
+    <String>RateNext</String>
+    <String>RatePrev</String>
+    <String>RateShift</String>
+    <String>RateNormal</String>
+    <String>PitchDown</String>
+    <String>PitchUp</String>
+    <String>PitchNext</String>
+    <String>PitchPrev</String>
+    <String>PitchShift</String>
+    <String>PitchNormal</String>
+    <String>Reverse</String>
+    <String>Forward</String>
+    <String>Backward</String>
+    <String>Slip</String>
+    <String>SlipForward</String>
+    <String>SlipBackward</String>
+    <String>Move</String>
+    <String>Drift</String>
+    <String>StartPoint</String>
+    <String>TrimStart</String>
+    <String>TrimEnd</String>
+    <String>SamplePlay</String>
+    <String>Retrigger</String>
+    <String>NextLoop</String>
+    <String>PrevLoop</String>
+    <String>Loop</String>
+    <String>LoopTrigger1</String>
+    <String>LoopTrigger2</String>
+    <String>LoopTrigger3</String>
+    <String>LoopTrigger4</String>
+    <String>LoopTrigger5</String>
+    <String>LoopTrigger6</String>
+    <String>LoopTrigger7</String>
+    <String>LoopTrigger8</String>
+    <String>Checkpoint</String>
+    <String>SUSRecord</String>
+    <String>SUSRehearse</String>
+    <String>SUSOverdub</String>
+    <String>SUSMultiply</String>
+    <String>SUSUnroundedMultiply</String>
+    <String>SUSInsert</String>
+    <String>SUSUnroundedInsert</String>
+    <String>SUSStutter</String>
+    <String>SUSReplace</String>
+    <String>SUSSubstitute</String>
+    <String>SUSMute</String>
+    <String>SUSNextLoop</String>
+    <String>SUSPrevLoop</String>
+    <String>SUSReverse</String>
+    <String>SUSSpeed</String>
+    <String>SUSMuteRetrigger</String>
+    <String>Realign</String>
+    <String>MuteRealign</String>
+    <String>QuantMidiStartPoint</String>
+    <String>SyncMasterTrack</String>
+  </FocusLockFunctions>
+</MobiusConfig>

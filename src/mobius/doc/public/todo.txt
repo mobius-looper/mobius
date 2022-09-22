@@ -1,0 +1,40 @@
+----------------------------------------------------------------------
+Exploring
+----------------------------------------------------------------------
+
+6.6 OSC Bindings
+
+Refer to a new OSC manual. 
+
+7 MIDI Status Export
+
+This is somewhat related to OSC, think about moving this to the OSC manual.
+
+----------------------------------------------------------------------
+
+When restarting the current loop make sure SwitchDuration=OnceReturn
+behaves like Once and puts the loop into mute since it can't return.
+
+* Need Global Mute, Global Pause, and Solo major modes
+  The documentation does NOT reflect reality
+
+----------------------------------------------------------------------
+Binding Parameters
+----------------------------------------------------------------------
+
+Non-ranged triggers should increment the value of integer and
+enumeration parameters and toggle boolean parameters.
+
+<!--
+Aliases
+
+Speed Cancel -> Rate Normal, Fullspeed
+Speed Step -> Rate Shift
+Speed Next -> Rate Next
+Speed Prev -> Rate Prev
+Speed Up -> Rate Up
+Speed Down -> Rate Down
+Toggle Halfspeed -> Speed
+SUS Halfspeed -> SUSSpeed
+-->
+

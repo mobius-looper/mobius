@@ -1,0 +1,31 @@
+Rounded tempos (for Live)
+
+Note - the following applies to version 7.0.10 of Ableton Live and
+earlier versions. Version 7.0.12 changed the behaviour of the
+application in this area, but it also introduced other issues. At the
+time of writing, if you want to use Live synced to Augustus Loop via
+MIDI you’re recommended to use version 7.0.10.  
+
+Essentially this is a workaround for a limitation in Ableton Live, in
+that Live reports rounded tempo values to hosted plug-ins when
+externally synced by MIDI clock. For example, if Live receives clocks
+at a tempo of 114.6bpm, it will tell its hosted plug-ins that the
+tempo is 115bpm. Why it does this remains something of a mystery.
+
+This is a problem if you are using multiple instances of Augustus Loop
+in a Live song, with one AL set to generate MIDI clock, Live synced to
+that clock, and the other ALs set to 'Host Tempo' mode. When you use
+Tap Record to record your loop in the master AL, the other ALs will be
+given a slightly wrong tempo by Live and the loops will be out of
+sync.  
+
+Turning on 'rounded tempo' in AL solves this problem by only ever
+generating MIDI clock at rounded values. The downside is that the loop
+length will not be quite what you wanted, but it may be good enough,
+depending largely on your musical style and whether you record the
+ﬁrst loop 'silent' simply to set the tempo.  
+
+With this mode turned on, when you use Tap Record the loop end will be
+slightly later than when you tap to close the loop. E.g. if you record
+a loop that would have a tempo of 122.3bpm, AL actually keeps
+recording until the loop length matches a tempo of 122bpm.

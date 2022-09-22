@@ -1,0 +1,128 @@
+<OscConfig>
+  <OscBindingSet name="Touch OSC Simple" active='true'>
+    <Binding triggerType='continuous' triggerPath='/1/fader1' targetPath='/mobius/1/output'/>
+    <Binding triggerType='continuous' triggerPath='/1/fader2' targetPath='/mobius/2/output'/>
+    <Binding triggerType='continuous' triggerPath='/1/fader3' targetPath='/mobius/3/output'/>
+    <Binding triggerType='continuous' triggerPath='/1/fader4' targetPath='/mobius/4/output'/>
+    <Binding triggerType='continuous' triggerPath='/1/fader5' targetPath='/mobius/global/pan'/>
+    <Binding triggerType='toggle' triggerPath='/1/toggle1' targetPath='/mobius/noup/record'/>
+    <Binding triggerType='toggle' triggerPath='/1/toggle2' targetPath='/mobius/noup/overdub'/>
+    <Binding triggerType='toggle' triggerPath='/1/toggle3' targetPath='/mobius/noup/mute'/>
+    <Binding triggerType='toggle' triggerPath='/1/toggle4' targetPath='/mobius/noup/reset'/>
+    <Binding triggerType='momentary' triggerPath='/2/push1'/>
+    <Binding triggerType='momentary' triggerPath='/2/push2'/>
+    <Binding triggerType='momentary' triggerPath='/2/push3'/>
+    <Binding triggerType='momentary' triggerPath='/2/push4'/>
+    <Binding triggerType='momentary' triggerPath='/2/push5'/>
+    <Binding triggerType='momentary' triggerPath='/2/push6'/>
+    <Binding triggerType='momentary' triggerPath='/2/push7'/>
+    <Binding triggerType='momentary' triggerPath='/2/push8'/>
+    <Binding triggerType='momentary' triggerPath='/2/push8'/>
+    <Binding triggerType='momentary' triggerPath='/2/push10'/>
+    <Binding triggerType='momentary' triggerPath='/2/push11'/>
+    <Binding triggerType='momentary' triggerPath='/2/push12'/>
+    <Binding triggerType='momentary' triggerPath='/2/push13'/>
+    <Binding triggerType='momentary' triggerPath='/2/push14'/>
+    <Binding triggerType='momentary' triggerPath='/2/push15'/>
+    <Binding triggerType='momentary' triggerPath='/2/push16'/>
+    <Binding triggerType='toggle' triggerPath='/2/toggle1'/>
+    <Binding triggerType='toggle' triggerPath='/2/toggle2'/>
+    <Binding triggerType='toggle' triggerPath='/2/toggle3'/>
+    <Binding triggerType='toggle' triggerPath='/2/toggle4'/>
+    <Binding triggerType='xy' triggerPath='/3/xy'/>
+    <Binding triggerType='toggle' triggerPath='/3/toggle1'/>
+    <Binding triggerType='toggle' triggerPath='/3/toggle2'/>
+    <Binding triggerType='toggle' triggerPath='/3/toggle3'/>
+    <Binding triggerType='toggle' triggerPath='/3/toggle4'/>
+    <Binding triggerType='toggle' triggerPath='/4/multitoggle/1/1'/>
+    <Binding triggerType='toggle' triggerPath='/4/multitoggle/2/1'/>
+    <Binding triggerType='toggle' triggerPath='/4/multitoggle/3/1'/>
+    <Binding triggerType='toggle' triggerPath='/4/multitoggle/4/1'/>
+    <Binding triggerType='toggle' triggerPath='/4/multitoggle/5/1'/>
+    <Binding triggerType='toggle' triggerPath='/4/multitoggle/6/1'/>
+    <Binding triggerType='toggle' triggerPath='/4/multitoggle/7/1'/>
+    <Binding triggerType='toggle' triggerPath='/4/multitoggle/8/1'/>
+    <Binding triggerType='toggle' triggerPath='/4/toggle1'/>
+    <Binding triggerType='toggle' triggerPath='/4/toggle2'/>
+    <Binding triggerType='toggle' triggerPath='/4/toggle3'/>
+    <Binding triggerType='toggle' triggerPath='/4/toggle4'/>
+  </OscBindingSet>
+  <OscBindingSet name="Touch OSC Beat Machine">
+    <Comments>
+      Page2:
+        /2/multitoggle/[1-5]/[1-16]
+        /2/multifader/[1-16]
+      Page3:
+        /3/toggle[1-5]
+        /3/rotary[1-6]
+      Page4:
+        /4/toggle[1-5]
+        /4/xy
+    </Comments>
+    <Binding triggerType='momentary' triggerPath='/1/push1'/>
+    <Binding triggerType='momentary' triggerPath='/1/push2'/>
+    <Binding triggerType='momentary' triggerPath='/1/push3'/>
+    <Binding triggerType='momentary' triggerPath='/1/push4'/>
+    <Binding triggerType='momentary' triggerPath='/1/push5'/>
+    <Binding triggerType='momentary' triggerPath='/1/push6'/>
+    <Binding triggerType='momentary' triggerPath='/1/push7'/>
+    <Binding triggerType='momentary' triggerPath='/1/push8'/>
+    <Binding triggerType='momentary' triggerPath='/1/push9'/>
+    <Binding triggerType='momentary' triggerPath='/1/push10'/>
+    <Binding triggerType='momentary' triggerPath='/1/push11'/>
+    <Binding triggerType='momentary' triggerPath='/1/push12'/>
+    <Binding triggerType='continuous' triggerPath='/1/fader1'/>
+    <Binding triggerType='continuous' triggerPath='/1/fader2'/>
+    <Binding triggerType='toggle' triggerPath='/1/toggle1'/>
+    <Binding triggerType='toggle' triggerPath='/1/toggle2'/>
+  </OscBindingSet>
+  <OscBindingSet name="Touch OSC Keys">
+    <Comments>
+      Page1: 
+        /1/push/[1-12]
+      Page2:
+        /2/push/[1-12]
+      Page3:
+        /3/fader[1-5]
+        /3/toggle[1-3]
+        /3/push[1-4]
+        /3/rotary1
+    </Comments>
+  </OscBindingSet>
+  <OscBindingSet name="Touch OSC Mix 16">
+    <Comments>
+      Page1: 
+        /1/fader[1-3]
+        /1/toggle[1-3]
+        /1/push[1-5]
+        /1/xy
+      Page2:
+        /2/fader[1-8]
+        /2/toggle[1-8]
+      Page3:
+        /3/fader[1-8]
+        /3/toggle[1-8]
+      Page4:
+        /4/multifader1/[1-16]
+        /4/multifader2/[1-16]
+    </Comments>
+  </OscBindingSet>
+  <OscBindingSet name="Touch OSC Mix 2">
+    <Comments>
+      Page1: 
+        /1/fader[1-3]
+        /1/toggle[1-3]
+        /1/push[1-5]
+        /1/xy
+      Page2:
+        /2/fader[1-8]
+        /2/toggle[1-8]
+      Page3:
+        /3/fader[1-8]
+        /3/toggle[1-8]
+      Page4:
+        /4/multifader1/[1-16]
+        /4/multifader2/[1-16]
+    </Comments>
+  </OscBindingSet>
+</OscConfig>

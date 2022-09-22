@@ -1,0 +1,104 @@
+
+Deferred Jumps
+
+  - certain functions always schedule a JumpPlayEvent before
+    the main event if they need to change the playback location
+    to compensate for latency
+
+  - when we reach the JumpPlayEvent, need to ask the event and/or
+    function what to do
+
+    void Function::calculateJump(Event* jump, JumpChanges* next)
+      - overloaded by each function
+
+Generic jumpPlayEvent handler
+
+  - calculate amount of true latency loss
+  - save current state for undo
+  - initialize JumpChanges object
+  - derive changes to rate, recalculate latencies
+    ! can this be pushed into the Functions too?
+
+  - call parent Function to set JumpChanges
+
+  - update rate, pitch, and reverse in the mOutput stream
+  - adjust nextFrame for latency loss and wrapping
+  - update layer and frame  (and save for undo)
+  - update mMute and mPause based on JumpChanges
+
+
+Function::getJumpChanges(Event* jump, JumpChanges* next)
+
+Loop::adjustJump
+  ! need to factor this out into generic sections, and
+    Function specific sections
+
+
+
+
+----------------------------------------------------------------------
+
+Function
+
+  scheduleMute
+    schedulePlayJump(parent, MutePlayEvent)
+    - used by Insert, should just schedule a generic Jump
+      and handle it later
+
+  ReplaceFunction
+    schedulePlayJump(parent, parent->frame)
+    - should be able to derive the frame from the parent event
+
+  MuteFunction
+    if SUSMuteRetrigger up
+      schedulePlayJump(parent)
+        set next Layer and frame
+        - should be able to defer these!
+    else
+      schedulePlayJump(parent, MutePlayEvent)
+      - toggles the mute      
+
+  SpeedFunction
+      schedulePlayJump(event, event->frame)
+      - should be able to derive the frame
+
+  RateFunction
+  RateShiftFunction
+      schedulePlayJump(event, event->frame)
+      - should be able to derive the frame
+      - rate saved in parent event      
+  
+
+  StartSongFunction
+    Mute->scheduleEvent
+      - immediate mute then schedules another StartSongEvent
+    schedulePlayJump(event, MutePlayEvent)
+    - only to come out of Mute mode
+
+  SlipFunction
+    schedulePlayJump(event)
+    - not working?
+
+Loop
+
+scheduleModeEndPlayJump
+  schedulePlayJump
+  - plus all kinds of shit
+
+scheduleReverse
+  - this one is weird, should be completely in Function
+  - schedulePlayJump(event, ReversePlayEvent)
+
+confirmSwitch
+  schedulePlayJump(mSwitch)
+  - generic jump analyzed later
+
+switchEvent
+  schedulePlayJump(mute, MutePlayEvent)
+  - added to the end of the next loop if function=SamplePlay
+
+finishReturnEvent
+  scheduleJumpPlay(re)
+  - added in front of a ReturnEvent, sort of like a switch
+  - sets layer and frame after scheduling
+  

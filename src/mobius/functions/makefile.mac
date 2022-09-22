@@ -1,0 +1,80 @@
+#
+# Mac makefile for the function library
+#
+
+default: lib
+
+INCLUDES = -I. -I.. -I../../util -I../../midi -I../../audio
+
+include ../../make/common.osx
+
+# temporary override to force a PPC build for soundtouch
+#LDFLAGS=
+
+VERSION=3
+
+######################################################################
+#
+# mobiusfunc.a
+#
+######################################################################
+
+FUNC_O = \
+       Bounce.o \
+       Capture.o \
+       Checkpoint.o \
+       Clear.o \
+       Confirm.o \
+       Coverage.o \
+       Debug.o \
+       Divide.o \
+       FocusLock.o \
+       FunctionUtil.o \
+       Insert.o \
+       InstantMultiply.o \
+       LoopSwitch.o \
+       Midi.o \
+       Move.o \
+       Multiply.o \
+       Mute.o \
+       Overdub.o \
+       Pitch.o \
+       Play.o \
+       Realign.o \
+       Record.o \
+       Replace.o \
+       Reset.o \
+       Reverse.o \
+       RunScript.o \
+       SampleTrigger.o \
+       Save.o \
+       Shuffle.o \
+       Slip.o \
+       Solo.o \
+       Speed.o \
+       StartPoint.o \
+       Stutter.o \
+       Substitute.o \
+       Surface.o \
+       Sync.o \
+       TrackCopy.o \
+       TrackGroup.o \
+       TrackSelect.o \
+       Trim.o \
+       UIFunctions.o \
+       UndoRedo.o \
+       Window.o
+
+mobiusfunc.a: $(FUNC_O)
+	 libtool -static -o mobiusfunc.a $(FUNC_O)
+
+lib: mobiusfunc.a
+
+######################################################################
+#
+# General
+#
+######################################################################
+
+.PHONY: clean
+clean: commonclean

@@ -1,0 +1,7 @@
+
+- OscInterface.h, messages can only have float args, need to allow strings
+  eventually
+
+- OscInterface::ProcessMessage, need to pool the OscMessage objects or
+  at least require that ownership not transfer
+

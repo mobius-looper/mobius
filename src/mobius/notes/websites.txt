@@ -1,0 +1,14 @@
+
+Rick's Zurich diary:
+
+  http://www.looppool.info/diarych1.html 
+
+Nice LGPL resampler:
+
+  http://ccrma-www.stanford.edu/~jos/resample/README-libresample-0.1.3.txt
+
+http://www.sonicspot.com/sealsdk/sealsdk.html
+
+www.soundhack.com
+  For the mac, source available, seems to be file oriented.
+

@@ -1,0 +1,670 @@
+Various old notes, most of these don't apply any more...
+
+
+----------------------------------------------------------------------
+Continuous Feedback
+
+Currently feedback is processed during playback by remembering the
+last feedback level in the layer when it is shifted.  To be like the
+EDP, feedback needs to be continuously applied during recording.
+
+This means when feedback is less than 100% we have to make an
+incremental copy of the play layer into the record layer, applying the
+current feedback level during each audio interrupt.  This will also
+effectively flatten the play layer layer, meaning the record layer
+will have no segments.
+
+If feedback were less than 100% but held constant for the duration of
+the loop we could still optimize out the copy and apply feedback
+during playback.
+
+The mechanism to accomplish continuous feedback are exactly the same
+as those for continuous layer flattening so we solve both problems
+with the same feature.  It may still be interesting however to
+distinguish between the two options:
+
+  - flattenLayers=true, continuousFeedback=true
+    like the EDP
+
+  - flattenLayers=true, continuousFeedback=false
+    Doesn't really buy much since we still have the flattening
+    overhead.  
+
+  - flattenLayers=false, continuousFeedback=true
+    Would allow us to optimize if if feedback were held constant.
+
+  - flattenLayers=false, cotinuousFeedback=false
+    What we have now.
+
+I think a single parameter should be enough, logically it should be
+flattenLayers but users are going to associate this more with
+continuousFeedback.
+
+Flattening could be done in the play layer as it plays, but feedback
+can't be applied there so it needs to be done into the record layer.
+Since the play frame and record frame are different, it is difficult
+to use the buffer calculated by the output stream.  At the very least
+it would have to be shifted in time, but with latency loss skips
+we may not even be playing the entire layer yet the skipped sections
+still need to be included in the flattening.
+
+Simpler to have the record layer flatten during recording by
+calculating play layer content that underlies each recorded block.
+We'll do the play flattening work twice but since layers will
+tend to remain flattened this will still be less overhead than
+dynamicallying flattening.  There can be no skips during recording,
+except for the sync retrigger during overdub which is disabled.
+
+RULE1: Blocks added to the record layer are always after previous
+blocks.  You may jump forward, but never backward.
+
+A Layer method must always be called even when not recording
+to copy the background layer.
+
+We will need to perform same jumps when copying the background layer,
+as we do when playing back.  For example, when in multiply or
+stutter mode the background layer keeps repeating.  
+
+----------------------------------------------------------------------
+Sync Again
+
+Input Sync Use Cases
+
+1) Initial Recording
+
+System monitors incomming StartSong and Clocks so it can determine
+MIDI beat (24 clocks) boundaries.  If no StartSong received, we just
+guess.
+
+Start recording is quantized to a clock or beat depending on the
+SyncMode and Quantize parameters.  End recording is quantized
+to a clock/beat.
+
+System remembers the initial number of loop beats, this
+is the External Pulse Count.  System remembers the
+number of pulses in the layer, this is the Layer Pulse Count.
+For the initial recording, the External and Layer Pulse Counts
+will be the same.
+
+System performs drift retrigger on each start point of the 
+external loop.
+
+2) Multiply/Insert/Stutter
+
+Adjust the Layer Pulse Count up or down by a multiple
+of the External Pulse Count.  Drift retrigger then happens
+when the start point of this multi-cycle external loop is reached.
+Could consider drift retrigger on each cycle, but if cycles
+are short this may sound glitchy.  
+
+3) Undo/Redo, same cycle length
+
+Undo/Redo attempts to maintain the same relative audio position,
+which requires a similar recalculation to the layer pulse counter.
+Since the cycle length has not changed, we will still be aligned
+with the sync source, though the pulse counter may warp to 
+a lower cycle if the Layer Pulse Count is less.
+
+Example: Layer 2 has three cycles, external pulse count is 8, 
+layer pulse count is 24.
+
+Undo from pulse 6 (cycle 1), new pulse is 6.
+Undo from pulse 14 (cycle 2), new pulse is 8.
+
+Example: Layer 3 has 4 cycles, layer pulse count is 32,
+undo to layer 2.
+
+Undo from pulse 30 (cycle 4).  New pulse could either be:
+pulse 22 (cycle 3) wrap from the end OR pulse 6 wrap from the front.
+Second approach feels more musical, we'll be in the cycle we would
+have been in if Layer 3 also had only 3 cycles?  Well, not really
+it depends on how many iterations there were.  If the layer delta
+is odd, they'll be out of sync so it doesn't really matter.  
+Do try to support this though:
+
+  - external sync "loop" is 16 beats
+  - initial loop is only 8 beats, repeats twice per external loop
+  - multiply loop to 2 cycles
+  - multiply loop to 4 cycles
+  - undo during cycle 3
+
+With a simple warp, we would end up in cycle 2.  But cycle 3 was
+actually the first cycle of the external loop, so to stay aligned we
+would need to wrap to cycle 1 instead.  The audio content will be
+largely the same, but we will continue to be aligned with the external
+loop.  Necessary only if the loop cycle is smaller than the external
+loop cycle.  Could see this if we're trying to create a short
+"beat" cycle, then immediately multiply it.
+
+So, when warping, rather than reducing by 1 cycle, reduce
+by the number of cycles in the previous layer on each
+iteration.  Since this has to be done when positioning the play
+frame, should calculate the new pulse count from the frame
+rather than trying to wrap the pulse counter?
+
+4) ReMultiply
+
+Same as Multiply/Insert of the external cycle length is the same
+as internal cycle length.  If external cycle is longer, then 
+the segment spliced out may start in the middle of the 
+external cycle, and we will now be dealgned.  There is really
+no way of detecting this short of specifying it as a new
+parameter like 8thsPerExternalCycle or CyclesPerExternalCycle.
+This seems over complicated, just let it dealgn.  
+
+Similar issues for ReMultiply with an number of cycles that
+isn't an even multiple of the external cycle.  We'll do
+a progressive dealgin on each loop.  
+
+4) Unrounded Multiply
+
+Unless quantized to an even subcycle boundary, we're in glitch land
+now.  We'll go into progressive dealign and can't really tell where we
+are without counting iterations.  Quantizing the start/end of the
+multiply to at least a MIDI clock boundary may prevent some roundoff
+errors, but you wouldn't want to do this for beat/bar sync, just use
+Quantize instead.
+
+Drift retrigger is still useful here if the new section
+is a multiple of the sybcycle.  If it is completely random, then
+we're not going to notice as much since we'll be doing progressive
+dealign.
+
+- Even Cycle UnMultiply
+
+Here we merge an even number of cycles into a single cycle.
+Similar to ReMultiply but we end up with one cycle.  Adjust
+layer pulse count, no dealign.  
+
+- Odd Cycle UnMultiply
+
+Here will go into progressive cycle dealign.  No frame dealign since
+we're on a cycle boundary, adjust layer pulse count.  Like remultiply
+we may be out of sync with the external loop if if was longer than 
+one of our cycles.
+
+Calculate new pulse count as a function of the frame count, may
+introduce rounding errors since framesPerPulse isn't constant.  If we
+can round up to the next pulse without going over our frame count,
+round up?  
+
+- Random UnMultiply
+
+Set dealign to the number of frames from the end of the region
+to the end of the current cycle.  Adjust the pulse count.
+
+- Undo back to normal layer
+
+It would be nice if we could enter an unrounded multiply
+excursion then undo back to a normal layer with the 
+external device and the audio realigned.  If the unrounded
+layer wasn't an even multiple this can't be done without
+counting the number iterations we made of the unrounded layer.
+
+If we kept a seperate Extenral Cycle Counter that never changed
+based on layer size changes, we could make a better guess.  Try
+to reposition the layer close to where the last known pulse was
+approxomate dealgin by calculating framesPerPulse * number
+of pulses remaining in the external cycle.
+
+The External Cycle size is reset on a new Recording.  If we
+keep the layers from the previous recording, have to remember
+the number of External Cycle pulses, but trying to sync
+up with the last pulse will be hard.  This is unusual, not
+sure I care.  (would have to preserve the external cycle size
+on each layer
+
+More of an issue for multiple loops within the same track,
+they can be created with different external cycle sizes
+(though usually an even multiple).  Have to warp the pulse
+counter when we switch
+
+
+5) Loop Switch
+
+When Timing or Sound copy is on this is similar to undo/redo.  If a
+new recording is created with a different cycle size, it is more like
+unrounded multiply.  With undo, we have some freedom to decide where
+we start, with loop switch only SamplerStyle=Continuous allows that,
+the others have to start at a fixed position, which will cause
+dealign.
+
+Output Sync Use Cases
+
+Similar to input sync but we generate tempos and send start/stop.
+
+SyncAdjust really has just two useful settings, Tempo and Resize.
+In Tempo mode, we change the tempo whenever the cycle length changes,
+in Resize mode we change the number of pulses to match the current tempo
+which may result in roundoff errors.  
+
+In Resize mode we should still change the tempo when rerecording 
+a new loop, if we want to undo back to previous layers we'll have
+to remember the tempo.  Need to somehow mark a rerecord layer?
+
+In resize mode, should change tempo after a loop switch and
+new recording.  When switching loops do we then switch tempos?
+
+So, Resize only makes sense after an unrounded operation that causes
+the cycle size to change, otherwise it's always a tempo change.
+
+Tempo/Resize also makes sense on speed.
+
+Resize doesn't make sense on undo, we should always return to the tempo
+the layer previously had.
+
+Resize doesn't make sense on switch, the loops have to be independent
+since they were recorded differently.  Might be useful for glitch?
+
+----------------------------------------------------------------------
+
+Stutter Mode
+
+Initiated with new Stutter and SUSStutter functions or with Insert/SUSInsert
+when InterfaceMode=Stutter.
+
+This is a "single cycle multiply" that inserts new cycles into the
+loop similar.  This is similar to a cycle quantized rounded insert, 
+but the inserted cycles have content taken from an existing cycle.
+
+Docs say "insert repetitions of the next cycle" but it seems more
+obvious to me to insert repetitions of the current cycle.
+
+Pressing Undo "returns the loop to its original form" and Andy made a
+comment suggesting that we return to a position that doesn't result in
+a audible jump.  This could mean something like SamplerStyle=Run, but
+to me it makes more sense to handle it like SamplerStyle=Continuous.
+This would mean that if the stutter were initiated toward the end of a
+cycle, and undo was performed in the middle of a cycle, we should
+return to the middle of the cycle that provided the content for the
+stutter.  This is different from normal undo frame handling which
+simply warps the frame so it is within the loop.  If the original loop
+contained may cycles after the stutter cycle, the ending frame after
+the stutter may still be within the length of the original loop and
+undo would not warp it.  To properly return, we have to remember the
+cycle or frame in which the stutter was initiated.
+
+In a normal multiply the play layer just keeps looping, but here
+we have to loop over a single cycle.  Could do this by continually
+scheduling a JumpPlay at the end of each stuttered cycle, but it 
+might be simpler to create a special temporary Layer that references
+the cycle and just let playback loop as normal.  
+
+If the stuttered layer is left for redo, switching to it then 
+undoing back won't sound like the original undo since we'll just
+wrap the play.  Since we're in glitch mode anyway, this may not
+be that bad.  To do a "smart" wrap we would have to remember the
+start and end of the stuttered cycles.  If we're before the frame
+stays the same, if we're after the frame is adjusted down by the
+number of stuttered cycles.  If we're in the middle, the frame is
+adjusted down bu the number of stuttered cycles between the
+current cycle and the original cycle.   This information would
+have to be kept on the stuttered layer.  with that addition, we
+could try to do similar things when undoing from a multiplied
+or inserted layer.
+
+----------------------------------------------------------------------
+Long Presses
+----------------------------------------------------------------------
+
+Long-Multiply does GeneralReset if the current loop is Reset.
+
+Long-Multiply does Substitute if the loop is not Reset.
+But the Multiply still runs for 400ms.
+Some ambiguity on 5-37, suggests Long-Multiply becomes SUSMultiply.
+
+Long-Undo jumps back a complete loop window when set.
+
+Long-Undo jumps back a layer when loop window not set.
+
+Long-Undo exits TempoSelect.
+
+Long presses while in SUS Overdub behave like short presses.
+
+Long-Record Resets the current loop, but not if RecordMode=Sustain.
+
+long-Reverse becomes a SUS Reverse.
+
+Long-Parameter returns to Play mode.
+
+Long-Trigger Resets the triggered loop (unless SamplerStyle=Att).
+
+Long-Insert does Replace.  Not compatible with SUSInsert?
+Have to set up an insert for 400ms?
+
+Long-Mute becomes SUS mute, MuteMode always Continuous.
+
+Long-Overdub becomes SUS overdub.
+
+Long-StartPoint does QuantStartPoint.
+
+----------------------------------------------------------------------
+Questions
+----------------------------------------------------------------------
+
+When MuteMode=Start, the clock keeps running in case the mute
+is ended with Undo and we need to behave like MuteMode=Continuous.
+Since the clock is running, should the unmute be quantized?
+
+When Multiply/Insert/Record is used to setup an alternate ending
+and force an unrounded multiply, does the Insert happen at frame 0
+(prepending to the loop) or at the end (appending to the loop)?
+Seems like appending would be more useful.
+
+When waiting for a quantized SUS operation (Replace, Substitute)
+where both the start and end times have been quantized,
+does the "Escaping Quantization" concept on 4-38 apply?  
+If yes:
+  If the function then starts immediately, when does it end?
+  If the down transition triggers the escape, is the "dangling"
+  up transition ignored?  
+  If you have passed the function start point and are waiting
+  for the quantized stop point, will initiating the function
+  again (down transition) escape the stop point and stop immediately?
+  What happens to the dangling up transition?
+
+When you are in Rehearse mode, must you end the mode with Insert or
+are all of the other Insert alternate endings available?
+
+For sustained buttons and SUS MIDI commands, are alternate ending
+functions allowed during the sustain or must you end the sustain with
+the default ending?  Text on 5-45 suggests no, this is only possible
+with SUSOverdub.
+
+When in Rehearse mode, assuming audio added during the playback of the
+last recorded cycle is ignored, you only begin recording after the
+cycle completes playback.
+
+Are InsertMode=Replace and InsertMode=Substitute always SUS functions?
+
+Are the MIDI commands SUSRoundInsert and SUSUnroundInsert subject
+to the InsertMode, or are they always assumed to perform an Insert?
+UPDATE: They should always perform an Insert.
+
+Are SUSRoundInsert and SUSRoundMultiply like InsertMode=Sustain 
+except that they don't perform unrounded insert/multiply?
+
+If InsertMode=Sustain, the end of the unrounded insert is subject to
+quantization.  When ending an unsustained Insert with Record, is the
+Record subject to quantization or will it always happen immediately?
+
+When you enter the quantize period after ending an Insert, is the
+insert end subject to undo?  Presumably this means that you drop
+back into Insert mode and continue.  If you were in the RoundMode=Off
+period of silence insertion, the audio that would have been recorded
+during that time will be recorded.
+
+Text on page 5-11 says that when Quantize=On then RoundMode
+is ignored when ending the Insert.  What if Quantize=SubCycle, 
+wouldn't the end of the record be quantized to an 8th boundary, 
+then silence until the end of the cycle?
+
+If you are in overdub, enter a new layer, then undo back to the
+previous layer, are you still in overdub?
+
+When you are in the quantize period after SwitchQuant=Loop, will
+Undo cause immediate switch like it does in SwitchQuant=Confirm, or
+will it cancel the switch?
+
+When record threshold is non-zero, and you switch to an empty 
+loop with AutoRecord=On, do you pause for the threshold or
+just charge ahead?
+  Answer: archives seem to indicate that you pause so it's important
+  to turn it off.  We should have a mode.
+
+Are Replace, Substitute, Reverse, and HalfSpeed confirming actions
+during the switch quantize period, or just Insert?
+
+If you Reverse shortly after the beginning of a loop and then
+return to the beginning, is this considered the end of a "pass"
+for the purposes of feedback and undo?  
+
+When stacking loops with SamplerStyle=Once and NextLoop, text says
+"when the second loop finishes playing one more time".  Do we really
+play the loop we return to all over again even if SwitchQuant != Loop and
+we switch in the middle?
+
+When Velocity=On, and a loop is triggered, how long does the
+attenuation last?  When you do Overdub, Multiply, etc. do you
+record at normal volume, but continue playing at lower volume?
+Does attenuation persist after Record?  Same as turning the volume
+knob down?
+
+Does MultiIncrease work when InsertMode=Sustain?  Does each
+down/up transition add another cycle?
+
+Is Rehearse mode possible when RecorddMode=Sustain?  How do 
+you perform the Insert alternating ending?
+
+When SwitchQuant=Cycle, a single cycle loop, and you Multiply.
+Do we loop first then start Multply (back to cycle 1) or Multiply
+and immediately add cycle 2?  The second behavior seems more useful.
+
+----------------------------------------------------------------------
+Issues
+----------------------------------------------------------------------
+
+In Reset mode, Mute/Insert can be used to select presets.  
+Not sure I like that.
+
+Not sure if we can do the MIDI SmartButtons without introducing
+a time delay like long-presses.
+
+Unclear how successive presses of ShortUndo within the same
+playback affect the layer.  First one removes content from that
+point till the end, second one is redundant or skips back a layer
+like LongUndo?
+
+Doc page 5-58 discuss MIDI ReverseButton command behaving in 
+SUS mode during a long press, which presumably means some time
+between the note on and off.  Amount of time isn't specified.
+This isn't really necessary since whe have SUSToggleReverse,
+but would avoid having to reserve another footpedal switch.
+
+Enhancement: When SamplerStyle=Once, stacking loops with NextLoop,
+and AutoRecord=On, normally can only return one loop since NextLoop
+is an alternate ending to Record which "breaks" the chain.  Could
+allow you to do this, but I'm not sure what you'd do on the way
+back down, play them all once?
+
+Enhancement: SamplerStyle=Once, MIDI Trigger will play the
+loop once then Mute.  With a "button" trigger, it returns to the
+previous loop.  Allow the returning behavior with MIDI triggers. 
+
+Enhancement: A variant of Samplerstyle=Attack that allows
+NextLoop to behave in a SUS manner rather than reverting
+to SamplerStyle=Run.
+
+We have OverdubMode=Quantize, do we also want OverdubMode=SUSQuantize
+or else split quantization into an independent OverdubQuantize?
+
+Since we don't support the virtual Parameter button for remote
+control, need direct MIDI access to every parameter.
+
+If alternate endings can be used during a SUS operation, we need to
+ignore the ending of the SUS.  Currently the up transition would
+be treated as a down transition since the mode will have changed by
+the time we release the sustain.
+
+Need to try to support loops less than OutputLatency.  Record
+processing could result in several layers being created, need to
+remember the starting layer during playback processing?  If output
+latency is greater than record lateney, would have to pre-buffer
+copies of the last layer which may be incorrect regarding feedback and
+future input.
+
+----------------------------------------------------------------------
+Latency AGAIN
+----------------------------------------------------------------------
+
+Must wait mInputLatency for the buffer containing audio from the
+current time is received.
+
+By starting mFrame at -mInputLatency, mFrame is always in sync
+with each buffer as it is received.
+
+There is no latency for commands, so to keep command processing in
+sync with audio recorded at that moment, they must be processed
+mInputLatency in the future.  
+
+Quantized commands are already scheduled into the future, they
+are processed on exactly the frame at which they are scheduled.
+There is no need to add mInputLatency.  
+
+What is the base frame for calculting quantized frames?
+It must be the frame corresponding to what the user just played.
+This is the current record frame plus mInputLatency, or
+realFrame.  This is also the time to process unquantized commands.
+If this exceeds mLoopFrames, then we have already exceed the loop,
+and the events are scheduled into the next loop.
+
+All commands could be deferred to realFrame or the quantized frame,
+and we could avoid most latency events.  A reason not to do that would
+be any command that is unaffected by input latency and could setup a
+transition sooner rather than later.  This could cause to reduce or
+eliminate mOutputLatency clipping during a transition.
+
+Think more about the need to recalculate mPlayFrame relative to
+mFrame.  Since we have to be thinking ahead, mPlayFrame should should
+already be correct and consistently warped through a Transition.
+Exceptions are Reset and Undo.
+
+Be careful recalculating mPlayFrame from mFrame in a command
+handler that may have been quantized.  In this case mFrame will
+have advanced.
+
+mPlayFrame is recalculated in these cases:
+
+  stopInitialRecord
+    - can't be helped
+
+  InsertStop 
+    - If the insert is rounded, we can transition smoothly
+
+  Undo
+    - An immediate event, transition not possible
+
+  endMute
+    - If the Mute is quantized, we can transition smoothly
+
+  setReverse
+    - If Reverse was quantized, we can transition
+
+
+----------------------------------------------------------------------
+Audio Characteristics
+----------------------------------------------------------------------
+
+Noise floor in a typical configuration running through the Mackie is
+eratic.  I've seen it as low as 0.000061 but crosstalk or noise in the
+aux bus will bring this up to 0.000305.  When used to squelch overdub
+loops, we'll need to let this be configurable.  We'll also need a way
+to display the maximum sample on every loop so this can be calibrated.
+
+Converting to 16-bit samples, 0.000305 is:
+
+  i = (f * 32767.0f) = 9.9939
+
+So an integer from 10 - 13 should be a decent floor.
+
+----------------------------------------------------------------------
+PortAudio v18 Latency
+----------------------------------------------------------------------
+
+Portaudio "high latency" assumptions are 100 msec minimum and 300 msec
+maximum per host buffer.  For Windows XP, it assumes 200 msec.
+
+Latency is used in the calculation of the minimum number of buffers.
+The default frames per user buffer is 256, not sure where this came
+from.  Assuming a sample rate of 44100:
+
+  mSecPerBuffer = (1000 * 256) / 44100 = 5.805
+  minBuffers = 1 + (200 / 5.805) = 1 + 34 = 35
+
+The host buffer size is calcuated at 512 frames.  This rounds to 18
+host buffers with 2 user buffers per host buffer, resulting in 36 user
+buffers.
+
+The first time the interrupt handler is called, outTime is 9216 which
+is 36 * 256, meaning that the audio you are putting in this buffer
+won't actually be heard until 9216 frames later due to the host
+buffers.  Microseconds of latency then works out to 208 msec.
+
+Measured round trip latency was 9369 which is pretty close, a delta of
+180 frames.
+
+I don't understand the need for multiple user buffers per host buffer.
+When calculating buffer quantization effects you have to use host
+buffer length since that is the true unit of buffering.
+
+What doesn't make sense to me is that measured input latency
+is only around 1141 frames.  UPDATE: It is because input latency
+is determined by the size of a single buffer, not by the size
+of all queued buffers as is the case with output latency.
+
+----------------------------------------------------------------------
+Constants
+----------------------------------------------------------------------
+
+44100	samples (frames) per second
+44.10	samples per millisecond
+.02268	milliseconds per sample
+256	frames per PortAudio user buffer
+512	frames per PortAudio host buffer
+5.805	milliseconds per user buffer
+11.61	milliseconds per host buffer
+172.27	user buffers per second
+86.13	host buffers per second (doubled in MME)
+1141	measured input latency (MME)
+9216	PortAudio buffer output latency (MME)
+
+60	beats per minute
+1	beat per second
+24	midi clocks per beat
+44100	samples per beat
+1837.5	samples per midi clock
+41.66   milliseconds per midi clock	
+7.177   buffers per midi clock
+
+@120 BPM 3.59 buffers per midi clock
+@240 BPM 1.79 buffers per midi clock
+@480 BPM .90 buffers per midi clock
+
+60 BPM, 8 beat bar = 192 midi clocks
+  - 352800 samples per bar
+  - 7998.72 msec per bar
+
+
+With audio buffer quantization of midi clocks, loop time will always
+be a multiple of 256.  So there will always be a potential round-down
+of 255 frames.
+
+
+1141 frames = 25.88 milliseconds, 2.23 host buffers
+
+At 64K frames per Audio buffer there will be 65536 / 44100 = 1.48 seconds
+of audio per buffer.
+
+Input latency was measured by configuring recording to begin upon the
+receipt of a MIDI note on event.  A hardware synthesizer was used to
+send the event while playing a percussion sample with short attack. 
+All audio buffers after the receipt of the MIDI event were
+captured.  The resulting audio was loaded into Sound Fourge and the
+beginning frame of the sample located.  
+
+There will be some amount of MIDI latency as the event leaves
+the synthesizer, passes through the MIDI interface hardware, through
+the OS drivers, and eventually reaches our MIDI callback.  Compared to 
+audio latency however, this latency is very small.  It should be on the
+order of a few milliseconds. 
+
+
+----------------------------------------------------------------------
+EDP Manual Errors
+----------------------------------------------------------------------
+
+Error: 5-65 Using Substitute: third bullet should be "InsertMode=Sub"
+
+Error: 5-33 Reverse alternate ending.  Phrase "immediately toggle
+Overdub mode" should be "immediately toggle Reverse mode".
+      

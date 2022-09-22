@@ -1,0 +1,4 @@
+!name Cycle Up
+!button
+
+set cycleCount cycleCount + 1

@@ -1,0 +1,163 @@
+The relationship between the EventType, the Event's Function, the invocationFunction and now the Action is messy.
+
+Event::invoke forwards to EventType::invoke
+
+EventType::invoke usually redirect through Function::doEvent
+
+EventTypes that do not forward to Function doEvent
+
+   InvokeEventType forwards to Function::invokeEvent
+   LoopEventType forwards to Loop::loopEvent
+   CycleEventType forwards to Loop::stutterCycle when in Stutter mode
+   SubCycleEeventType does nothing
+   JumpPlayEventType calls Loop::jumpPlayEvent
+   ValidateEventType calls Loop::validate
+   ReversePlayEventType calls Loop::reversePlayEvent
+   RunScriptEventType calls Mobius::doAction
+   ScriptEventType calls ScriptInterpreter::scriptEvent
+   SynchronizerEventType calls Synchronizer::syncEvent
+
+Uses of newEvent
+
+LoopSwitch.cpp:        Event* e = Event::newEvent(Record, RecordStopEvent, frame + latency);
+
+   Schedules RecordStopEvent, forces through Record
+   Event does not get a copy of the action.  This one is weird because
+   the event handler is Record even though we're in Replace or Substitute mode.
+   RecordStopEvent is used as a universal recording stopper for several modes.
+
+LoopSwitch.cpp:	switche = Event::newEvent(action->getFunction(), SwitchEvent, 0);
+
+  SwitchEvent using the action function.  
+
+LoopSwitch.cpp:            event = Event::newEvent(MuteOn, loop->getFrame());
+
+   During SUSReturn promotion, do an immediate mute.
+
+TrackSelect.cpp:				Event* e = Event::newEvent(this, TrackEvent, 0);
+
+   Creates and invokes an event without scheduling.
+
+
+TrackSelect.cpp:						Event* e = Event::newEvent(Record, RecordStopEvent, selectFrame);
+  
+   Creates a RecordStopEvent for recording modes other than Record 
+   (Replace, Substitute, Overdub).
+   !! this is broken for rounding modes, not sure what this should do.
+   I can see just letting the record continue, or scheduling an end event
+   and leaving, but this then complicates what track copy means.  Would have
+   to ensure that the copy is always taken from the play layer.
+
+TrackSelect.cpp:				event = Event::newEvent(this, TrackEvent, selectFrame);
+
+   Schedules the track select event.
+
+UndoRedo.cpp:		event = Event::newEvent(this, UndoEvent, l->getFrame());
+UndoRedo.cpp:		event = Event::newEvent(this, RedoEvent, l->getFrame());
+
+  Normal event scheduling.
+
+
+EventManager.cpp:	Event* event = Event::newEvent(func, 0);
+
+  Normal event scheduling in getFunctionEvent.  
+  !! See if we can avoid passing Function now that we have Action? 
+
+EventManager.cpp:		jump = Event::newEvent(JumpPlayEvent, transitionFrame);
+  Normal JumpPlayEvent
+
+EventManager.cpp:        re = Event::newEvent(trigger->function, ReturnEvent, returnFrame);
+  Schedules a Return event, the "trigger" event must be in the 
+  LoopSwitch family.
+
+Function.cpp:				event = Event::newEvent(this, InvokeEvent, 0);
+  Normal Invoke event.
+
+Function.cpp:				event = Event::newEvent(this, 0);
+  Old way of handling Invoke events.
+
+Loop.cpp:            Event* e = Event::newEvent(Overdub, 0);
+  Some weird fringe case trying to restore Overdub minor mode,
+  shouldn't be happening.  
+
+Loop.cpp:			Event* e = Event::newEvent(f, mFrame);
+  Forces mute on and off by creating and invoking an event without scheduling.
+
+Loop.cpp:        endEvent = Event::newEvent(primaryFunction, endType, event->frame);
+  Insert/Multiply mode end event, unrounded.
+
+Loop.cpp:			recordStop = Event::newEvent(Record, RecordStopEvent, endFrame);
+  RecordStopEvent for Multiply when RecordDuringRoudning is false.
+
+Loop.cpp:		endEvent = Event::newEvent(primaryFunction, endType, endFrame);
+  Insert/Multiply mode end event, rounded.
+
+Loop.cpp:	trans = Event::newEvent(JumpPlayEvent, transitionFrame);
+  Jump event for stutter transition.
+
+Loop.cpp:	Event* v = Event::newEvent(ValidateEvent, next->mFrame);
+  Schedule a validation event after loop switch.
+
+Loop.cpp:            Event* mute = Event::newEvent(MuteOn, next->getFrames());
+  Force mute on after loop switch.
+
+Loop.cpp:                Event* sus = Event::newEvent(event->function, SUSReturnEvent, 0);
+  Schedule pending SUSReturn
+  !! compare this with EventManager::scheduleReturnEvent
+
+Loop.cpp:                Event* mute = Event::newEvent(MuteOn, next->getFrame());
+Loop.cpp:            Event* sus = Event::newEvent(event->function, SUSReturnEvent, 0);
+  More loop switching state changes.
+
+Loop.cpp:    Event* re = Event::newEvent(Record, 0);
+  Force recording to start after a loop switch.
+
+Loop.cpp:		event = Event::newEvent(f, next->mFrame);
+  Schedule minor mode transfers after a loop switch.
+
+Loop.cpp:			event = Event::newEvent(initial, mFrame);
+  Schedules the mode start event after a sound copy.
+  !! This includes Overdub, Multiply, and Insert which means that
+  those functions can't depend on having an Action.  If we try to do 
+  away with Event::function or invokingFunction we'll need to generate
+  an Action in these places.
+
+Loop.cpp:		event = Event::newEvent(Insert, mFrame);
+Loop.cpp:		event = Event::newEvent(Overdub, mFrame);
+Loop.cpp:		event = Event::newEvent(Multiply, mFrame);
+  Schedules the mode start event after a time copy.
+
+Script.cpp:	Event* e = Event::newEvent();
+  Normal script wait event.
+
+SyncTracker.cpp:                        Event* e = Event::newEvent();
+  Generates a pulse event.
+
+synchronizer.cpp:    mReturnEvent = Event::newEvent();
+  Owned Return Event.
+
+synchronizer.cpp:	event = Event::newEvent(f, RecordEvent, 0);
+  schedulePendingRecord, called by scheduleRecordStart
+
+synchronizer.cpp:                event = Event::newEvent(function, RecordStopEvent, 0);
+  scheduleRecordStop, needs to use the action function for AutoRecord
+
+synchronizer.cpp:                event = Event::newEvent(function, RecordStopEvent, 0);
+synchronizer.cpp:                event = Event::newEvent(function, RecordStopEvent, stopFrame);
+synchronizer.cpp:        stop = Event::newEvent(function, RecordStopEvent, 0);
+synchronizer.cpp:        stop = Event::newEvent(function, RecordStopEvent, stopFrame);
+  These all need to force the Record function
+b
+synchronizer.cpp:            event = Event::newEvent();
+synchronizer.cpp:            event = Event::newEvent();
+synchronizer.cpp:        Event* e = Event::newEvent();
+  Generated pulse events
+
+----------------------------------------------------------------------
+
+!!! Event::finishScriptWait causes the script to resume synchronously
+    I don't like that...need more control over when this resumes
+
+EventManager::
+
+

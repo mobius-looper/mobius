@@ -1,0 +1,214 @@
+// !$*UTF8*$!
+{
+	08FB7793FE84155DC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 1FF6BC2D0E737E53009851E5 /* miditest */;
+		activeTarget = 1FF6BC220E737D32009851E5 /* miditest */;
+		breakpoints = (
+			1FF6BC360E737E98009851E5 /* MacMidiInput.cpp:197 */,
+		);
+		codeSenseManager = 1FF6BC200E737CC1009851E5 /* Code sense */;
+		executables = (
+			1FF6BC2D0E737E53009851E5 /* miditest */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXErrorsWarningsDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXErrorsWarningsDataSource_LocationID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					300,
+					133,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXErrorsWarningsDataSource_TypeID,
+					PBXErrorsWarningsDataSource_MessageID,
+					PBXErrorsWarningsDataSource_LocationID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					131,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					243,
+					20,
+					48.1626,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					200,
+					63,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 242449598;
+			PBXWorkspaceStateSaveDate = 242449598;
+		};
+		perUserProjectItems = {
+			1FF6BC3B0E738B2D009851E5 /* PBXTextBookmark */ = 1FF6BC3B0E738B2D009851E5 /* PBXTextBookmark */;
+			1FF6BC4B0E762141009851E5 /* PBXTextBookmark */ = 1FF6BC4B0E762141009851E5 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 1FF6BC1F0E737CC1009851E5 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	1FF6BC1F0E737CC1009851E5 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+		scmType = "";
+	};
+	1FF6BC200E737CC1009851E5 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	1FF6BC220E737D32009851E5 /* miditest */ = {
+		activeExec = 0;
+	};
+	1FF6BC2D0E737E53009851E5 /* miditest */ = {
+		isa = PBXExecutable;
+		activeArgIndex = 0;
+		activeArgIndices = (
+			YES,
+		);
+		argumentStrings = (
+			events,
+		);
+		autoAttachOnCrash = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		launchableReference = 1FF6BC2E0E737E53009851E5 /* miditest */;
+		libgmallocEnabled = 0;
+		name = miditest;
+		savedGlobals = {
+		};
+		sourceDirectories = (
+		);
+		variableFormatDictionary = {
+		};
+	};
+	1FF6BC2E0E737E53009851E5 /* miditest */ = {
+		isa = PBXFileReference;
+		explicitFileType = "compiled.mach-o.executable";
+		name = miditest;
+		path = /Users/jeff/dev/mobius/src/midi/miditest;
+		sourceTree = "<absolute>";
+	};
+	1FF6BC340E737E98009851E5 /* MacMidiInput.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MacMidiInput.cpp;
+		path = /Users/jeff/dev/mobius/src/midi/MacMidiInput.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {922, 2926}}";
+			sepNavSelRange = "{4941, 0}";
+			sepNavVisRect = "{{0, 1869}, {922, 727}}";
+		};
+	};
+	1FF6BC360E737E98009851E5 /* MacMidiInput.cpp:197 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FF6BC340E737E98009851E5 /* MacMidiInput.cpp */;
+		functionName = "MacMidiInput::processPackets()";
+		hitCount = 1;
+		lineNumber = 197;
+		location = miditest;
+		modificationTime = 242622795.208413;
+		state = 1;
+	};
+	1FF6BC3B0E738B2D009851E5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FF6BC3C0E738B2D009851E5 /* MacMidiInput.cpp */;
+		rLen = 0;
+		rLoc = 2147483647;
+		rType = 0;
+	};
+	1FF6BC3C0E738B2D009851E5 /* MacMidiInput.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MacMidiInput.cpp;
+		path = /Users/jeff/dev/mobius/src/midi/MacMidiInput.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {922, 2926}}";
+			sepNavSelRange = "{4941, 0}";
+			sepNavVisRect = "{{0, 1869}, {922, 727}}";
+			sepNavWindowFrame = "{{86, 124}, {961, 856}}";
+		};
+	};
+	1FF6BC4B0E762141009851E5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FF6BC4C0E762141009851E5 /* MacMidiInput.cpp */;
+		name = "(null): 209";
+		rLen = 0;
+		rLoc = 4941;
+		rType = 0;
+		vrLen = 1426;
+		vrLoc = 2972;
+	};
+	1FF6BC4C0E762141009851E5 /* MacMidiInput.cpp */ = {
+		isa = PBXFileReference;
+		name = MacMidiInput.cpp;
+		path = /Users/jeff/dev/mobius/src/midi/MacMidiInput.cpp;
+		sourceTree = "<absolute>";
+	};
+}

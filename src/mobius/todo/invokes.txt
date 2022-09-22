@@ -1,0 +1,1137 @@
+----------------------------------------------------------------------
+Invocation Overload
+----------------------------------------------------------------------
+
+Global functions will always have one, reduce the need for these
+in track functions.
+
+Overloads should be used for:
+
+  - Deciding whether the function is not relevant.  One example
+    would be a misconfigured Switch function for an invalid track.
+
+  - Mode sensitive redirects.  We have a few cases of EDPisms where
+    a function invoked in a certain mode converts to a differnet function.
+    Have to be careful about these though because if events are stacked
+    or quantized, there could be pending events that would change the mode
+    by the time this function's event is executed.  Unfortunately that
+    means that most mode sensitivity has to be done in the reschedule
+    handler which will cause latency loss for stacked events.  Or the
+    event scheduler would have to look at previously scheduled events.
+
+    Think about this...looking back at events is not such a bad thing, 
+    but it would have to be unambiguous what they would do.  
+
+  - Modifying previously scheduled events without changing anything
+    else about the loop.  One example is Confirm which only activates
+    a previously scheduled switch event.  Some functions do previous
+    event modification in their scheduleEvent handlers but usually 
+    when they can also schedule normal events.  Confirm could
+    activate the switch in the scheduleEvent method but it would have
+    to set noMode so nothing else is changed.
+
+----------------------------------------------------------------------
+Schedule Event Overload
+----------------------------------------------------------------------
+
+Overloading the default Function::scheduleEvent is more common.
+
+One common use is to schedule a play jump if the event is not marked
+for reschedule.
+
+Another common use is to add annotations to the default event for
+functions that need arguments such as the new  Move location, 
+or the next loop for switch.
+
+Several functions do their mode sensitivity here but that's probably
+wrong if it can be rescheduled.  
+
+----------------------------------------------------------------------
+Preferred Invocation Flow
+----------------------------------------------------------------------
+
+The preferred flow is:
+
+  
+   MobiusMode::scheduleModeEnd(Action)
+      - redirects to the appropriate Function 
+      - may schedule one or more secondary events  
+      - decides if the Action should be ignored or continued
+      - returns the primary "mode end" event
+
+   Function::scheduleEvent(Action, Event* modeEnd)
+      - if a function ended a mode, the mode end event is passed so
+        we can adjust our frame relative to the mode end frame
+
+For Record, MobiusMode::scheduleModeEnd would tell us whether or not
+to proceed.  
+
+Problem 1: scheduleModeEnd can only return an Event it can't say
+"ignore trigger" without something else.  Probably a flag in the
+Action.
+
+Problem 2: This flow only works if the trigger event won't be rescheduled.
+If it is going to be rescheduled we can't make any assumptions about
+what it will do, the mode doesn't end, it gets a frame and goes into the list.
+
+To determine whether an event will be rescheduled we have to go through
+EventManager::getFunctionEvent.  This handles quantization and stacking.
+At the end when we know the desired frame, it checks to see if there
+are any rescheudling events prior to it and marks the event for
+rescheduling.  
+
+So we always have to go through EventManager::getFunctionEvent.
+Hmm, it might be enough just to check the current event list
+for rescheduling events assuming that they'll always go after it?
+
+This is where we need the concept of a "stacking" event.  LoopSwitch
+and Record are stacking events.  Rescheduling could be similar but
+it's nice to see them spread out on quant boundaries.
+
+The EventTypes that reschedule are:
+
+   Insert, InsertEnd, Multiply, MultiplyEnd, Rate, Reverse, Speed, Stutter
+
+Comments say that Rate and Speed shouldn't have to do this but the
+calculations were too subtle.  Reverse probaly can't avoid it due to the
+need to reflect subcycele quantized frames.
+
+The others are all rounding modes.
+
+Note that Mute is NOT a rescheduling mode so all those functions
+that check Mute mode when they are scheduled won't work when quantizing.
+They really need to check the previously scheduled events or unconditionally
+schedule something that may end up being ignored.
+
+Really any function that has mode sensitivity when it is invoked or
+scheduled means that the mode it is sensitive to must reschedule events.
+I don't like this.  
+
+----------------------------------------------------------------------
+Mode End Events
+----------------------------------------------------------------------
+
+Only necessary when the mode ending needs special time calculations.
+Insert, Multiply, and Stutter need this because the round the ending.  
+Record needs this because it may be synchronized.
+
+All other modes can simply end when the next function event is
+evaluated.  These are nomally delayed for input latency so we'll 
+capture the right amount of recording for Overdub, Replace, and Substitute.
+
+Confirm does not need an end event, it simply actives the SwitchEvent.
+
+Mute is scheduled in complicated ways because it can be a secondary event.
+It does not need a mode ending event though.
+
+Pause mode does not need an end event.
+
+Play mode does not need an end event.
+
+Replace and Substitute modes do not need an end event.
+
+Reset mode happens immediately, there is no need for latency delay.
+In theory Reset could round off and temporarily keep the old layers,
+if you Undo in Reset mode the layers are restored.  Many issues with that.
+
+RunMode is an internal mode used when synchronzing.  No end event.
+
+SwitchMode doesn't have an end event.  It is indicated by the presence
+of a SwitchEvent that may be scheduled or pending confirmation.  It
+isn't really a mode, it's defined by the presence of an event.  This
+is a "stacking" event, nothing happens until after it is executed.
+
+SynchronizeMode and ThresholdMode are temporary modes preceeding
+a Record.  They function the same way, just the criteria for letting
+Record start are different.  
+
+Rehearse and RehearseRecord are complcated and I would like to remove them.
+Rehearse should simply revert to Play whenever another event is executed,
+it does not need a mode end event.  RehearseRecord is like Record mode, it
+needs to be scheduled for synchronization.  
+
+Rehearse and synchronization don't mix do they?  Ideally the way
+I would like this to work is:
+
+  Rehearse Start
+    - exactly the same as Record Start, waits for sync pulse
+
+  Rehearse End
+    - exactly like Record End, may wait for sync pulse
+
+  Rehearse Play
+    - exactly like Play, has a ReRehearse event scheduled
+      for the end, sort of like the Return event
+
+    - currently this is a mode, but it's more like a pre-scheduled event
+
+  ReRehearse
+    - event at end of rehearse review loop
+    - easiest thing is to Clear the loop enter Overdub and schedule
+       RehearsePlay event at the end
+    - synchronization is not in play here, we're just automating
+      a Clear/Overdub at the beginning of the loop
+    - ReRehearse can't change the original loop length this way
+
+  ReRehearse - algo 2
+
+    - event at end of rehearse review loop
+    - resets the loop and begins a new recording
+    - MUST NOT WAIT FOR SYNC PULSE
+      - the user will think we're already on a sync pulse
+      - we'll be exact for TrackSync, but for others may be starting
+        with a small amount of drift
+      - this will be messy
+
+  ReReharse - algo 3a
+    - same as 1 or 2 if we're synchronizing
+    - if we're not synchronizing, just start a new Record
+
+----------------------------------------------------------------------
+Bounce
+----------------------------------------------------------------------
+
+BounceFunction::invoke
+
+  if Threshold or SynchronizeMode 
+     Function::scheduleEvent
+
+  else if Reset mode
+     Mobius::toggleBouncRecording
+
+  else if Pause mode
+     Mobius::toggleBouncRecording
+
+  else
+     Function::scheduleEvent
+     adjust end frame for latency
+     
+     NOTE: Event has the "noMode" flag so it will not end Multiply/Insert
+     events, and since it bypasses Function::invoke it won't end Record
+     mode either
+  endif
+
+  This is more like a global function than loop function.  It needs
+  to schedule an event but it won't end any modes
+
+  We could do without an invoke method if "noMode" prevented the 
+  canceling of all modes (including Record) in the default invoke.
+
+
+Uses default Function::scheduleEvent, but invoke() has some after logic
+to adjust the event frame.  
+
+BounceFunction::doEvent
+  Mobius::toggleBounceRecording
+
+
+The main reason this can't be a global function is because of BounceQuantize.  
+It will currently not end Record/Insert/Multiply modes which is probably
+okay, it would be odd to start or end a bounce in the middle of a 
+recording mode.  The alternative would be to have the Bounce deferred
+until the end of the rounding period or a synchronized recording.
+
+----------------------------------------------------------------------
+Capture (StartCapture, StopCapture, SaveCapture)
+----------------------------------------------------------------------
+
+global
+
+----------------------------------------------------------------------
+Checkpoint
+----------------------------------------------------------------------
+
+CheckpointFunction::invoke, mayCancelMute
+
+ if loop has record layer
+    Loop::shift
+    if loop has play layer
+        Loop::setCheckpoint
+
+
+I don't understand how this works, you can't just go and Loop::shift
+in a function invocation handler.  This either needs to only work in
+Play mode, or it needs gracefully end the mode like PlayFunction, 
+then set the checkpoint.
+
+Alternatly, toggle something in the current record layer, then
+whenever this finally gets shifted, create the checkpoint.  That
+has some nice qualitiies but it won't be obvoius in the UI this
+is happening unless we shedule a pending event or have this
+be a minor mode "Checkpointing".  Feels more like a pending event.
+
+Or perhaps the checkpoint should be the previous committed layer, not
+the one we're currently recording.  That would be safe to do anywhere
+and would behave the same if you're currently in play mode.
+
+----------------------------------------------------------------------
+Clear
+----------------------------------------------------------------------
+
+ClearFunction:doEvent
+  capture fade tail
+  various Layer housekeeping
+
+  !! where's all the mode canceling?  Rehearse still allive?
+
+      would Replace/Substitute be canceled? I don't see that
+
+----------------------------------------------------------------------
+Confirm
+----------------------------------------------------------------------
+
+ConfirmFunction::invoke
+
+  if not switching
+     log and ignore
+
+  else if not switch pending
+     log and ignore
+
+  else 
+     confirm switch event
+
+This one feels okay, it is completely ignored unless we're switching, 
+it does not stack.  When it does confirm it just activates a previously
+scheduled event and returns, it doesn't schedule anything new.
+  
+!! Should we have the Action that did the Confirm be bound to the 
+SwitchEvent so the script can wait for the switch?  Can just
+do "Wait switch" instead.
+
+Confirm doesn't have to worry about stacking and quantize, a LoopSwitch
+will always be scheduled after appropriate mode endings.  It is never
+rescheduled (is it?).  If it is it would have to take the
+stacked events with it.  
+
+Either way, Confirm just activates the switch it is not part
+of the stack.
+
+----------------------------------------------------------------------
+Coverage, InitCoverage
+----------------------------------------------------------------------
+
+global
+
+----------------------------------------------------------------------
+Debug, Breakpoint, DebugStatus
+----------------------------------------------------------------------
+
+global
+
+----------------------------------------------------------------------
+Divide
+----------------------------------------------------------------------
+
+DivideFunction::scheduleEvent
+
+  Just calls the standard Function::scheduleEvent 
+    Comments say that if we're in Mute mode and Divide is a mute cancel
+    function that we should set up a JumpPlayEvent, to mute earlier
+
+DivideFunction::doEvent
+
+  sync resize
+  shift layer
+  check mute cancel
+  resume play
+  validate
+
+----------------------------------------------------------------------
+FocusLock
+----------------------------------------------------------------------
+
+global
+
+----------------------------------------------------------------------
+Insert
+----------------------------------------------------------------------
+
+InsertFunction::invoke
+
+  if Reset mode and down
+     select next preset
+     this is okay because Reset is never deferred 
+
+  else if Mute and not isMuteCancel
+     convert to RestartOnce
+     !! potential problem if the event is quantized and we're
+        not in Mute yet
+     !! any function whose invoke is sensitive to another mode needs
+        to be rescheduled, or else it can only run without quant, roudning
+        or sync
+
+  else if not ignoring
+     Function::invoke
+     !! Logic dependent on Mode which won't be accurate if we're
+        quantizing or rescheduling, should be in the normal event scheduler
+
+
+InsertFunction::scheduleEvent
+
+  if Record mode
+      return previously scheduled RecordStopEvent
+      why?  I guess because we're not stacking
+
+  else if Rehearse mode
+      ! this looks weird, handling of Rehearse is such a mess
+      if down
+          schedule default event, but don't cancel mode
+      else
+          ignore
+  else 
+     Function::scheduleEvent
+     setup play jump
+
+
+InsertFunction::doEvent
+
+  if event type InsertEvent
+     call Loop::insertEvent
+     !! this is only called from InsertFunction and RecordFunction
+        need to encapsulate this
+  
+  else if event type InsertEndEvent
+
+     layer arrangement
+     loop::shift
+     Synchronzer::loopResize
+     setMute, resumePlay, validate
+
+----------------------------------------------------------------------
+InstantMultiply
+----------------------------------------------------------------------
+
+InstantMultiply::scheduleEvent
+
+  Function::scheduleEvent
+
+  Comments say that if we are in Mute and InstantMultiply is a mute
+  cancel, we should be scheudling a JumpPlayEvent.  Currently we will
+  have some latency loss.
+
+
+InstantMultiply::doEvent
+
+  Loop::shift
+  layer stuff
+  Synchroniczer resize
+  Loop::shift again
+  checkMuteCancel
+  resumePlay
+  validate
+
+----------------------------------------------------------------------
+LoopSwitch
+----------------------------------------------------------------------
+
+LoopTriggerFunction::invoke
+
+   if Up
+      promote or cancel SUS return 
+      ? if SwitchQuant is on, and we susup before switching
+        should this cancel the switch?  WHat happens now is the
+        SwitchEvent gets a special flag so that an Return will be
+        scheduled after the switch, this isn't visible though, should
+        actually stack a Return event
+   else 
+      cancel SUS return
+      cancel Return event
+      determine next loop number
+      scheduleTrigger()
+   endif
+
+   Most of this could be done in the scheduleEvent handler, but some of the
+   logic is interesting because it can ignore the trigger and not do
+   any mode canceling of there won't be a meaningful action.
+
+
+LoopSwitch::scheduleTrigger
+
+   if Reset mode
+      add event and confirm
+   else if Play, Mute modes
+       scheduleSwitch
+   else Record mode
+       Record->scheduleModeStop
+       scheduleSwitch
+   else if Overdub, Rehearse
+       scheduleSwitch
+   else if Replace or Substitute
+       setup RecordStopEvent
+       scheduleSwitch
+   else if Insert/Mulitply
+        scheduleSwitch
+   endif
+
+   The logic here is similar to what would be in Function::invoke
+   and Function::scheduleEvent.  We schedule a mode stop event for Record.
+   Replace and Substitute get a record stop event, but they could  just
+   as easilly extend until the switch like the others.  
+    
+   The rounding modes are NOT canceled which seems wrong to me.  
+   !! This can't be working, there is no rounding, it only uses
+   Switch Quantize.  
+
+LoopSwitch::scheduleSwitch
+
+    This is close to what a normal Function::switchEvent handler would do,
+    but we need the mode end event.
+
+    if alreaedy have switch event
+        change loop number
+        attach Action to old event, replace previous Acxtion
+    else
+       setup new SwitchEvent
+       if modeEnd event from Record
+          keep switch in confirm mode
+          ! this is not really switch confirmation, we should let it
+            be confirmed but remain stacked under the record 
+       endif
+    
+       if doesn't need confirmation
+          if don't ahve a modeEnd     
+              confirmEvent(), this will quantize
+          else
+              schedule the event immediately after the mode end event
+
+LoopSwitch::scheduleEvent
+  should never get here
+
+----------------------------------------------------------------------
+MidiStart, MuteMidiStart
+----------------------------------------------------------------------
+
+Wait for the start point then send MIDI Start.  Optionally with Mute.
+
+MidiStart::scheduleEvent
+
+  if Reset
+     send start now
+
+  else prev MidiStartEvent
+     ignore
+ 
+  else 
+      if need Mute event
+         schedule Mute
+         ! should be MuteOn or look for pending Mute events
+         !! Mute is not ending the current mode.  If we're rounding
+            this should be scheduled like a Mute ending for the mode,
+            then set up the MidiStartEvent after, same is probably
+            true for other optional Mute functions
+      endif
+
+      Function::scheduleEvent for MidiStartEvent
+        !! this is not handling rounding properly, it assumes the
+           event will fire on whatever the loop size is at the time
+           Unless the rounding functions will move previously scheduled
+           events if they extend the loop?
+
+           This would be better done with a pending event that we
+           know to execute at the start point rather than scheduled for
+           a specific frame.  That way we wouldn't even have to end
+           any modes!
+
+----------------------------------------------------------------------
+MidiStop
+----------------------------------------------------------------------
+
+MidiStop::scheduleEvent
+  Function::scheduleEvent
+  if Reset
+      adjust the end frame to now
+
+Could avoid the overload if function had a flag like "immediateInReset"
+that created the event and called the handler so we wouldn't even
+need to schedule it.
+  
+----------------------------------------------------------------------
+MidiOut
+----------------------------------------------------------------------
+
+global
+
+----------------------------------------------------------------------
+Move
+----------------------------------------------------------------------
+
+Move::scheduleEvent
+
+  Function::scheduleEvent
+    set event->number to the new frame
+    schedule play jump
+
+----------------------------------------------------------------------
+Multiply
+----------------------------------------------------------------------
+
+Multiply::invoke
+
+  if Realign event 
+     remove the event
+  
+  else if Mute mode and isMuteCancel
+
+     convert to MuteRealign::invoke
+
+  else
+     Function::invoke
+
+This does some EDPisms.  Sensitivity to Realign is fine
+because that's an event rather than a mode.  Sensitivity to Mute mode
+should technically be deferred but unfortunately it's a fairly dramatic
+change of function.  For obscure EDPisms like this I'm not opposed to 
+forcing you to actually be in Mute mode.
+
+Multiply::scheduleEvent
+
+   Function::scheduleEvent
+     then sets the "afterLoop" flag
+
+A pretty normal function with some obscure EDPisms that we should 
+be able to disable.
+
+----------------------------------------------------------------------
+Mute
+----------------------------------------------------------------------
+
+Mute::invoke
+     
+  if Reset mode
+     toggle mute
+  else
+     Function::invoke
+
+Originally this was designed for an EDPism where Mute during Reset
+would select the previous preset.  This conflicted with the use of Mute
+as a minor mode that could be "armed" prior to recording.  
+
+Now it checks for Reset and just toggles mute without scheduling.
+Could do the same thing in scheduleEvent so this no longer needs
+an invoke overload.
+
+
+Mute::scheduleEvent
+
+  Function::scheduleEvent
+    schedule play jump
+
+The play jump here is more complicated than most and is sensitivie
+to MuteMode.
+
+----------------------------------------------------------------------
+Overdub
+----------------------------------------------------------------------
+
+Overdub::scheduleEvent
+
+  if not advancing
+     toggle overdub
+  else
+    Function::scheduleEvent
+
+Another optimization similar to what Mute does.  !isAdvancing is
+more inclusive, it is false for Reset, Threshold, Synchronize, Run
+and Pause modes.  We could go through normal scheduling but we would 
+have to be reset and threshold enabled and NOT end Pause mode.
+
+Pause would normally be canceled during event scheduling.
+
+----------------------------------------------------------------------
+Pitch, Rate
+----------------------------------------------------------------------
+
+PitchFunction::scheduleEvent
+RateFunction::scheduleEvent
+
+  if prev event 
+     change the pitch/rate
+     ! why do this here, if this were in invoke we wouldn't cancel
+       modes just to change previous events
+  else
+     if pitch won't change and not restarting
+        ignore
+        ! should be in the invoke handler so we don't cancel modes
+        ! can't rely on this if we're quantizing, but it's just an
+          optimization, so we're okay
+
+     else if Reset, Threshold, or Synchronize mode
+ 
+        immediately set stream
+        ! this is similar to how other functions use !isAdvancing
+
+     else
+        Function::scheduleEvent
+         save new rate/pitch on the event
+    
+Adjusting the previously scheduled event feels better in invoke().
+Better yet add a checkPrevious() method that can be called from the
+default invoke process.
+
+Like others there is an optimization that won't schedule an event 
+if nothing will happen or if we're in a mode that doesn't need an event.
+
+!! The ignore optimization should go in invoke so we don't cancel
+any modes.  Rate can use noMode to avoid canceling Record but Pitch
+would always cancel Record.
+
+----------------------------------------------------------------------
+Play
+----------------------------------------------------------------------
+
+Does not overload Function::invoke or Function::scheduleEvent.
+
+----------------------------------------------------------------------
+Realign
+----------------------------------------------------------------------
+
+RealignFunction::scheduleEvent
+
+  if prev event
+     ignore
+
+  else if sync none
+     ignore
+
+  else if sync track and realign now
+
+     Synchronizer::loopRealignSlave
+     ! Synchronizer also has a few ignore cases we could also be
+       checking in the invoke overload
+
+     !! this is not ending modes, this will completely screw up rounding 
+     modes, and probably Record too
+
+  else
+     escape quantization
+    
+     if MuteRealign and not in MuteMode
+        Mute->scheduleEvent
+        !! mode sensitivity, at least use MuteOn so it won't toggle
+           might want to do this unconditionally?
+        !! scheduling this must end the current mode
+     endif
+     
+     Function::scheduleEvent
+     if out sync 
+        Synchronizer::loopMidiStop
+
+The ignore cases should be moved to the invoke handler so we don't do
+any mode endings.  
+
+Handling of RealignTime=Now is completely broken.
+
+This is another function that schedules a secondary event that 
+needs to end the mode and we have to juggle the Action.
+
+----------------------------------------------------------------------
+Record
+----------------------------------------------------------------------
+
+Record::scheduleEvent
+
+  if rounding mode
+
+     Function::scheduleEvent
+      this will be treated as an alternate ending and not schedule
+      a Record event
+
+  else
+     Synchronizer::scheduleRecordStart
+
+
+Testing alt endings in this way is backwards.  We should be asking the
+current mode to end and tell us if it wants to ignore the trigger function.
+
+Synchronizer::scheduleRecordStart
+
+  if Synchronize, Threshold, Record modes
+      if RecordStopEvent already scheduled
+         extend stop frame in some cases
+      else
+         scheculeRecordStop
+
+  else if RecordStart synchronized
+     Loop::stopPlayback
+     schedulePendingRecord
+    
+  else if threshold recording
+     Loop::stopPlayback
+     schedulePendingRecord
+
+ else
+    Loop::stopPlayback
+    Function::scheduleEventDefault
+
+    if TriggerScript
+       adjust event frame
+    endif
+
+    if AutoRecord
+       schedule stop event
+    endif
+
+  endif
+
+This one is interesting because it doesn't cleanly end the current mode.
+It assumes it is okay to immediately silence the loop (stopPlayback) 
+and schedule the record event.  This is okay but it means you can't
+undo Record.  This seems okay, only if we're synchronzing or thresholding
+would you have a chance to undo anyway.  The only reason this
+needs to schedule is for input latency delay.
+
+!! It would be less confusing if we did an immediate reset, then set
+things up so we wouldn't see the layer list waiting for the sync pulse or
+threshold.  It makes it looks like you can undo but you can't.  
+
+----------------------------------------------------------------------
+Replace
+----------------------------------------------------------------------
+
+Replace::scheduleEvent
+   Function::scheduleEvent
+    if not rescheduling
+       schedule play jump
+
+doEvent puts the loop in mute without scheduling the Mute function.
+This is Mute minor mode.
+
+----------------------------------------------------------------------
+Reset
+----------------------------------------------------------------------
+
+Reset::invoke
+
+  Calls Mobius::globalReset, Track::reset, or Track::loopReset
+
+  I don't see why this can't be a global function, probably because
+  before global funcs were outside the interrupt.
+
+Quantizing Reset might be interesting to some people that think
+of it like "Stop" but you can do that in scripts if you want.
+
+----------------------------------------------------------------------
+Reverse
+----------------------------------------------------------------------
+
+Reverse::scheduleEvent
+
+   if Reset, Threshold, Synchronize mode
+
+      immediately set direction
+      and optimization like other minor modes
+
+  else 
+      Function::scheduleEvent
+        set afterLoop
+        if not rescheduling
+            if Record mode
+               immediately change stream direction
+               !! this won't work if the record stop is being synchronized
+            else
+               set up play jump
+
+
+Relatively normal except for the weird and broken Record mode optimization.
+
+----------------------------------------------------------------------
+RunScript
+----------------------------------------------------------------------
+
+global
+
+This is unusual because the global function handler may schedule
+a ScriptEvent using the default scheduler, but only if the
+script is quantized.
+
+----------------------------------------------------------------------
+SampleTrigger
+----------------------------------------------------------------------
+
+global
+
+----------------------------------------------------------------------
+Save
+----------------------------------------------------------------------
+
+global
+
+Check this one further, make sure we are saving the last shifted
+play layer, not the one currently being recorded.  Since Save can
+take awhile, need to guard against Reset or another function that
+may corrupt the layer list.  Need some kind of "track lock".
+
+----------------------------------------------------------------------
+Shuffle
+----------------------------------------------------------------------
+
+Shuffle::scheduleEvent
+
+   Function::scheduleEvent
+     adds the script args
+     !! don't need this any more since we take the Action
+
+----------------------------------------------------------------------
+Slip
+----------------------------------------------------------------------
+
+Slip::scheduleEvent
+
+  calculate direction and length
+ 
+  if prev SlipEvent
+
+     change direction and length
+
+  else
+      Function::scheduleEvent
+        save the direction and length in event->number so it can be seen
+        if not rescheduling
+           schedule play jump
+
+Another case of adjusting a previously scheduled event.
+
+----------------------------------------------------------------------
+Solo
+----------------------------------------------------------------------
+
+global
+ 
+----------------------------------------------------------------------
+Speed
+----------------------------------------------------------------------
+
+This is actually not the same as Rate.  They could use the
+same logic but Speed is simpler.
+
+SpeedFunction::scheduleEvent
+
+  if not advancing
+     toggle speed
+
+  else
+     Function::scheduleEvent
+       schedule play jump
+
+This is what Rate does:
+
+RateFunction::scheduleEvent
+
+  if prev event 
+     change the pitch/rate
+     ! why do this here, if this were in invoke we wouldn't cancel
+       modes just to change previous events
+  else
+     if pitch won't change and not restarting
+        ignore
+        ! should be in the invoke handler so we don't cancel modes
+        ! can't rely on this if we're quantizing, but it's just an
+          optimization, so we're okay
+
+     else if Reset, Threshold, or Synchronize mode
+ 
+        immediately set stream
+        ! this is similar to how other functions use !isAdvancing
+
+     else
+        Function::scheduleEvent
+         save new rate/pitch on the event
+
+RateFunction is more complicated, but Speed toggle is a subset.
+
+The handling of the prev event is different, not sure why Rate
+wouldn't just schedule successive quantization events rather than
+modifying the previous event?
+
+Speed uses !isAdvancing to immediately set the stream, Rate explicitly
+tests some modes, this should be the same.
+
+----------------------------------------------------------------------
+StartPoint
+----------------------------------------------------------------------
+
+StartPoint::scheduleEvent
+
+  if MidiStartPoint and have prev event
+     ignore
+
+  else
+     Function::scheduleEvent
+       if MidiStartPoint set pending
+
+Fairly normal, the ignore test could go in the invoke() overload.
+These should end all modes and return to play mode?  Currently only
+ending rouding modes and Record.
+
+----------------------------------------------------------------------
+Stutter
+----------------------------------------------------------------------
+
+Stutter::scheduleEvent
+
+   Function::scheduleEvent
+     if event not pending
+        !! why are we testing pending here rather than reschedule
+        if Stutter mode
+           Loop::scheduleStutterTransition
+        else
+           set afterLoop
+           not bothering with a playJump 
+
+Fairly normal except for the "not pending" check, that may be a bug.
+There is a special stutter transition method because it's 
+more complicadted than a usual play jump.
+
+!! Actually I hate the way we have obscure knowledge of Stutter mode
+in loop.  For loopEvent we could have a mode callback to let it decide
+what to do.  We're scheduling a weird parentless PlayJump to handle
+repeated stutters, need a special event for this.
+
+The whole play jump thing is an incredible mess, but do that another day.
+
+----------------------------------------------------------------------
+Substitute
+----------------------------------------------------------------------
+
+Does not overrid invoke or scheduleEvent.
+
+Unlike Reverse, since we're not changing the playback qualities 
+(i.e. not muting) we don't need a play jump.  Just end the current mode.
+
+----------------------------------------------------------------------
+Surface
+----------------------------------------------------------------------
+
+global
+
+----------------------------------------------------------------------
+SyncMaster, SyncMasterTrack, SyncMasterMidi
+----------------------------------------------------------------------
+
+global
+
+----------------------------------------------------------------------
+TrackCopy
+----------------------------------------------------------------------
+
+TrackCopyFunction::invoke
+
+  Calls Loop::trackCopyTiming or Loop::trackCopySound.
+
+This is unusual because it has immediate effect.  It's a bit like Reset
+because the loop will be thrown away so we don't need an orderly
+mode ending.  
+
+This could be a global function, it probably wasn't because before
+globals ran outside the interrupt.
+
+One potentially interesting use of scheduling would be to have the copy
+happen at a rhythmically interesting time, but could use scripts for that.
+
+!! make this global unless we can find a use for scheduling
+
+----------------------------------------------------------------------
+TrackGroup
+----------------------------------------------------------------------
+
+global
+
+----------------------------------------------------------------------
+TrackSelect
+----------------------------------------------------------------------
+
+TrackSelectFunction::invoke
+
+  ignore if we can't determine the target track
+
+  if the current loop isn't advancing for any reason
+     select the next track immediately
+  else
+     if Record mode
+        schedule RecordStopEvent
+
+     else if in any recording mode
+        schedule RecordStopEvent
+
+     schedule TrackEvent
+  endif
+
+!! this is actually quite broken, if we're in a rounding mode this
+will not properly end the mode.
+
+This one is odd because we don't have to wait for the mode to end
+we just set it up and then go immediately to the next track,
+but we may need to if TrackCopy is to work properly!!
+
+Any reason we can't just keep the old mode going?  
+
+----------------------------------------------------------------------
+Trim
+----------------------------------------------------------------------
+
+Does not overload invoke() or scheduleEvent().
+
+This could be scheduling play jumps if we're quantized but it isn't
+bothering for some reason.
+
+----------------------------------------------------------------------
+Undo, Redo
+----------------------------------------------------------------------
+
+Undo::scheduleEvent
+
+  if Threshold or Synchronize mode
+
+     immediate loop reset
+     this cancels the recording but leaves the track controls alone
+
+     Mode sensitivity is okay here?  Hmm, maybe not.  Make sure
+     Record::scheduleEvent will set the mode without delay!!
+     Not really a big problem unless you were doing these at the same
+     time in a script.
+    
+  else if Mute mode and isMuteCancel and not any other scheduled events
+   
+     EDPism, schedules Mute but reverses the MuteMode
+     This one is quite obscure and probably a surprise to most people,
+     take this out or make it a preset parameter.  
+
+     We have the usual mode sensitivity problem here if Mute is 
+     quantized?  Actually no because we're checking !em->hasEvents so
+     nothing can be scheduled and we have to be in Mute mode.
+
+  else if mode not Reset
+
+    schedule an undo event on the current frame but does not go
+    through Function::scheduleEvent
+
+  else
+     ignore in reset mode
+
+
+! Checking for reset mode shouldn't be necessary since this function
+doesn't set resetEnabled.
+
+scheduleModeEnd could handle Threshold and Sync modes but we have always
+treated those as special in the invoke() process.  Think more about that.
+
+This will end rounding modes and Record. 
+
+!! If we're in Record mode should just convert to Reset rather than
+ending it which may be synchronized.
+
+!! What should Undo do in Multiply/Insert?  Again it doesn't seem to 
+be worthwhile to wait for the rounding period then throw the layer away,
+just do it now.
+
+----------------------------------------------------------------------
+Window
+----------------------------------------------------------------------
+
+Not implemented but it will have characteristics of Undo and Move.
+
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+

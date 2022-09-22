@@ -1,0 +1,56 @@
+Bidule VST key codes:
+
+Alt: 0 56 2 1024
+
+Num .Del with Num Lock off: 127 22 0 127 F16
+Same as Delete key.
+
+Scroll lock: 0 53 0 0 (null)
+
+PrtScn/SysRq: get an onKeyUp but not a down
+
+-_ : 45 0 0 45 Insert
+
+=+ : 43 0 0 43 Execute
+
+\| : 124 0 0 124 F13
+
+q 113 0 0 113 F2
+w 119 0 0 119 F8
+e 101 0 0 101 Num 5
+r 114 0 0 114 F3
+t 116 0 0 F5
+y 121 0 0 F10
+u 117 0 0 F6
+i 105 0 0 Num 9
+o 111 0 0 Divide
+p 112 0 0 F1
+[ 123 0 0 F12
+] 125 0 0 F14
+\ 124 0 0 F13
+
+a 97 Num 1
+s 115 F4
+d 100 Num 4
+f 102 Num 6
+g 103 Num 7
+h 104 Num 8
+j 106 Multiply
+k 107 Add
+l 108 Separator
+; 59 (null)
+' 39 Right
+
+z 122 F11
+x 120 F9
+c 99 Num 3
+v 118 F7
+b 98 Num 2
+n 110 Decimal
+m 109 Subtract
+, 44 Snapshot
+. 46 Delete
+/ 47 Help
+
+
+

@@ -1,0 +1,65 @@
+#
+# Mac makefile for qwin
+#
+
+default: libqwin qwintest mactest bundles
+
+INCLUDES = -I../util
+
+include ../make/common.osx
+
+LIBUTIL = ../util/libutil.a
+LIBQWIN = libqwin.a
+
+######################################################################
+#
+# libqwin
+#
+######################################################################
+
+LIBQWIN_O = \
+	  KeyCode.o \
+	  Border.o Button.o Character.o Checkbox.o Color.o ColorDialog.o \
+	  ComboBox.o Component.o Container.o Context.o Custom.o Dialog.o Divider.o \
+	  Dragable.o Font.o FormPanel.o Frame.o GroupBox.o KeyEvent.o \
+	  Label.o LabeledText.o LayoutManager.o ListBox.o Listeners.o \
+	  Menu.o MessageDialog.o MouseEvent.o MultiSelect.o NumberField.o \
+	  OpenDialog.o Palette.o FontConfig.o \
+          Panel.o RadioButton.o Radios.o ScrollBar.o \
+	  SimpleDialog.o Slider.o Static.o StatusBar.o Strut.o TabbedPane.o Text.o \
+	  TextArea.o Timer.o ToolBar.o Table.o Tree.o Window.o \
+	  UIManager.o Qwin.o \
+	  UIMac.o MacGraphics.o MacWindow.o MacMenu.o
+
+libqwin: libqwin.a
+
+libqwin.a: $(LIBQWIN_O)
+	   libtool -static -o libqwin.a $(LIBQWIN_O)	    
+
+qwintest: libqwin.a qwintest.o
+	g++ $(LDFLAGS) -g -framework Carbon -o qwintest qwintest.o libqwin.a $(LIBUTIL)
+
+mactest: libqwin.a mactest.o
+	g++ $(LDFLAGS) -g -framework Carbon -framework ApplicationServices -o mactest mactest.o libqwin.a $(LIBUTIL)
+
+bundles:
+	cp qwintest bundle/qwintest.app/Contents/MacOS
+	cp mactest bundle/mactest.app/Contents/MacOS
+	cp chef.icns bundle/mactest.app/Contents/Resources
+	cp chef.icns bundle/qwintest.app/Contents/Resources
+
+######################################################################
+#
+# General
+#
+######################################################################
+
+
+.PHONY: clean
+clean: commonclean
+	@-rm -f wintest
+	@-rm -f mactest
+	@-rm -f bundle/qwintest.app/Contents/MacOS/qwintest
+	@-rm -f bundle/mactest.app/Contents/MacOS/mactest
+
+######################################################################

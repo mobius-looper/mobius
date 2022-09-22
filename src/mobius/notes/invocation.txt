@@ -1,0 +1,484 @@
+Evoluation of Function Invocation and Events
+
+* Actions and Bindings
+
+See notes/actions.txt for discussion of actions that can cause function invocation
+and how to bind invocation to triggers.  
+
+* Function
+
+Invoked or "executed" to perform something in the system.  May schedule events.
+
+* Event
+
+Function side effects that are to be executed at a certain time.
+
+* Mode
+
+Operating mode of the track, effects semantics of functions.
+
+* Jumps
+
+See notes/newjump.txt for some old notes related to scheduling play jumps.
+
+----------------------------------------------------------------------
+Function Invocation
+----------------------------------------------------------------------
+
+1) Mobius receives Action or FunctionContext
+
+All function invocations enter through one of two Mobius methods.
+The Action interface is new and will eventually replace the older
+FunctionContext interface.
+
+  - Mobius::doFunction(Action)
+
+    - called by NewBindingResolver
+    - temporarily converts Action to FunctionContext
+    - if function is global, calls Function::invoke(FunctionContext,Mobius)
+    - else calls Track::setPendingFunction 
+
+  - Mobius::doFunction(FunctionContext,Track)
+  
+    - older invoker called by BindingResolver
+    - if function is global, calls Function::invoke(FunctionContext,Mobius)
+    - else calls Track::setPendingFunction 
+
+
+2) Function::invoke(FunctionContext,Mobius)
+
+Used only for global functions.  Global functions are not sensitive to track
+modes and are not scheduled.  The invoke() method typically forwards to
+other Mobius methods such as startCapture() and stopCapture().
+
+3) Track::setPendingFunction
+
+  - Ignores up transitions for functions that are not sustainable.
+  - If trigger.source is TriggerScript or TriggerHost call
+     Track::doFunction(FunctionContext) immediately
+  - else add FunctionContext to the queue for the next interrupt
+
+4) Track::doPendingFunctions
+
+  - Called at the start of each interrupt
+  - Calls Track::doFunction(FunctionContext)
+
+5) Track::doFunction(FunctionContext)
+
+  - Watches for the up transition of a long-press trigger being
+    tracked.  May change FunctionContext.function by calling
+    Function::getLongPressFunction.  
+
+  - This was intended to convert functions like Long/Mute
+    into Sustain Mute.
+
+  - !! I don't like long-press ending mutation done in Track, 
+    it sould be forwarded to the Function.
+
+  - Calls Function::invoke(FunctionContext, Loop);
+
+    - Should be passing Track intead
+
+  - Sets up long-press tracking
+
+6) Track::checkLongPress
+
+  - Called at the beginning of every interrupt to to see if we're 
+    sustaining a trigger and have gone beyond the long-press
+    interval.  
+
+  - State maintained on each Track.
+    !! This should be at a higher level, in Mobius or even
+    BindingResolver?
+
+  - When long press duration is reached we take the saved
+    copy of the original FunctionContext, set longPress = true
+    and call Function::invokeLong
+
+
+7) Function::invoke(FunctionContext,Loop)
+
+This is the primary function-specific entry point, now we're getting
+down to business.
+
+Some functions will overload the invoke() method, most will use
+the default implementation in Function.  Several functions that overload
+invoke could be rewritten to let the logic be in the Mode, but there
+are too many complex things going on, we can't get rid of this phase.
+
+Function::invoke always gets first crack at what the Function will do.
+
+Default invoke() method does
+
+  - check context.down || sus
+  - check Threshold mode
+  - check Synchronize mode
+  - check isSwitching
+    - call scheduleSwitchStack
+    ! needs to be generialized, a track can have one "stacking"
+      event, switch is one of them
+  - check Reset mode
+  - else
+     - look for previous event, escape quantization 
+     - cancel Returns
+     - cancel Record mode
+     - Function::scheduleEvent(FunctionContext, Loop)
+
+8) Function::scheduleEvent(FunctionContext, Loop)
+
+This is overloaded by many functions.  The default implementation does:
+
+  - let Loop::getFunctionEvent schedule the event
+    - !! move this up to Function
+
+  - if we're in a rounding mode (Insert/Multiply) call Loop::scheduleModeEnd
+    !! this should be redirected through the Mode
+
+9) Loop::processEvent(Event)
+
+  - Called when Events scheduled by Function::scheduleEvent are reached
+
+  - does various event filtering when in Reset mode
+    !! Do Modes need a crack at the event handler too?
+
+  - call Event::invoke(Loop)
+
+  - rescheduleEvents()
+    - forget what this does, I think some things like Reverse
+      need to result in a reschedulling of all previously scheduled
+      events, if that's what's going on here this could be done by
+      treating Reverse as a "stacking" event
+
+10) Event::invoke(Loop)
+
+  - Default implementation calls Function::doEvent(Loop, Event)
+  - A small number of events don't have functions so they implement
+    the logic in the Event class
+
+11) Function::doEvent
+
+  - Usually the function specific semantics
+
+
+----------------------------------------------------------------------
+New Invocation
+----------------------------------------------------------------------
+
+Same as old but add MobiusMode::invoke.
+
+After Function::invoke, the next stop is MobiusMode::invoke which
+allows the mode to decide how to deal with the function.  It will take
+awhile but about half of what is currently in Function::invoke can
+migrate to MobiusMode::invoke.
+
+The mode can decide to change the function (for example Insert in
+Reset changes presets).  
+
+Record will schedule a stop and stack the event.
+
+Loop switch will stack the event.  However we need a formal MobiusMode
+for this, which we have but it isn't what getMode() returns.  
+
+Could formalize a "Stacking Event" and then functions can say whether
+they stack or not.
+
+  - escape quantization
+
+  - common event processing
+      cancel Return events
+      unpause
+
+----------------------------------------------------------------------
+Layers
+----------------------------------------------------------------------
+
+Loop
+  - responsible for Layer list, shifting, play layer
+  - maybe some of the frame calculation utilities for quantization
+  - undo/redo processing
+  - many of the event handlers should be moved to Functions
+
+Track
+  - scheduled event management
+  - switch event and other stacking events
+  - Loop::getFunctionEvent moves here
+  - most "mode" state from loops, mMode, mPause, mOverdub etc.
+  - play jump scheduling?
+    - hmm, technically this isn't loop specific but it's a big
+      assed chunk of code and Track is getting big
+
+MobiusMode
+  - assists in function scheduling, adjusts the FunctionContext
+  - defers to Track for frame scheduling
+
+
+
+----------------------------------------------------------------------
+Events
+----------------------------------------------------------------------
+
+Event->function
+  - identifies the Function that will provide evaluation of the event
+    - doEvent
+    - prepareJump
+    - prepareSwitch
+
+Event->type
+  - adjusts the meaning of the event for the given function
+  - usually a function schedules just one event type, but there
+    may be more than one
+    
+    - InsertEvent, InsertEndEvent
+    - MultiplyEvent, MultiplyEndEvent
+    - Record, RecordEndEvent, RecordStopEvent
+
+  - !! since we are evolving toward the Function being in control
+    over event evaluation, we have less need for EventType subclasses
+    could just have a union or a function-specific integer code
+
+
+Event->invokingFunction
+  - the function that was originally triggered that caused the event
+    to be scheduled
+  - non-null only if it is an alternate ending to the primary function
+  - change name to alternateEnding?
+
+Events should contain entire FunctionContext or at least a common
+subclass.
+
+Event/Function/MobiusMode
+
+Need to tighten the dependecy between MobiusMode and Function.  Several
+scheduling decisions depend on MobiusMode, this needs to get us back
+to a Function where the logic can be encapsulated.
+
+Currently modes are static, if we made then more dynamic like events
+they could hold state, such as SUSMute vs Mute.  May not be that interesting.
+
+----------------------------------------------------------------------
+Functions Overloading Invoke
+----------------------------------------------------------------------
+
+Bounce
+
+  Does various mode specific things for Threshold, Synchronize, Reset
+  isPaused.  Schedules an event but has to adjust latency.
+
+Capture
+
+  Global functions
+
+Checkpoint
+
+  This doesn't schedule an event or effect recording, it just
+  does things to the layer history.  Everything is done in the invoke method.
+  I can't think of any interesting modal behavior.
+
+Confirm
+  
+  Confirm operates on previously schedule events, it does not schedule
+  an event ot handle the confirmation.  
+
+Debug
+
+  Undefined
+
+Ignore
+
+  Something for EDP pass-through, not used any more.
+
+Insert
+
+  * Insert in Reset mode selects the next preset
+
+  - else does some sustain checking then calls the default Function::invoke
+
+LoopSwitch
+
+  - fairly complicated sustain logic for SUSReturn promotion 
+    among other things
+  - calculates the next loop
+  - updates previously scheduled switch event or
+    schedules a new switch event
+  - event may be left pending
+
+  - Some of this could be rewritten as Mode logic if 
+    we had a formal SwitchMode active in the track but this
+    is a minor mode, or sort of an "overlay" mode so it is
+    unclear who would have control.
+
+Mute
+
+  - Reset mode logic to immediately toggle mute without scheduling,
+    this could be done in the Mode handler?
+
+  - Formerly had EDP behavior where Mute in Reset changed presets
+
+  - otherwise uses default event scheduler
+
+Pitch
+Rate
+
+  - not currently overloading invoke() but some comments say we should
+    to handle rapid triggers
+
+Realign
+
+  - DriftCorrectFunction is global
+
+Reset
+
+  - Calls global, track, or loop reset methods, not scheduled
+
+RunScriptFunction
+
+  - immediately forwards to Mobius::runScript
+
+SampleTrigger
+
+  - global function, sets up playback in the sample track
+
+Save
+ScriptRecorder
+Solo
+Surface
+Sync
+  - global functions
+
+TrackCopy
+
+  - Immediately calls Loop::trackCopyTiming or trackCopySound
+  - !! should be scheduled like others
+
+TrackSelect
+
+  - complex logic depending on whether the track is advancing,
+    in Record mode, or doing some other form of recording
+
+----------------------------------------------------------------------
+Event States
+----------------------------------------------------------------------
+Event Structures
+
+  - scheduled: in the event list
+
+  - ready: a scheduled event with a known time
+
+  - pending: a scheduled event waiting for a confirmation 
+    - confirmations are usually either function triggers or sync pulse events
+      but they can be anything
+    - when an event is confirmed it is either executed immediately, 
+      scheduled for a specific frame, or the event handler is allowed to 
+      calculate the frame
+
+  - stacking: containes stacked events
+    - stacked events may or may not be scheduled
+    - stacked events that are not scheduled are typically used to influence
+      how the stacking event behaves
+    - stacked events that are scheduled are normally processed through their    
+      usual event handler after the stacking event is processed
+
+  - stacked: stacked under an event container
+    - when a stacking event moves, stacked events that are scheduled move
+      by the same amount
+    - what about switch quant?  is this always true?
+
+
+Stacking Functions
+
+  Record
+    - waits for sync pulse or scheduled ending, can be extended
+  AutoRecord
+    - waits for scheduled ending, can be extended or decreased
+  Insert, Multiply, Stutter
+    - waits for scheduled ending, can be extended
+  LoopSwitch
+    - waits for confirmation or quantized ending
+  Rehearse
+    - a mess
+  Realign, MuteRealign
+    - waits for the realign point
+  MuteMidiStart
+    - waits for the external start point
+  TrackSwitch
+    - !! think about this what if the current track is waiting for
+         a record ending and TrackCopy behavior is expected
+         need to schedule pending until any recording mode finishes
+           - would be nice to leave overdub on?
+           - have to wait for any deferred or rounding record mode to finish
+           - need a new minor TrackSwitch mode
+           ! think about what happens when we TrackCopy and reference layers
+             that are still being recorded, problems?
+
+
+Quantization
+  Independent of stacking.  Events can quant to the same point
+  but are not related.  In some cases events can quant to locations
+  before previously scheduled events (well, probably not until we
+  allow different quant settings for each function.
+
+
+Stacking defines a "wall", you cannot schedule events before
+that wall, eventes are expected to happen immediately after
+the wall, there is no further quantization.  
+
+  - Key point: stacking overrides quantization
+
+
+Undo 
+  Undoes the last scheduled event, even if it is not the latest in time.
+  If the last scheduled events has stacked events, undoes the stack in
+  reverse order.
+
+----------------------------------------------------------------------
+Deferred Loop Switch
+----------------------------------------------------------------------
+
+Loop Switch during a synced recording is broken and has been for
+awhile because the switch is not deferred until after the record is
+supposed to end.  You get into this weird state where the original
+loop is still recording and resumes recording when you switch back.
+Or something like that.
+
+
+The way Multiply/Insert push the switch is messy.  
+
+Here is how it should work.
+
+1) Function::invoke receives the event, if it is global it is executed
+   immediately.  If it is a track function, MobiusMode::invoke is called.
+
+2) MobiusMode receives the function invocation and decides if
+   there is mode specific behavior for this function.  For example
+   a Record alternate ending for Multiply.  It may not let the
+   Function invoke itself.  If it passes MobiusMode calls 
+   Function::start, invokeInner, or something.  If the mode handler
+   caused the scheduling of a "stacking" event the ...
+
+3) Function::invokeDefault asks the current mode to end itself, it may get 
+   an ending Event back.  Letting the new function decide to end the
+   current mode is better than having 1 always end the mode because we
+   may not always need it ended.
+
+3) If the ending Event is not pending schedule the function event
+   for the same frame and schedule a play jump.  
+
+4) If the ending Event is pending, schedule a pending function event
+   and add it to the "stack" of the pending mode event.
+
+5) When mode end event stops being pending and a frame is known, 
+   ask the stacked events to reschedule themselves.
+
+6) The stacked events can be kept on the ending event even after
+   the frames are known in case other triggers might adjust the ending.
+   For example, AutoRecord could still be used to add recorded bars
+   and defer the switch longer.
+
+
+
+----------------------------------------------------------------------
+
+
+
+
+

@@ -1,0 +1,84 @@
+
+* Seeing this when changing output devices
+  MIDIPortDisconnectSource -10832
+
+----------------------------------------------------------------------
+AU
+----------------------------------------------------------------------
+
+* Host sync
+
+* need nicer status message if functions are performed before connecting
+  any audio pins rather than just hanging
+
+* figure out what "Mode" means in bidule: Processing, Mute, Bypass
+
+----------------------------------------------------------------------
+VST
+----------------------------------------------------------------------
+
+- Escape binding for Move Display Components not working
+  - it closes the window, may be nothing we can do
+
+- exit of the VST frame isn't shutting down properly?
+  - still some odd memory corruption in Reaper
+
+- key/midi help dialogs displaying funky, they show briefly then
+   are hidden under the Mobius window, but you can bring them to the front
+   something to do with being non-modal, setting window group now working?
+
+----------------------------------------------------------------------
+Display
+----------------------------------------------------------------------
+
+- save/load not tested
+
+- MIDI Devices: nice to scroll to the current selection
+
+- white event triangle not filled in
+
+Qwin
+  - Change MacContext and MacFont to allow two types of sizing,
+    image and typographic.
+
+  - rework the "main" routine to be more exposed to the app like
+    we're now doing for VSTs
+
+----------------------------------------------------------------------
+Menus
+----------------------------------------------------------------------
+
+File->Open Loop
+  start in the installation directory, remember previous selection,
+  filter for .wav files
+
+File->OpenProject
+  same as Open Loop but filter for .mop files
+
+File->Save Loop
+File->Save Project
+File->Save Project Template
+  start in installation directory (or user directory)
+
+File->Save Quick
+  didn't save file?
+
+----------------------------------------------------------------------
+
+Convert .ico files to .icns files and put in Resources.
+The format can be "any supported type" name needs to be 
+the bundle name (the top level bundle directory) so we 
+need to change this from "bundle" to "Mobius".
+
+Normally application files that can be edited go here
+according to Carbon Wiki:
+
+  It's recommended that application data live in your application
+  bundle's "Resources" folder, which you can access using
+  CFBundleCopyResourceURL(), or if it needs to be editable, needs to be
+  extracted or is an optional install, in the user's Application Support
+  folder in their Library folder.
+
+Most of my apps put things in Application Support, not sure I want 
+to mess with that. Just leave everythign in Resources?
+

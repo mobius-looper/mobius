@@ -1,0 +1,97 @@
+#
+# Makefile for the BaseAudioUnit framework
+# 
+
+default: example
+
+# necessary for common.osx
+INCLUDES = -I../../util -I../../qwin -I../CoreAudio/PublicUtility -I../CoreAudio/AudioUnits/AUPublic/Utility -I../CoreAudio/AudioUnits/AUPublic/AUBase -I../CoreAudio/AudioUnits/AUPublic/AUViewBase -I../CoreAudio/AudioUnits/AUPublic/OtherBases -I../CoreAudio/AudioUnits/AUPublic/AUCarbonViewBase
+
+FRAMEWORKS = -framework Carbon -framework AudioToolbox -framework AudioUnit -framework CoreServices -framework CoreFoundation
+
+include ../../make/common.osx
+
+# not sure these are necessary but the hosts may expect?
+AU_COMPAT = -compatibility_version 1 -current_version 1
+
+# example uses this, not sure what it does but it looks important
+# -L/Developer/Examples/CoreAudio/AudioUnits/MultitapDelayAU/build/Development
+# -F/Developer/Examples/CoreAudio/AudioUnits/MultitapDelayAU/build/Development
+
+# WTF!!!
+# -install_name /Library/Audio/Plug-Ins/Components/MultitapAU.component/Contents/MacOS/MultitapAUView
+
+######################################################################
+#
+# example
+#
+######################################################################
+
+#
+# AU Component
+#
+
+BASE_UNIT_O = BaseAudioUnit.o BaseAudioUnitViewShim.o
+BASE_UNIT_R = BaseAudioUnit.r
+BASE_UNIT_EXP = BaseAudioUnit.exp
+
+BaseAudioUnit: $(BASE_UNIT_O)
+	g++ $(LDFLAGS) $(FRAMEWORKS) -dynamiclib -exported_symbols_list $(BASE_UNIT_EXP) $(AU_COMPAT) -o BaseAudioUnit -L.. -lau -L../../util -lutil $(BASE_UNIT_O)
+
+#
+# AU Component View
+#
+
+BASE_VIEW_O = BaseAudioUnitView.o
+BASE_VIEW_EXP = BaseAudioUnitView.exp
+
+BaseAudioUnitView: $(BASE_VIEW_O)
+	g++ $(LDFLAGS) $(FRAMEWORKS) -dynamiclib -exported_symbols_list $(BASE_VIEW_EXP) $(AU_COMPAT) -o BaseAudioUnitView -L.. -lau -L../../util -lutil -L../../qwin -lqwin $(BASE_VIEW_O)
+
+#
+# Resources
+#
+
+BaseAudioUnit.rsrc: BaseAudioUnit.r
+	/Developer/Tools/Rez -o BaseAudioUnit.rsrc -d SystemSevenOrLater=1 -useDF -script Roman -d i386_$i386 -I /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -arch ppc -arch i386 -isysroot /Developer/SDKs/MacOSX10.4u.sdk BaseAudioUnit.r
+
+
+#
+# Package
+# NOTE: Do not delete the outer .component directories start 
+# from the Contents directdory.  This allows us to have a symlink
+# to the component directry in /Library/Audio/Plug-Ins...
+
+BaseAudioUnit.component/Contents: BaseAudioUnit BaseAudioUnitView BaseAudioUnit.rsrc
+	rm -rf BaseAudioUnit.component/Contents
+	mkdir BaseAudioUnit.component/Contents
+	mkdir BaseAudioUnit.component/Contents/MacOS
+	mkdir BaseAudioUnit.component/Contents/Resources
+	cp Info.plist BaseAudioUnit.component/Contents
+	cp BaseAudioUnitView BaseAudioUnit.component/Contents/MacOS
+	cp BaseAudioUnit BaseAudioUnit.component/Contents/MacOS
+	cp BaseAudioUnit.rsrc BaseAudioUnit.component/Contents/Resources
+
+example: BaseAudioUnit.component/Contents
+
+# don't need this if we have a symlink
+export:
+	rm -rf /Library/Audio/Plug-Ins/Components/BaseAudioUnit.component
+	cp -r BaseAudioUnit.component /Library/Audio/Plug-Ins/Components
+
+symlink:
+	ln -s /Users/jeff/dev/mobius/src/au/qwin/BaseAudioUnit.component /Library/Audio/Plug-Ins/Components/BaseAudioUnit.component
+
+######################################################################
+#
+# General
+#
+######################################################################
+
+.PHONY: clean
+clean: commonclean
+	@-rm BaseAudioUnit
+	@-rm BaseAudioUnitView
+	@-rm *.rsrc
+	@-rm -rf BaseAudioUnit.component/Contents
+	

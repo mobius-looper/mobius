@@ -1,0 +1,26 @@
+# Debugging script to help find out why secondary
+# feedback is not being used in Substitute mode.
+# Call this when secondary feedback is lowered
+# and you are in InterfaceMode=Expert and it
+# doesn't sound like secondary feedback is being used.
+
+!name Check Feedback
+!autoload
+
+Message Effective feedback $effectiveFeedback
+
+if effectiveFeedback != altFeedback
+
+  if !isRecording
+     Message You are not in a recording mode
+
+  else if interfaceMode != expert && interfaceMode != stutter
+     Message You are not in expert mode: $interfaceMode
+
+  else if mode == replace
+     Message You are in Replace mode
+
+
+  endif
+
+endif

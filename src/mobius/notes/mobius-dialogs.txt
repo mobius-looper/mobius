@@ -1,0 +1,404 @@
+Found this on the laptop dated 5/31/2006
+
+It's a summary of some zoneombius Yahoo dialogs related to bugs.
+
+----------------------------------------------------------------------
+From: Per Boysen
+> Studio recording is another situation though. I'm really looking 
+> forward to the new function that lets you record each track as a 
+> separate stereo file. Will there be also a separate file recorded from 
+> the audio input? (Jeff?)
+
+I hadn't thought about that but it wouldn't be hard to do.  Would it
+just be recording all the time, or should it only be recording when
+one of the tracks is in a recording/overdub mode?
+
+Going back to a comment you made a few days ago regarding recording
+each track as separate files, I think you asked to only begin
+recording once the track had something in it?  We can do that but
+won't it be hard to line everything up if they don't all start at the
+same time?
+
+Also, I don't know if this helps you, but if you save a "project", it
+will create separate audio files for the current contents of each
+track.  You don't get the full performance history though, just the
+end result.
+
+Jeff
+
+----------------------------------------------------------------------
+
+> From: Per Boysen
+> I know a workaround for that! Running Mobius as VST in Live and 
+> programming the MIDI commands as quantized MIDI Clips in Live, instead 
+> of tap dancing them on a MIDI floor controller.
+> You only need one good take to catch the script.
+
+Yes, that would be a good solution for this.
+
+I've been thinking about some new features that are similar to using
+host-controlled MIDI sequences, but maybe a bit simpler.  One is the
+concept of "subcycle sequence".  Rather than dividing the cycle
+strictly by 8thsPerCycle, you can load a standard MIDI file where the
+notes define where the subcycles are.  This sequence can be
+automatically stretched to fit the length of the cycle, the relative
+distance between the notes stays the same to preserve the "groove".
+
+The notes themselves don't do anything it is the distance between the
+notes that we would use for timing.  So in theory you could tap out a
+pattern on any drum machine/keybord, save it to a standard MIDI file,
+then use it to control timing for Mobius quantization.
+
+Then also a "control sequence" that defines both timing and function.
+triggers. This can be loaded like a script, when you run it we
+internally "play" the sequence just like executing a script, using the
+distance between events in the same way we use Wait statements in
+scripts.  The sequence can optionally be stretched to fit the length
+of the cycle, or used as is.
+
+If you're already comfortable with MIDI sequences in Live this doesn't
+really add anything new.  But it might be easier to configure, and
+provides a similar capability in standalone Mobius.
+
+Do either of these sound useful?
+
+Jeff
+----------------------------------------------------------------------
+> From: Ben
+> Isn't it related to the issue I had witj the 8thspercycle parameter?
+> Doubling it will allow the complete loop to be reproduced.
+
+Yes, 8thsPerCycle is one of the things used in the calculations to
+determine how the loop length compares to the current tempo, and in
+the sync modes when it needs to be retriggered.  If the loop is
+triggering in the middle, then doubling 8thsPerCycle may fix that, but
+you really shouldn't have to do this.
+
+There's a bug somewhere because Track Sync is only supposed to be used
+on the initial recording, and for the Realign function.  You should
+free to throw the track out of alignment with Speed/Reverse etc. then
+use Realign to bring it back into sync.  It should not be retriggering
+in the middle just by changing speed.
+
+Jeff
+----------------------------------------------------------------------
+> From: Per Boysen
+> Microtonaity - cool! Can we get the option to save Fine Rate set-ups 
+> in the same way as Seup and MIDI Control configuration?
+
+The controller bindings for fine shifting would be made in the MIDI
+Configuration dialog, there would be two new names in the Control box.
+Then there would be one or two shift range parameters, probably under
+the Preset, though they could go in the MIDI config if that makes more
+sense.
+
+   FinePitchRangeUp
+     - the number of semitones the fine pitch shift control
+       is allowed to raise the pitch
+
+   FinePitchRangeDown
+     - number of semitones the fine pitch shift control is
+       allowed to lower the pitch
+
+Examples:
+
+  FinePitchRangeUp=0
+  FinePitchRangeDown=1
+
+    Pedal at toe down is normal pitch, at toe up drops one semitone.
+
+  FinePitchRangeUp=1
+  FinePitchRangeDown=0
+  
+     Pedal at toe down is up one semitone, toe down is normal.
+
+  FinePitchRangeUp=1
+  FinePitchRangeDown=1
+  
+     Pedal at toe down is up one semitone, tow down drops a semitone,
+     somewhere in the middle is normal pitch.
+
+
+When we get to this point, I'll also add the option to bind the Pitch
+Bend MIDI controller to these so you get the ability to snap back to
+the center and return to normal pitch.
+
+----------------------------------------------------------------------
+From: Per Boysen
+
+> The relation between Solo and Mute is complicated. It took me some 
+> time to find out and I'm still not quite sure I understand every 
+> detail.
+
+Yes, without any visual indiciation of the track state it's hard to
+predict what will happen if a long time passes between Solos or Mutes.
+Here is how it currently works:
+
+  - Each track has a new parameter "previouslyMuted"
+
+  - On the first press of Solo or Global Mute, we first set 
+    previouslyMuted to true for each track that is currently muted,
+    then we mute all tracks and in the case of Solo, unmute the
+    current track
+
+  - On the second press of Solo or Global Mute, every track whose
+    previouslyMuted parameter is true is kept in mute, otherwise
+    it is unmuted
+
+  - If between the first and second presses, you use the Mute function,
+    it cancels the Solo/GlobalMute mode by setting all the previouslyMuted
+    parameters to false.  
+
+  - We can tell if this is the first or second press by looking at
+    all of the previouslyMuted parameters, if they are all false then
+    we are not in either Solo or Global Mute mode and it must be the
+    first press.  If any one is on, then it is the second press and
+    we restore the previous mute state.
+
+Having some kind of visible indicator of the previouslyMuted state in
+each track, and whether they are set because of Solo or Global Mute
+should help.  But if you think it would be more obvious if it worked a
+different way let me know.
+
+> This is very cool for performance flow, but can quickly become to much 
+> to remember by a live performers overheated brain. So we need some 
+> kind of "Emergency Button", some "Un-Mute All Tracks" function, 
+> something really strong that manage to override "the un-Soloed track 
+> status". I tried the "Mute All" because I thought it would work as 
+> "Un-Mute All" on a second press. But it just toggled as the Solo 
+> function does.
+
+Does this emergency button simply unmute all tracks and set all the
+previouslyMuted parameters to false, effecively canceling both Solo
+and Global Mute?  If so, that's easy.
+
+> Another cool thing I found out is that some commands manage to "open 
+> up" a muted track: "Speed" opens a muted track for audio but the 
+> graphics still show the track as being muted. "Insert" un-mutes a 
+> muted track.
+
+Mute is unusual in Mobius compared to other multi-track applications.
+In most applications, muting a track behaves like the mute button on a
+mixing console, the track is still "playing" but the output is not
+connected to anything.  In Mobius though, because of the EDP heritage
+Mute is a special mode with lots of options.
+
+When you're in Mute mode, the manual describes Undo, Insert, and
+Multiply as alternate endings but nothign else.  I probably have the
+alternate endings wrong, in most cases I think I decided that if
+you're starting to use other functions, then the track should be taken
+out of Mute mode.
+
+What Mute/Insert is supposed to do is "Play the loop once the return
+to mute".
+
+The behavior you're seeing with Speed is a bug.  It should be changing
+speed but leaving the track in Mute mode.  The same with Reverse,
+RateShift and other functions that affect playback but do not cause
+recording.
+
+I'm open to suggestions on how Mute should work, if you would prefer
+that Speed, Reverse and other "playback control" functions take us out
+of Mute I can add that as an option.  To me though, it seems like
+Record, Overdub, Substitute, Replace, and other "recording" functions
+should always take you out of Mute, otherwise you can't hear what
+you're recording over.
+
+Now, going back to Solo and Global Mute.  I'm guessing that people
+expect these to behave more like they do on a mixing console, so that
+if you turn off solo, and we unmute some tracks, the tracks simply
+start playing again as they would when MuteMode=Continuous.  If you
+had MuteMode=Start, would you expect the unmuted tracks to be
+retriggered after Solo/Global Mute, or should MuteMode be ignored
+here?
+
+I'm wondering if we need two kinds of mute.  The EDP-style "Mute mode"
+with all the retriggering and alternate ending options, and a simpler
+"Track mute" that just turns off the output from the track without
+affecting the mode of the loop.  In other words, the loop can be in
+Multiply, Insert, or any mode, Track Mute doesn't change that it just
+effectively sets Output Level to zero.  This might be easier for
+people familiar with other multi-track applications to understand, but
+then it could be hard to explain how this is different than "Mute
+mode".
+
+----------------------------------------------------------------------
+> From: Ben
+> When loading loops, these are muted.
+> Is there a way to unmute a loaded loop in track 2 so it sync to a 
+> running loop in track 1?
+> If I've understood correctly, TrackSyncMode= Loop works only for 
+> recording.
+
+Very interesting idea.  This can be done in a rather complicated way
+using scripts, but it would be better to add a new MuteMode.  When
+MuteMode=Synchronized, it means the same as MuteMode=Start when
+leaving mute, except that the unmute will be controlled by
+TrackSyncMode.  So if TrackSyncMode=Loop, and there is a master track,
+we wait till the start point of the master loop to unmute.
+
+> Same kind of stuff when loading a project containing several
+> tracks: how are we supposed to unmute loops one by one so as thay are 
+> synchronised (just as when I recorded the project with 
+> trackcopy=timing).
+
+Good point.  Maybe it would be better to have a parameter like
+TriggerSync=true that means that any form of retrigger (Retrigger,
+Loop Trigger n, UnMute/MuteMode=Start) will wait for the time
+determined by TrackSyncMode.
+
+> By the way it seems unmuting several tracks (gmutetoggle script ) 
+> create a reset.
+
+I haven't run this script in a long time, it is possible that some of
+the recent changes made to the scripting engine broke it.  I'm in the
+process of updating all the example scripts now, I'll look at it.
+
+----------------------------------------------------------------------
+> From: Per Boysen
+>
+> >> Yes you will have the option to either save and restore
+> the last play
+> >> state in each loop or have the current state follow you.
+> 
+> Will this option be open for MIDI binding?
+
+Yes.  This will be controlled by several new preset parameters.  So
+you can control them by changing presets or you can write a script
+that does "set rateTransfer follow" and call the scripts from MIDI.
+
+> I'm asking because many times when I'm playing with Mobius I'm 
+> thinking that "now it would be fine if I was able to leave this loop 
+> in Half-Speed for a while", etc etc. If we will have both "remember"
+> and "follow" as options it would be useful to jump around between them 
+> now and then.
+
+What I was planning to do is have the transfer modes be used when you
+*enter* a loop.  But the way you describe it, do you want to use them
+when you *leave* the loop.
+
+Perhaps there should be another option, the ability to "lock" play
+parameters when you are in a loop and have them always be restored
+when you return.  You could then decide this on the fly for each loop
+rather than having single parameter that affects all the loops when
+you trigger them.  They could be used together, if the loop is not
+locked then transfer=follow will work, otherwise it always behaves
+like transfer=remember.
+
+----------------------------------------------------------------------
+This is actually a response to Per's message over on Loopers-Delight, but I decided to respond to it here since it is long and specific to Mobius.
+
+> From: Per Boysen [mailto:perboysen@gmail.com]
+>
+> Before Mobius I used a system in Ableton Live where MIDI events, 
+> organized into relevant series, were trigged by pedals to dynamically 
+> alter the ongoing looping process. That system was quick and smart 
+> because the same serial sequences could be used as triggers for any 
+> kind of action - I just had to convert them once. With Mobius I have 
+> to write new scripts and that's a bit time consuming.
+
+Can you tell me more about what you need? There may be some easy
+solutions.  When you used MIDI sequences, would you keep the same
+sequence of notes, but change the Live mappings of those notes into
+commands?
+
+I'm not sure if this is what you want, but scripts can call other
+scripts, and this can be used as a technique to separate rhythm from
+action.  So for example in your Time Wary By 12 script, instead of
+calling Speed call another script.
+
+  !name Warp By 12
+  !focuslock
+  Variable save8thsPerCycle $8thsPerCycle
+  Overdub
+  repeat 12
+  	Call WarpFunction
+	Wait subcycles 1
+  next
+  Overdub
+  set 8thsPerCycle 16 $save8thsPerCycle
+
+Then add this:
+
+  !name WarpFunction
+  Speed
+
+If you wanted a script that went in and out of reverse instead of
+speed, you could modify just the WarpFunction script:
+
+  !name WarpFunction
+  Reverse
+
+All the stuff in Warp By 12 remains the same.  The problem I can see
+with this is that you have to stop and modify the WarpFunction script
+every time you want to change behavior.  I presume in Live you can
+save the MIDI bindings in a "project" file of some kind and change
+behavior just by selecting a different project?
+
+I can think of two new features that could solve this, both of them
+easy.  The first is to allow you to use functions whose names are
+stored in variables.  So in the warp script:
+
+  !name Warp By 12
+  !focuslock
+  Variable save8thsPerCycle $8thsPerCycle
+  Overdub
+  repeat 12
+  	$WarpFunction
+	Wait subcycles 1
+  next
+  Overdub
+  set 8thsPerCycle 16 $save8thsPerCycle
+
+Inside the repeat we have $WarpFunction which means to find the
+variable named WarpFunction, and use its value as the name of the
+function to call.  We can then write two scripts like this:
+
+  !name Speed Warp By 12
+  Variable WarpFunction Speed
+  Call "Warp By 12"
+
+and
+
+  !name Reverse Warp By 12
+  Variable WarpFunction Reverse
+  Call "Warp By 12"
+
+Then you could bind the two little scripts to MIDI events and have
+them both accessible.
+
+Another feature would be to extend the Mobius project file to set you
+save "global variable" values.  So one project could have
+WarpFunction=Speed and another WarpFunction=Reverse.  You would need
+only one footswitch binding and then select the behavior by loading a
+specific project file.
+
+Does this help?
+
+----------------------------------------------------------------------
+[Per]
+An offshoot of the BPM Selection Range discussion:
+
+When we are speaking about this "tempo divisor" function ("8ths per
+cycle", as it is now called) I'd like to add a wish I have been
+thinking of for a long time. Why not give this tempo divisor the
+option of MIDI CC control binding? In praxis this could be used for
+all kind of ritardando/accelerando effects. The scaling can be set to
+one of two options: (1) linear or (2) musically divided into "tempo
+steps" that make sense (the usual, passing also dotted and triad
+value. Like most "beat sync LFO sweep" effects are implemented).
+
+Thinking in a longer perspective, it would also be cool with Track
+Tempo Divisors (how cool to bind them to a MIDI CC mapped to a
+rotating knob!). At first such a "track local tempo", set by the tempo
+divisor, could affect the Rate. I guess it would technically mean the
+same processing as the recent Rate Shift function? But it gets more
+interesting with eventual future versions that are able to
+time-stretch loops to keep the pitch when the Track Tempo Divisor is
+manipulated. (I think this is the theory behind a lot of MAX produced
+(?) electronic stuff from artists like Autechre, Squarepusher etc).
+The cool thing would be to get the option to apply this processing to
+live audio, not having to load up with pre-recorded samples for the
+work-out.
+
+----------------------------------------------------------------------

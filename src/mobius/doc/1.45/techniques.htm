@@ -1,0 +1,1087 @@
+<html>
+<head>
+<title>Mobius Techniques</title><style type='text/css'>
+<!-- 
+div.constraint,div.issue,div.note,div.notice     { margin-left: 2em; }dt.label       { display: run-in; }li           { margin-top: 0.3em; margin-bottom: 0.3em; }p           { margin-top: 0.6em; margin-bottom: 0.6em; }.diff-chg	{ background-color: orange; }.diff-del	{ background-color: red; text-decoration: line-through;}.diff-add	{ background-color: lime; }table          { empty-cells: show; }div.exampleInner { margin-left: 1em;                       margin-top: 0em; margin-bottom: 0em}div.exampleOuter {border: 4px double gray;                  margin: 0em; padding: 0em}div.exampleInner { background-color: #d5dee3;                   border-top-width: 4px;                   border-top-style: double;                   border-top-color: #d3d3d3;                   border-bottom-width: 4px;                   border-bottom-style: double;                   border-bottom-color: #d3d3d3;                   padding: 4px; margin: 0em }div.exampleWrapper { margin: 4px }div.exampleHeader { font-weight: bold; margin: 4px}body {  padding: 2em 1em 2em 70px;  margin: 0;  font-family: sans-serif;  color: black;  background: white;  background-position: top left;  background-attachment: fixed;  background-repeat: no-repeat;}:link { color: #00C; background: transparent }:visited { color: #609; background: transparent }a:active { color: #C00; background: transparent }a:link img, a:visited img { border-style: none } /* no border on img links */a img { color: white; }        /* trick to hide the border in Netscape 4 */@media all {                   /* hide the next rule from Netscape 4 */  a img { color: inherit; }    /* undo the color change above */}th, td { /* ns 4 */  font-family: sans-serif;}h1, h2, h3, h4, h5, h6 { text-align: left }/* background should be transparent, but WebTV has a bug */h1, h2, h3 { color: #005A9C; background: white }h1 { font: 170% sans-serif }h2 { font: 140% sans-serif }h3 { font: 120% sans-serif }h4 { font: bold 100% sans-serif }h5 { font: italic 100% sans-serif }h6 { font: small-caps 100% sans-serif }.hide { display: none }div.head { margin-bottom: 1em }div.head h1 { margin-top: 2em; clear: both }div.head table { margin-left: 2em; margin-top: 2em }p.copyright { font-size: small }p.copyright small { font-size: small }@media screen {  /* hide from IE3 */a[href]:hover { background: #ffa }}dd { margin-top: 0.3em; margin-bottom: 0.6em }dt { margin-top: 0; margin-bottom: 0 } /* opera 3.50 */dt { font-weight: bold }pre, code { font-family:monospace; font-size: medium }ul.toc {  list-style: disc;		/* Mac NS has problem with 'none' */  list-style: none;}-->
+</style>
+</head>
+<body>
+<h1 class=title1>Mobius Techniques</h1>
+<h2 class=title2>January 2011</h2>
+<br>
+<h1 class=sec1>Contents</h1>
+<table>
+<tr align=left><th>1</th><td></td><td><a href='#Introduction'>Introduction</a></td>
+<tr align=left><th>2</th><td></td><td><a href='#Record'>Record</a></td>
+<tr align=left><th>2.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Sustain Record'>Sustain Record</a></td>
+<tr align=left><th>2.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Record Mode'>Record Mode</a></td>
+<tr align=left><th>2.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Reverse Recording'>Reverse Recording</a></td>
+<tr align=left><th>2.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#rateShiftRecording'>Rate Shifted Recording</a></td>
+<tr align=left><th>2.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Auto Record Function'>Auto Record Function</a></td>
+<tr align=left><th>2.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Synchronized Recording'>Synchronized Recording</a></td>
+<tr align=left><th>2.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Threshold Recording'>Threshold Recording</a></td>
+<tr align=left><th>2.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Generating MIDI Clocks'>Generating MIDI Clocks</a></td>
+<tr align=left><th>2.9</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Alternate Endings'>Alternate Endings</a></td>
+<tr align=left><th>2.10</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Long Press Record'>Long Press Record</a></td>
+<tr align=left><th>2.11</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Auto Record'>Auto Record</a></td>
+<tr align=left><th>2.12</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Rehearse'>Rehearse</a></td>
+<tr align=left><th>3</th><td></td><td><a href='#Overdub'>Overdub</a></td>
+<tr align=left><th>3.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Ending Record with Overdub'>Ending Record with Overdub</a></td>
+<tr align=left><th>3.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Overdub Mode'>Overdub Mode</a></td>
+<tr align=left><th>3.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Noise Floor'>Noise Floor</a></td>
+<tr align=left><th>3.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Reduce Feedback During Overdub'>Reduce Feedback During Overdub</a></td>
+<tr align=left><th>3.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Overdub Quantized'>Overdub Quantized</a></td>
+<tr align=left><th>4</th><td></td><td><a href='#Reset'>Reset</a></td>
+<tr align=left><th>5</th><td></td><td><a href='#Play'>Play</a></td>
+<tr align=left><th>6</th><td></td><td><a href='#Managing Layers'>Managing Layers</a></td>
+<tr align=left><th>7</th><td></td><td><a href='#mutePause'>Mute, Pause, and Solo</a></td>
+<tr align=left><th>8</th><td></td><td><a href='#multiply'>Extending The Loop With Multiply</a></td>
+<tr align=left><th>9</th><td></td><td><a href='#insert'>Extending The Loop With Insert</a></td>
+<tr align=left><th>10</th><td></td><td><a href='#shortening'>Shortening The Loop</a></td>
+<tr align=left><th>11</th><td></td><td><a href='#replace'>Replacing Loop Content</a></td>
+<tr align=left><th>12</th><td></td><td><a href='#Shuffle'>Shuffle</a></td>
+<tr align=left><th>13</th><td></td><td><a href='#Changing Direction'>Changing Direction</a></td>
+<tr align=left><th>14</th><td></td><td><a href='#rateShift'>Rate Shift</a></td>
+<tr align=left><th>15</th><td></td><td><a href='#pitchShift'>Pitch Shift</a></td>
+<tr align=left><th>16</th><td></td><td><a href='#switching'>Loop Switching</a></td>
+<tr align=left><th>16.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Switch Quantize'>Switch Quantize</a></td>
+<tr align=left><th>16.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Switch Confirmation'>Switch Confirmation</a></td>
+<tr align=left><th>16.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Switch and Confirm Modes'>Switch and Confirm Modes</a></td>
+<tr align=left><th>16.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Empty Loop Action'>Empty Loop Action</a></td>
+<tr align=left><th>16.4.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Time Copy'>Time Copy</a></td>
+<tr align=left><th>16.4.1.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Time Copy Mode'>Time Copy Mode</a></td>
+<tr align=left><th>16.4.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Sound Copy'>Sound Copy</a></td>
+<tr align=left><th>16.4.2.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Sound Copy Mode'>Sound Copy Mode</a></td>
+<tr align=left><th>16.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Switch Location'>Switch Location</a></td>
+<tr align=left><th>16.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Switch Duration'>Switch Duration</a></td>
+<tr align=left><th>16.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Return Location'>Return Location</a></td>
+<tr align=left><th>16.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Switch State Transfer'>Switch State Transfer</a></td>
+<tr align=left><th>16.8.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Record Transfer'>Record Transfer</a></td>
+<tr align=left><th>16.8.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Overdub Transfer'>Overdub Transfer</a></td>
+<tr align=left><th>16.8.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Reverse Transfer'>Reverse Transfer</a></td>
+<tr align=left><th>16.8.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Rate Transfer'>Rate Transfer</a></td>
+<tr align=left><th>16.8.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Pitch Transfer'>Pitch Transfer</a></td>
+<tr align=left><th>16.9</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Switch Velocity Sensitive'>Switch Velocity Sensitive</a></td>
+<tr align=left><th>16.10</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Retrigger and Retrigger Once'>Retrigger and Retrigger Once</a></td>
+<tr align=left><th>17</th><td></td><td><a href='#jumping'>Changing Playback Position</a></td>
+<tr align=left><th>18</th><td></td><td><a href='#StartPoint'>Changing The Start Point</a></td>
+<tr align=left><th>19</th><td></td><td><a href='#Long Presses'>Long Presses</a></td>
+<tr align=left><th>20</th><td></td><td><a href='#Managing Tracks'>Managing Tracks</a></td>
+<tr align=left><th>21</th><td></td><td><a href='#Bounce Recording'>Bounce Recording</a></td>
+<tr align=left><th>22</th><td></td><td><a href='#capture'>Capturing a Performance</a></td>
+<tr align=left><th>23</th><td></td><td><a href='#sendingMidi'>Sending MIDI Messages</a></td>
+<tr align=left><th>24</th><td></td><td><a href='#Host Control With MIDI Loopback Devices'>Host Control With MIDI Loopback Devices</a></td>
+</table>
+<a name='Introduction'>
+<h1 class=sec1>1 Introduction</h1>
+</a>
+<a name='Record'>
+<h1 class=sec1>2 Record</h1>
+</a>
+<p>The <i>Record</i> function is used to record new loops of live audio.
+There are several ways to start and stop a recording, in the
+simplest case you press the Record button once to begin recording,
+and again to stop recording.  Immediately after the second press the loop
+begins playing and continues until you alter it with another function.</p>
+<p>Before a loop is recorded for the first time, the loop is
+in <i>reset mode</i> and you will see the word <b>Reset</b> appear
+in the status display.  While a loop is recording you are in <i>record
+mode</i>
+and will see the word <b>Record</b> in the status display.  Unless
+and advanced record ending option is used, when the recording completes
+the loop will enter <i>play mode</i> and <b>Play</b> will appear in the
+status display.</p>
+<p>If you want to discard the loop and start over you can use
+the <a href='#Reset'>Reset</a> function to stop the loop, release all loop memory
+and return to reset mode.  From there you can use the Record function
+again to record another loop.</p>
+<p>If you want to discard the loop and immediately begin recording
+a new one just press Record again with while the loop is playing.
+The memory for the previous loop is not released until you
+end the new recording, you can use the <i>Undo</i> function
+to cancel the new recording and return to the original loop.  Note
+that Undo only restores the previous loop if the previous loop
+was not empty (in reset mode). Once a loop is reset all history of
+the loop is gone, you cannot undo from reset mode.</p>
+<p>Another way to reset a loop is to press and hold the Record
+button.  This is referred to as a "Long Press Record" and it
+behaves the same as the <a href='#Reset'>Reset</a> function.  Using
+long press Record to reset the loop is a common technique when using
+a MIDI footswitch.   Since you will almost always have a footswitch
+bound to the Record function you don't need to waste a footswitch
+bound to the Reset function, you can simply do a long press of
+the Record footswitch to do a reset.  The loop will enter record
+mode for about 1/2 second (or whatever the configured long press
+interval is) then the loop will be reset.</p>
+<p>Once the loop has been recorded to your satisfaction, you may
+begin modifying it, or combining it with loops on other tracks.</p>
+<a name='Sustain Record'>
+<h2 class=sec2>2.1 Sustain Record</h2>
+</a>
+<p>The function <i>Sustain Record</i> is used with triggers that can
+communicate both a "pressed" and "released" state.  The recording starts
+when the trigger is pressed and stops when it is released.  For a
+footswitch that sends MIDI notes, the recording would start when
+the footswitch was pressed, continue while the footswitch was held,
+and stop when the footswitch was released.   This can make it easier
+to record very short loops.</p>
+<p>If the Sustain Record function is bound to a trigger that does
+not support press/release states, such as a MIDI program change,
+it will behave the same as the Record function, requiring two presses
+to start and ending the recording.</p>
+<a name='Record Mode'>
+<h2 class=sec2>2.2 Record Mode</h2>
+</a>
+<p>The preset parameter <i>Record Mode</i> can be used to change the
+way the Record function behaves.   It has these values:</p>
+<ul>
+<li><b>Toggle</b> - the default, one press to start and another to stop</li>
+<li><b>Sustain</b> - forces Record to behave like Sustain Record</li>
+<li><b>Safe</b> - </li>
+</ul>
+<p>RecordMode=Safe should be it's own option so you can use it
+with both toggle and sustain recording.</p>
+<a name='Reverse Recording'>
+<h2 class=sec2>2.3 Reverse Recording</h2>
+</a>
+<a name='rateShiftRecording'>
+<h2 class=sec2>2.4 Rate Shifted Recording</h2>
+</a>
+<a name='Auto Record Function'>
+<h2 class=sec2>2.5 Auto Record Function</h2>
+</a>
+<a name='Synchronized Recording'>
+<h2 class=sec2>2.6 Synchronized Recording</h2>
+</a>
+<a name='Threshold Recording'>
+<h2 class=sec2>2.7 Threshold Recording</h2>
+</a>
+<a name='Generating MIDI Clocks'>
+<h2 class=sec2>2.8 Generating MIDI Clocks</h2>
+</a>
+<a name='Alternate Endings'>
+<h2 class=sec2>2.9 Alternate Endings</h2>
+</a>
+<a name='Long Press Record'>
+<h2 class=sec2>2.10 Long Press Record</h2>
+</a>
+<a name='Auto Record'>
+<h2 class=sec2>2.11 Auto Record</h2>
+</a>
+<a name='Rehearse'>
+<h2 class=sec2>2.12 Rehearse</h2>
+</a>
+<a name='Overdub'>
+<h1 class=sec1>3 Overdub</h1>
+</a>
+<p>Overdubbing is the process of adding new sound to an existing loop.
+It is the most common way to modify loops after recording.  When
+overdub is enabled, new sound coming into a track will be merged with
+the loop that is currently playing in that track.  This will result in
+a new loop containing both the original sound and the new sound.</p>
+<p>Unlike many loopers, overdub in Mobius does not replace the
+original loop.  Instead overdubbing creates a new "layer".  Remember
+that loops are not single audio recordings, they are actually made up
+of several audio recordings called layers.  Each time you modify a
+loop a new layer is created.  If you don't like the results of a
+modification you can return the previous layer with the <i>Undo</i>
+function.</p>
+<p>Overdub is controlled with the following functions.</p>
+<ul>
+<li>Overdub</li>
+<li>Sustain Overdub</li>
+<li>Overdub On</li>
+<li>Overdub Off</li>
+</ul>
+<p>The <i>Overdub</i> function will toggle overdub on and off
+each time it is used.</p>
+<p>The <i>Sustain Overdub</i> function will turn overdub on when the
+function button is pressed and turn it off when the button is
+released.  It must be used with a <i>sustainable trigger</i>.  This is
+useful if you want to create very short overdubs.  Pressing, holding,
+then releasing a button is much faster than trying to press a button
+twice.</p>
+<p>The <i>Overdub On</i> and <i>Overdub Off</i> functions turn overdub
+on and off without toggling.  They are intended for use in scripts
+where you want to set the overdub state without worrying about the
+current state.</p>
+<p>When a loop is playing, it is actually one of the layers in the
+loop that is playing.  This is called the "active layer".
+The active layer is usually the last layer that was created, if
+you are displaying the <a href='exploring.htm#Layer Bars'>Layer Bars</a>
+
+in the Mobius window, the active layer will be highlighted.  While
+overdub is on, a new layer is continually being created as the active
+layer plays.  This new layer will contain a copy of what is in the
+active layer adjusted for feedback, then merged with the sound coming
+into the track adjusted by the track's input level.  When the active
+layer plays to the end, the new layer with the overdub is "shifted"
+and becomes the active layer.  The overdubbed layer then begins
+playing and a new layer is created to record the next overdub.  This
+process continues for as long as overdub is enabled.  This means that
+if you never turn overdub off you may generate a lot of layers.</p>
+<p>If you decide you don't like an overdub, you can use the
+<i>Undo</i> function to discard the new layer and return to the
+previous layer.  You can keep using <i>Undo</i> to go all the way back
+in time to the very first layer, then start overdubbing again.  See
+the <a href='#Managing Layers'>Managing Layers</a> section for more information on using
+<i>Undo</i>.</p>
+<a name='Ending Record with Overdub'>
+<h2 class=sec2>3.1 Ending Record with Overdub</h2>
+</a>
+<p>A very useful technique is ending a new loop recording with
+the <i>Overdub</i> function.  You start by pressing <i>Record</i> to
+begin recording a new loop, then when you're ready to stop instead of
+pressing <i>Record</i> again, press <i>Overdub</i>.  The new loop
+is created and begins playing and you are immediately placed
+in <i>Overdub</i> mode.  This is important because when you transition
+seamlessly from  <i>Record</i> mode to <i>Overdub</i> mode we can avoid
+a fade at the end of the loop.</p>
+<p>Normally when you record a loop by pressing
+<i>Record</i> twice, the left and right edges of the loop are 
+automatically faded to zero.  This ensure that there will be no
+abrupt changes in sample level at the loop start point.  Without these
+fades you would usually hear a sharp "click" every time the loop
+reached its end point and begin playing from the beginning because
+the audio waveform at the end of the loop would not exactly align 
+with the audio waveform at the beginning of the loop.</p>
+<p>The consequence of these edge fades is that you can't create a loop
+that lets a sound such as a reverb tail or a cymbal crash carry over
+from the end of the loop back to the start and keep going.  Any sound
+at the end of the loop will be abruptly cut off and faded to zero.</p>
+<p>When you end a recording with <i>Overdub</i> the right edge fade
+will not be done so the sound being recorded at the end of the loop
+will seamlessly carry over to the to the beginning of the next
+layer. You will hear the cymbal crash or the reverb tail cross the
+loop boundary without a "fade bump".  You can now leave overdub on
+indefinitely or wait just long enough for the sound to decay nicely
+then press <i>Overdub</i> again to end the overdub.  This can result
+in much more natural sounding loops because the end of the loop will
+gradually blend with the start of the loop.</p>
+<a name='Overdub Mode'>
+<h2 class=sec2>3.2 Overdub Mode</h2>
+</a>
+<p>A loop is always in one <i>major mode</i> which is displayed in
+the <a href='starting.htm#Mode'>Mode</a>
+ component in the user
+interface.  The default major mode is <i>Play</i>.  The loop will
+always return to <i>Play</i> mode when no other modes are active.
+Most major modes are temporary, they begin when you execute a <i>modal
+function</i> such as <i>Record</i>, <i>Multiply</i>, or <i>Insert</i>
+and then end when you execute that function again.  These are
+called <i>function modes</i>.  If you are already in a function mode
+and then execute a different function, the previous mode is canceled
+and will not be restored.  For example if a loop is in <i>Multiply</i>
+mode and you execute the <i>Insert</i> function, the <i>Multiply</i>
+mode is canceled and the loop enters <i>Insert</i> mode.  Later when
+you execute the <i>Insert</i> function again to end <i>Insert</i> mode
+the loop will not return to the previous <i>Multiply</i> mode, it will
+return to <i>Play</i> mode.</p>
+<p>A loop may be in any number of <i>minor modes</i> at the same time,
+these are displayed in the
+<a href='starting.htm#minorModesComponent'>Minor Modes</a>
+
+component in the user interface. Examples of minor modes include
+<i>Reverse</i>, <i>Half Speed</i>, and <i>Pitch Shift</i>. Minor modes
+are not canceled when you change major modes.  For example if you start
+in the <i>Reverse</i> minor mode when you execute the <i>Multiply</i> 
+function, the major mode will change to <i>Multiply</i> but
+<i>Reverse</i> minor mode will still be active.  Later when you leave
+<i>Multiply</i> mode and return to <i>Play</i> mode, <i>Reverse</i> 
+will continue to be active.</p>
+<p><i>Overdub</i> is unusual because it has characteristics of
+both <i>major</i> and <i>minor</i> modes.  Like a major mode it will
+be displayed in the <a href='starting.htm#Mode'>Mode</a>
+ component in
+the user interface when it is active.  But like a minor mode
+<i>Overdub</i> is not canceled when the major mode changes, it is 
+just temporarily suspended.  It will also be displayed in the
+<a href='starting.htm#minorModesComponent'>Minor Modes</a>
+
+component in the user interface so you can see when it has been suspended.</p>
+<p>For example if you start in <i>Overdub</i> mode and execute
+the <i>Multiply</i> function, the major mode will change
+to <i>Multiply</i> and <i>Overdub</i> is suspended.  Later when you
+leave <i>Multiply</i> mode you will return to <i>Overdub</i>
+mode. <i>Overdub</i> is the only major mode that behaves this way.</p>
+<a name='Noise Floor'>
+<h2 class=sec2>3.3 Noise Floor</h2>
+</a>
+<p>You may want to leave overdub on while you listen to the loop a few
+times with your instrument muted.  While you are listening the loop
+without playing you usually don't want more layers to be created
+just because overdub was left on.  Mobius will only generate a new
+layer if the maximum signal level of the sound received by the track
+exceeds a threshold.  This threshold is set with the <i>Noise Floor</i>
+global parameter.</p>
+<p>Most instruments generate some low-level noise when they are not
+being played.  Keyboards may hiss or buzz, guitars generate lots of
+handling and string noise.  If you see layers being added when you are
+not playing your instrument you may need to increase the <i>Noise
+Floor</i> value.  If the value is zero then there will be no noise
+filter and every pass of the loop while overdub is on will generate a
+new layer.  The default value is 15 which is adequate for most
+instruments including guitars with quiet pickups.  If you need to
+raise the noise floor, increase the value by 5 or 10 until layers are
+no longer being created.  You should not have to set this value
+above 1000, if you do please let us know.  Be careful not to set
+the <i>Noise Floor</i> too high or else overdubs may be lost if you
+are playing softly.</p>
+<a name='Reduce Feedback During Overdub'>
+<h2 class=sec2>3.4 Reduce Feedback During Overdub</h2>
+</a>
+<p>If you are overdubbing a loud audio signal you need to be careful
+not to overload the loop.  Mobius does not do any compression or
+limiting, if you overdub loud sounds over loud sounds you may exceed
+the maximum level which will cause harsh digital clipping.  If this
+happens you will need to reduce the track input level or reduce
+feedback.  Reducing the input level makes the new overdubbed sound
+quieter, reducing feedback makes the sound being copied from the
+current loop quieter.</p>
+<p>If you prefer to leave the feedback control all the way up (127)
+mobius can still automatically apply a small amount of feedback
+while overdub is enabled.  The amount of feedback reduction is
+small, approximately 5%.  This can help reduce clipping if you
+overdub several times.</p>
+<p>Normally this small amount of feedback reduction is not audible
+but you can turn it off with a global parameter.  Open the
+<i>Global Parameters</i> window and locate the checkbox labeled
+<i>Reduce Feedback During Overdub</i>, uncheck the box to turn
+this feature off.</p>
+<a name='Overdub Quantized'>
+<h2 class=sec2>3.5 Overdub Quantized</h2>
+</a>
+<p>Normally the overdub functions do not obey the <i>Quantize</i>
+parameter, they are executed immediately when you press the function
+trigger.  This is because you are usually merging new sound into an
+existing sound so controlling exactly where the "edges" of the overdub
+will be is not critical.  If you start overdub a little early, just
+keep your instrument muted until you are ready to add something then
+mute it when you're done.</p>
+<p>Quantized overdub can however be useful as an effect.  If you keep
+a loud sound playing before and after the overdub, you can drop in
+overdubs that a very sharp attack and decay.  To enable overdub
+quantization edit the preset and check the box labeled <i>Overdub
+Quantized</i>.</p>
+<a name='Reset'>
+<h1 class=sec1>4 Reset</h1>
+</a>
+<a name='Play'>
+<h1 class=sec1>5 Play</h1>
+</a>
+<a name='Managing Layers'>
+<h1 class=sec1>6 Managing Layers</h1>
+</a>
+<a name='mutePause'>
+<h1 class=sec1>7 Mute, Pause, and Solo</h1>
+</a>
+<a name='multiply'>
+<h1 class=sec1>8 Extending The Loop With Multiply</h1>
+</a>
+<a name='insert'>
+<h1 class=sec1>9 Extending The Loop With Insert</h1>
+</a>
+<a name='shortening'>
+<h1 class=sec1>10 Shortening The Loop</h1>
+</a>
+<a name='replace'>
+<h1 class=sec1>11 Replacing Loop Content</h1>
+</a>
+<a name='Shuffle'>
+<h1 class=sec1>12 Shuffle</h1>
+</a>
+<a name='Changing Direction'>
+<h1 class=sec1>13 Changing Direction</h1>
+</a>
+<a name='rateShift'>
+<h1 class=sec1>14 Rate Shift</h1>
+</a>
+<p>The <i>rate shifting</i> feature allows you to adjust the playback
+and recording rate of the loop so that both the perceived pitch and
+tempo of the loop change.  This is similar to the <i>Half Speed</i>
+function except that you are not limited to a single rate shift of 1
+octave down.</p>
+<p>Rate shifting may be controlled in several ways using these
+functions.</p>
+<ul>
+<li>Rate Up</li>
+<li>Rate Down</li>
+<li>Rate Next</li>
+<li>Rate Previous</li>
+<li>Rate Normal</li>
+<li>Rate Shift</li>
+</ul>
+<p>The <i>Rate Up</i> and <i>Rate Down</i> functions move the rate up
+or down by one semitone relative to the current rate.</p>
+<p>The <i>Rate Next</i> and <i>Rate Previous</i> functions select rates
+defined in the <i>Rate Sequence</i> preset parameter.  A rate sequence
+is a space delimited list of numbers which represent positive or
+Negative rate changes in semitone increments.  For example a rate of
+"1" is one semitone above normal, a rate of "-7" is 7 semitones below
+normal (or a perfect fifth lower).  The rate sequence "wraps" on the
+edges so if you are on the last rate in the sequence, <i>Rate Next</i>
+will move to first rate in the sequence.</p>
+<p>The <i>Rate Normal</i> function returns the rate to normal, no
+matter how it was shifted.</p>
+<p>Perhaps the most useful function is <i>Rate Shift</i>.  This allows
+you to use a keyboard controller to instantly access a large range of
+rates spread over several octaves.  You normally bind a MIDI note
+event to the <i>Rate Shift</i> function, this becomes the <i>rate
+center note</i>.  When you press the rate center note, the rate
+returns to normal.  Where it gets interesting is that the notes above
+and below the center note are automatically assigned to semitone rate
+shifts relative to the center note.  Notes below the center note lower
+the rate, notes above raise the rate.  This allows you to "play" the
+loop chromatically, similar to using a sampler.</p>
+<p>Note that Mobius will attempt to bind rate shift functions in a 4
+octave range on either side of the center note.  For best results, it
+is recommended that the center note use a MIDI channel that is not
+being used for any other functions.  If a rate shift note is already
+assigned to another Mobius function, the previous function will have
+priority.  To avoid these conflicts use a different channel.</p>
+<p>When the rate is shifted, the playback of the loop will be affected
+by the setting of the <i>Rate Shift Retrigger</i> preset parameter.
+If this parameter is checked, then the loop will be retriggered
+whenever the rate is shifted.  This makes it behave like a sampler.
+If the parameter is not checked, the rate is simply shifted without
+retriggering.</p>
+<a name='pitchShift'>
+<h1 class=sec1>15 Pitch Shift</h1>
+</a>
+<p>NOTE: Pitch Shifting is provided in release 1.24 as a "technology
+preview".  There are still bugs in it and I do not consider it ready
+for real use.  Still you may find it interesting to get a sense for
+what will eventually be provided.</p>
+<p>Pitch shifting is very similar to <a href='#rateShift'>Rate Shift</a> except
+that the pitch is changed without changing the tempo of the loop.  In
+all other respects the functions and parameters used to control pitch
+shifting are identical to those for rate shifting.</p>
+<p>Pitch shifting may be controlled in several ways using these
+functions.</p>
+<ul>
+<li>Pitch Up</li>
+<li>Pitch Down</li>
+<li>Pitch Next</li>
+<li>Pitch Previous</li>
+<li>Pitch Normal</li>
+<li>Pitch Shift</li>
+</ul>
+<p>The <i>Pitch Up</i> and <i>Pitch Down</i> functions move the pitch up
+or down by one semitone relative to the current pitch.</p>
+<p>The <i>Pitch Next</i> and <i>Pitch Previous</i> functions select pitches
+defined in the <i>Pitch Sequence</i> preset parameter.  The 
+<i>Pitch Sequence</i> value has the same format as the <i>Rate Sequence</i>
+value described in the <a href='#rateShift'>Rate Shift</a> section.</p>
+<p>The <i>Pitch Normal</i> function returns the rate to normal, no
+matter how it was shifted.</p>
+<p>Finally <i>Pitch Shift</i> allows you to use a keyboard controller
+to instantly access a large range of pitches spread over several octaves.
+The Pitch Shift function is bound to a MIDI note in the same way
+as the <i>Rate Shift</i> function.  See 
+<a href='#rateShift'>Rate Shift</a> for more
+information
+on how the notes are selected, and the issues this can cause.</p>
+<p>When the pitch is shifted, the playback of the loop will be affected
+by the setting of the <i>Pitch Shift Retrigger</i> preset parameter.
+If this parameter is checked, then the loop will be retriggered
+whenever the pitch is shifted.  If the parameter is not checked, the pitch
+is simply shifted without retriggering.</p>
+<a name='switching'>
+<h1 class=sec1>16 Loop Switching</h1>
+</a>
+<p>Tracks may contain several loops but only one loop at a time can be
+selected for playing or recording.  This is called the
+<i>active loop</i>.  Changing the active loop in a track
+a track is called <i>loop switching</i>.  Loop switching is
+a complex topic because there are many options available to control when
+the switch happens and what happens to the new loop after 
+it is activated.</p>
+<p>Often you will want to use <i>switch quantization</i> to control
+when the loop switch will happen relative to the loop that is
+currently playing.  This is important if you want to maintain a steady
+rhythm, for example letting the current loop play to the end before
+switching.</p>
+<p>If the next loop is empty you will often want to automatically
+begin recording into it, or copy portions of the current loop into it
+so you can begin creating variations.</p>
+<p>One of the most common uses for loop switching is to record
+"song parts" such as verse A in loop 1, verse B in loop 2, and
+a chorus in loop 3, then switch between those at rhythmically
+precise times.</p>
+<p>You can also use track loops as a primitive sample player where
+each loop contains a different sound that when triggered plays
+from beginning to end and then stops.</p>
+<p>The following functions will do some form of loop switch.</p>
+<ul>
+<li><b>Next Loop</b></li>
+<li><b>Previous Loop</b></li>
+<li><b>Sustain Next Loop</b></li>
+<li><b>Sustain Previous Loop</b></li>
+<li><b>Loop 1</b></li>
+<li><b>Loop 2</b></li>
+<li><b>Loop 3</b></li>
+<li><b>Loop 4</b></li>
+<li><b>Loop 5</b></li>
+<li><b>Loop 6</b></li>
+<li><b>Loop 7</b></li>
+<li><b>Loop 8</b></li>
+<li><b>Retrigger</b></li>
+<li><b>Retrigger Once</b></li>
+</ul>
+<p>The <i>Next Loop</i> function will activate the next loop in the
+track.  If the last loop is currently active, <i>Next Loop</i> will
+wrap back around and activate the first loop.  The <i>Previous
+Loop</i> function works in the opposite direction, activating the
+previous loop.  If the first loop is currently active <i>Previous
+Loop</i> wraps and activates the last loop.</p>
+<p>The <i>Sustain Next Loop</i> and <i>Sustain Previous Loop</i>
+functions must be bound to a
+<a href='starting.htm#Sustainable Trigger'>sustainable trigger</a>
+.  
+If they are not, they behave the same as <i>Next Loop</i> and 
+<i>Previous Loop</i>.  The sustain functions will switch to the new
+loop while the function button is held down, then they return to the
+original loop when the function button is released.  Note that
+you can get sustain behavior with other loop switching functions
+by setting the <a href='#Switch Duration'>Switch Duration</a> parameter.</p>
+<p>The <i>Retrigger</i> function starts the current loop over from the
+beginning.  It may not sound like this would be a loop switch but it
+behaves like a switch away from and then immediately back to the
+current loop.  The <i>RetriggerOnce</i> function restarts the current
+loop, lets it play to the end and then automatically
+enters <i>Mute</i> mode.</p>
+<p>The numbered <i>Loop</i> functions switch directly to the numbered
+loop.  If that loop is already selected these functions behave the
+same as <i>Retrigger</i>.</p>
+<a name='Switch Quantize'>
+<h2 class=sec2>16.1 Switch Quantize</h2>
+</a>
+<p>If you want to maintain a steady rhythm as you switch between loops
+you will usually want to use some form of <i>switch quantization</i>
+to make the switch happen at an exact time.  Switch quantization is
+not controlled by the <i>Quantize</i> parameter like most functions.
+Instead there is a dedicated parameter named <i>Switch Quantize</i>
+that is used for all loop switch functions.  This parameter may
+have the following values.</p>
+<ul>
+<li><b>Off</b></li>
+<li><b>Subcycle</b></li>
+<li><b>Cycle</b></li>
+<li><b>Loop</b></li>
+<li><b>Confirm</b></li>
+<li><b>Confirm Subcycle</b></li>
+<li><b>Confirm Cycle</b></li>
+<li><b>Confirm Loop</b></li>
+</ul>
+<p>When the value is <i>Off</i> the switch will happen immediately
+when you press the function button.</p>
+<p>When the value is <i>Subcycle</i>, <i>Cycle</i> or <i>Loop</i> the
+switch will be delayed until the next quantization point.  You will
+see a white event marker under the loop meter showing when the switch
+will happen and the loop will enter <i>Switch</i> mode.</p>
+<p>When one of the four <i>Confirm</i> values is selected, an extra
+confirmation action will be required before the loop switch will
+happen.  After you use any of the loop switch functions, the current
+loop will first enter <i>Confirm</i> mode and wait there indefinitely.
+You must then execute the <i>Confirm</i> function to confirm the
+switch.  See the <a href='#Switch Confirmation'>Switch Confirmation</a> section for other
+confirmation options.  What happens after the confirmation action
+depends on which <i>Switch Quantize</i> parameter value was selected.
+If the value was <i>Confirm</i> the switch will happen immediately.  If the
+value was <i>Confirm Subcycle</i>, <i>Confirm Cycle</i>, or 
+<i>Confirm Loop</i> the loop enters <i>Switch</i> mode and waits
+for the next quantization point before switching.</p>
+<p>Note that while you in either <i>Confirm</i> or <i>Switch</i> 
+mode many functions will behave differently than they normally do.
+This is sometimes referred to as the "switch quantization period" 
+and by some older EDP users as "lame duck period".  This is described
+in detail later in the <a href='#Switch and Confirm Modes'>Switch and Confirm Modes</a> section.</p>
+<a name='Switch Confirmation'>
+<h2 class=sec2>16.2 Switch Confirmation</h2>
+</a>
+<p>If you have <a href='#Switch Quantize'>Switch Quantize</a> set to any of values
+beginning with the word "Confirm" you must execute another function to
+cancel the confirmation mode and proceed with the loop switch.  The
+default function for canceling confirmation mode is <i>Confirm</i>.
+This function has no other use besides switch confirmation.  If you
+try to execute it when the loop is not in <i>Confirm</i> mode it
+will have no effect.</p>
+<p>You may not want to assign one of the precious buttons on your foot
+controller to the <i>Confirm</i> function since it is normally
+useless.  It is possible to select other functions that will behave as
+a switch confirmation action by setting the global parameter <i>Switch
+Confirmation Functions</i>.  In the <i>Global Parameters</i> window,
+select the <i>Functions</i> tab and locate the item selector
+labeled <i>Switch Confirmation Functions</i>.  Select the functions
+you want to use for confirmation and move them to the right.</p>
+<p>If you are familiar with the EDP, you may want to use
+the <i>Undo</i> function for confirmation since that is the only way
+to do switch confirmation on the EDP.  We here at the labs don't like
+using <i>Undo</i> for confirmation because it makes it impossible to
+cancel the loop switch or remove "stacked" functions.  We recommend
+one of the following functions that are often assigned to a footswitch
+button but are not often used during the 
+<a href='#Switch and Confirm Modes'>switch quantization period</a>.</p>
+<ul>
+<li>Realign</li>
+<li>Redo</li>
+<li>Replace</li>
+<li>Reset</li>
+<li>Retrigger</li>
+<li>Reverse</li>
+<li>Speed</li>
+<li>Substitute</li>
+</ul>
+<p>If is recommended that you do not select one of the following
+functions since these have special behavior during the switch
+quantization period.  If you do not need the special behavior you can
+use them as confirmation functions but review the <a href='#Switch and Confirm Modes'>Switch and
+Confirm Modes</a> section to make sure you will not need them.</p>
+<ul>
+<li>Record</li>
+<li>Overdub</li>
+<li>Multiply</li>
+<li>Insert</li>
+</ul>
+<a name='Switch and Confirm Modes'>
+<h2 class=sec2>16.3 Switch and Confirm Modes</h2>
+</a>
+<p>While a loop is in <i>Confirm</i> or <i>Switch</i> modes many
+functions will behave differently than they normally do.  This is
+sometimes referred to as the "switch quantization period" or by some
+older uses as the "lame duck period".</p>
+<p>Most functions you execute will simply be delayed until after the
+switch.  This is called <i>function stacking</i>.  In the user
+interface, you will see the function names stacking under the loop
+switch event marker.  This can be used to queue up interesting
+combinations of functions and have them all execute exactly at the
+same time after the switch.  For example, putting the next loop
+into <i>Reverse</i>, <i>Half Speed</i>, and
+<i>Substitute</i> modes all at once.</p>
+<p>Until the switch occurs you can use <i>Undo</i> to remove 
+stacked functions if you trigger the wrong one or decide you don't 
+want it.  Once you have removed all the stacked functions and you are
+left with only the switch event marker, using <i>Undo</i> will cancel
+the switch and leave you in the current loop.</p>
+<p><b>NOTE:</b> The EDP uses <i>Undo</i> as the switch confirmation
+action.  If you like this and have <i>Undo</i> set in the
+<i>Switch Confirmation Functions</i> global parameter, then you will not
+be able to use <i>Undo</i> to undo the stacked functions and cancel
+the switch when you are in <i>Confirm</i> mode.  You can however
+use <i>Undo</i> normally while in <i>Switch</i> mode.</p>
+<p>A few functions have special behavior when executed during the
+switch quantization period.</p>
+<ul>
+<li><b>Record</b> - forces the next loop to be rerecorded, even if it is not empty</li>
+<li><b>Overdub</b> - performs a <a href='#Sound Copy'>Sound Copy</a> if the next loop is empty</li>
+<li><b>Multiply</b> - performs a <a href='#Sound Copy'>Sound Copy</a> if the next loop is empty</li>
+<li><b>Insert</b> - performs a <a href='#Time Copy'>Time Copy</a> if the next loop is empty</li>
+</ul>
+<p>A <a href='#Sound Copy'>Sound Copy</a> creates an instant copy of the original
+loop in the next loop.  A <a href='#Time Copy'>Time Copy</a> creates a <i>clear</i>
+loop of the same size as the original loop, but does not copy over any
+of the audio content.  Both of these concepts are described in more
+detail later.</p>
+<p>The difference between <i>Overdub</i> and <i>Multiply</i> is what
+mode the loop will be left on after the sound copy.  When
+<i>Overdub</i> was stacked, the loop will always be left in <i>Overdub</i> 
+mode if a sound copy occurred.  If <i>Multiply</i> was stacked the loop will
+be left in the mode specified by the <i>Sound Copy Mode</i> preset parameter.</p>
+<a name='Empty Loop Action'>
+<h2 class=sec2>16.4 Empty Loop Action</h2>
+</a>
+<p>If you switch to a loop that is empty, the <i>Empty Loop Action</i>
+parameter will be used to determine what happens after the switch.  
+The possible values for <i>Empty Loop Action</i> are:</p>
+<ul>
+<li>None</li>
+<li>Record</li>
+<li>Copy</li>
+<li>Copy Timing</li>
+</ul>
+<p>When set to <i>None</i>,  no automatic action will be performed.
+The loop will be left in <i>Reset</i> mode.</p>
+<p>When set to <i>Record</i>, the loop will immediately
+enter <i>Record</i> mode after the switch. You can record as long as
+you like but you must remember to execute the <i>Record</i> function
+to end the recording.</p>
+<p>When set to <i>Copy</i> a <a href='#Sound Copy'>Sound Copy</a> will be made
+from the original loop into the new loop.</p>
+<p>When set to <i>Copy Timing</i> a <a href='#Time Copy'>Time Copy</a> will be made
+from the original loop into the new loop.</p>
+<p><i>Copy Timing</i> and less often <i>Copy Sound</i> are very useful
+because they let you creating synchronized loops that are exactly the
+same size or an exact multiple of a common factor.  See the
+<a href='synchronization.htm#Loop Sync'>Loop Sync</a>
+ section
+of the <i>Mobius Synchronization</i> manual for more information
+on creating synchronized loops.</p>
+<a name='Time Copy'>
+<h3 class=sec3>16.4.1 Time Copy</h3>
+</a>
+<p>When <i>Empty Loop Action</i> is set to <i>Copy Timing</i> and you
+switch to an empty loop, a new <i>clear</i> loop will be instantly
+created that is exactly the same size as the previous loop.  This is
+called a <i>Time Copy</i>.  Review the 
+<a href='starting.htm#Reset, Empty, Clear, and Silent'>Reset, Empty, Clear, and Silent</a>
+
+section of the <i>Getting Started</i> manual if you are not sure about
+the difference between "empty" and "clear".  A <i>clear</i> loop has a
+size and it can be played and modified, it just starts out with no
+audio content.</p>
+<p>In addition to copying the size, time copy will also copy the
+number of cycles.</p>
+<a name='Time Copy Mode'>
+<h4 class=sec4>16.4.1.1 Time Copy Mode</h4>
+</a>
+<p>When you first switch to a time copied loop, you will be placed in a mode
+defined by the <i>Time Copy Mode</i> preset parameter.  The possible
+values are:</p>
+<ul>
+<li><b>Play</b></li>
+<li><b>Overdub</b></li>
+<li><b>Multiply</b></li>
+<li><b>Insert</b></li>
+</ul>
+<p>The default value is <i>Insert</i>.</p>
+<p>When <i>Time Copy Mode</i> is set to <i>Play</i> the copied loop
+will simply start playing.  When set to any of the other values, it
+behaves as if that function were automatically executed immediately
+after the copy. You must then remember to execute that function again
+to cancel that mode.  For example, when <i>Time Copy Mode</i> is set
+to <i>Insert</i> you will immediately begin inserting into copied
+loop.  You must press the button for the <i>Insert</i> function when
+you are finished.</p>
+<p>The values available here are the same as those available
+for <a href='#Sound Copy Mode'>Sound Copy Mode</a>.  This means you can select <i>Multiply</i>
+but this is less useful after a time copy because there is no audio
+content to repeat so <i>Multiply</i> behaves almost the same
+as <i>Insert</i>.  The main reason to use <i>Multiply</i> here is if
+the source loop had several cycles and you wanted to immediately use
+"remultiply" to remove some of the cycles from the end.
+See <a href='#shortening'>Shortening The Loop</a> for more information on using
+the <i>Multiply</i> function to make the loop smaller.</p>
+<a name='Sound Copy'>
+<h3 class=sec3>16.4.2 Sound Copy</h3>
+</a>
+<p>When <i>Empty Loop Action</i> is set to <i>Copy</i> and you switch
+to an empty loop, the current loop will be instantly copied to the
+next loop.  This is called a <i>Sound Copy</i>.  From the listener's
+perspective, they won't know the copy happened, they will still be
+hearing the original loop.</p>
+<p>You may now begin changing the copied loop using <i>Overdub</i>,
+<i>Multiply</i> or any other function.  When you are finished
+modifying the copied loop you can use the same technique to create
+another loop, or you may switch back to the original loop.</p>
+<a name='Sound Copy Mode'>
+<h4 class=sec4>16.4.2.1 Sound Copy Mode</h4>
+</a>
+<p>When you first switch to a copied loop, you will be placed in a
+mode defined by the <i>Sound Copy Mode</i> preset parameter.  The
+possible values are:</p>
+<ul>
+<li><b>Play</b></li>
+<li><b>Overdub</b></li>
+<li><b>Multiply</b></li>
+<li><b>Insert</b></li>
+</ul>
+<p>The default value is <i>Multiply</i>.</p>
+<p>When <i>Sound Copy Mode</i> is set to <i>Play</i> the copied loop
+will simply start playing.  When set to any of the other values, it
+behaves as if that function were automatically executed immediately
+after the copy. You must then remember to execute that function again
+to cancel that mode.  For example, when <i>Sound Copy Mode</i> is set
+to <i>Multiply</i> you will immediately begin multiplying the copied
+loop.  You must press the button for the <i>Multiply</i> function when
+you are finished multiplying.</p>
+<p>Some people find it convenient to assign the <i>Play</i> function
+to a button.  <i>Play</i> is like a universal mode canceling function,
+if you are in any recording mode (<i>Record</i>, <i>Multiply</i>,
+<i>Insert</i> etc.) pressing <i>Play</i> will cancel that mode and return
+you to <i>Play</i> mode.  So after you have performed a loop copy you don't
+need to think about <i>Sound Copy Mode</i> and execute the corresponding
+function to end the mode, just use <i>Play</i> and it will cancel whatever
+mode you are in.</p>
+<a name='Switch Location'>
+<h2 class=sec2>16.5 Switch Location</h2>
+</a>
+<p>The <i>Switch Location</i> parameter determines where the playback
+position will be after you switch to another loop.  The possible values
+are:</p>
+<ul>
+<li><b>Follow</b> - keep the same location you had in the previous loop</li>
+<li><b>Restore</b> - restore the location the new loop had the last time it was playing</li>
+<li><b>Start</b> - start the new loop from the beginning</li>
+<li><b>Random</b> - move to a randomly chosen subcycle</li>
+</ul>
+<p>When using <i>Follow</i>, if the new loop is smaller than the
+current loop the playback position may need to be "wrapped" so that it 
+fits within the new loop.  For example if the current loop is 6 seconds
+long and you are currently at the start of second 5, then you switch
+to a loop that is 3 seconds long, the new loop location will be at
+the start of second 2.</p>
+<p>When using <i>Restore</i>, if the new loop has never been played the
+location will be at the start.  If you are using one of the methods
+to perform a sound copy or a timing copy (see <a href='#Empty Loop Action'>Empty Loop Action</a>) then
+the location will not be restored.</p>
+<p><i>Switch Location</i> only applies if the loop is not empty (in
+Reset mode).  If the loop is empty then the new location will always
+be at frame zero of the empty loop.</p>
+<a name='Switch Duration'>
+<h2 class=sec2>16.6 Switch Duration</h2>
+</a>
+<p>The <i>Switch Duration</i> parameter determines how long you will
+stay in the new loop after a switch.  This parameter is used by all
+switch functions except <i>Sustain Next Loop</i>, <i>Sustain Previous Loop</i>,
+<i>Retrigger</i>, and <i>Retrigger Once</i>.    The possible values are:</p>
+<ul>
+<li><b>Permanent</b> - stay in the new loop until it is manually changed</li>
+<li><b>Once</b> - play the new loop until the end, then automatically enter <i>Mute</i> mode</li>
+<li><b>Once Return</b> - play the new loop until the end, then automatically return to the previous loop</li>
+<li><b>Sustain</b> - play the new loop for as long as the function button is held down, then it automatically enter <i>Mute</i> mode</li>
+<li><b>Sustain Return</b> - play the new loop for as long as the function button is held down, then return to the previous loop</li>
+</ul>
+<p>The most common option is <i>Permanent</i>, you remain in the new
+loop until you change it with another loop switch function.</p>
+<p>The <i>Once</i> option when combined with a <a href='#Switch Location'>Switch
+Location</a> value of <i>Start</i> makes the loop triggering
+functions behave similar to a sampler.  The loop always starts playing
+from the beginning, plays once, then stops (enters mute mode).</p>
+<p>The <i>Sustain</i> option must be used with a switch function
+bound to a 
+<a href='starting.htm#Sustainable Trigger'>sustainable trigger</a>
+. 
+If you use a non-sustainable trigger then this will behave the same
+as <i>Permanent</i>, you will remain in the new loop but it will not
+enter <i>Mute</i> mode automatically.</p>
+<p>The <i>Sustain Return</i> option must also be used with a switch function
+bound to a 
+<a href='starting.htm#Sustainable Trigger'>sustainable trigger</a>
+. 
+If you use a non-sustainable trigger then this will behave the same
+as <i>Permanent</i>.</p>
+<p>Note that when <i>Switch Duration</i> is set to <i>Sustain
+Return</i> the <i>Next Loop</i> function behaves the same as
+the <i>Sustain Next Loop</i> function.  <i>Sustain Next Loop</i>,
+and <i>Sustain Previous Loop</i> will always return to the original
+loop when the sustain ends.  They ignore the <i>Switch Duration</i>
+parameter.</p>
+<p>The <i>Retrigger</i> and <i>Retrigger Once</i> functions ignore
+the <i>Switch Duration</i> parameter.  <i>Retrigger</i> always behaves
+as if <i>Switch Duration</i> was set to <i>Permanent</i> and
+<i>Retrigger Once</i> always behaves as if <i>Switch Duration</i>
+was set to <i>Once</i>.</p>
+<a name='Return Location'>
+<h2 class=sec2>16.7 Return Location</h2>
+</a>
+<p>If you switch to a loop with the <a href='#Switch Duration'>Switch Duration</a>
+parameter set to <i>Once Return</i> or <i>Sustain Return</i> you will
+eventually be automatically returned to the original loop unless you
+cancel the return.  The <i>Return Location</i> parameter determines
+where you will begin playing in the original loop.  The possible
+values are the same as the values for the <a href='#Switch Location'>Switch Location</a>
+parameter.</p>
+<ul>
+<li><b>Follow</b> - keep the same location you have in the current loop</li>
+<li><b>Restore</b> - restore the location the original loop had the last time it was playing</li>
+<li><b>Start</b> - start the original loop from the beginning</li>
+<li><b>Random</b> - move to a randomly chosen subcycle</li>
+</ul>
+<p>When using <i>Follow</i>, if the original loop is smaller than the
+current loop the playback position may need to be "wrapped" so that it
+fits within the new loop.  For example if the current loop is 6
+seconds long and you are currently at the start of second 5, then you
+return to a loop that is 3 seconds long, the new loop location will be
+at the start of second 2.</p>
+<a name='Switch State Transfer'>
+<h2 class=sec2>16.8 Switch State Transfer</h2>
+</a>
+<p>When you execute any of the loop switch functions, you can choose
+to have some of the current loop modes carried over to the next loop.
+This is controlled with a set of "transfer mode" preset parameters
+found under the <i>Loop Switch</i> tab.</p>
+<a name='Record Transfer'>
+<h3 class=sec3>16.8.1 Record Transfer</h3>
+</a>
+<p>The <i>Record Transfer</i> parameter determines whether
+the <i>Record</i> major mode will be carried over from the current
+loop to the next loop.  It has these possible values.</p>
+<ul>
+<li>Off - Record is not transferred</li>
+<li>Follow - Record is transferred</li>
+</ul>
+<p>When this parameter is set to <i>Follow</i>, if the current loop is
+in <i>Record</i> mode, after the switch the next loop will also
+automatically enter <i>Record</i> mode.  Note that this will happen
+whether or not the next loop is empty.  This option is useful if you
+want to record a set of loops all at once without stopping.  Start
+by executing the <i>Record</i> function to record the first loop.
+Then execute the <i>Next Loop</i> function to end the current recoding
+and immediately begin recording the next loop.</p>
+<p>When this parameter is set to <i>Off</i> and the current 
+loop is in <i>Record</i> mode, executing a switch function will finish
+the recording of the current loop then switch to the next loop.
+If the next loop is not empty it will simply start playing.  If the next
+loop is empty the <a href='#Empty Loop Action'>Empty Loop Action</a> parameter controls
+what will happen.</p>
+<a name='Overdub Transfer'>
+<h3 class=sec3>16.8.2 Overdub Transfer</h3>
+</a>
+<p>The <i>Overdub Transfer</i> parameter determines whether
+the <i>Overdub</i> minor mode will be carried over from the current
+loop to the next loop.  It has these possible values.</p>
+<ul>
+<li>Off - Overdub will be forced off in the next loop</li>
+<li>Follow - Overdub will be carried over from the current loop to the next loop</li>
+<li>Restore - Overdub will be restored to the state it had the last time the next loop was active</li>
+</ul>
+<p>The default value is <i>Off</i>.  If you like to leave overdub
+mode on all the time and control overdubbing by muting your instrument
+you may want to set this to <i>Follow</i> so you don't have to 
+reactivate overdub every time you switch loops.</p>
+<p>Setting this to <i>Restore</i> is relatively unusual because you
+usually care more about what the overdub state is now, not what it
+was in the past.</p>
+<a name='Reverse Transfer'>
+<h3 class=sec3>16.8.3 Reverse Transfer</h3>
+</a>
+<p>The <i>Reverse Transfer</i> parameter determines whether
+the <i>Reverse</i> minor will be carried over from the current
+loop to the next loop.  It has these possible values.</p>
+<ul>
+<li>Off - Reverse will be forced off in the next loop</li>
+<li>Follow - Reverse will be carried over from the current loop to the next loop</li>
+<li>Restore - Reverse will be restored to the state it had the last time the next loop was active</li>
+</ul>
+<p>The default value is <i>Off</i>.  If you think of reverse
+as a "global" option that should apply to all loops in a track then
+set this parameter to <i>Follow</i>.</p>
+<p>Setting this to <i>Restore</i> may be interesting if you want to have
+some loops that always play forward and some that always play 
+in reverse.</p>
+<a name='Rate Transfer'>
+<h3 class=sec3>16.8.4 Rate Transfer</h3>
+</a>
+<p>The <i>Rate Transfer</i> parameter determines whether the <i>Rate
+Shift</i> minor mode will be carried over from the current loop to the
+next loop.  This applies to shift applied by the various <i>Rate</i>
+functions as well as the <i>Half Speed</i> function.
+It has these possible values.</p>
+<ul>
+<li>Off - Rate shift will be off in the next loop</li>
+<li>Follow - Rate shift will be carried over from the current loop to the next loop</li>
+<li>Restore - Rate shift will be restored to the state it had the last time the next loop was active</li>
+</ul>
+<p>The default value is <i>Off</i>.  If you think of rate shift
+as a "global" option that should apply to all loops in a track then
+set this parameter to <i>Follow</i>.</p>
+<p>Setting this to <i>Restore</i> may be interesting if you want to have
+loops that always play at different rates.</p>
+<a name='Pitch Transfer'>
+<h3 class=sec3>16.8.5 Pitch Transfer</h3>
+</a>
+<p>The <i>Pitch Transfer</i> parameter determines whether the <i>Pitch
+Shift</i> minor mode will be carried over from the current loop to the
+next loop.  It has these possible values.</p>
+<ul>
+<li>Off - Pitch shift will be off in the next loop</li>
+<li>Follow - Pitch shift will be carried over from the current loop to the next loop</li>
+<li>Restore - Pitch shift will be restored to the state it had the last time the next loop was active</li>
+</ul>
+<p>The default value is <i>Off</i>.  If you think of pitch shift as a
+"global" option that should apply to all loops in a track then set
+this parameter to <i>Follow</i>.</p>
+<p>Setting this to <i>Restore</i> may be interesting if you want to
+have loops that always play with different amounts of pitch shift.</p>
+<a name='Switch Velocity Sensitive'>
+<h2 class=sec2>16.9 Switch Velocity Sensitive</h2>
+</a>
+<p>The <i>Switch Velocity Sensitive</i> parameter can be used to
+automatically adjust the track output level during a loop switch.
+This can only be used if the loop switch function is bound to a
+MIDI <i>Note</i> message that can carry velocity information.  When
+this parameter is checked, the output level of the track will be set
+to the velocity value of the MIDI note that triggered the loop switch
+function.  If a loop switch function is not bound to a MIDI <i>Note</i>
+message, then this parameter will be ignored.</p>
+<p>This is most often used with the 8 numbered <i>Loop X</i> functions
+bound to adjacent keys on a MIDI keyboard, or to velocity sensitive
+pads on a control surface.  Once loops have been recorded you can then
+"play" the loops by triggering them from the MIDI device making them
+softer of louder depending on how hard you hit the key/pad.  If you
+also set the <a href='#Switch Location'>Switch Location</a> parameter to <i>Start</i> and the
+<a href='#Switch Duration'>Switch Duration</a> to <i>Once</i> it will behave like a
+simple velocity sensitive sample player.</p>
+<a name='Retrigger and Retrigger Once'>
+<h2 class=sec2>16.10 Retrigger and Retrigger Once</h2>
+</a>
+<p>The <i>Retrigger</i> and <i>Retrigger Once</i> functions are
+considered to be loop switch functions but they are unusual because
+they do not change the loop.  They always restart the current loop
+from the beginning and stay in the current loop.</p>
+<p>They will obey the <a href='#Switch Quantize'>Switch Quantize</a> parameter so that you
+can stack functions to be executed after the retrigger.  But they
+ignore the <a href='#Switch Location'>Switch Location</a> and <a href='#Switch Duration'>Switch Duration</a>
+parameters.</p>
+<p>Since the loop does not change all of the 
+<a href='#Switch State Transfer'>Switch State Transfer</a> parameters are also ignored.</p>
+<a name='jumping'>
+<h1 class=sec1>17 Changing Playback Position</h1>
+</a>
+<a name='StartPoint'>
+<h1 class=sec1>18 Changing The Start Point</h1>
+</a>
+<a name='Long Presses'>
+<h1 class=sec1>19 Long Presses</h1>
+</a>
+<a name='Managing Tracks'>
+<h1 class=sec1>20 Managing Tracks</h1>
+</a>
+<a name='Bounce Recording'>
+<h1 class=sec1>21 Bounce Recording</h1>
+</a>
+<p>The <i>Bounce</i> function allows you to capture the
+output of several tracks, mix them together, and copy the result into
+an empty track.  This is similar to the <i>bounce down</i> mixing
+technique used with a multi track recorder.</p>
+<p>When the Bounce Record function is first called, it begins
+capturing the output of any track that is currently playing.  The
+track output is mixed together "post fader" so the Output Level
+control of each track may be used to control the track mix
+in the recording.</p>
+<p>When Bounce Record is called a second time, the captured and mixed
+track output is copied to the first empty track (from the left).  The
+source tracks are then immediately muted, and the new track immediately
+begins playing.  This new track contains a single loop with the
+captured output from the other tracks.  This loop can then be
+manipulated as usual.</p>
+<p>Any number of bounce recordings can be made, but you must have at
+least one empty track.  If there are no empty tracks when the
+second Bounce Record is called, the recording is thrown away.</p>
+<p>Note that bounce recording is a special kind of "global mode" that
+is not related to any particular track or loop.  While you are bounce
+recording, you can be manipulating tracks and loops in any way,
+including recording new loops, multiplying, overdubbing, triggering,
+and rate shifting.  Mobius is recording the entire process.</p>
+<p>Bounce recording can be especially useful with the Retrigger, Rate
+Shift and Pitch Shift functions.  Once a loop is created, you can
+play a chord progression using Rate Shift or Pitch Shift, record the
+result of that performance, and bounce this into a new track to serve
+as a background loop.</p>
+<p>The timing of the bounce recording may be controlled with the
+<i>Bounce Quantize</i> parameter.  Bounce quantization is not affected
+by the <i>Quantize</i> parameter that is used with other functions.
+This is because bounce quantization is almost always set to <i>Loop</i>
+or <i>Cycle</i>, but you may not wish to use this same quantization
+for the functions that build the loop.</p>
+<a name='capture'>
+<h1 class=sec1>22 Capturing a Performance</h1>
+</a>
+<a name='sendingMidi'>
+<h1 class=sec1>23 Sending MIDI Messages</h1>
+</a>
+<a name='Host Control With MIDI Loopback Devices'>
+<h1 class=sec1>24 Host Control With MIDI Loopback Devices</h1>
+</a>
+</body>
+</html>

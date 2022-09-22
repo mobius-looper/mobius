@@ -1,0 +1,207 @@
+----------------------------------------------------------------------
+AU Sync
+----------------------------------------------------------------------
+
+
+
+
+
+----------------------------------------------------------------------
+
+Re: Getting exact playout time of audio buffers in GarageBand
+
+Subject: Re: Getting exact playout time of audio buffers in GarageBand
+From: William Stewart <email@hidden>
+Date: Thu, 7 Jul 2005 15:03:47 -0700
+Delivered-to: email@hidden
+Delivered-to: email@hidden
+And to add to what both Jeff and Chris have described.
+
+In Tiger we added a new property:
+
+kAudioUnitProperty_PresentationLatency
+
+As this is a new property, I doubt that any host is supporting this at this time, but it is designed to deal with the exact problem that you are having.
+
+The following are the comments as they appear in <AudioUnit/ AudioUnitProperties.h>
+
+kAudioUnitProperty_PresentationLatency (Input/ Output Scope) Float64 (write only)
+This property is set by a host to describe to the AU the presentation latency of both
+any of its input and/or output audio data.
+It describes this latency in seconds. A value of zero means either no latency
+or an unknown latency.
+
+This is a write only property because the host is telling the AU the latency of both the data it provides
+it for input and the latency from getting the data from the AU until it is presented.
+
+The property is should be set on each active input and output bus (Scope/Element pair). For example, an
+AU with multiple outputs will have the output data it produces processed by different AU's, etc before it
+is mixed and presented. Thus, in this case, each output element could have a different presentation latency.
+
+This should not be confused with the Latency property, where the AU describes to the host any processing latency
+it introduces between its input and its output.
+
+For input:
+Describes how long ago the audio given to an AU was acquired. For instance, when reading from
+a file to the first AU, then its input presentation latency will be zero. When processing audio input from a
+device, then this initial input latency will be the presentation latency of the device itself
+- , the device's safety offset and latency.
+
+The next AU's (connected to that first AU) input presentation latency will be the input presentation latency
+of the first AU, plus the processing latency (as expressed by kAudioUnitProperty_Latency) of the first AU.
+
+For output:
+Describes how long before the output audio of an AU is to be presented. For instance, when writing
+to a file, then the last AU's output presentation latency will be zero. When the audio from that AU
+is to be played to an AudioDevice, then that initial presentation latency will be the latency of
+the device itself - which is the I/O buffer size, and the device's safety offset and latency
+
+The previous AU's (connected to this last AU) output presenation latency will be that initial presentation
+latency plus the processing latency (as expressed by kAudioUnitProperty_Latency) of the last AU.
+
+Thus, for a given AU anywhere within a mixing graph, the input and output presentation latencies describe
+to that AU how long from the moment of generation it will take for its input to arrive, and how long
+it will take for its output to be presented.
+
+An example usage for this property is for an AU to provide accurate metering for its output,
+where it is generating output that will be presented at some future time (as presented by the output
+presentation latency time) to the user.
+
+
+Bill
+
+----------------------------------------------------------------------
+
+
+
+Christian,
+
+It is not up to the AudioUnit to decide when the rendered audio gets sent to the hardware, the host will do this.
+When the host calls MusicDeviceMIDIEvent() a sample offset (inOffsetSampleFrame argument) is passed
+in and the AudioUnit is expected to render notes according to this exact sample offset, based off the next
+buffer to be rendered when AudioUnitRender() is called.  The host is able to get sample accurate placement
+of notes this way on a continuous stream of rendered audio.  It is up to the host to compute accurate and relevant
+sample offsets based on incoming MIDI events or sequences.  The context in which your AudioUnit is called
+can vary.  It might be called in the realtime audio I/O thread, a secondary "feeder" thread, or in an offline context,
+so your AudioUnit should not try to hack around with the timestamps and instead should just honor the sample
+offsets.
+
+Chris Rogers
+Core Audio
+Apple Computer
+
+----------------------------------------------------------------------
+
+
+I thought I'd better chime in here about the specific example given below:
+
+On Mar 2, 2005, at 3:37 PM, Pavol Markovic wrote:
+
+Hi Ralph,
+
+here's example. The only relevant place/frequency to call callback functions is in render/process thread, max once per render call (you don't have to call it for every single frame, because the number of frames to render are passed as parameter into render method/function)
+
+... somewhere in render/process call stack...
+
+  bool haveSamplePos = false;
+  Float64 outCurrentSampleInTimeLine;
+
+if ( IsTransportStateProcSafe() && mHostCallbackInfo.transportStateProc )
+{
+OSStatus result = mHostCallbackInfo.transportStateProc(mHostCallbackInfo.hostUserData, NULL, NULL, &outCurrentSampleInTimeLine, NULL, NULL, NULL);
+
+Unfortunately, neither Logic nor Digital Performer currently give valid information for the outCurrentSampleInTimeLine parameter. You'll just get the value 0 for that. Other information should be valid, but the time in samples may not be, depending on the host. This has been a major headache for our software. It's strange that the callback was implemented, but the proper setting of one of the parameters left out. For hosts that give us 0 in that parameter, we're relying on the (potentially much less reliable) time information in the Render call.
+
+    if ( result == noErr )
+    {
+      haveSamplePos = true;
+    }
+  }
+
+Please note, that currently very few hosts provide this info and older versions of GarageBand and Logic may crash when tryin' to call this. Find e-mail thread "TransportState Logic/GarageBand workaround" in archives (8/18/2004).
+
+
+Quite so. But you'd think that once a host (esp. one that Apple owns!) added the callback support, they'd add *all* the information it purports to support. (The only AU host I have that supports the time info is Metro. At least *someone* got it right! :-))
+
+-Howard
+
+----------------------------------------------------------------------
+
+
+I would just suggest modifying that to have this somewhere earlier:
+
+static bool gIsTransportStateProcSafe = IsTransportStateProcSafe();
+
+and then check on the value of gIsTransportStateProcSafe rather than calling IsTransportStateProcSafe() during every render call. Not that it's necessarily so expensive, but the call does involve some bundle finding, plist parsing, etc. And the result is never going to change throughout the life of the process.
+
+Marc
+
+
+----------------------------------------------------------------------
+
+Hi Ralph,
+
+here's example. The only relevant place/frequency to call callback functions is in render/process thread, max once per render call (you don't have to call it for every single frame, because the number of frames to render are passed as parameter into render method/function)
+
+... somewhere in render/process call stack...
+
+  bool haveSamplePos = false;
+  Float64 outCurrentSampleInTimeLine;
+
+if ( IsTransportStateProcSafe() && mHostCallbackInfo.transportStateProc )
+{
+OSStatus result = mHostCallbackInfo.transportStateProc(mHostCallbackInfo.hostUserData, NULL, NULL, &outCurrentSampleInTimeLine, NULL, NULL, NULL);
+if ( result == noErr )
+{
+haveSamplePos = true;
+}
+}
+
+Please note, that currently very few hosts provide this info and older versions of GarageBand and Logic may crash when tryin' to call this. Find e-mail thread "TransportState Logic/GarageBand workaround" in archives (8/18/2004).
+
+Best,
+Pavol Markovic
+
+
+
+----------------------------------------------------------------------
+
+Just to clarify,
+
+Howard is looking to get the absolute position, in samples, in the sequencer time line (in VstTimeInfo, this is samplePos).
+
+Previously, in VST-AU, we used the time counter passed to Render(). This works fine for most things, but it seems that it's actually a count from whenever the audio engine was last started / flushed (usually happens at transport start), rather than an absolute position in the song. So, it's OK when the song is started from the beginning, but not when it's started at some other point, as Howard's plug needs to track the absolute song position in samples.
+
+outCurrentSampleInTimeLine should be providing that, but is it? Also, why is it a Float64, when sample position at the start of a render call is always an integer? Simply because it's possible to represent numbers >2x10^31 without a special datatype, or some other reason?
+
+Also, Howard:- bear in mind that CallHostTransportState is a new part of the AU API, and isn't supported on all hosts (which is why we check the variable transportSafe first). So, code based on this call should work fine on Logic 7 and DP4.5, but that code will never be reached if the host is older.
+
+Regards,
+      Angus.
+
+
+----------------------------------------------------------------------
+
+Howard Moon wrote:
+
+Hi all,
+
+I'm working on a vst plug-in "wrapped" as an Audio Unit, and am implementing the CallHostTransportState time & transport information in the AUBase class. I've looked at some code from a couple sources (including DestroyFX), but don't see anyone setting the particular information I need. In particular, I need to set the VstTimeInfo member, samplePos. The third parameter of the CallHostTransportState function (outCurrentSampleInTimeLine) seems to be what I need, but I need to know how to convert it to the samplePos that my wrapped vst plug-in needs. Simply assigning it doesn't seem to be working, perhaps because that parameter needs to be converted and/or offset somehow? In any case, if you've got any advice as to how I can compute samplePos from the outCurrentSampleInTimeLine parameter, I'd appreciate hearing it.
+
+Thanks much,
+Howard
+----------------------------------------------------------------------
+
+
+MIDI Events
+ci
+The Music Device to receive the event.
+inStatus
+The MIDI message's status byte.
+inData1
+The MIDI message's first data byte (if any).
+inData2
+The MIDI message's second data byte (if any).
+inOffsetSampleFrame
+If non-zero, specifies that the event should be rendered at this sample frame offset within the next buffer to be rendered. Otherwise, the event will occur at the beginning of the next buffer.
+

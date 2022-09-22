@@ -1,0 +1,552 @@
+
+
+----------------------------------------------------------------------
+Scripts
+----------------------------------------------------------------------
+
+Scripts need to expose values as ranged and centered.  So:
+
+   set pan 0
+   set pan -64
+   set pan 63
+
+The problem with this though is if the range is varialbe we don't know what
+the min/max values are.  For pan it is relatively obvious that 64 is center.  
+Not so for rate shift with 8192.
+ 
+   set pan center
+   set pan min
+   set pan max
+
+This will conflict with variables.  Could have a sort of implicit binding context
+for these three when you enter "pan" scope but it would have to be a runtime
+binding.  This would be clearer:
+
+   set pan pan.center
+
+New concept, global objects.  Sort of like Javascript.  If you reference one
+without a path "pan" you get a default property "pan.value".  But the "pan"
+symbol actually resolves to an object with several properties.  In theory
+this would be the way to script change the range, center, etc.
+
+This could be used for lots of things:
+ 
+    loop.frame
+    track.loop
+    tracks[1].loop
+
+Instead of:
+
+   for 2
+     set output 127
+   next
+
+just do:
+
+    set tracks[1].output 127
+
+Have the zero or one problem.  Values have so far always been zero based
+which is reasonable since "set output 0" is obviously off but "set output 1"
+looks like it still has some level.
+
+Track and loop numbers have been mixed.  Usually they are 1 based:
+
+   for 1,2,3
+   Loop 1
+   Track 2
+
+Not following this for expresssions even though to programmers they
+look like array indexes will be confusing to programmers, but not so much
+to others. array[1] still looks like the first element of the array.
+
+----------------------------------------------------------------------
+MIDI
+----------------------------------------------------------------------
+
+Continuous Controller
+
+CC values are scaled to the range of the target control.  Usually
+this will be one-to-one since the built-in controls will still
+have a 128 step range, but RateShift will be higher.
+
+Pitch Bend
+
+Handle like CCs scaling range to the control range.  Knowing this
+is PB though implies an 8192 center.  So if the target declares a 
+center offset, then 8192 will map to that offset.
+
+Note
+
+Unless there are binding arguments control goes to it's maximum range
+when pressed.  Then falls back to zero when released?
+
+Program
+
+Control goes to center value if there is one, otherwise maximum value.
+Could generalize and give controls a default value.
+
+
+So CCs can be used with RateShift we need to use binding arguments
+to define where "center" is.  Call this "origin" instead?
+
+So if the origin is defined as 64, then a value of 64 maps to the
+center of the controller range, or 8192.  If the origin is 127
+it means that the rate can only go down.  With a pedal all the way
+up there is no shift.  If the origin is zero, the rate can only go up
+and pedal toe up means no shift.  The origin could be defaulted to 
+64 if the control specifies a center offset.  That's the way
+Pitch Bend works.  But Pitch Bend is special because it can 
+be used for parameters and things that don't have a zero offset,
+and for those 8192 should always select the thing in the center of the range.
+
+So when PB is bound to Output Level, 8192 is output 64.
+
+Binding Argument
+
+   origin 64
+   center 64
+   center 0
+   center 127
+
+I think I like "center".  
+
+Issue: compressed or truncated ranges
+
+Assume RateShift range of 16384 with an 8192 center.  When binding
+a MIDI CC, 0 will map to 0, 64 will map to 8192, and 127 will map to 16384.
+
+Each CC step represents an increase of 16384 / 128 = 128 RateShift units.
+
+Now assume a center offset of 0 instead of 64.  There are now 8192 RateShift
+units in range of the CC so each CC step represents an increase of 64 units.
+This gives us a finer range of control when shifting up.
+
+Now assume a center offset of 32.  We have 32 CC steps to represent RateShift
+units from 0 to 1892 and 96 CC steps to represent RateShift units
+from 1982 to 16384.  There are two ways to approach this:
+
+  Compress Ranges
+
+     The bottom of the RateShift range is divided by 32 so each CC step 
+     represents 512 Rate Shift units.
+
+     The top of the RateShift range is divided by 96 so each CC step 
+     represents 170.7 RateShift units.
+
+     This will make the up shift smoother than normal, but starting at
+     about 25% of the pedal range going down the shift down will be
+     much more rapid.
+
+     Setting center offset to 1 will result in a smooth up shift from
+     1 to 120 but if the CC drops to zero there will be a sudden
+     rate shift down to the minimum value.  This might be interesting
+     as an effect, but I'll have to hear it.
+
+  Truncate Ranges
+
+     Each CC step always represents 128 RateUnit steps.  If the center
+     offset is less than 64 then you won't be able to reach the minimum
+     unit going down, and you'll overflow the maximum unit going up.  
+
+     This doesn't feel particularly useful.
+
+  Reflect Range
+
+     Pick the higher of the two ranges and make the step be the same
+     size on each side of center.  You will get a smooth shift to the
+     maximum on one side, but the other will not reach the maximum.  
+     The size of the steps will be the same so the overall slope
+     will be smooth.
+
+     This feels musically useful, more useful than Truncate Ranges.
+
+There are really two thigns in play here:
+
+   Center Offset
+   Step Size
+   
+Step size can be held constant, or it can vary depending on Center Offset.
+
+A "sensitivity" parameter can also adjust the step size.  When 1.0 step
+size is calculated as normal.  When sensitivity is .5 step size is half normal.
+This can be used to get CC's to behave with a finer grain and reduced range.
+
+Sensitivity will have the same effect as changine the internal range
+of the parameter.  For example if RateShift has an internal range of 1 octave
+divided among 16384 steps.  Setting the internal range to 1/2 octave will make
+it twice as smooth.  The effect is not exactly the same, there are still
+128 internal steps per CC step but the difference between the internal
+steps can be reduced.
+
+Hmm...still not as good as a more direct setting of a floating value
+rather than working through the internal steps.
+
+----------------------------------------------------------------------
+Min, Max, Range
+----------------------------------------------------------------------
+
+Internally it is best if rate shift is represented as an integer
+with zero meaning "no shift" positive meaning upward shift and
+negative meaning downward shift.  This is consistent with how
+rateSemitone works.  It is also nice because we don't have to care
+about the internal range of values.  Making this be 8192 to represent
+"no shift" requires a specific range.
+
+This is also the best way to show this in the UI.  We're already doing
+that for rateSemitone.  This is also the most logical way to 
+reference this value in scripts:
+
+   set rateShift 0
+
+Since the UI, scripts, and Track all need to deal with rates this
+way it would be easiest if that was the range supported by the Controller.
+This makes RateController unuusal because it can have a negative minimum value
+with a zero center rather than a zero minimum value.
+
+VST, AU, and OSC bindings will need to adjust but they already do.
+
+Think about whether we really need both min and max.  All we need is a range and
+a "split" boolean.  Controls are always zero to something.  They may
+be -X to X.  But they will never be -X to Y, they are always balanced.
+
+UIs could use this "pan" type to display something visual when
+you reach the center and give it a larger sweet spot?
+
+Look at Components/TrackStrip, too much type specific logic, make
+it use the Parameter or Control.
+
+Min/max are okay but most (all) parameters assume that will be 
+the value set and returned.  In other words it isn't just
+a display hit with the actual values beginning at zero.  If
+the min is 1 then the Action value must be 1.  We can't standardize
+on parameters having only a range, they need min/max.
+
+----------------------------------------------------------------------
+ISSUES
+----------------------------------------------------------------------
+
+Controller/Parameter
+
+Scripts can only resolve to parameters not Controllers.  So even though
+we have a Controller named "rateShift" you can't set it in a script.
+This is one reason why we have this silly overlap between Parameters
+and Controllers.
+
+One thing the Parameter framework gives us is saving values in 
+the Setup, similar to the way we do it for Preset parameters.
+
+There isn't anything very interesting in Controller after the
+addition of the Action model.  There were some things for group/global
+replication but Action should be doing that now.  There was support
+for InterfaceMode that has been taken out.
+
+There was some support for group relative output levels, but this
+was broken after Action.  See OutputController::setValue and the
+"relative" flag.  We could add that to Action but it would need
+to be handled by Mobius::doControl.
+
+I don't see a reason why we can't get rid of the Controller concept
+internally and just treat it as a Parameter. It would simplify a lot.
+If any special behavior is needed we can give the parameter TYPE_CONTROL.
+This is nice too because we could in theory have some controls that
+have global scope and Parameter already has scoping concepts.
+
+I would however like to keep the Control concept in the UI.  They
+do look and behave differently than other parameters, though as
+we add more track parameters not so much...
+
+Center Width: Think about a configurable center width so when using physical
+controls you don't have to land exactly on CC 64, there can for example
+be a 10 step "snap" range on either side.  This makes it easier to find the 
+center but reduces increases the step size which in turn reduces smoothness.
+
+Should Rate Shift be saved on the Loop for RateTransfer=Restore or
+just the semitone rates?  It's odd because it's a control not
+function initiated state.
+
+---
+
+The system objects related to rate shift currently are:
+
+   Controller: rateShift
+
+   Variable: rate, scaleRate
+      the old names for rateSemitone
+
+   Variable: rateSemitone
+      new, what I'd like to standardize on
+
+   Variable: rawRate
+      the actual floating point rate in effect
+
+   Function: RateNormal
+   Function: RateUp
+   Function: RateDown
+   Function: RateNext
+   Function: RatePrev
+   Function: RateShift (ranged)
+
+   MobiusMode: RateShiftMode
+    - used only by UI to get the names to display, overkill
+
+
+What I'd like:
+
+   Controller: rateSemitone
+   Controller: rateShift
+      - two new controls/parameters that can be exposed
+        as plugin parameters, bound to CCs or PitchBend,
+        and displayed as knobs in the UI
+          - would be nice to add the concept of a "display string"
+            so we can render the values in the UI with symbols
+            rather than just numbers, could be extended to other paramters 
+            like plugin hosts do...
+
+      - Like input and output, these these have the desired values, the
+        actual values in effect might be deferred due to smoothing?
+        For these I don't think so.
+
+      - These differ from functions in that they are NOT quantized. 
+        - Most minor mode functions could use the same treatment?
+
+          
+Unfortunately there are sure to be a lot of scripts that use "rate" 
+to mean "rateSemitone".  Between the two that's the most likely 
+use of the abbreviation in scripts.  
+
+I think "scaleRate" is relatively new and not used in old scripts, 
+ignore that one.  
+
+Variable:rawRate is okay.  
+
+As soon as we make rate and rateShift parameters then they will be
+settable in scripts which they weren't before.  You can do:
+
+    set rate rate + 1
+
+Instead of
+
+    RateShift rate + 1
+
+
+The RateShift function is now awkward because we have a control parameter
+that can do the same thing.  The nice things about having this as a function
+are:
+
+   - spread concept to auto bind to a range of MIDI keys
+   - quantization
+
+I really don't want the notion of quantized parameters or controls.  They happen
+immediately.  If you need them quantized write a script.
+
+   TODO: scripts should have an !event declaration to declare something
+   to show in the event list.  Are we using !name now?
+
+
+!! Need quantization control over the Rate functions.  Don't always want
+these quantized.  Handler like OverdubQuantized?
+
+Instead of the concept of a spread function, we could extend this to 
+include note binding of parameters.
+
+   - given a parameter with range 0 to 127
+   - when binding a NOTE, the note corresponds to value 0
+     and succecive notes up set higher values
+   - a bindingOrigin definition on the Parameter determines
+     if the first note is at the beginning of the range or 
+     somewhere in the middle
+   - also need a binding argument to set the origin
+
+   - useful primarily for RateSemitone, RateShift, and PitchSemitone
+     - could be used for input, output, feedback, and other controls 
+       but much less likely since these aren't obviously associated
+       with notes
+     - could be used for parameters, but unlikelyu
+
+Currently if you bind a note to a Parameter it will set it to zero
+unless you have binding arguments.  The problem with using notes
+is the the auto spreading through the BindingResolver.  We could assume
+that anything bound to a ranged value is spread but this could get messy
+and hard to explain.  Better to make this a binding arg like "spread" ?
+
+   spread
+     - note origin is the bottom of the range and bindings spread above
+
+   spread up
+     - same as spread
+
+   spread down
+     - note origin is the top of the range and bindings spread below
+
+   spread center
+     - note origin is in the center of the range
+       and bindings spread above and below
+
+Spread only applies to MIDI notes.  Program changes would almost always
+be meaningless.
+
+So this binding:
+
+   Function:RateShift note 60
+
+would be the same as
+
+   Parameter:Rate note 60 spread center
+
+Since the latter is hard to explain there is still some value in having
+spread functions.  But if we made "read center" the default for a note
+binding it would be easy for everything.   Less obvious for input, output,
+and feedback levels through where the expectation would be either 0 or 127
+at the origin note.
+
+---
+
+I'm not liking the rateShift control which does a fine rate while
+the RateShift function does a semitone shift.  
+
+If we let RateShift and the rate parameter mean "semitone" shift.  
+Then what is continuous rate shift:
+
+   rateFine
+   rateSweep
+   rateSmooth
+   rateContinuous
+   rateCoarse vs rateFine
+   rateSlight
+   rateBend
+
+I'm liking this
+
+   rateStep
+      - the degree of the rate scale, usually chromatic but
+        could allow loading of microtonal scales
+
+      - rateDegree maybe more accurate but geekier
+
+      - slight confusion with the step in a rate sequence?
+
+   rateBend
+   
+      - implies a gradual change, not quantized to a scale degree
+      - pitch bend works the same way
+
+Shift is really too vague now.  The function could be RateStep?
+
+Hmm, "shift" is a general term that can be applied to both step
+shift and bends.  But to most people it means step shift.  
+
+
+But when you hear "pitch shift" you think of slight gradual changes
+that are not quantized to notes.
+
+So "bend" and "shift" are nearly synomous.  Bend implies more of a 
+gradual continus change due to the association with the Pitch Bend controller.
+Words that imply scale degrees:
+
+   step
+   degree
+   semitone
+   note
+   key
+   interval
+
+Wikipedia: the distanced between two succesive notes in a scale is a "scale step".
+
+Conclusion:
+
+  rateStep
+    - the amount of shift expressed as a chromatic (or custom scale) step 
+      either positive or negative
+
+  ratebend
+    - the amount of shift expressed as a continuous range of rates around
+        a center, either positive or negative
+
+
+Functions:
+
+   Function: RateNormal
+   Function: RateUp
+   Function: RateDown
+   Function: RateNext
+   Function: RatePrev
+   Function: RateShift (ranged)
+
+RateNormal would imply that it cancels all form of shift, both step and bend,
+but it currently only cancels step.
+
+Up and Down change step shift.
+
+Next and Prev change step shift as defined in the rate sequence.  There is
+noway to tell where you are.  Possibly a variable or track parameter
+
+   rateSequenceStep
+
+
+RateShift actually does a step shift, so a more logical name would be RateStep.
+
+Then we could have a RateBend function that does the same and could be quantized.
+
+
+---
+
+Should HalfSpeed be just a shorthand for RateStep?  Confusing if we want
+to be compatible with EDP.  Seems useful enough to keep.  But then
+it would follow that we need a DoubleSpeed.  What this really is is:
+
+   rateOctave
+
+rateOctave -1 is the same as halfspeed.  A coarser grained step.  
+So shift granules
+
+   octave
+   step
+   bend
+
+Supporting a HalfSpeed mode and an octave shift at the same time is awkward.
+
+Halfspeed would need to toggle a .5 change to the CURRENT octave shift?
+Or just force the octave shift to -1.   Status to display:
+
+   Rate Octave -1
+   Halfspeed
+
+
+----------------------------------------------------------------------
+Rescheduling After Rate
+----------------------------------------------------------------------
+
+The main complication with rate shift is that it changes the effective
+latency and any events schedule with absolute time.
+
+For example "Wait subcycle" is independent of rate, but "Wait msec 1000"
+needs to wait exactly one second regardless of rate.  Absolute waits
+could be accomplished by advancing them between each interrupt event 
+based on the absolute time between those events rather than prescheduling
+them for a specific frame.  Alternately, every time we change rate we look 
+forward to events in the future that were scheduled with an absolute time and
+reschedule them.  This is a problem only for scripts so it isn't a big one.
+
+The bigger problem is latency adjustments.  Primary events are almost always 
+scheduled for a specific frame, then a secondary JumpPlayEvent is added
+based on latency.  Previously scheduled JumpPlayEvents need to move
+every time the rate is changed.
+
+It would be easier if we did not have to schedule latency compensation events
+on exact frames and instead continually evaluate their ideal frame relative
+to the current rate at the time the event is within range of a buffer.  
+
+I think this can all be encapsulated in EventManager but we have to look
+closely at every JumpPlayEvent to make sure there aren't any special cases.
+
+It would also be nice if we could skip JumpPlayEvent scheduling completely.
+Let the Event/Function have a flag indiciating that it needs latency 
+compensation and auto generate the event when we need it.  This would avoid some
+of the weird event parentage logic, but need to check carefully how this
+is working with primary events sharing the same play event.  Stacked events
+can effect each other so we would only auto-gen one event for a stack.  This
+could actually be a lot more elegant way to handle this than sharing.
+
+Will need a "started" flag on the parent event to correspond to jump->processed.
+This would be a good time to take out all the complicated undo logic.
+

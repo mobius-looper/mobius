@@ -1,0 +1,33 @@
+
+Would the best way to do this to install a handler for
+kEventWindowFocusRelinquish and return noErr if I don't want to relinquish,
+or will that not stop it, in which case I guess I could post an event to my
+floater to get it to reset the focus.
+
+No, the return value is ignored; FocusRelinquish is just a notification that you've already lost the focus.
+
+Do you want the document window to have an active titlebar in this case, or should it also appear inactive as a cue to the user that keyboard focus is on the floating window? If the latter, then you could just set the activation scope of the floating window to kWindowActivationScopeAll, and then focus would remain on it as long as it was the frontmost window.
+
+-------
+
+
+There are a variety of different solutions, depending on what versions of CarbonLib or X you need to support. The most modern solution would be to use SetWindowGroup( myPopUpWindow, GetWindowGroupOfClass
+( kFloatingWindowClass ) ) to move the popup window into the window group for floating windows. That will allow the popup to be z-ordered at the top of the floating window section of the window list. That solution will work on 10.0 and later, and on CarbonLib 1.4 and later.
+
+
+-------
+
+
+
+Is there anything that can be done for earlier versions of CarbonLib?
+
+I'd recommend creating the borderless window using this code instead:
+
+WindowDefSpec defSpec;
+defSpec.defType = kWindowDefProcID;
+defSpec.u.procID = kWindowPlainDialogProc;
+CreateCustomWindow( &defSpec, kWindowFloatingClass, ... );
+
+What this will do is create your dialog window in the floating window group initially. Actually, this is a perfectly good fix on all systems; there's really no need to use SetWindowGroup on any OS release if you use this technique instead.
+
+-eric

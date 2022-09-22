@@ -1,0 +1,11 @@
+!name GMuteToggle
+
+For all
+  Jump PLayinSync mode = Mute
+  Variable SaveSwitchQuant = $switchQuant
+  set switchQuant off
+  Retrigger
+  set switchQuant $SaveSwitchQuant
+  Label PlayinSync
+  Mute
+Next

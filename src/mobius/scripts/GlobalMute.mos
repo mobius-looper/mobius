@@ -1,0 +1,61 @@
+#
+# GlobalMuteToggle
+#
+# Mute any tracks that are currently playing, but keep any 
+# currently muted tracks.  Remember the mute state for each
+# track in a track variable.  The second time, unmute only those
+# tracks that were not muted the first time.
+#
+
+# Name to display in the button and binding lists
+!name Global Mute Toggle
+
+# global variable to hold global mute state
+Variable GlobalMuteState global
+
+# track variable to hold the track's last mode
+Variable LastTrackMode
+
+# test global mute state and turn mute on or off
+Jump TurnMuteOff GlobalMuteState = on
+
+# iterate over each track saving the mode and muting
+For all
+  # save the current track mode
+  set LastTrackMode $mode
+
+  # ignore if already muted
+  Jump AlreadyMuted mode = mute
+
+  # ignore in reset, Mute in Reset selects the
+  # previous preset
+  Jump AlreadyMuted mode = reset
+
+  # turn mute on
+  Mute
+
+  Label AlreadyMuted
+Next
+
+set GlobalMuteState on
+set CustomMode "Global Mute"
+end
+
+# Jump here if GlobalMuteState was already on.
+# Iterate over each track unmuting tracks that were previouly
+# not muted.
+Label TurnMuteOff
+
+For all
+  Jump PreviouslyMuted LastTrackMode = mute
+  Jump PreviouslyMuted LastTrackMode = reset
+
+  # turn mute off
+  Mute
+
+  Label PreviouslyMuted
+Next
+
+set GlobalMuteState off
+set CustomMode
+end

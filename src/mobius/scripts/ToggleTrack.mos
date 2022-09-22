@@ -1,0 +1,20 @@
+!name ToggleTrack
+Jump Track1 Track = 1
+Jump Track2 Track = 2
+end
+
+Label Track1
+Mute
+for 2
+  Mute
+next
+TrackSelect2
+end
+
+Label Track2
+Mute
+for 1
+  Mute
+next
+TrackSelect1
+end

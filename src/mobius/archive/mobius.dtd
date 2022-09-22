@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  An ancient attempt at a DTD, this has never been used
+  for parsing and has not been kept up to date.
+-->
+
+<!ELEMENT UIConfig ((Location | Button | Palette)*)>
+<!ATTLIST UIConfig
+  name CDATA #IMPLIED
+  program CDATA #IMPLIED
+  savePath CDATA #IMPLIED
+  loadPath CDATA #IMPLIED
+>
+
+<!ELEMENT Location EMPTY>
+<!ATTLIST Location
+  name CDATA #IMPLIED
+  x CDATA #IMPLIED
+  y CDATA #IMPLIED
+>
+
+<!ELEMENT Button EMPTY>
+<!ATTLIST Button
+  command CDATA #IMPLIED
+>
+
+<!ELEMENT Palette ((Color)*)>
+<!ELEMENT Color EMPTY>
+<!ATTLIST Color
+  name CDATA #IMPLIED
+  rgb CDATA #IMPLIED
+>
+
+<!ELEMENT MobiusConfig ((Preset | MidiConfig)*)>
+<!ATTLIST MobiusConfig
+  midiInput CDATA #IMPLIED
+  midiOutput CDATA #IMPLIED
+  midiMode (normal | slave | both | off) 'normal'
+  audioInput CDATA #IMPLIED
+  audioOutput CDATA #IMPLIED
+  preset CDATA #IMPLIED
+  midiConfig CDATA #IMPLIED
+  noiseFloor CDATA #IMPLIED
+  inputLatency CDATA #IMPLIED
+  outputLatency CDATA #IMPLIED
+  fadeFrames CDATA #IMPLIED
+  tracePrintLevel CDATA #IMPLIED
+  traceDebugLevel CDATA #IMPLIED
+>
+
+<!ELEMENT EDPSlave EMPTY>
+<!ATTLIST EDPSlave
+  midiInput CDATA #IMPLIED
+  midiOutput CDATA #IMPLIED
+  channel CDATA #IMPLIED
+  base CDATA #IMPLIED
+  controllers (true | false) 'false'
+>
+
+<!ELEMENT Preset EMPTY>
+<!ATTLIST Preset
+  name CDATA #IMPLIED
+  program CDATA #IMPLIED
+  8thsPerCycle CDATA #IMPLIED
+  autoRecord (true | false) 'false'
+  channel CDATA #IMPLIED
+  feedback CDATA #IMPLIED
+  multiplyMode (traditional | overdub) 'traditional'
+  insertMode (rehearse | replace | substitute | halfspeed | reverse | insert | sustain) 'rehearse'
+  interfaceMode (loop | delay | expert | stutter | out | in | replace | flip) 'loop'
+  loopCopy (off | timing | sound) 'off'
+  moreLoops CDATA #IMPLIED  
+  muteMode (continuous | start | pause) 'continuous'
+  overdubMode (toggle | sustain | quantize) 'toggle'
+  overflowMode (stop | play) 'stop'
+  quantize (off | cycle | subCycle | loop) 'off'
+  recordMode (toggle | sustain | safe) 'toggle'
+  roundMode (true | false) 'false'
+  samplerStyle (run | start | once | attack) 'run'
+  switchQuant (off | confirm | cycle | confirmCycle | loop | confirmLoop | subCycle | confirmSubCycle) 'off'
+  sync (off | out | outUserStart | in) 'out'
+  threshold CDATA #IMPLIED
+  velocity CDATA #IMPLIED
+>
+
+<!ELEMENT MidiConfig ((Command*))>
+<!ATTLIST MidiConfig
+  name CDATA #IMPLIED
+  program CDATA #IMPLIED
+  volumeController CDATA #IMPLIED
+  feedbackController CDATA #IMPLIED
+>
+
+<!ELEMENT Command EMPTY>
+<!ATTLIST Command
+  name CDATA #IMPLIED
+  status (control | note | program | realtime) 'control'
+  value CDATA #IMPLIED
+>

@@ -1,0 +1,2145 @@
+<!DOCTYPE document>
+<document>
+<heading>
+<title>Mobius Scripting</title>
+<date>June, 2008</date>
+</heading>
+
+<TOC/>
+
+<section><title>Introduction</title>
+
+<p>Mobius provides a powerful feature called <i>scripts</i> that can
+be used to add new functions or customize the behavior of Mobius to
+match your looping style.  Some of the things that can be done with
+scripts are:</p>
+
+<ul>
+<li>Perform several functions at exactly the same time 
+with a single button press.</li>
+<li>Perform different functions from the same button, depending 
+on the current loop mode.</li>
+<li>Perform a function while temporarily changing one or more of the 
+preset parameters.</li>
+<li>Perform a sequence of functions at musically useful intervals.</li>
+<li>Automate gradual changes to output level and pan.</li>
+</ul>
+
+<p>A script is simply a text file that can be created with any text
+editor.  The contents of the script file are statements in a language
+called the <i>Mobius Scripting Language</i>.  Once the script files
+have been written, they are <i>registered</i> so that Mobius knows
+their names and locations.  Once a script file has been registered, it
+may be assigned one or more <i>triggers</i> which can be MIDI events,
+computer keyboard presses, or buttons in the Mobius window.</p>
+
+<p>When a trigger for a script is received, the statements in the
+script are performed.  This process is called <i>running the
+script</i>, <i>executing the script</i>, or <i>calling the
+script</i>.</p>
+
+<p>The following is an example of a simple script:</p>
+
+<example>
+  Wait loop
+  Reverse
+  HalfSpeed
+</example>
+
+<p>When this script is called, it will first wait until the loop
+reaches it's start point, then perform a <i>Reverse</i> and 
+<i>HalfSpeed</i> function at exactly the same time.</p>
+
+</section> <!-- Introduction -->
+
+<section><title>Writing Scripts</title>
+
+<p>You may write a script using any text editor, though if you are not
+in the United States you need to be careful about the character
+encoding used for the script file.  Scripts must be written in an
+8-bit character encoding that is compatible with ASCII.</p>
+
+<p>If the editor you use gives you an option, do not select "Unicode"
+or "Unicode big endian".  You must use ASCII, UTF-8, ANSI, Text, or
+MSDOS-Text.</p>
+
+<p>There have been reports of files not loading property with the ANSI
+or UTF-8 encoding, so if you are having problems with scripts
+try saving them in the simplest text encoding available.</p>
+
+<p>A script file may have any name, but it is recommended that they
+have the extension <b>.mos</b>.  Scripts may be stored in any
+directory, though many people prefer to keep them in the
+<i>scripts</i> directory under the Mobius installation directory.</p>
+
+<p>Once you have written a script it must be <i>registered</i>, which
+is just a way of telling Mobius where the scripts are.  To register
+a script pull down the <b>Configuration</b> menu and select
+the <b>Scripts...</b> item, the <b>Script Registration</b> window
+will pop up.  The large panel in the center contains the full path
+names of all registered script files.</p>
+
+<p>To register a new script click the <b>Add</b> button.  A file
+browser will pop up, navigate to the directory containing the script,
+highight the script file, and click <b>Open</b>.  The file will be
+added to the end of the script list.  To delete a registered script,
+click on it so that it becomes highlighted, then click the
+<b>Delete</b> button.  The script will be removed from the list.</p>
+
+<p>The order in which the script files appear in the Script
+Registration window will also be the order in which they are listed in
+the trigger binding windows (more on these later).  If you want to
+change the order of the scripts, click on one so that it is
+highlighted, then click on the <b>Move Up</b> or <b>Move Down</b>
+buttons to move it to the desired location.</p>
+
+<p><b>NOTE:</b> The ability to order scripts will be removed in future
+releases.  Insteaed, scripts will be presented in alphabetical
+order.</p>
+
+</section> <!-- Writing Scripts -->
+
+<section><title>Running Scripts</title>
+
+<p>Scripts are run in response to a <b>trigger</b>, the available
+trigger types are MIDI events, computer keyboard keys, and buttons in 
+the Mobius window.  The association of a script to a trigger
+is called <b>binding</b>.</p>
+
+<p>Once a script has been registered it will appear in the function
+list of all binding windows just as if it were a built-in
+function.</p>
+
+<p>To bind a script to a MIDI event, pull down the <b>Configuration</b>
+menu and select the <b>MIDI Control...</b> item.  The script names
+will appear at the top of the list of function names in the panel
+on the left.</p>
+
+<p>To bind a script to a keyboard event, select the
+<b>Keyboard Control...</b> item from the Configuration menu.  The script
+names will appear at the top of the list of function names in the
+panel on the left.</p>
+
+<p>To bind a script to a button in the UI, select the <b>Buttons...</b>
+item from the Configuration menu.  The script names will appear
+at the top of the list of function names.</p>
+
+<p>See the <i>Mobius User's Manual</i> for more information on how
+to use the binding windows.</p>
+
+<p>You may bind all three of the trigger types to the same script, but
+only one trigger of a given type may be bound to a script.  In other
+words, a script may have a MIDI event trigger, a key trigger, and a button
+trigger, but it cannot have two MIDI triggers or two key triggers.  This
+restriction will be removed in future versions of Mobius.</p>
+
+<p>Some trigger types support both a <i>down</i> and an <i>up</i>
+trigger.  When used with the <ref>!sustain</ref> declaration this
+allows the script to have different behavior when you press and
+release a footswitch or key.  Triggers of this type are called
+<i>momentary triggers</i>.  The momentary triggers are:</p>
+
+<ul>
+<li>MIDI Note events</li>
+<li>MIDI Continuous Controller events</li>
+<li>Mobius UI buttons</li>
+<li>Computer keyboard keys</li>
+<li>Mouse buttons</li>
+</ul>
+
+<p>When binding a script to a MIDI event, consider whether you want
+to use advanced script features such as <ref>Sustain Scripts</ref>
+or <ref>Long Press Scripts</ref>.  These features require that the
+script be bound to a momentary trigger.</p>
+
+</section> <!-- Running Scripts -->
+
+<section><title>Debugging Scripts</title>
+
+<p>TODO: Introduce DBWIN32, Echo, Message, Prompt...</p>
+
+</section>
+
+<!--==================================================================
+
+  Basics
+
+====================================================================-->
+
+<section><title>Script Language Basics</title>
+
+<p>A script is simply a text file containing lines of characters with
+each line ending with a return character.  Each line of text will be
+one of the following types:</p>
+
+<ul>
+<li>Empty</li>
+<li>Comment</li>
+<li>Declaration</li>
+<li>Statement</li>
+</ul>
+
+<p>For a given line of text the first <i>significant</i> character
+determines the type.  The first significant character is anything
+other than <i>white space</i> characters such as spaces and tabs.</p>
+
+<p>If all the characters on a line are <i>white space</i>, the line is
+<i>empty</i> and is ignored.</p>
+
+<p>If the first significant character is a <b>#</b> the line
+is a <i>comment</i> and the entire line is ignored.</p>
+
+<p>If the first significant character is a <b>!</b> the line
+is a <i>declaration</i>.</p>
+
+<p>If the first significant character is anything other than whitespace,
+<b>#</b> or <b>!</b> the line is a <i>statement</i>.</p>
+
+<p>Declarations are used to give Mobius information about how
+to run the script.  They can appear anywhere in the script but
+it is recommended that you put them all at the top.  The order of
+declarations is not important.</p>
+
+<p>Statements are performed in the order they are written in the script.</p>
+
+<p>This example script shows each of the line types.</p>
+
+<example>
+  # Do the NextLoop function after turning off switch quantize
+  !name Next Loop Now
+
+  set switchQuant off
+  NextLoop
+</example>
+
+
+<p>The first line begins with a # so it is a comment.  You may put
+comments anywhere in the script to explain what the script is doing.</p>
+
+<p>The second line is a declaration, in this example it is specifying
+the name you want to display in the binding windows.</p>
+
+<p>The third line is empty.</p>
+
+<p>The fourth and fifth lines are statements.</p>
+
+<p><b>GEEK NOTE:</b>If you have experience with other programming
+languages, note that Mobius does not support multi-line statements
+(with or without a line continuation character) and there are no block
+comments.  If you don't know what that means don't worry.  All that
+you need to remember is that a comment, declaration or statement must
+all be one one line.</p>
+
+<section><title>Anatomy of a Statement</title>
+
+<p>A statement always begins with a <i>Keyword</i> which is a sequence
+of letters and numbers with no spaces.  Example keywords are
+<i>Record</i>, <i>set</i>, and <i>if</i>.  When we talk about
+statements, we usually identify them by their keyword, such as <i>"a
+Record statement"</i> or <i>"an if statement"</i>.</p>
+
+<p>After the keyword, a statement may contain <i>arguments</i> or an
+<i>expression</i>.  An argument is a single word or number without
+spaces, an expression is a complex sequence of characters that may
+include spaces.  Consider this example:</p>
+
+<example>
+  Variable nextLoop
+</example>
+
+<p>In the previous example the keyword is <i>Variable</i> so this
+is called a <i>Variable statement</i>.  After the keyword
+is the argument <i>nextLoop</i>.  The meaning of the argument
+depends on the keyword, in this case the argument is the name
+of a script variable.  Here is a more complex example:</p>
+
+<example>
+  Variable nextLoop loopNumber + 2
+</example>
+
+<p>In a <i>Variable</i> statement, all of the characters after
+the name argument are an expression.  This expression is used
+to calculate the initial value of the variable.  In this example
+<i>loopNumber + 2</i> is the expression.</p>
+
+<p>Some statements have no arguments, a few have more than one argument.
+But a statement can have at most one expression.  When a statement
+has both an argument and an expression, the argument comes first.</p>
+
+</section> <!-- Anatomy -->
+
+<section><title>Intrinsic and Function Statements</title>
+
+<p>There are two categories of statements: those that are an intrinsic
+part of the scripting language, and those that perform Mobius looping
+functions.  Examples of intrinsic statements are <i>variable</i>,
+<i>set</i>, <i>if</i> and <i>for</i>.  Examples of function statements 
+are <i>Record</i>, <i>Overdub</i> and <i>NextLoop</i>.</p>
+
+<p>The intrinsic statements do not change often, but new function
+statements are added frequently.  All the Mobius functions that are
+visible in the binding windows may be used in scripts, as well as
+several special functions that are available only in scripts.
+Whenever we talk about new functions being added to Mobius,
+you can assume that these functions can also be used in scripts.</p>
+
+<p><b>GEEK NOTE:</b>If you are familiar with the C language, you can
+think of intrinsic statements as being similar to the core C language,
+and the functions being similar to the "stdio.h" standard library.</p>
+
+<p>All of the intrinsic statements will be described in detail 
+because you need to understand all of them to write complex scripts.</p>
+
+<p>The names of the function statements will be listed for reference,
+but we will not describe in detail what each function does.  The
+Mobius User's Manual will have a full description of how each function
+behaves.  Unless stated otherwise, you can assume that a function
+called from a script will behave the same as a function triggered with
+a MIDI event.</p>
+
+</section> <!-- Intrinsics and Functions -->
+
+<section><title>Case Insensitivity</title>
+
+<p>The script language is <i>case insensntive</i> which means that
+upper case and lower case letters are considered to be the same.  In
+the examples you will see, function names usually start with a capital
+letter and and variable names start with a lowercase letter.  When a
+function or variable name contains more than one word, a
+capitalization style called "camel case" is used which means that the
+initial letter of adjacent words are upper case and the other letters
+are in lower case.  For example:</p>
+
+<example>
+  NextLoop
+  Variable saveQuantize quantize
+</example>
+
+<p>You do not have to follow this style, "NextLoop", "nextloop",
+"NEXTLOOP", or "NeXtLoOp" all mean the same thing.</p>
+
+<p>The examples use inconsistent case for the intrinsic statement
+keywords.  Keywords whose names are found in common programming
+languages are usually written in all lower case, these include
+<i>if</i>, <i>else</i>, <i>for</i>, and <i>while</i>.</p>
+
+<p>Other keywords are usually capatilized, such as
+<i>Variable</i>, <i>Label</i>, and <i>Jump</i>.</p>
+
+<p><b>NOTE:</b> Case insensitivity is not fully support in 1.30g.
+These bugs have been reported.</p>
+
+<ul>
+<li>Looping function names must begin with an upper case letter</li>
+<li>parameter values must start with a lower case letter and be written
+in camel case, exactly as documented in this manual.</li>
+</ul>
+
+<p>Until these are fixed, you are advised to follow the capitalization
+style used in this manual.</p>
+
+</section> <!-- Case Insensitivity -->
+
+<section><title>Parameters and Variables</title>
+
+<p>TODO: The difference between parameters and variables, User defined
+and system variables, variable scoping...</p>
+
+</section>
+
+<section><title>Statement Blocks and Indentation</title>
+
+<p>A few special statements are used to define a range of statements
+that may be executed more than once or not at all.   The range
+of statements is called a <i>statement block</i>, the statements
+that surround the block are called <i>block start</i> and <i>block end</i>
+statements.</p>
+
+<p>The following table lists the block start statements with their
+corresponding block end statements:</p>
+
+<table>
+<tr><th>Start</th><th>End</th></tr>
+<tr><td>if</td><td>endif, else, elseif</td></tr>
+<tr><td>elseif</td><td>endif, else, elseif</td></tr>
+<tr><td>else</td><td>endif</td></tr>
+<tr><td>for</td><td>next</td></tr>
+<tr><td>repeat</td><td>next</td></tr>
+<tr><td>while</td><td>next</td></tr>
+<tr><td>proc</td><td>endproc</td></tr>
+</table>
+
+<p>The details of each statement will be described in sections below.
+The important thing to know now is that statement blocks must have
+both a start and end statement and you must use the end statement that
+is appropriate for the start statement.</p>
+
+<p>Here are some examples of statement blocks:</p>
+
+<example>
+  if mode = record
+    Overdub
+  else
+    Reset
+  endif
+
+  for *
+    set 8thsPerCycle 8
+  next
+</example>
+
+<p>To help make it clear where the statement blocks start and end
+it is recommended that you use <i>indentation</i> for the lines
+inside the block.  Most examples use 2 spaces of indentation but
+you can use any number.  Indentation is not required but it makes
+the script easier to read and understand.</p>
+
+<p>Block statements may be <i>nested</i> which means that a block may
+appear inside another block.  Here is a simple example of a nested block:</p>
+
+<example>
+  if mode = record
+    if track = 1
+      Overdub
+    endif
+  endif
+</example>
+
+<p>When blocks are nested, the block start statement is paired with
+the nearest block end statement that follows.  It is strongly
+recommended that you use indentation to make it clear which block
+start and end statements belong together.</p>
+
+</section> <!-- Blocks and Indentation -->
+
+<section><title>The Mysterious $</title>
+
+<p>The <b>$</b> is a special character used to indicate that the word
+that follows it is a parameter or variable reference.  In early versions of
+Mobius the $ was required for references, now it is optional
+in most places.  Since it appears in example scripts it tends to keep
+reappearing even though it is not required.</p>
+
+<p>The $ is required in a few statements where it is not clear whether
+a word is a reference, or simply a word.  These statements are:</p>
+
+<ul>
+<li>Echo</li>
+<li>Message</li>
+<li>Prompt</li>
+</ul>
+
+<p>These functions all use the remainder of the line following the
+keyword as a message to be displayed to the user.  The message will be
+displayed exactly as it is written.  For example the statement
+"Message mode" will display the string "mode".  If you want to display
+a message with the name of the current looping mode, you reference
+the <i>mode</i> variable with a $.</p>
+
+<example>
+  Message The current mode is $mode
+</example>
+
+</section>
+
+</section> <!-- Script Language Basics -->
+
+<section><title>Script Execution Environment</title>
+
+<p><b>NOTE</b>: This section introduces concepts that may be difficult
+for people without programming experience to understand.  It is not
+necessary to understand this section in order to write scripts.  But
+if you write scripts using the <ref>Wait</ref> statement, the
+<ref>!sustain</ref> declaration, or the <ref>!multiclick</ref>
+declaration, this section will help you understand how to get the most
+power out of these features.</p>
+
+<p>Scripts are similar to a re-entrant function in a multi-threaded
+programming language.  These concepts should be familar to most
+programmers, but they basically mean that there can be several copies
+of the script running at the same time.</p>
+
+<p>Each of the calls for the down transition, up
+transition, and sustain notifications are done in an environment
+similar to a thread.  If you use Wait statements, it is possible for
+the script to be active in more than one thread.  By using variables,
+the threads can communicate with each other.</p>
+
+<p>More here...</p>
+
+</section> <!-- Execution Environment -->
+
+<!--==================================================================
+
+  Reference
+
+====================================================================-->
+
+<section><title>Script Language Reference</title>
+
+<section><title>Declarations</title>
+
+<p>In this section we will describe the declarations.  These may
+appear anywhere in the script though there are usually written
+at the top.</p>
+
+<section><title>!autoload</title>
+
+<p>Normally scripts are loaded once when Mobius is first started and
+remain in memory for as long as Mobius runs.  If you make changes to
+the script file they will not be used by Mobius until you shut it down
+and restart it.</p>
+
+<p>The <i>!autoload</i> declation will cause the script file to be
+reloaded from the file system every time the script is called.  
+This is very useful when writing new scripts, it allows you to keep
+Mobius running while you make changes the script.</p>
+
+<p>After the script is working properly you should remove this
+declaration.  Realoading the script causes a small delay before
+the script is run.  This is undesireable of you are trying to 
+run the script at exact locations in the loop.</p>
+
+</section> <!-- autoload -->
+
+<section><title>!controller</title>
+
+<p>This option identifies the script as a <i>controller</i> script.
+When the script is triggered by a MIDI continuous controller, the
+script is called whenever the value of the controller changes.</p>
+
+<p>Normally, when a script is bound to a MIDI continuous controller,
+it is assumed that the controller events are being sent by a momentary
+switch rather than an expression pedal.  Momentary switches typically
+send a non-zero controller value when the switch is pressed and a zero
+value when the switch is released.  Mobius will only call the script
+when it receives a non-zero value which means the switch has been 
+pressed.  It will not call the script when it receives a zero value
+after the switch is released, unless you also use the <ref>!sustain</ref>
+declaration.</p>
+
+<p>This behavior is usually not desired when the continuous controller
+values are being generated by an expression pedal.  With an expression
+pedal, you want the script called whenever the position of the pedal
+changes, even when it goes to zero.</p>
+
+<p>Controller scripts are most often used to change the track controls:</p>
+
+<ul>
+<li>Input Level</li>
+<li>Output Level</li>
+<li>Feedback</li>
+<li>Secondary Feedback</li>
+<li>Pan</li>
+</ul>
+
+<p>They may also be used to change rate and pitch shift for each track,
+and change preset paramters such as <i>8ths Per Cycle</i>.</p>
+
+<p>Including the <i>!controller</i> declaration in a script will
+<b>disable</b> the following directives if they also appear in the script.</p>
+
+<ul>
+<li>!quantize</li>
+<li>!switchQuantize</li>
+<li>!sustain</li>
+<li>!multiclick</li>
+<li>!spread</li>
+</ul>
+
+<p>Here is an example script that implements a basic volume control.
+The behavior of this scipt is exactly the same as binding
+a controller to the Output Level control.</p>
+
+<example>
+  !name Output Level
+  !controller
+  set outut midiValue
+</example>
+
+<p>The <i>!controller</i> declaration tells Mobius that this script
+should be called every time the value of the trigger changes.  The
+word <i>midiValue</i> is a reference to a system variable that will
+contain the value of the continuous controller that triggered this
+script. The value will be from 0 to 127.</p>
+
+<p>Here is a more interesting example that sets the output level
+to the inverse of the controller value. When the controller
+value is zero (toe up) the output level will be 127, when the
+controller value is 127 (toe down) the output level will be zero.</p>
+
+<example>
+  !name Backwards Output Level
+  !controller
+  set output 127 - midiValue
+</example>
+
+<p>If you are familar with the EDP, controller scripts give you the
+ability to implement "flip mode" as well as many other combinations of
+Mobius controls that change in response to a single expression pedal.</p>
+
+
+</section> <!-- !controller -->
+
+<section><title>!focuslock</title>
+
+<p>Normally scripts do not obey focus lock or track groups.  When a
+script is run it will only run in the selected track.</p>
+
+<p>The <i>!focuslock</i> declaration makes the script sensitive to
+track focus lock and track groups.  The script will be run
+simultaneously in all focused locked tracks, and all tracks in the
+same track group as the selected track.</p>
+
+<p>This option is useful for simple scripts that only operate
+on one track.  It makes the script behave more like the built-in
+Mobius functions.  If however the script uses the <ref>for</ref> 
+statement to operate on several tracks, you normally never
+use the <i>!focuslock</i> option.</p>
+
+</section> <!-- focuslock -->
+
+<section><title>!multiclick</title>
+
+<p>This option allows the script to change behavior if you trigger it
+more than once within a short time.  Some people think of this as
+"double clicking".  A script that uses this option is called a
+<i>multi-click script</i>.</p>
+
+<p>To create a multi-click script, add this declaration:</p>
+
+<example>
+  !multiclick 2000
+</example>
+
+<p>The numeric argument is the <i>trigger expiration period</i>
+expressed as a number of milliseconds.  The default expiration period
+is 1000 (1 second) so you only need to include this argument if you
+want a value other than 1000.  In this example the expiration
+period will be two seconds.</p>
+
+<p>Next add <i>Label</i> statements to the script with these names:</p>
+
+<ul>
+<li><b>click</b> - run whenever the script is triggered again 
+before the expiration period</li>
+<li><b>endClick</b> - run when the trigger expiration period is reached</li>
+</ul>
+
+<p>As always this is best described with an example:</p>
+
+<example>
+  !name Multiclick Test
+
+  # the default value is 1000 milliseconds, override to 2 seconds
+  !multiclick 2000
+
+  Message Starting Click Test
+  end
+
+  Label click
+  Message Click $clickCount
+  end
+
+  Label endClick
+  Message Ending Click Test
+  end
+</example>
+
+<p>When you trigger the script for the first time, the message
+"Starting Click Test" is displayed. If you trigger the script again
+within 2 seconds, a message is displayed showing the number of
+triggers that have been received from the system variable
+<i>clickCount</i>.  If you wait 2 seconds without triggering the
+script again, the "Ending Click Test" message is displayed and the
+script is finished.</p>
+
+<p>Each time the script is triggered, the expiration period starts
+over at 2 seconds.</p>
+
+<p><b>GEEK Note</b>: As with sustain scripts, the click and endClick
+labels are called in different threads so the script may be active
+in more than one thread.  Variables can be used for communication 
+between threads.</p>
+
+</section> <!-- multiclick -->
+
+<section><title>!name</title>
+
+<p>This declaration is used to specify the name to be displayed for
+this script in the binding windows.  If no name is specified, the file
+name is displayed.  It is very common to use a <i>!name</i>
+declaration since the script file name is not always meaningful to the
+user.</p>
+
+<p>The name consists of all characters after the space after the
+<i>!name</i> declaration up to the end of the line.  In the following
+example, the name displayed for the script would be "Auto Record 4".</p>
+
+<example>
+  !name Auto Record 4
+</example>
+
+<p>Like all declarations, <i>!name</i> may appear anywhere in the file
+but it is usually the first line to make it easier to see.</p>
+
+</section> <!-- name  -->
+
+<section><title>!quantize</title>
+
+<p>Normally scripts will not obey the quantize parameter in the preset.
+When a script is triggered it will be run immeidately.</p>
+
+<p>The <i>!quantize</i> option makes the script sensitive to the
+quantize parameter, it will be run at the next quantization point.  
+This makes scripts behave more like built-in functions.</p>
+
+<p>This option is most often used when the script does not begin
+with a <i>Wait</i> statement.</p>
+
+<p>TODO: The difference between !quantize and Wait...</p>
+
+</section> <!-- quantize -->
+
+<section><title>!spread</title>
+
+<p>This option will allow the script to be triggered by a range of
+MIDI note, controller, or program events.  The script is bound
+once to the center of the range, but will then be triggered by
+events on either side of the center.</p>
+
+<p>This option is usually used when binding to MIDI note events.  If
+the script is bound to middle C, then notes on either side of middle C
+will automatically be bound to the script.  This is similar to the way
+the <i>Pitch Shift</i> and <i>Rate Shift</i> functions behave.  The
+note you select in the Binding window is the center note, pressing
+notes below the center lowers the pitch/rate, pressing notes above the
+center raises the pitch/rate.</p>
+
+<p>For spread scripts, the script will be run when any note in the
+range is pressed.  The script can then reference internal variables to
+determine which note within the range was pressed.</p>
+
+<p>While it will be most common to bind spread scripts to MIDI notes
+so that you can "play" the script chromatically, you can also bind the
+script to a range of program changes or continuous controller
+values.</p>
+
+<p>To define a spread script, include this declaration at the top:</p>
+
+<example>
+  !spread
+</example>
+
+<p>The default range of the spread is 48 values on either side of the
+center, which for notes means 4 octaves up and 4 octaves down. You can
+reduce this range by adding an argument to the <i>!spread</i> declaration:</p>
+
+<example>
+  !spread 4
+</example>
+
+<p>In the previous example, the 4 argument means that the spread will
+be 4 notes on either side of the center.</p>
+
+<p>If there is a conflict between a spread script binding and another
+function that is bound to a specific note, the other function will
+have priority.  For example, if a spread script with a range of 12 is
+bound to note 64, the script will be called whenever notes 52 to 76
+are received. If you also have the Record function bound to note 59,
+that note will call the Record function, but all the notes around it
+will still call the script.  You can think of this like "holes being
+punched" into the spread range.  You usually do not want to have a
+spread range conflict with another function binding so it is best to
+move the center notes so they do not overlap. If you want to have a
+large spread range, you will need to use different MIDI channels for
+the center notes.</p>
+
+<p>When a spread script is called, the following system variables may
+be referenced to adjust the behavior of the script:</p>
+
+
+<ul>
+<li><b>triggerOffset</b> - A positive or negative integer representing the
+relative position of the trigger from the center of the range.</li>
+</ul>
+
+<p>For example, if you bind the script to note 64 and you press note
+63, the value of <i>triggerOffset</i> will be -1. If you press note 64
+<i>triggerOffset</i> will be 0, and if you press note 65 <i>triggerOffset</i>
+will be 1.</p>
+
+<p>The built-in Rate Shift function could be implemented with
+this script:</p>
+
+<example>
+  !name Script Rate Shift
+  !spread 12
+  RateShift triggerOffset
+</example>
+
+<p>Spread scripts are probably most useful with the RateShift, PitchShift,
+LoopTrigger, and TrackSelect functions. But you could also use them
+to set the ouput level or 8thsPerCycle parameter.</p>
+
+<p>As a more interesting example, if you always want to rate shift
+in octave intervals, you could use this script and you would only need
+to reserve 9 notes:</p>
+
+<example>
+  !name Rate Shift Octaves
+  !spread 4
+  RateShift triggerOffset * 12
+</example>
+
+</section> <!-- !spread -->
+
+<section><title>!sustain</title>
+
+<p>This option will cause the script to be run on both the <i>down</i>
+and <i>up</i> transitions of the trigger.  A down transition happens when
+you press a switch, an up transition happens when you release a switch.
+A script that uses this option is called a <i>sustain script</i>.  Sustain
+scripts are effective only if you are using a momentary trigger such
+as a MIDI note, MIDI continuous controller, or computer keyboard key.</p>
+
+<p>To use MIDI notes, the trigger device must send a <i>Note On</i>
+event when a switch is pressed and a <i>Note Off</i> event when the
+switch is released.  To use MIDI continuous controllers, the switch
+must send a CC value greater than zero when the switch is pressed and
+zero when the switch is released.  Note that you can not use MIDI
+program changes for sustain scripts since the program change is only
+sent when the switch is pressed.</p>
+
+<p>Sustain scripts are also run repeatedly while the switch is held
+down, this allows it to change behavior depending on how long the
+switch is held.  This allows scripts to have <i>long press</i>
+behavior like other built-in functions.</p>
+
+<p>To be notified when the trigger goes up, you simply add this
+label to the script:</p>
+
+<example>
+  Label endSustain
+</example>
+
+<p>The statements following this label will be run when the function
+trigger goes up.</p>
+
+<p>To be notified while the trigger is held, add this label to the script:
+</p>
+
+<example>
+  Label sustain
+</example>
+
+<p>The statements following this label will be run every 250 milliseconds
+(1/4 second) while the trigger is held. You can determine how
+long the trigger has been held by testing the <i>sustainCount</i> variable.
+This will have a number starting at 1 and incrementing by 1 every time
+the sustain script is called.</p>
+
+<p>You can specify the duration of the sustain notifications by adding
+a number after the !sustain keyword.   This number is the number of
+milliseconds between notifications.  For example, this declaration
+will cause the sustain label to called every second rather than every 
+1/4 second.</p>
+
+<example>
+  !sustain 1000
+</example>
+
+<p>Here is a more complex example that demonstrates all of the features
+of sustain scripts.</p>
+
+<example>
+  !name Sustain Test
+
+  # default is 250 msec, raise it to 1 sec
+  !sustain 1000
+
+  # the Message statement can be used to display brief messages
+  Message Starting sustain test
+  end
+
+  Label sustain
+  Message Sustained $sustainCount
+  end
+
+  Label endSustain
+  Message Ending sustain test
+  end
+</example>
+
+<p>You can think of this as 3 scripts in one. From the top to the first
+<i>end</i> are the statements that are run when the switch is pressed.</p>
+
+<p>The statements from <i>Label sustain</i> to the next <i>end</i> are 
+called as the switch is held.</p>
+
+<p>The statements from <i>Label endSustain</i> to the next <i>end</i> 
+are called when the function trigger goes up.</p>
+
+<p>You do not need to declare both labels, but you do need to remember
+to put an <i>end</i> before each of the sustain lables.</p>
+
+<p><b>GEEK Note</b>: Scripts are similar to a re-entrant function in a
+multi-threaded programming language.  Each of the calls for the down
+transition, up transition, and sustain notifications are done in an
+environment similar to a thread.  If you use Wait statements, it is
+possible for the script to be active in more than one thread.  By
+using variables, the threads can communicate with each other.</p>
+
+<p>Here is a more realistic example. A long-press of the Record function
+will normally perform a Reset. This script does something similar but
+with the Mute function.</p>
+
+<example>
+  !name Mute/Reset
+
+  Mute
+  end
+
+  Label sustain
+  if sustainCount = 1
+  Reset
+  endif
+</example>
+
+<p>Under the <i>sustain</i> label, you can test the
+<i>sustainCount</i> variable to make the script change behavior the
+longer the trigger is held.  Some examples of this might be:</p>
+
+<ul>
+<li>change rate or pitch shift the longer the trigger is held</li>
+<li>bounce between half speed and normal speed every second as long as the trigger is held</li>
+<li>slip forward one subcycle every 1/2 second</li>
+</ul>
+
+<p>Here is another example of simle sustain sccript that raises the
+rate a fifth while held and drops it back when released.</p>
+
+<example>
+  !name SUSRateUp5
+
+  RateUp 7
+  end
+
+  Label endSustain
+  RateDown 7
+  end
+</example>
+
+</section> <!-- sustain -->
+
+<section><title>!switchQuantize</title>
+
+<p>When you change loops with the <i>switchQantize</i> parameter
+set something other than <i>off</i>, Mobius will enter a special
+<i>Switch</i> mode while it waits for the next 
+switch quantization point.  During this mode, many functions that
+you trigger are queued and performed after the loop switch.</p>
+
+<p>By default scripts do not wait until after the loop switch, 
+they are run immediately.  The <i>!switchQuanitze</i> option
+will delay the execution of the script until after the loop switch.
+This makes scripts behave more like built-in functions.</p>
+
+<p>Note however that the functions performed by the script are not
+treated like alternate endings to the switch function.  For example,
+if you do an Overdub during the switch quantization and the next
+loop is empty, the current loop is copied into the next loop.  But
+if you run a script whos first function is Overdub, this will
+not cause the loop to be copied.</p>
+
+</section> <!-- switchQuantize -->
+
+</section> <!-- Declarations -->
+
+<section><title>Expressions</title>
+</section>
+
+<section><title>Intrinsic Statements</title>
+
+<p>The syntax for each statement will be summarized using a notation
+that programmers should recognize as similar to BNF.  For example:</p>
+
+<pre>
+    Call &lt;scriptName> | &lt;procName> [&lt;arg> ...]
+</pre>
+
+A line in a script is divided into <i>tokens</i> seperated by one or
+more spaces.  The syntax notation describes what each token means.
+Tokens are often just words without spaces like <i>Call</i>.  If
+a token needs to contain spaces it must be surrounded in double
+quotes like <i>"My Script"</i>.
+
+<p>In the syntax notation, tokens that are not surrounded by angle
+brackets must be written exactly as shown.  Tokens that are
+surrounded by angle brackets must be replaced with tokens that are
+meaningful for your environment.  For example the token
+<i>&lt;scriptName></i> would be replaced by the name of the script you
+want to call.</p>
+
+<p>The vertical bar is used when there is a choice of several tokens
+that may apepar at this location.  In this example the token following
+the <i>Call</i> may be either a procedure name or a script name.</p>
+
+<p>Square brackets are used to surround optional tokens.  In this
+example the <i>Call</i> statement may have an optional list of
+arguments.  The <i>...</i> means that the contents within the brackets
+may be repeated any number of times.</p>
+
+<p>Two special tokens are used in syntax notation:</p>
+
+<ul>
+<li><b>&lt;arg></b> - replaced by a symbol, string, or variable reference</li>
+<li><b>&lt;expression></b> - replaced by a complex expression</li>
+</ul>
+
+<p>Note that some of the intrinsic statements are intended for use
+only in special testing scripts.  The statement keywords are presented
+using the character case that is most often seen in the example
+scripts.  As mentioned in the <ref>Case Insensitivity</ref> section,
+case in function names is ignored.</p>
+
+
+<section><title>break</title>
+
+<p>This statement is used only by developers running Mobius under a
+debugger.  It will have no effect when running Mobius outside of a
+debugger.  Return to your homes, there is nothign to see here.</p>
+
+</section>
+
+<section><title>Call</title>
+
+<pre>
+    Call &lt;scriptName> | &lt;procName> [&lt;arg> ...]
+</pre>
+
+<p>Calls another script or a <i>procedure</i>, with optional arguments.</p>
+
+<p>When a script is called, the statements in the script are executed
+as if they were written directly in the calling script.  Only scripts
+that have been registered in the <i>Scripts</i> dialog can be
+called.</p>
+
+<p>Normally scripts are referenced using the name defined by the
+<i>!name</i> declaration in the script.  If the script has no
+<i>!name</i> you may reference the script using it's file name.</p>
+
+<example>
+  # Call a script using its !name
+  # note that quotes must be used if the script name contains spaces
+
+  Call "My Script" 
+
+  # Call a script using its file name
+  Call myscript.mos
+
+  # Call a script using its file name without the .mos extension
+  Call myscript
+</example>
+
+<p>Script arguments may either be symbols, strings, or variable
+references.  A symbol is simply a word without spaces.  A string is a
+sequence of characters surrounded by double quotes.  A variable
+reference is the name of a variable or parameter prefixed with the
+<b>$</b> character.</p>
+
+<example>
+  # Call a script passing a symbol argument
+  Call "Set Sub Cycles" 8
+
+  # Call a script passing a string argument
+  Call ShowMessage "This is my message to you!"
+
+  # Call a script passing a variable value
+  Variable message "This is my message to you!"
+  Call ShowMessage $message
+</example>
+
+<p>In the script being called, arguments are referenced with 
+a number preceeded by the $ character.  Script arguments are numbered
+starting from 1.  For example:</p>
+
+<example>
+  !name Set Sub Cycles
+  Message Changing subcycles to $1
+  set 8thsPerCycle $1
+</example>
+
+<p>The previous script will set the <i>8thsPerCycle</i> preset parameter
+to the value of the first argument.</p>
+
+<p>Note that scripts that are designed to be called from other scripts
+usually do not have any declarations other than <ref>!name</ref> and
+sometimes <ref>!autoload</ref>.  Any other declarations in the called
+script will be ignored.  If you want the called script to be quantized
+for example, you will need to use the <ref>Wait</ref> statement
+in the calling script.</p>
+
+<section><title>Procedures</title>
+
+<p>A procedure is a set of statements defined within a script that
+will not be executed until you call them.  Procedures are defined with
+the <ref>Proc</ref> statement.  Procedures are used in the Mobius test
+scripts but are not often used in user scripts.  Their primary use is
+to prevent the duplication of a set of statements that are needed more
+than once in the script.</p>
+
+<example>
+
+  # define a procedure
+  # the statements within the Proc/Endproc will NOT be executed
+  # until you call the procedure
+
+  # Define a procedure
+  Proc ChangeDirection
+    if inReverse
+        Message Leaving reverse mode
+    else
+        Message Entering reverse mode
+    endif
+    Reverse
+  Endproc
+
+  # toggle reverse mode with a message
+  Call ChangeDirection
+
+  # wait for the end of the loop
+  Wait loop
+
+  # toggle reverse mode with a message again
+  Call ChangeDirection
+</example>
+
+<p>Arguments may also be passed to called procedures:</p>
+
+<example>
+  # set 8thsPerCycle to the value of the first argument
+  Proc SetSubCycles
+    set 8thsPerCycle $1
+  Endproc
+
+  # call procedure passing number of subcycles desired
+  Call SetSubCycles 8
+</example>
+
+
+</section> <!-- Procedures -->
+</section> <!-- Call -->
+
+<section><title>Cancel</title>
+</section>
+<section><title>diff</title>
+</section>
+<section><title>end</title>
+</section>
+<section><title>endproc</title>
+</section>
+<section><title>Echo</title>
+</section>
+<section><title>else</title>
+</section>
+<section><title>elseif</title>
+</section>
+<section><title>endif</title>
+</section>
+<section><title>for</title>
+</section>
+<section><title>if</title>
+</section>
+<section><title>InitPreset</title>
+</section>
+<section><title>Jump</title>
+</section>
+<section><title>Label</title>
+</section>
+<section><title>Load</title>
+</section>
+<section><title>Message</title>
+</section>
+<section><title>next</title>
+</section>
+<section><title>Preset</title>
+</section>
+<section><title>proc</title>
+</section>
+<section><title>Prompt</title>
+</section>
+<section><title>repeat</title>
+</section>
+<section><title>Save</title>
+</section>
+<section><title>set</title>
+</section>
+<section><title>Setup</title>
+</section>
+<section><title>Variable</title>
+</section>
+<section><title>Wait</title>
+</section>
+<section><title>while</title>
+</section>
+
+</section> <!-- Intrinsic Statements -->
+
+<section><title>Special Labels</title>
+
+<section><title>reentry</title>
+</section>
+
+<section><title>sustain</title>
+</section>
+
+<section><title>endSustain</title>
+</section>
+
+<section><title>click</title>
+</section>
+
+<section><title>endClick</title>
+</section>
+
+</section> <!-- Special Labels -->
+
+<section><title>Functions</title>
+
+<p>All Mobius functions may be used in scripts.  The names of the 
+functions used in scripts may differ slightly from the names you
+will see in the UI.  In particular, script function names never contain
+spaces.  If a function name is displayed in the UI with spaces
+such as "Next Loop", the script function name is usually the same
+with the spaces removed such as "NextLoop".</p>
+
+<p>There are also a few functions that may be used only in scripts,
+they will not appear in the UI.</p>
+
+<p>The function names displayed in the UI are taken from a file that
+may be modified by the user.  This file is called a <i>message catalog</i>.
+The default message catalog is in the Mobius installation directory 
+and is named <i>Catalog_USEnglish.txt</i>.  If you have modified this file,
+or if you have asked Mobius to read messages from a different file, the
+names that appear in the tables below may not be the same.</p>
+
+<p>The following table lists all of the Mobius functions with both
+the default UI name and the script name.</p>
+
+<p>When the UI name is displayed as <b>*</b> it means that this
+function is only accessible from scripts.</p>
+
+<p>When the script name is followed by a space, then an italic
+<i>n</i>, it means that you may type a numeric argument after the
+function name.  For example <i>Loop1</i> is the same as <i>Loop 1</i>.
+This is most useful for functions such as <i>InstantMultiply</i>,
+<i>PitchShift</i> and <i>RateShift</i> where there are not unqualified
+function names defined for every possible argument value.</p>
+
+
+<table align='left'>
+<tr><th>Script Name</th><th>UI Name</th></tr>
+
+<tr><td>AutoRecord</td><td>Auto Record</td></tr>
+<tr><td>Backward</td><td>Backward</td></tr>
+<tr><td>Bounce</td><td>Bounce</td></tr>
+<tr><td>Checkpoint</td><td>Checkpoint</td></tr>
+<tr><td>Clear</td><td>Clear</td></tr>
+<tr><td>Divide <i>n</i></td><td>*</td></tr>
+<tr><td>Divide2</td><td>Instant Divide 2</td></tr>
+<tr><td>Divide3</td><td>Instant Divide 3</td></tr>
+<tr><td>Divide4</td><td>Instant Divide 4</td></tr>
+<tr><td>Drift</td><td>Drift</td></tr>
+<tr><td>FocusLock</td><td>Focus Lock</td></tr>
+<tr><td>Forward</td><td>Forward</td></tr>
+<tr><td>FullSpeed</td><td>Full Speed</td></tr>
+<tr><td>GeneralReset</td><td>General Reset</td></tr>
+<tr><td>GlobalReset</td><td>Global Reset</td></tr>
+<tr><td>GlobalMute</td><td>Global Mute</td></tr>
+<tr><td>GlobalPause</td><td>Global Pause</td></tr>
+<tr><td>HalfSpeed</td><td>Half Speed</td></tr>
+<tr><td>Insert</td><td>Insert</td></tr>
+<tr><td>InsertOnly</td><td>Insert Only</td></tr>
+<tr><td>InstantMultiply <i>n</i></td><td>*</td></tr>
+<tr><td>InstantMultiply2</td><td>Instant Multiply 2</td></tr>
+<tr><td>InstantMultiply3</td><td>Instant Multiply 3</td></tr>
+<tr><td>InstantMultiply4</td><td>Instant Multiply 4</td></tr>
+<tr><td>Loop <i>n</i></td><td>*</td></tr>
+<tr><td>Loop1</td><td>Loop Trigger 1</td></tr>
+<tr><td>Loop2</td><td>Loop Trigger 2</td></tr>
+<tr><td>Loop3</td><td>Loop Trigger 3</td></tr>
+<tr><td>Loop4</td><td>Loop Trigger 4</td></tr>
+<tr><td>Loop5</td><td>Loop Trigger 5</td></tr>
+<tr><td>Loop6</td><td>Loop Trigger 6</td></tr>
+<tr><td>Loop7</td><td>Loop Trigger 7</td></tr>
+<tr><td>Loop8</td><td>Loop Trigger 8</td></tr>
+<tr><td>Move</td><td>Move</td></tr>
+<tr><td>Multiply</td><td>Multiply</td></tr>
+<tr><td>Mute</td><td>Mute</td></tr>
+<tr><td>MuteOff</td><td>*</td></tr>
+<tr><td>MuteOn</td><td>*</td></tr>
+<tr><td>MuteRealign</td><td>Mute Realign</td></tr>
+<tr><td>MuteStartSong</td><td>Mute + MIDI Start Song</td></tr>
+<tr><td>NextLoop</td><td>Next Loop</td></tr>
+<tr><td>NextTrack</td><td>Next Track</td></tr>
+<tr><td>Overdub</td><td>Overdub</td></tr>
+<tr><td>OverdubOff</td><td>*</td></tr>
+<tr><td>OverdubOn</td><td>*</td></tr>
+<tr><td>Pause</td><td>Pause</td></tr>
+<tr><td>PitchDown</td><td>Pitch Down</td></tr>
+<tr><td>PitchNext</td><td>Pitch Next</td></tr>
+<tr><td>PitchNormal</td><td>Pitch Normal</td></tr>
+<tr><td>PitchPrev</td><td>Pitch Prev</td></tr>
+<tr><td>PitchShift <i>n</i></td><td>*</td></tr>
+<tr><td>PitchUp</td><td>Pitch Up</td></tr>
+<tr><td>Play</td><td>Play</td></tr>
+<tr><td>PrevLoop</td><td>Previus Loop</td></tr>
+<tr><td>PrevTrack</td><td>Prev Track</td></tr>
+<tr><td>QuantMidiStartPoint</td><td>Quant MIDI Start Point</td></tr>
+<tr><td>RateDown</td><td>Rate Down</td></tr>
+<tr><td>RateNext</td><td>Rate Next</td></tr>
+<tr><td>RateNormal</td><td>Rate Normal</td></tr>
+<tr><td>RatePrev</td><td>Rate Prev</td></tr>
+<tr><td>RateShift <i>n</i></td><td>*</td></tr>
+<tr><td>RateUp</td><td>Rate Up</td></tr>
+<tr><td>Realign</td><td>Realign</td></tr>
+<tr><td>Record</td><td>Record</td></tr>
+<tr><td>Redo</td><td>Redo</td></tr>
+<tr><td>Rehearse</td><td>Rehearse</td></tr>
+<tr><td>Replace</td><td>Replace</td></tr>
+<tr><td>Reset</td><td>Reset</td></tr>
+<tr><td>ResumeScript</td><td>Resume Script</td></tr>
+<tr><td>Retrigger</td><td>Retrigger</td></tr>
+<tr><td>Reverse</td><td>Reverse</td></tr>
+<tr><td>Sample <i>n</i></td><td>*</td></tr>
+<tr><td>Sample1</td><td>Sample Trigger1</td></tr>
+<tr><td>Sample2</td><td>Sample Trigger2</td></tr>
+<tr><td>Sample3</td><td>Sample Trigger3</td></tr>
+<tr><td>Sample4</td><td>Sample Trigger4</td></tr>
+<tr><td>Sample5</td><td>Sample Trigger5</td></tr>
+<tr><td>Sample6</td><td>Sample Trigger6</td></tr>
+<tr><td>Sample7</td><td>Sample Trigger7</td></tr>
+<tr><td>Sample8</td><td>Sample Trigger8</td></tr>
+<tr><td>SamplePlay</td><td>Sample Play</td></tr>
+<tr><td>SaveAudioRecording</td><td>Save Audio Recording</td></tr>
+<tr><td>SaveLoop</td><td>Save Loop</td></tr>
+<tr><td>SaveScriptRecording</td><td>Save Script Recording</td></tr>
+<tr><td>Shuffle</td><td>Shuffle</td></tr>
+<tr><td>Slip</td><td>Slip</td></tr>
+<tr><td>SlipBackward</td><td>Slip Backward</td></tr>
+<tr><td>SlipForward</td><td>Slip Forward</td></tr>
+<tr><td>Solo</td><td>Solo</td></tr>
+<tr><td>Speed</td><td>Speed</td></tr>
+<tr><td>StartAudioRecording</td><td>Start Audio Recording</td></tr>
+<tr><td>StartPoint</td><td>Start Point</td></tr>
+<tr><td>StartScriptRecording</td><td>Start Script Recording</td></tr>
+<tr><td>StopAudioRecording</td><td>Stop Audio Recording</td></tr>
+<tr><td>StopScriptRecording</td><td>Stop Script Recording</td></tr>
+<tr><td>StartSong</td><td>MIDI Start Song</td></tr>
+<tr><td>StopSong</td><td>MIDI Stop Song</td></tr>
+<tr><td>Stutter</td><td>Stutter</td></tr>
+<tr><td>Substitute</td><td>Substitute</td></tr>
+<tr><td>SUSInsert</td><td>Sustain Insert</td></tr>
+<tr><td>SUSMultiply</td><td>Sustain Multiply</td></tr>
+<tr><td>SUSMute</td><td>Sustain Mute</td></tr>
+<tr><td>SUSMuteRetrigger</td><td>Sustain Mute Retrigger</td></tr>
+<tr><td>SUSNextLoop</td><td>Sustain Next Loop</td></tr>
+<tr><td>SUSOverdub</td><td>Sustain Overdub</td></tr>
+<tr><td>SUSPrevLoop</td><td>Sustain Prev Loop</td></tr>
+<tr><td>SUSRecord</td><td>Sustain Record</td></tr>
+<tr><td>SUSRehearse</td><td>Sustain Rehearse</td></tr>
+<tr><td>SUSReplace</td><td>Sustain Replace</td></tr>
+<tr><td>SUSReverse</td><td>Sustain Reverse</td></tr>
+<tr><td>SUSSpeed</td><td>Sustain Speed</td></tr>
+<tr><td>SUSStutter</td><td>Sustain Stutter</td></tr>
+<tr><td>SUSSubstitute</td><td>Sustain Substitute</td></tr>
+<tr><td>SUSUnroundedMultiply</td><td>Sustain Unrounded Multiply</td></tr>
+<tr><td>SUSUnroundedInsert</td><td>Sustain Unrounded Insert</td></tr>
+<tr><td>SyncMaster</td><td>Set Sync Master</td></tr>
+<tr><td>Track <i>n</i></td><td>*</td></tr>
+<tr><td>Track1</td><td>Select Track 1</td></tr>
+<tr><td>Track2</td><td>Select Track 2</td></tr>
+<tr><td>Track3</td><td>Select Track 3</td></tr>
+<tr><td>Track4</td><td>Select Track 4</td></tr>
+<tr><td>Track5</td><td>Select Track 5</td></tr>
+<tr><td>Track6</td><td>Select Track 6</td></tr>
+<tr><td>Track7</td><td>Select Track 7</td></tr>
+<tr><td>Track8</td><td>Select Track 8</td></tr>
+<tr><td>TrackGroup</td><td>Track Group</td></tr>
+<tr><td>TrimEnd</td><td>Trim End</td></tr>
+<tr><td>TrimStart</td><td>Trim Start</td></tr>
+<tr><td>Undo</td><td>Undo</td></tr>
+
+</table>
+
+</section> <!-- Functions -->
+
+<section><title>Modes</title>
+
+<p>This table lists the possible values of the <i>mode</i> varaible.</p>
+
+<ul>
+<li>Confirm</li>
+<li>Delay</li>
+<li>Hold</li>
+<li>Insert</li>
+<li>Multiply</li>
+<li>Mute</li>
+<li>Overdub</li>
+<li>Pause</li>
+<li>Play</li>
+<li>Record</li>
+<li>Rehearse</li>
+<li>RehearseRecord</li>
+<li>Replace</li>
+<li>Reset</li>
+<li>Run</li>
+<li>Stutter</li>
+<li>Substitute</li>
+<li>Switch</li>
+<li>Synchronize</li>
+<li>Threshold</li>
+</ul>
+
+</section> <!-- Modes -->
+
+<section><title>Parameters</title>
+
+<section><title>Global Parameters</title>
+
+<section><title>altFeedbackDisable</title>
+
+<p><b>Value:</b> A comma seperated list of recording mode names.</p>
+
+<p>This option specifies which recording modes will use alternate
+feedback when the <i>interfaceMode</i> parameter is set to <i>expert</i>.</p>
+
+<p>The relevant modes names are:</p>
+<ul>
+<li>Multiply</li>
+<li>Overdub</li>
+<li>Stutter</li>
+<li>Substitute</li>
+</ul>
+
+<p>In <i>Replace</i> mode, the feedback level is always zero.</p>
+
+<p>In <i>Insert</i> mode, there is no background content so feedback
+is not relevant.</p>
+
+<p>In all other modes recording is not active so feedback is not relevant.</p>
+
+<p><b><i>Example:</i></b> set altFeedbackDisable Multiply,Overdub</p>
+
+<p>When a parameter value is described as being a "comma separated
+list" it means that the value to assign in a set statement consists of
+a list of words seperated by a comma.  There may also be spaces before
+and after the commas.  The following examples are all the same:</p>
+
+<example>
+  set altFeedbackDisable Multiply,Overdub
+
+  set altFeedbackDisable Multiply, Overdub
+
+  set altFeedbackDisable Multiply  ,  Overdub
+</example>
+
+</section> <!-- altFeedbackDisable -->
+
+<section><title>audioInput</title>
+
+<p><b>Value:</b>The name of an audio input device.</p>
+<p><b>UI Name:</b> Selected in the Audio Devices dialog</p>
+
+<p>The names of the audio devices will depend on the devices attached
+to your system.  To determine the list of audio device names on your
+system open the Audio Devices dialog from the Configuration menu.</p>
+
+<p>This parameter may only be read.  Setting the value in a script will
+have no effect.  This parameter is rarely used in scripts.  One possible
+application is to reference the parameter in a conditional expression to 
+change the behavior of the script depending on which input device
+is selected.</p>
+
+</section> <!-- audioInput -->
+
+<section><title>audioOutput</title>
+<p><b>Value:</b> The name of an audio output device.</p>
+<p><b>UI Name:</b> Selected in the Audio Devices dialog</p>
+
+<p>Like <ref>audioOutput</ref> this parameter may only be read, setting it
+will have no effect.</p>
+
+</section> <!-- audioOutput -->
+
+<section><title>autoFeedbackReduction</title>
+<p><b>Value:</b> true or false</p>
+<p><b>UI Name:</b> This parameter is not displayed in the UI.</p>
+
+<p>When this is true it enables a small amount of feedback reduction
+whenever Mobius is in Overdub, Multiply, or Stutter modes and the
+feedback control is set at the maximum value of 127.  The actual
+feedback will value will be 121 which is approximately a 5%
+reduction.</p>
+
+<p>Enabling this parameter can reduce the chance of audio clipping
+when overdubbing.  Even when this is true you can still reach clipping
+if your overdubs are very loud.</p>
+
+<p>The default value is true, there is usually no need to turn this off.</p>
+
+</section> <!-- autoFeedbackReduction -->
+
+<section><title>driftCheckPoint</title>
+
+<p><b>Value:</b> <i>loop</i> or <i>external</i></p>
+<p><b>Default:</b> <i>loop</i></p>
+<p><b>UI Name:</b> Not displayed in the UI</p>
+
+<p>When set to <i>loop</i> we check for sync drift each time we reach
+the Mobius loop start point.</p>
+
+<p>When set to <i>external</i> we check for sync drift every time the
+external clock reaches the start point.  The external start point is 
+defined by the number of "pulses" counted when the loop was first
+recorded.  When syncing to MIDI clocks a pulse is a MIDI clock, when
+syncing to VST beats a pulse is a VST beat, when syncing to a VST bar
+a pulse is a VST bar, etc.</p>
+
+<p>For example, if syncing from MIDI clocks, a loop is recorded for
+96 clocks.  After recording we continue to count MIDI clocks wrapping
+back to zero every time we count up to 96.  When we wrap back to zero,
+this is the external start point.</p>
+
+</section> <!-- driftCheckPoint -->
+
+<section><title>fadeFrames</title>
+
+<p><b>Value:</b> a positive integer, usually under 1000</p>
+<p><b>Default:</b> 128</p>
+<p><b>UI Name:</b> <i>Fade Frames</i></p>
+
+<p>The number of frames used when cross fading after a change to the
+audio being played.  When this value is small (128) the cross fade
+will happen rapidly.  The perception will be the at the change happens
+immediately but the fade prevents a "click" that can happen if there
+is an abrupt change in the audio stream.</p>
+
+<p>If this value is large the fade will happen more gradually and
+sound more like a manually operated mixer fade.</p>
+
+<p><b>NOTE:</b> While you may achieve some interesting effects by
+setting this to a large value, Mobius was not designed to be used with
+long fade ranges.  Most of the functions will sound best will a short
+fade range.</p>
+
+</section> <!-- fadeFrames -->
+
+<section><title>groupFunctions</title>
+
+<p><b>Value:</b> a comma separated list of function names</p>
+<p><b>UI Name:</b> Group and Focus Lock Functions</p>
+
+<p>This parameter specifies which functions will be sensitive to
+focus lock and track groups.  A function on this
+list is said to be <i>"group sensitive"</i>.  When a group sensitive
+function is performed on a track, it is automatically performed in
+any other track that has focus lock or is in the same group
+as the current track.</p>
+
+<p>This parameter may only be read from scripts.</p>
+
+</section> <!-- groupFunctions -->
+
+<section><title>inputLatency</title>
+
+<p><b>Value:</b> a positive integer, usually between 100 and 4000</p>
+<p><b>UI Name:</b> <i>Override Input Latency Frames</i> in the Audio Devices dialog</p>
+<p>This paramaeter has the number of frames of latency found on the
+input side of the audio stream.  This value may be changed, though in 
+practice this is only done in test scripts.</p>
+
+</section> <!-- inputLatency -->
+
+<section><title>integerWaveFile</title>
+<p><b>Value:</b> true or false</p>
+<p><b>UI Name:</b> <i>16 Bit Wave Files</i></p>
+
+<p>When true, audio files saved from Mobius will be formatted as samples
+of 16-bit integers.  When this is false, files are formatted as samples
+of 32-bit floating point numbers.</p>
+
+<p>Selecting integer wave files may be necessary if you want to read
+a file created by Mobius in another audio application that does not
+support 32-bit floating point files.</p>
+
+<p>This parameter may be changed in scripts but there is rarely a 
+need to do so.</p>
+
+</section> <!-- integerWaveFile -->
+
+<section><title>isolateOverdubs</title>
+
+<p><b>Value:</b> true or false</p>
+<p><b>UI Name:</b> not visible in the UI</p>
+
+<p>This parameter is not currently used.</p>
+
+</section> <!-- isolateOverdubs -->
+
+<section><title>longPress</title>
+
+<p><b>Value:</b> a positive integer, usually between 500 and 2000</p>
+<p><b>UI Name:</b> <i>Long Press Milliseconds</i></p>
+
+<p>This parameter sets the number of milliseconds to wait before
+a function trigger that is being held down is converted to a <i>long press</i>
+of that funciton.</p>
+
+<p>The default is one half second (500).</p>
+
+</section> <!-- longPress -->
+
+<section><title>maxSyncDrift</title>
+
+<p><b>Value:</b> a non-negative integer, usually between 1000 and 10000</p>
+<p><b>Default:</b> 2048</p>
+<p><b>UI Name:</b> <i>Drift Resync Frames</i></p>
+
+<p>This is the number of frames (stereo samples) that the loop is
+allowed to drift away from an external clock before the loop is
+retriggered to bring it back into alignment with the external clock.
+Some amount of drift is common and unavoidable and tends to correct
+itself over time.   It is not recommended that you set this parameter
+below 1000 or excessive retriggering may occur.  If you are often hearing
+a "fluttering" sound near the loop start point try raising the maxSyncDrift
+parameter.</p>
+
+</section> <!-- maxSyncDrift -->
+
+<section><title>midiInput</title>
+
+<p><b>Value:</b>The name of a MIDI input device.</p>
+<p><b>UI Name:</b> Selected in the MIDI Devices dialog</p>
+
+<p>The name of the MIDI device that Mobius is monitoring for clock or
+command events when running as a standalone application.  If you need
+to open a MIDI input device when running as a plugin see the
+<ref>vstMidiInput</ref> parameter.</p>
+
+<p>Mobius may only recieve MIDI events from one device.</p>
+
+<p>The names of the MIDI devices will depend on the devices attached
+to your system.  To determine the list of MIDI device names
+open the MIDI Devices dialog from the Configuration menu.</p>
+
+<p>This parameter may only be read.  Setting the value in a script will
+have no effect.  This parameter is rarely used in scripts.  One possible
+application is to reference the parameter in a conditional expression to 
+change the behavior of the script depending on which MIDI device
+is selected.</p>
+
+</section> <!-- midiInput -->
+
+<section><title>midiMode</title>
+
+<p><b>Values:</b> normal, slave, both, off</p>
+<p><b>UI Name:</b> MIDI Control in the External EDP dialog</p>
+
+<p>This parameter is used to control the routing of incomming
+MIDI events to Mobius and to an external hardware device connected
+to the MIDI output.  This is intended only for Mobius testing and
+is not used in user scripts.</p>
+
+<p>If the value is <i>normal</i> then Mobius processes events
+normally.  If the value is <i>slave</i> then events are sent
+immediately to the MIDI output device.  If the value is <i>both</i>
+events are sent to both Mobius and the MIDI output device.</p>
+
+</section> <!-- midiMode -->
+
+<section><title>midiOutput</title>
+
+<p><b>Value:</b>The name of a MIDI output device.</p>
+<p><b>UI Name:</b> Selected in the MIDI Devices dialog</p>
+
+<p>The MIDI device to which Mobius will send events such as MIDI
+clocks, start, stop, and continue when running as a standalone
+application.  If you need to receive MIDI events when running as a
+plugin see the <ref>vstMidiOutput</ref> parameter.</p>
+
+<p>The names of the MIDI devices will depend on the devices attached
+to your system.  To determine the list of MIDI device names
+open the MIDI Devices dialog from the Configuration menu.</p>
+
+<p>This parameter may only be read.  Setting the value in a script will
+have no effect.  This parameter is rarely used in scripts.  One possible
+application is to reference the parameter in a conditional expression to 
+change the behavior of the script depending on which MIDI device
+is selected.</p>
+
+</section> <!-- midiOutput -->
+
+<section><title>midiRecordPulsed</title>
+
+<p><b>Value:</b> true or false, default false</p>
+<p><b>UI Name:</b> Not displayed in the UI</p>
+
+<p>When true the ending of a MIDI synchronized recording will be
+quantized an exact MIDI clock pluse.  Normally, the end of the
+recording is calculated based on the average tempo which due to clock
+drift may not light up exactly with the final clock.</p>
+
+<p>Prior to the 1.30 release series, Mobius would always end the
+recording on an exact clock pulse.  But this frequently resulted in
+non-optimal loop lengths because of drift in the final clock.  By
+calculating the ending based on the average tempo of many clocks, the
+loop length is usually more accurate.  The more accurate a loop is,
+the fewer sync drift retriggers you will have.</p>
+
+<p>You should only set this parameter if you think you are
+experiencing excessive drift retriggers and have discussed the
+situation with me.</p>
+
+</section> <!-- midiRecordPulsed -->
+
+<section><title>midiThrough</title>
+
+<p><b>Value:</b>The name of a MIDI output device.</p>
+<p><b>UI Name:</b> Selected in the MIDI Devices dialog</p>
+
+<p>If selected, any MIDI events received from the <ref>midiInput</ref>
+device are immediately echoed to the <i>midiThrough</i> device.</p>
+
+<p>This parameter is used only when Mobius is running as a 
+standalone application.  If you need to pass MIDI events when
+running as a plugin see the <ref>vstMidiThrough</ref> parameter.</p>
+
+<p>This parameter may only be read.  Setting the value in a script will
+have no effect.</p>
+
+</section> <!-- midiThrough -->
+
+<section><title>monitorAudio</title>
+
+<p><b>Value:</b> true or false</p>
+<p><b>UI Name:</b> <i>Monitor Audio Input</i> in the <i>Global Parameters</i> dialog</p>
+
+<p>When true, causes the audio input for the active track to be sent
+immediately to the audio output device for that track.  This can be used
+to monitor the signal being sent to Mobius if you are not monitoring
+using an external mixer or the sound card.  This is normally done only
+if you are using Mobius as a VST plugin, and only if your sound card
+supports ASIO drivers.</p>
+
+</section> <!-- monitorAudio -->
+
+<section><title>muteCancelFunctions</title>
+
+<p><b>Value:</b> A comma seperated list of function names.</p>
+<p><b>UI Name:</b> <i>16 Bit Wave Files</i></p>
+
+</section> <!-- muteCancelFunctions -->
+
+<section><title>noiseFloor</title>
+
+<p><b>Value:</b> an integer</p>
+<p><b>UI Name:</b> <i>Noise Floor</i></p>
+
+
+
+
+</section>
+
+<section><title>outputLatency</title>
+
+<p><b>Value:</b> a positive integer, usually between 100 and 4000</p>
+<p><b>UI Name:</b> <i>Override Output Latency Frames</i> in the Audio Devices dialog</p>
+
+<p>This paramaeter has the number of frames of latency found on the
+output side of the audio stream.  This value may be changed, though in 
+practice this is only done in test scripts.</p>
+
+</section>
+<section><title>pedalMode</title>
+</section>
+<section><title>project</title>
+</section>
+<section><title>quickSave</title>
+</section>
+<section><title>trackGroups</title>
+</section>
+<section><title>saveLayers</title>
+</section>
+<section><title>setup</title>
+</section>
+<section><title>traceDebugLevel</title>
+</section>
+<section><title>tracePrintLevel</title>
+</section>
+
+<section><title>vstMidiInput</title>
+
+<p><b>Value:</b>The name of a MIDI input device.</p>
+<p><b>UI Name:</b> Selected in the MIDI Devices dialog</p>
+
+<p>The name of the MIDI device that Mobius is monitoring for
+clock or command events when running as a plugin.  If you
+need to receive MIDI commands when running as a standalone
+application, see the <ref>midiInput</ref> parameter.</p>
+
+<p>Normally Mobius recieves control and clock events from the host
+application and you do not specify a MIDI input device.  In some
+special circumstances you may want Mobius to receive events from both
+the host and a MIDI device.  It is not recommended that you use this
+parameter unless advised by me.</p>
+
+<p>This parameter may only be read.  Setting the value in a script
+will have no effect.</p>
+
+</section> <!-- vstMidiInput -->
+
+<section><title>vstMidiOutput</title>
+<p><b>Value:</b>The name of a MIDI output device.</p>
+<p><b>UI Name:</b> Selected in the MIDI Devices dialog</p>
+
+<p>The MIDI device to which Mobius will send events such
+as MIDI clocks, start, stop, and continue when running
+as a plugin.  This parameter is ignored when Mobius is running
+as a standalone application.  See the parameter 
+<ref>midiOutput</ref> for more information.</p>
+
+<p>This parameter may only be read.  Setting the value in a script
+will have no effect.</p>
+
+</section> <!-- vstMidiOutput -->
+
+<section><title>vstMidiThrough</title>
+
+<p><b>Value:</b>The name of a MIDI output device.</p>
+<p><b>UI Name:</b> Selected in the MIDI Devices dialog</p>
+
+<p>If selected, any MIDI events received from the <ref>midiInput</ref>
+device are immediately echoed to the <i>midiThrough</i> device.</p>
+
+<p>This parameter is used only when Mobius is running as a plugin.
+if you need to pass MIDI events when Mobius is run as a standalone
+application, see the <ref>midiThrough</ref> parameter.</p>
+
+<p>This parameter may only be read.  Setting the value in a script will
+have no effect.</p>
+
+</section> <!-- vstMidiThrough -->
+
+</section> <!-- Global Parameters -->
+
+<section><title>Preset Parameters</title>
+
+<section><title>subCycle</title>
+</section>
+<section><title>autoRecord</title>
+</section>
+<section><title>multiplyMode</title>
+</section>
+<section><title>insertMode</title>
+</section>
+<section><title>shuffleMode</title>
+</section>
+<section><title>interfaceMode</title>
+</section>
+<section><title>loopCopy</title>
+</section>
+<section><title>trackCopy</title>
+</section>
+<section><title>loopCount</title>
+</section>
+<section><title>muteMode</title>
+</section>
+<section><title>muteCancel</title>
+</section>
+<section><title>overdubMode</title>
+</section>
+<section><title>overdubTransfer</title>
+</section>
+<section><title>reverseTransfer</title>
+</section>
+<section><title>rateTransfer</title>
+</section>
+<section><title>pitchTransfer</title>
+</section>
+<section><title>quantize</title>
+</section>
+<section><title>bounceQuantize</title>
+</section>
+<section><title>recordMode</title>
+</section>
+<section><title>roundMode</title>
+</section>
+<section><title>samplerStyle</title>
+</section>
+<section><title>switchQuant</title>
+</section>
+<section><title>timeCopy</title>
+</section>
+<section><title>soundCopy</title>
+</section>
+<section><title>syncMode</title>
+</section>
+<section><title>trackSyncMode</title>
+</section>
+<section><title>unroundedSyncAdjust</title>
+</section>
+<section><title>speedSyncAdjust</title>
+</section>
+<section><title>switchSyncAdjust</title>
+</section>
+<section><title>threshold</title>
+</section>
+<section><title>velocity</title>
+</section>
+<section><title>maxUndo</title>
+</section>
+<section><title>maxRedo</title>
+</section>
+<section><title>minTempo</title>
+</section>
+<section><title>maxTempo</title>
+</section>
+<section><title>recordTempo</title>
+</section>
+<section><title>recordBeats</title>
+</section>
+<section><title>recordBars</title>
+</section>
+<section><title>noFeedbackUndo</title>
+</section>
+<section><title>noLayerFlattening</title>
+
+<p><b>Value:</b> true or false</p>
+<p><b>UI Name:</b> not visible in the UI</p>
+
+<p>When true, Mobius will keep each overdub layer in it's own private
+memory area rather than merging it with the previous layer during
+recording.  This option is not normally enabled because it can
+cause performance problems if you have many layers.  The option also
+does not allow the content of old layers to be "sculpted" using the
+feedback control.</p>
+
+<p>The option is only supported for advanced users that understand 
+the differences between the two memory architectures.</p>
+
+<p>The ability to isolate overdub layers will be used more in the
+future when advanced features are added such as the ability to 
+independently set the output level of each layer.</p>
+
+</section> <!-- noLayerFlattening -->
+
+<section><title>rateSequence</title>
+</section>
+<section><title>rateShiftRetrigger</title>
+</section>
+<section><title>pitchSequence</title>
+</section>
+<section><title>pitchShiftRetrigger</title>
+</section>
+<section><title>slipMode</title>
+</section>
+<section><title>slipTime</title>
+</section>
+<section><title>realignTime</title>
+</section>
+<section><title>outRealignMode</title>
+</section>
+
+</section> <!-- Preset Parameters -->
+
+<section><title>Track Parameters</title>
+
+<section><title>altFeedback</title>
+</section>
+<section><title>feedback</title>
+</section>
+<section><title>focus</title>
+</section>
+<section><title>group</title>
+</section>
+<section><title>input</title>
+</section>
+<section><title>output</title>
+</section>
+<section><title>pan</title>
+</section>
+<section><title>trackPreset</title>
+</section>
+
+</section> <!-- Track Parameters -->
+
+</section> <!-- Parameters -->
+
+<section><title>System Variables</title>
+
+<section><title>basePulseFrames</title>
+</section>
+<section><title>blockFrames</title>
+</section>
+<section><title>cycleCount</title>
+</section>
+<section><title>cycleFrame</title>
+</section>
+<section><title>cycleFrames</title>
+</section>
+<section><title>cycleNumber</title>
+</section>
+<section><title>externalPulse</title>
+</section>
+<section><title>externalPulses</title>
+</section>
+<section><title>globalMute</title>
+</section>
+<section><title>inHalfSpeed</title>
+</section>
+<section><title>inMute</title>
+</section>
+<section><title>inOverdub</title>
+</section>
+<section><title>inPause</title>
+</section>
+<section><title>inRealign</title>
+</section>
+<section><title>inReturn</title>
+</section>
+<section><title>inReverse</title>
+</section>
+<section><title>layerCount</title>
+</section>
+<section><title>loopCount</title>
+</section>
+<section><title>loopFrame</title>
+</section>
+<section><title>loopFrames</title>
+</section>
+<section><title>loopNumber</title>
+</section>
+<section><title>mode</title>
+</section>
+<section><title>nextEvent</title>
+</section>
+<section><title>nextEventFunction</title>
+</section>
+<section><title>nextLoop</title>
+</section>
+<section><title>noExternalAudio</title>
+</section>
+<section><title>outSyncMaster</title>
+</section>
+<section><title>preRealignFrame</title>
+</section>
+<section><title>preRealignPulseFrame</title>
+</section>
+<section><title>pulseFrame</title>
+</section>
+<section><title>pulseFrames</title>
+</section>
+<section><title>pulseLoopFrame</title>
+</section>
+<section><title>rawPitch</title>
+</section>
+<section><title>rawRate</title>
+</section>
+<section><title>recordCyclePulses</title>
+</section>
+<section><title>returnCode</title>
+</section>
+<section><title>sampleFrames</title>
+</section>
+<section><title>scalePitch</title>
+</section>
+<section><title>scaleRate</title>
+</section>
+<section><title>solo</title>
+</section>
+<section><title>subCycleCount</title>
+</section>
+<section><title>subCycleFrame</title>
+</section>
+<section><title>subCycleFrames</title>
+</section>
+<section><title>subCycleNumber</title>
+</section>
+<section><title>sustainCount</title>
+</section>
+<section><title>syncBar</title>
+</section>
+<section><title>syncBeat</title>
+</section>
+<section><title>syncDrift</title>
+</section>
+<section><title>syncDriftChecks</title>
+</section>
+<section><title>syncHostBar</title>
+</section>
+<section><title>syncHostBeat</title>
+</section>
+<section><title>syncHostRawBeat</title>
+</section>
+<section><title>syncHostReceiving</title>
+</section>
+<section><title>syncHostStarted</title>
+</section>
+<section><title>syncHostTempo</title>
+</section>
+<section><title>syncInBar</title>
+</section>
+<section><title>syncInBeat</title>
+</section>
+<section><title>syncInRawBeat</title>
+</section>
+<section><title>syncInReceiving</title>
+</section>
+<section><title>syncInStarted</title>
+</section>
+<section><title>syncInTempo</title>
+</section>
+<section><title>syncOutBar</title>
+</section>
+<section><title>syncOutBeat</title>
+</section>
+<section><title>syncOutRawBeat</title>
+</section>
+<section><title>syncOutSending</title>
+</section>
+<section><title>syncOutStarted</title>
+</section>
+<section><title>syncOutStarts</title>
+</section>
+<section><title>syncOutTempo</title>
+</section>
+<section><title>syncRawBeat</title>
+</section>
+<section><title>syncRealigns</title>
+</section>
+<section><title>tempo</title>
+</section>
+<section><title>track</title>
+</section>
+<section><title>trackSyncMaster</title>
+</section>
+
+</section> <!-- System Variables -->
+
+</section> <!-- Reference -->
+
+<section><title>Examples</title>
+
+<section><title>Sustain Scripts</title>
+</section>
+
+<section><title>Long Press Scripts</title>
+</section>
+
+
+
+</section> <!-- Examples -->
+
+</document>

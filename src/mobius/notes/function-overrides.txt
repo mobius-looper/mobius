@@ -1,0 +1,39 @@
+
+Function Specific Overrides
+
+  - group & focus lock (currently a global)
+  - mute cancel (currently global)
+    - still worth having muteCancelMode in Preset?
+
+  - quantize 
+    - could be used instead of bounceQuantize and overdubMode
+      and switchQuantize
+  - 8thsPerCycle (only if Quantize=subcycle)
+
+Mode Specific Overrides
+ 
+  - ignore secondary feedback
+
+
+The thing I don't like about 8thsPerCycle and Quantize overrides
+is that it's easy enough to do in a script.  Instead of playing
+the save/restore variable game, how about a new argument syntax
+
+    Insert quantize=off 
+    Multiply quantize=subCycle,subCycles=16
+
+Focus Lock could work similarly
+
+    Insert focusLock=off
+    Insert groupLock=off
+
+Or more proactively
+
+    Insert group=A
+
+Mute Cancel can work this way but much more tedious than global config
+    
+    Retrigger muteCancel=off
+
+
+

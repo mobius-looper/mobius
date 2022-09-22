@@ -1,0 +1,21 @@
+!name Tremolo
+!focuslock
+Variable track tremoloMode
+
+if tremoloMode = true
+  set tremoloMode false
+else 
+  set tremoloMode true
+  set 8thsPerCycle 8
+  label TREMOLOLOOP
+    set output 64
+    wait subcycle
+    jump STOP tremoloMode = false
+    set output 127
+    wait subcycle
+    jump STOP tremoloMode = false
+  jump TREMOLOLOOP
+  label STOP
+  set output 127
+endif
+

@@ -1,0 +1,93 @@
+
+Frames Per Beat Rounding
+
+It makes calculations easier if the number of frames in one sync beat
+is an integer.  This ensures that slaving to some number of beats will
+always produce loop lengths that share a common factor.  For example
+if the framesPerBeat were 10.5 then a loop of two beats would be 21
+but a loop of 3 beats would be 31 or 32 and would gradually drift out
+of sync with a 2 beat loop.
+
+For a sample rate of 44100 or higher the result of the roundoff is
+relatively small.  
+
+  
+  120 bpm, 2 bps, 22050 fps
+
+  120.1 bpm, 2.0016r bps, 22031.640... fps
+    22031 fps = 2.0017... bps, 120.103... bpm
+
+  120.2 bpm, 2.003r bps, 22013.311... fps
+    22013 fps = 2.00336 bps, 120.201 bpm
+
+Using a program to do this calculation and print the roundoff error,
+the error is in the ten-thousandths at small tempos and gradually
+increases.  Above 120 bpm the error is in the thousandths, at around
+180 you start to see hundredths, the maximum error up to 500 was
+at 487 bpm with an error of 0.088074.
+
+Calculating the roundoff errors between 80 and 300 bpm with 1/10 bpm 
+increments shows a maximum error of 0.032959.
+
+Converting to frames .03 bpm represents 22.05 frames, .088 represents
+64.68 frames.  Accumuating 64 frames of drift every beat isn't ideal, but
+this is at relatively extreme tempos.
+
+For a typical tempo of 140.7 bpm, the error was .007217 or 5.3 frames.
+
+The question is whether it is better to ensure that slave tracks are
+exact multiples of a common factor and will therefore never drift relative
+to each other, or whether it is better to reduce the drift relative to the
+sync source.  I'm thinking the former.  
+
+The expectation is that Mobius tracks once recorded don't drift relative to 
+each other and we can never completely prevent external drift, especially
+with MIDI.
+
+/**
+ * Gather some test data.
+ */
+PRIVATE void Mobius::hack()
+{
+    float maxError = 0.0f;
+
+    printf("Roundoff error for integer tempos:\n");
+    for (int i = 10 ; i < 500 ; i++) {
+        float error = hack2((float)i);
+        if (error > maxError)
+          maxError = error;
+    }
+    printf("Max roundoff error for integer tempos: %f\n", maxError);
+
+
+    printf("Roundoff error for 1/10 fractional tempos:\n");
+    maxError = 0.0f;
+    float tempo = 80.0f;
+    while (tempo < 300) {
+        float error = hack2(tempo);
+        if (error > maxError)
+          maxError = error;
+        tempo += .1f;
+    }
+    printf("Max roundoff error for 1/10 fractional tempos: %f\n", maxError);
+}
+
+PRIVATE float Mobius::hack2(float tempo) 
+{
+    float bps = tempo / 60.0f;
+    float fps = 44100.0f / bps;
+    int ifps = (int)fps;
+    float abps = 44100.0f / (float)ifps;   
+    float atempo = abps * 60.0f;
+    float error = atempo - tempo;
+
+    if (error < 0) 
+      error = 0.0f - error;
+
+    printf("Tempo %f fps %f round tempo %f error %f\n",
+           tempo, fps, atempo, error);
+
+    return error;
+}
+
+----------------------------------------------------------------------

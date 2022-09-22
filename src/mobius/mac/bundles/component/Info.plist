@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+
+	<key>CFBundleVersion</key>
+	<string>2.5</string>
+
+	<key>CFBundleShortVersionString</key>
+	<string>2.5</string>
+
+	<key>CFBundleLongVersionString</key>
+	<string>2.5</string>
+
+    <!-- required and must be unique
+         !! this must match AUMobius.BUNDLE_ID
+    -->
+	<key>CFBundleIdentifier</key>
+	<string>circularlabs.mobiusau.2.5</string>
+
+	<key>CFBundleExecutable</key>
+	<string>Mobius 2</string>
+
+	<!-- not sure where these would be displayed... -->
+	<key>CFBundleGetInfoString</key>
+	<string>Circular Labs Mobius Audio Unit v2.5</string>
+
+        <!-- not sure this is relevant for AU plugins?
+        -->
+	<key>CFBundleIconFile</key>
+	<string>mobius.icns</string>
+ 
+	<key>NSHumanReadableCopyright</key>
+	<string>2012 Jeffrey S. Larson</string>
+
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+
+	<key>CFBundleSignature</key>
+	<string>????</string>
+
+	<!-- This is defined in Launch Services Programming Guide,
+	     it has nothing to do with Carbon, it means "must run 
+	     natively in Mac OS X and cannot be run in the Classic
+	     emulation environment".
+	     This seems to be necessary for the component to be
+	     recognized as a Universal Binary, even if the the library
+	     was compiled for both.
+	-->
+	<key>LSRequiresCarbon</key>
+        <true/>
+
+	<!-- From Runtime Configuration Guidelines:
+	     If true Core Services routines map the bundle's resource files
+	     into memory instead of reading them.  File mapping can improve
+	     performance in situations where you are frequently accessing a
+	     small number of resources. However, resources are mapped into
+	     memory read-only and cannot be modified.
+	<key>CSResourcesFileMapped</key>
+	<true/>
+	-->
+
+</dict>
+</plist>

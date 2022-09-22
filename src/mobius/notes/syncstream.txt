@@ -1,0 +1,374 @@
+Notes on better alignment of triggers (primarily MIDI) with the audio stream.
+
+PortAudio gives us a "GetStreamTime" that returns a double seconds
+counter.  In the following trace it is the fourth column.  The fifth
+column is our millisecond counter.
+
+At a sample rate of 44100 a milllisecond is 44.1 samples.  A 256 sample
+buffer therefore represents 256 / 44.1 = 5.804988 milliseconds.
+
+With perfect timing each PortAudio buffer would represent these millisecond offsets:
+
+   0 5.8 11.6 17.4 23.2 29 34.8 40.6 46.4 52.2 58 63.8
+
+Rounding to an integral millisecond the deltas in milliseconds between buffers is:
+
+   5 6 6 6 6 5 6 6 6 6 5
+
+Tracing the first few PA blocks is close to this though there is some jitter.
+Occasionally we see a delta of 7 followed by several 5's to compensate.
+Occasionally there is a major disruption followed by several blocks of 0 delta
+to compensate:
+
+----------------------------------------------------------------------
+35756: 0 0: paCallback 1969079.137925 0.000000 1969079.156859 1969079.145000 1522
++6
+35756: 0 0: paCallback 1969079.142925 0.000000 1969079.161859 1969079.150000 1528
++6
+35756: 0 0: paCallback 1969079.148925 0.000000 1969079.167859 1969079.156000 1534
++6
+35756: 0 0: paCallback 1969079.154925 0.000000 1969079.173859 1969079.162000 1540
++5
+35756: 0 0: paCallback 1969079.160925 0.000000 1969079.179859 1969079.168000 1545
++6
+35756: 0 0: paCallback 1969079.166925 0.000000 1969079.185859 1969079.174000 1551
++6
+35756: 0 0: paCallback 1969079.172925 0.000000 1969079.191859 1969079.180000 1557
++6
+35756: 0 0: paCallback 1969079.178925 0.000000 1969079.197859 1969079.187000 1564
++5
+35756: 0 0: paCallback 1969079.184925 0.000000 1969079.203859 1969079.192000 1569
++5
+35756: 0 0: paCallback 1969079.189925 0.000000 1969079.208859 1969079.197000 1574
++7
+35756: 0 0: paCallback 1969079.195925 0.000000 1969079.214859 1969079.203000 1581
++6
+35756: 0 0: paCallback 1969079.201925 0.000000 1969079.220859 1969079.209000 1585
++7
+35756: 0 0: paCallback 1969079.206925 0.000000 1969079.225859 1969079.215000 1592
+6
+35756: 0 0: paCallback 1969079.212925 0.000000 1969079.231859 1969079.221000 1598
+5
+35756: 0 0: paCallback 1969079.218925 0.000000 1969079.237859 1969079.226000 1603
+6
+35756: 0 0: paCallback 1969079.224925 0.000000 1969079.243859 1969079.232000 1609
+6
+35756: 0 0: paCallback 1969079.229925 0.000000 1969079.248859 1969079.237000 1615
+6
+35756: 0 0: paCallback 1969079.235925 0.000000 1969079.254859 1969079.243000 1621
+24, 17 + 7 = 24
+35756: 0 0: 17 millis between interrupts
+35756: 0 0: paCallback 1969079.259925 0.000000 1969079.278859 1969079.268000 1645
+0, buffer catch up?
+35756: 0 0: 1 millis between interrupts
+35756: 0 0: paCallback 1969079.259925 0.000000 1969079.278859 1969079.268000 1645
+35756: 0 0: 0 millis between interrupts
+0
+35756: 0 0: paCallback 1969079.259925 0.000000 1969079.278859 1969079.268000 1645
+0
+35756: 0 0: paCallback 1969079.259925 0.000000 1969079.278859 1969079.268000 1645
+5
+35756: 0 0: paCallback 1969079.265925 0.000000 1969079.284859 1969079.273000 1650
+6
+35756: 0 0: paCallback 1969079.270925 0.000000 1969079.289859 1969079.278000 1656
+6
+35756: 0 0: paCallback 1969079.276925 0.000000 1969079.295859 1969079.284000 1662
+5
+35756: 0 0: paCallback 1969079.282925 0.000000 1969079.301859 1969079.290000 1667
+7
+35756: 0 0: paCallback 1969079.288925 0.000000 1969079.307859 1969079.296000 1673
+6
+35756: 0 0: paCallback 1969079.294925 0.000000 1969079.313859 1969079.302000 1679
+6
+35756: 0 0: paCallback 1969079.300925 0.000000 1969079.319859 1969079.308000 1685
+6
+35756: 0 0: paCallback 1969079.306925 0.000000 1969079.325859 1969079.314000 1691
+1
+35756: 0 0: 1 millis between interrupts
+35756: 0 0: paCallback 1969079.311925 0.000000 1969079.330859 1969079.319000 1692
+35756: 0 0: 10 millis between interrupts
+10
+35756: 0 0: paCallback 1969079.316925 0.000000 1969079.335859 1969079.324000 1702
+6
+35756: 0 0: paCallback 1969079.322925 0.000000 1969079.341859 1969079.331000 1708
+9
+35756: 0 0: 9 millis between interrupts
+35756: 0 0: paCallback 1969079.332925 0.000000 1969079.351859 1969079.340000 1717
+35756: 0 0: 2 millis between interrupts
+2
+35756: 0 0: paCallback 1969079.334925 0.000000 1969079.353859 1969079.342000 1719
+35756: 0 0: paCallback 1969079.341925 0.000000 1969079.360859 1969079.349000 1726
+35756: 0 0: 0 millis between interrupts
+35756: 0 0: paCallback 1969079.346925 0.000000 1969079.365859 1969079.354000 1726
+35756: 0 0: 11 millis between interrupts
+35756: 0 0: paCallback 1969079.351925 0.000000 1969079.370859 1969079.359000 1737
+35756: 0 0: 11 millis between interrupts
+35756: 0 0: paCallback 1969079.362925 0.000000 1969079.381859 1969079.370000 1748
+35756: 0 0: 1 millis between interrupts
+35756: 0 0: paCallback 1969079.363925 0.000000 1969079.382859 1969079.371000 1749
+35756: 0 0: paCallback 1969079.369925 0.000000 1969079.388859 1969079.377000 1754
+35756: 0 0: paCallback 1969079.375925 0.000000 1969079.394859 1969079.383000 1760
+35756: 0 0: paCallback 1969079.381925 0.000000 1969079.400859 1969079.389000 1766
+35756: 0 0: paCallback 1969079.387925 0.000000 1969079.406859 1969079.395000 1772
+35756: 0 0: 11 millis between interrupts
+35756: 0 0: paCallback 1969079.397925 0.000000 1969079.416859 1969079.405000 1783
+35756: 0 0: 1 millis between interrupts
+35756: 0 0: paCallback 1969079.398925 0.000000 1969079.417859 1969079.406000 1784
+35756: 0 0: paCallback 1969079.404925 0.000000 1969079.423859 1969079.412000 1790
+35756: 0 0: paCallback 1969079.409925 0.000000 1969079.428859 1969079.418000 1794
+35756: 0 0: paCallback 1969079.416925 0.000000 1969079.435859 1969079.424000 1801
+35756: 0 0: paCallback 1969079.421925 0.000000 1969079.440859 1969079.430000 1806
+35756: 0 0: paCallback 1969079.427925 0.000000 1969079.446859 1969079.435000 1812
+35756: 0 0: paCallback 1969079.433925 0.000000 1969079.452859 1969079.441000 1818
+35756: 0 0: paCallback 1969079.438925 0.000000 1969079.457859 1969079.446000 1824
+35756: 0 0: paCallback 1969079.444925 0.000000 1969079.463859 1969079.452000 1830
+35756: 0 0: paCallback 1969079.450925 0.000000 1969079.469859 1969079.458000 1835
+35756: 0 0: paCallback 1969079.456925 0.000000 1969079.475859 1969079.464000 1841
+35756: 0 0: paCallback 1969079.462925 0.000000 1969079.481859 1969079.470000 1847
+35756: 0 0: paCallback 1969079.468925 0.000000 1969079.487859 1969079.476000 1853
+35756: 0 0: 9 millis between interrupts
+35756: 0 0: paCallback 1969079.476925 0.000000 1969079.495859 1969079.484000 1862
+35756: 0 0: 3 millis between interrupts
+35756: 0 0: paCallback 1969079.479925 0.000000 1969079.498859 1969079.487000 1865
+35756: 0 0: paCallback 1969079.485925 0.000000 1969079.504859 1969079.493000 1871
+35756: 0 0: paCallback 1969079.494925 0.000000 1969079.513859 1969079.502000 1879
+35756: 0 0: 3 millis between interrupts
+35756: 0 0: paCallback 1969079.497925 0.000000 1969079.516859 1969079.505000 1882
+35756: 0 0: paCallback 1969079.503925 0.000000 1969079.522859 1969079.511000 1888
+35756: 0 0: paCallback 1969079.509925 0.000000 1969079.528859 1969079.517000 1892
+35756: 0 0: paCallback 1969079.515925 0.000000 1969079.534859 1969079.523000 1900
+35756: 0 0: paCallback 1969079.520925 0.000000 1969079.539859 1969079.528000 1906
+35756: 0 0: 3 millis between interrupts
+35756: 0 0: paCallback 1969079.525925 0.000000 1969079.544859 1969079.534000 1909
+35756: 0 0: paCallback 1969079.531925 0.000000 1969079.550859 1969079.540000 1917
+35756: 0 0: paCallback 1969079.537925 0.000000 1969079.556859 1969079.545000 1922
+35756: 0 0: paCallback 1969079.543925 0.000000 1969079.562859 1969079.551000 1928
+35756: 0 0: paCallback 1969079.549925 0.000000 1969079.568859 1969079.557000 1934
+35756: 0 0: paCallback 1969079.555925 0.000000 1969079.574859 1969079.563000 1940
+35756: 0 0: paCallback 1969079.560925 0.000000 1969079.579859 1969079.568000 1946
+35756: 0 0: paCallback 1969079.566925 0.000000 1969079.585859 1969079.574000 1952
+35756: 0 0: paCallback 1969079.572925 0.000000 1969079.591859 1969079.580000 1958
+35756: 0 0: paCallback 1969079.578925 0.000000 1969079.597859 1969079.586000 1963
+35756: 0 0: paCallback 1969079.584925 0.000000 1969079.603859 1969079.592000 1969
+35756: 0 0: paCallback 1969079.590925 0.000000 1969079.609859 1969079.598000 1975
+35756: 0 0: paCallback 1969079.596925 0.000000 1969079.615859 1969079.604000 1981
+35756: 0 0: paCallback 1969079.601925 0.000000 1969079.620859 1969079.609000 1987
+35756: 0 0: paCallback 1969079.607925 0.000000 1969079.626859 1969079.615000 1992
+35756: 0 0: paCallback 1969079.613925 0.000000 1969079.632859 1969079.621000 1999
+35756: 0 0: paCallback 1969079.618925 0.000000 1969079.637859 1969079.627000 2003
+35756: 0 0: paCallback 1969079.626925 0.000000 1969079.645859 1969079.634000 2011
+35756: 0 0: paCallback 1969079.630925 0.000000 1969079.649859 1969079.638000 2015
+35756: 0 0: paCallback 1969079.636925 0.000000 1969079.655859 1969079.644000 2021
+35756: 0 0: paCallback 1969079.642925 0.000000 1969079.661859 1969079.650000 2028
+35756: 0 0: paCallback 1969079.647925 0.000000 1969079.666859 1969079.655000 2033
+35756: 0 0: paCallback 1969079.653925 0.000000 1969079.672859 1969079.661000 2039
+35756: 0 0: 11 millis between interrupts
+35756: 0 0: paCallback 1969079.665925 0.000000 1969079.684859 1969079.673000 2050
+35756: 0 0: 1 millis between interrupts
+35756: 0 0: paCallback 1969079.665925 0.000000 1969079.684859 1969079.674000 2051
+35756: 0 0: paCallback 1969079.671925 0.000000 1969079.690859 1969079.679000 2056
+35756: 0 0: paCallback 1969079.679925 0.000000 1969079.698859 1969079.687000 2064
+35756: 0 0: paCallback 1969079.683925 0.000000 1969079.702859 1969079.691000 2068
+35756: 0 0: paCallback 1969079.688925 0.000000 1969079.707859 1969079.696000 2074
+35756: 0 0: 9 millis between interrupts
+35756: 0 0: paCallback 1969079.697925 0.000000 1969079.716859 1969079.705000 2083
+35756: 0 0: 2 millis between interrupts
+35756: 0 0: paCallback 1969079.700925 0.000000 1969079.719859 1969079.708000 2085
+35756: 0 0: paCallback 1969079.706925 0.000000 1969079.725859 1969079.714000 2090
+35756: 0 0: paCallback 1969079.712925 0.000000 1969079.731859 1969079.720000 2097
+----------------------------------------------------------------------
+
+The PA stream time increments with these deltas, it follows fairly closely
+to our millisecond deltas.  
+
+35756: 0 0: paCallback 1969079.137925 0.000000 1969079.156859 1969079.145000 1522
++6 msec, +.005 stream
+35756: 0 0: paCallback 1969079.142925 0.000000 1969079.161859 1969079.150000 1528
++6 msec, +.006 stream
+35756: 0 0: paCallback 1969079.148925 0.000000 1969079.167859 1969079.156000 1534
++6 msec, +.006 stream
+35756: 0 0: paCallback 1969079.154925 0.000000 1969079.173859 1969079.162000 1540
++5 msec, +.006 stream
+35756: 0 0: paCallback 1969079.160925 0.000000 1969079.179859 1969079.168000 1545
++6 msec, +0.006 stream
+35756: 0 0: paCallback 1969079.166925 0.000000 1969079.185859 1969079.174000 1551
++6 msec, +0.006 stream
+35756: 0 0: paCallback 1969079.172925 0.000000 1969079.191859 1969079.180000 1557
++6 msec, +0.007 stream
+35756: 0 0: paCallback 1969079.178925 0.000000 1969079.197859 1969079.187000 1564
++5 msec, +0.005 stream
+35756: 0 0: paCallback 1969079.184925 0.000000 1969079.203859 1969079.192000 1569
++5 msec, +0.005 stream
+35756: 0 0: paCallback 1969079.189925 0.000000 1969079.208859 1969079.197000 1574
++7 msec, +0.006 stream
+35756: 0 0: paCallback 1969079.195925 0.000000 1969079.214859 1969079.203000 1581
++6 msec, +0.006
+35756: 0 0: paCallback 1969079.201925 0.000000 1969079.220859 1969079.209000 1585
++7 msec, +0.006
+35756: 0 0: paCallback 1969079.206925 0.000000 1969079.225859 1969079.215000 1592
+6 msec, +0.006
+35756: 0 0: paCallback 1969079.212925 0.000000 1969079.231859 1969079.221000 1598
+5 msec, +0.005
+35756: 0 0: paCallback 1969079.218925 0.000000 1969079.237859 1969079.226000 1603
+6 msec, +0.006
+35756: 0 0: paCallback 1969079.224925 0.000000 1969079.243859 1969079.232000 1609
+6 msec, +0.005
+35756: 0 0: paCallback 1969079.229925 0.000000 1969079.248859 1969079.237000 1615
+6 msec, +0.006
+35756: 0 0: paCallback 1969079.235925 0.000000 1969079.254859 1969079.243000 1621
+24, 17 + 7 = 24 msec, .025 stream
+35756: 0 0: 17 millis between interrupts
+35756: 0 0: paCallback 1969079.259925 0.000000 1969079.278859 1969079.268000 1645
+0, buffer catch up?, .0 stream
+35756: 0 0: 1 millis between interrupts
+35756: 0 0: paCallback 1969079.259925 0.000000 1969079.278859 1969079.268000 1645
+35756: 0 0: 0 millis between interrupts
+0, .0 stream
+35756: 0 0: paCallback 1969079.259925 0.000000 1969079.278859 1969079.268000 1645
+0, .0 stream
+35756: 0 0: paCallback 1969079.259925 0.000000 1969079.278859 1969079.268000 1645
+5 msec, 0.005 stream
+35756: 0 0: paCallback 1969079.265925 0.000000 1969079.284859 1969079.273000 1650
+6
+35756: 0 0: paCallback 1969079.270925 0.000000 1969079.289859 1969079.278000 1656
+6
+----------------------------------------------------------------------
+
+The Debug function was modified to trace the current millisecond and stream time.
+FunctionContext was extended to capture the millisecond and stream time close
+to the time of invocation.  The FunctionContext is then copied into the
+pending function queue of the Track and processed at the beginning of the
+next interrupt.  
+
+Millisecond and stream at the point of evaluation should lag the point of invocation
+by up to one block (5.8 milliseconds).
+
+35916: 101 -289: DebugFunction: current millisecond 4196 stream time (x1000) 2036069295
+35916: 101 -289: DebugFunction: trigger millisecond 4192 stream time (x1000) 2036069291
+
+msec lag 5, stream lag .004
+
+35916: 101 -289: DebugFunction: current millisecond 4881 stream time (x1000) 2036069981
+35916: 101 -289: DebugFunction: trigger millisecond 4879 stream time (x1000) 2036069979
+
+msec 2, stream .002
+
+35916: 101 -289: DebugFunction: current millisecond 5073 stream time (x1000) 2036070172
+35916: 101 -289: DebugFunction: trigger millisecond 5072 stream time (x1000) 2036070171
+
+msec 1, stream .001
+
+35916: 101 -289: DebugFunction: current millisecond 5241 stream time (x1000) 2036070340
+35916: 101 -289: DebugFunction: trigger millisecond 5240 stream time (x1000) 2036070339
+
+msec 1, stream .001
+
+35916: 101 -289: DebugFunction: current millisecond 5392 stream time (x1000) 2036070492
+35916: 101 -289: DebugFunction: trigger millisecond 5392 stream time (x1000) 2036070492
+
+msec 0, stream 0
+
+35916: 101 -289: DebugFunction: current millisecond 6593 stream time (x1000) 2036071693
+35916: 101 -289: DebugFunction: trigger millisecond 6592 stream time (x1000) 2036071692
+
+msec 1, stream .001
+
+35916: 101 -289: DebugFunction: current millisecond 13995 stream time (x1000) 2036079094
+35916: 101 -289: DebugFunction: trigger millisecond 13992 stream time (x1000) 2036079091
+
+msec 3, stream .003
+
+35916: 101 -289: DebugFunction: current millisecond 69195 stream time (x1000) 2036134294
+35916: 101 -289: DebugFunction: trigger millisecond 69194 stream time (x1000) 2036134293
+
+msec 1, stream .001
+
+----------------------------------------------------------------------
+
+The measured stream lag can be used to offset the invocation of the
+function rather than always doing them at the start of the block.
+
+For most functions, we should do them at the start of the block since
+this is closest to the trigger time.  Adding a lag offset would make
+it more "accurate" relative to the stream time but this would still be
+percieved as extra latency by the user (probably not perceptable).  So
+while jittery starting the request as quicly as possible is best.
+
+The added latency can be offset somewhat by reducing the audio latency
+compensation during recording (loop time = current time + audio
+latency - trigger latency) resulting in a more accurate alignment of
+the record event.  But this isn't good for adjustments to the output
+stream which should take place as soon as possible.
+
+Factoring in lag (accutally offset within the previous buffer) is more
+important for timing events where the distance between them is
+carefully measured.  The jitter introduced by block quantization
+can throw off timing calculations though it tends to balance over
+time.
+
+For Sync=Out, if we do this adjustment to MS_CLOCK events from
+the millisecond timer, it is important that we also offset the
+initial clock sent 
+
+If we do offset adjustment of MIDI clocks, it is important that the
+first clock sent when the loop is closed also be offset.  Otherwise
+the gap between the first and second clocks will be larger than normal.
+
+Example:
+
+Loop of 44100 samples is closed.  We're at the start of an interrupt block.
+Tempo is calculated as 120 BPM, which is 918 samples per MIDI clock or
+about 3.5 blocks per clock.
+
+Call the block in which recording stops and playback starts block zero.
+
+The timer starts, MIDI start and a clock is sent and we start watching clocks.
+At about the middle of block 3 another MIDI clock is sent and this is
+entered in to the sync queue for the next interrupt.  Processing time for
+each clock is in essence "rouded up" to the next block.
+
+If we do no adjustment the "pulse width" between the first and second clocks
+will be 4 blocks rather than 3.5 because of the roundup.  This will make
+the pulse look larger than expected.  
+
+In theory the third MIDI clock should be sent very close to the beginning
+of block 7.  If it is slightly early, it rounds up to 7 and the pulse
+width returns to alignment.  The initial width was 4 blocks but the second
+was 3 so we're back in sync (3.5 * 2 = 7).
+
+If the third clock is slightly late it will be rounded up to block 8.  
+We'll be one block ahead.  But the fourth clock should come in during 
+block 10 rounded up to 11.  The delta between 8 and 11 is only 3
+instead of 3.5 so it is closer to true alignment.  This jitter 
+continues and tends to correct itself unless the loop is very short
+and you make alignment decisions at the end of every loop.
+
+But the closing of the loop is usually deferred by input latency.
+At our usual test latency of 289 the loop close will happen
+at offset 33 into the block, this is when clocks start.
+
+The second clock will come in at sample 951 in block 3 and round up to 4.
+The third clock at 1869 in block 7 rounding up to 8.
+The fourth clock at 2787 in block 10 (10.8) rounding up to 11.  
+
+So the jitter again tends to ballance but there is always an initial
+33 or 223 frame offset because the first clock wasn't quantized to a
+block boundary.  It would technically be more accurate if the first
+pulse wasn't processed (for stream advance purposes) until the beginning
+of the block AFTER the recording is closed and the MIDI clocks actually
+do start.
+
+
+
+
+
+
+
+
+
+
+
+
+the trigger time so while the relative stream time could be more accurate
+extra delay is not wanted because of 
+

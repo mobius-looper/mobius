@@ -1,0 +1,329 @@
+
+
+- Track strip indicator of which loop is playing (Per)
+  Either something graphical like the loop bars, but
+  text like "2/4" meaning "loop 2 of 4" would be more
+  concise and scalable.
+
+- Combo loop list and loop meter (Matthias)
+  In the track strip, display a vertical stack of bars to represent
+  each loop and have the bar representing the active loop be 
+  a moving loop meter.
+
+- With minimum and maximum tempo both zero, should disable
+  SpeedSyncAdjust and UnroundeSyncAdjust (Per)
+  Forget the details, dig up more on this issue.
+
+- Random value generator in scripts (Per)
+  Useful for things like NextLoop to randomize where we go,
+  or to randomize which subcycle we switch on.
+  (see discussion in the dialogs file)
+
+- Long press becomes a sustained function (Rainer)
+  
+- Warning message when binding a key or MIDI event that already has
+  a binding to something else (Per)
+  Currently, the old binding is silently deleted.
+
+- Empty loops have a different color bar in the loop list (Per)
+  With transfer modes, could also have different colors for loops
+  with direction and rate changes.  Also some indication of how
+  long the loop is relative to the others.  Perhaps a hollow
+  bar means empty.
+
+- Audio Recording : deferred track rendering (Per)
+  When we support saving audio from each track to seperate
+  files, may be nice to delay capturing audio from empty tracks
+   until something is recorded into it.
+
+
+* Unresolved function calls from scripts need to generate an error message.
+
+* Call scripts from other scripts
+  - Call script.mos                 file name
+  - Call 'Do Something Strange'     display name
+  - 'Do Something Strange'	    resolves to script
+  - Run 'Do Something Strange'      run async
+
+* Script Expressions
+   - Function arguments
+   - Call arguments
+   - Repeat count
+   - Wait time
+   - For spec
+   - Echo, between strings
+     - echo 'foo' a+b 'bar'
+     - echo 'foo' + (a + b) + 'bar'
+     - echo foo <% a + b %> bar
+     - sigh, easy enough just to do calculations in a Variable and use $ refs
+   - Message, like Echo
+   - Setup, Preset, name of config object
+
+* Need rate/pitch *relative* shift up/down, e.g.
+   RateShiftRel 7  - shift up a fifth from where we currently are
+
+* Quantized Slips are "escaping quantize" when pressed again
+  during the quantize period, they need to be adjusting the amount
+  of slip instead
+
+* Pending Preset problems
+
+  If you do "set preset foo" it will set a pending preset, which
+  means any other "set" until the next next interrupt will be lost.
+  The Preset function handles this, but the generic parameter setters
+  don't know the function context.  Same with "set setup foo".
+
+* Unit tests need a way to initialize the Setup, previously initializing
+  the Preset was enough....this causes several problems because the preset
+  is unpredictable on a GlobalReset or GeneralReset.
+
+
+* Track change functions should also change the "home" track
+   for a script if executed within a script
+
+* Proc needs to maintain its own private resolution scope
+  for Labels and Variables
+
+* go through all function invokers looking for ones that check 
+  the current mode, do these all behave correctly in the presence
+  of quantized mode switch events?
+
+* Need to save the full FunctionContext (or at least most of it)
+  with a reschedulable event so we can reschedule it in the
+  correct context.
+
+
+
+Event should have its own local Preset so we don't have
+to allocate one.
+
+Event should have its own local FunctionContext or a subset
+so we can reschedule them accurately.
+
+Event Sequencing.  Review notes in Event.cpp.
+
+- ProjectLoop is not storing scaleRate, rate, scalePitch, pitch
+
+Setups
+
+  Track::loadProject
+  - getting levels out of the Project should be disalbed
+    unless the track has content, if everything is in reset, 
+    revert to the Setup
+
+  - make the setup/init toggle a global parameter
+
+  - need "instant parameter" for the current preset, midi config,
+    and setup
+
+* If we allow randomly scheduled events, ponder this issue:
+
+  T1: Jump/Rate latency
+  T2: Jump/Speed
+  T3: Speed
+  T4: Rate
+
+  The delta between T1 and T1 is normal latency but the delta between
+  T2 and T3 will be 1/2 latency.  
+
+----------------------------------------------------------------------
+
+Long Presses:
+
+Documented:
+
+  Record -> Reset
+  Multiply -> GeneralReset if in Reset
+  Multiply -> SUSMultiply if not in Reset??
+  Multiply -> SUSSubstitite (seems to be a conflict in the manual)
+     - requires a rewind if not quantizing
+
+  Overdub -> SUSOverdub
+  Insert -> SUSReplace  
+  Mute -> SUSMute
+  Reverse -> SUSReverse
+  Trigger -> Reset (only for MIDI note on?), if SamplerStyle!=Attaqck
+    - not sure I like this one
+
+Extensions:
+
+  Insert -> SUSInsert
+  Stutter -> SUSStutter
+  Replace -> SUSReplace
+  Substitute -> SUSSubstutite
+  Speed -> SUSSpeed
+  SamplePlay -> (mute on release?)
+  Trigger -> (mute on release?)
+  NextLoop -> SUSNextLoop
+  PrevLoop -> SUSPrevLoop
+  Clear -> Reset
+  Reset -> GeneralReset
+  GeneralReset -> GlobalReset
+  * ExtraLong-Reset -> GlobalReset
+  Bounce -> SUSBounce
+  RateDown -> SUSRateDown
+  RateUp -> SUSRateUp
+  RateNext -> SUSRateNext
+  RatePrev -> SUSRatePrev
+  RateShift -> SUSRateShift
+  PitchDown -> SUSPitchDown
+  PitchUp -> SUSPitchUp
+  PitchNext -> SUSPitchNext
+  PitchPrev -> SUSPitchPrev
+  PitchShift -> SUSPitchShift
+
+----------------------------------------------------------------------
+
+Need:
+  
+  - easier way than "for" to ask questions about the next loop?
+
+  - check Program change bindings, Luca says they don't work after the upgrade
+
+  - check SawStudio crash
+
+  - Script directory with autoload
+  
+  - Script "library" with multiple scripts in one file
+
+  - Looperlative emulator library
+
+
+Would like LoopCopy=Timing and LoopCopy=Sound to preserve the
+current frame, currently they start over at zero and ignore 
+SamplerStyle.  This will confuse Layer::startInsert which assumes
+that if startFrame == 0 and there are segments that we're doing
+a time copy, will need to pass a flag.
+
+
+Max Track Groups doesn't really belong in MidiConfig, 
+move to Preset?  Actually it is a setting for all tracks
+so it should go in the Project, need more control
+over projects!
+
+!! VST Through Device not working when we get events
+from the host
+
+VstMobius creates its own MidiInterface to pass to the plugin, but
+it is an ordinary WindowsMidiInterface so setting the through port
+won't do anything without an input port.  
+
+Need to be able to pass the MIDI events received through the VST
+interface to the through device.  But what if an input device
+is also selected, route both??  I guess it's ok as long as the
+low level device send function is reentrant.
+
+
+* Script wait subtlety:
+
+   Reverse
+   Wait loop
+
+When the reverse happens, the script wait for "loop" will be reflected
+relative to the location of the ReverseEvent, not the entire loop.
+In this case that isn't usually what we expect, we expect it to go
+from zero to the end of the loop since that's what "Wait loop" usually means.
+May need to add something to ScriptWait event to indiciate whether this
+is a "logical location" wait or an absolute frame wait.  But I guess
+we have that with "Wait end" and "Wait start".
+
+
+---------------------
+
+!! Now that we have track scopes, we don't need the individual
+TrackSelectn functions, just make track scope bindings to a
+generic TrackSelect function.
+
+
+- Per reports a "bump" when ending the initial recording, check 
+  to make sure we're not doing an immediate drift retrigger
+
+- convert the track Parameters related to controllers into Controller
+  operations OR remove them and have script parameter resolution understand
+  controllers
+
+- Add some layertests for the way feedback works with segments.
+
+- With the new smoothing logic, make sure feedback matching works
+  if we were smoothing feedabck over the edge.
+
+- Per reports that switching MIDI Configurations is unreliable
+  and crashes often
+
+- From Matthias L.
+
+  When we retrigger, should a loop be brought out of Mute mode?
+
+  If you have quantized functions, Overdub, Multiply, Insert scheduled
+  BEFORE you do a Retrigger or NextLoop, these will be processed
+  as if they were scheduled after the trigger, which has some special
+  semantics.  
+
+  Revisit rescheduling of events after switchEvent.  If we're retriggering
+  the SAME loop, it's quite different, currently we get into
+  an infinite loop.
+
+----------------------------------------------------------------------
+
+- When running the unit test scripts, need a way to disable MIDI
+  triggered functions or parameter changes, especially so we don't
+  get CC changes to feedback during the test
+
+
+----------------------------------------------------------------------
+
+Design Flaws:
+
+  - Layer: If there are many little unrounded inserts we create
+    a layer for each one.  Think of a way to reuse the same layer
+    like we do when there are multiple overdubs per layer.
+
+Recent Bugs
+
+- Jeff: When a pending RecordEnd is scheduled for a sync mode,
+   pressing undo should just remove the event so we can keep
+   recording, instead it resets.
+
+- Jeff: Reverse while in overdub, if your reverse again before
+  reaching the start, the reverse part of the overdub will be lost, 
+  maybe overwriting the Layer audio?  Need to shift immediately after
+  the direction change if we've been recording
+
+- Dmitry: claims you have to toggle the Cubase plugin enable switch
+  twice before you hear sound pass through
+
+- Dmitry: Sync=Out, undo through 10 or so layers often (but not always)
+  causes dealignment of around 10-20ms.  Uses a track containing a metronome
+
+Recent Enhancement Requests
+
+- Dmitry: wants blinkers for the Global MIDI start point, and drift retrigger
+  like the EDP, drift retrigger LED has two colors for early vs. late
+- Ben: wants a clipping indicator
+- mks: expose presets and the CC knobs as VST parameters
+     option to have VST presets be either presets or track selectors
+- Alan: would like a roudning period when MultiplyMode=Overdub so that
+  multi-increase works
+- Matthias: Undo when in overdub, doesn't want to remain in overdub,
+   not sure what the EDP does, see mail from around 3/30
+- Matthias: Undo in scripts needs to be handled synchronously like
+   TrackSelect so that the next functions in the script are applied
+   to the new track/loop/layer
+- Ben: MIDI "learn" quickly from the UI buttons
+  
+----------------------------------------------------------------------
+External Sync
+
+  - MIDI Sync Indicators (page 6-11)
+    MIDI notes transmitted at loop start point, global MIDI start point, 
+    cycle start point, and subcycle start point.  Used to denote
+    interesting times in a sequencer or do a metronome.
+    Notes are less than the base Source# note.  If we were to do this,
+    just provide global parameters where the notes can be set.
+
+  - Continue with SongPositionPointer
+
+
+
+
+

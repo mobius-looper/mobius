@@ -1,0 +1,92 @@
+
+New Binding Dialog
+
+There are way more things we can bind than actual bindings, it is hard
+to see what the overall bindings are.  Well, with the track/group
+multipliers there can be lots of bindings too.
+
+Method 1: Binding List Oriented
+
+Bindigns List: tall panel on the right containing a list of all
+bindings.  Sort by Trigger/Target or Target/Trigger?  New/Delete
+button at the bottom.
+
+Delete button deletes the selected binding.
+New button creates a new binding, if one is selected it creates
+a copy?
+
+Once a binding is selected the target is scrolled into position
+and the trigger parameters are displayed for editing.
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+
+<MidiConfig>
+
+  <MidiBinding name='Record' status='note' value='0'/>
+
+  <FunctionBinding name='Record' status='note' value='0'/>
+
+  <ControllerBinding name='inputLevel' value='6'/>
+
+
+Function bindings: one shot or sustaned "on and off" things
+  - controllable with notes, CC's, or programs
+ 
+Controller bindings: continuous value things
+  - controllable with CC's only
+    (but could allow pitch bend, and aftertouch)
+
+
+
+  <ControllerBinding name='group1Input' value='6'/>
+  <ControllerBinding name='group1Output' value='6'/>
+  <ControllerBinding name='group1Feedback' value='6'/>
+  <ControllerBinding name='inputLevel' value='6'/>
+  <ControllerBinding name='inputLevel' value='6'/>
+
+  inputLevelGroup1
+  outputLevelGroup1
+
+  <ControlGroup name='global'>
+    <ControllerBinding name='inputLevel' value='6'/>
+  </ControlGroup>
+
+  <ControlGroup name='group1'>
+    <ControllerBinding name='inputLevel' value='6'/>
+  </ControlGroup>
+  
+  <ControlGroup name='group2'>
+    <ControllerBinding name='inputLevel' value='6'/>
+  </ControlGroup>
+
+Hierarchical is nice conceptually but we still have the flattening
+problem for display.  Flat naming convention is easy.  
+
+We lose full-blown Parameter status but that's ok since you don't
+need to change these in scripts, just select a different config.
+
+Also works for track bindings:
+
+  <ControllerBinding name='inputLevelTrack1' value='6'/>
+
+----------------------------------------------------------------------
+
+Controller
+  - like Function, defines a base controller
+  - some may be static, others multiplied
+
+Controllers
+  - runtime expanded list of Controller objects for statics, tracks and groups
+
+
+
+
+
+
+

@@ -1,0 +1,15 @@
+!name Sustain Test
+
+# default is 1000 bump it up
+!sustain 1000
+
+Message Start sustain test
+end
+
+Label sustain
+Message Sustained $sustainCount
+end
+
+Label endSustain
+Message End sustain
+end

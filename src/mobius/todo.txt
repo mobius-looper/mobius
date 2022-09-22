@@ -1,0 +1,272 @@
+Next Release
+
+Divide by zero in Synchronizer::activateRecordStop
+
+  - Record first loop  
+  - NextLoop with EmptyLoopMode=Record
+  - Record to stop, crash
+
+
+* Fro - Undo quantizing?
+  - it's the "undo the last overdub before undoing the current layer" issue,
+    add an "always undo layer" option
+
+* That complicated Ableton restart sync problem (follow host transport) (Forestcat)
+
+* Event scripts
+
+
+* Setting custom mode doesn't reset after changing going in and out of 
+  a normal mode
+
+----------------------------------------------------------------------
+
+* Back-to-back Bounce should push to the next quant boundary
+
+* TrackCopy from a script should ignore TrackCopyMode, always leave it
+  in Play?  The issue may be that quantize is not performed with TrackCopyMode
+  and if you just script it after TrackCopy it may be quantized
+
+* Calibration windows hosed on the Mac
+
+* customMode not reset after Global Reset, should be able to do
+  "set customMode" rather than "set customMode """
+
+* Occasional error windowing after returning to the beginning of history:
+  ERROR: 101 44232: Inconsistent deferred fades detected in output stream
+  I think this has to do with the assumption that mLastLayer will
+  not change once it has been played, windowed layers don't behave like that.
+
+* Todd - export variables and other loop status as plugin parameters
+
+* On initial Mac load, all the controls are zero, Global Reset restores them
+
+* Visible parameter display is a mess.  We need to be dynamically resizing 
+  the value boxes based on the maximum string width, truncating this to 
+  a reasonable maximum, and then truncating the string when it is displayed
+  if it exceeds the maximum rather than spilling over the end of the box.
+
+* When Empty Track Action is a visible parameter, the value bounding box
+  is too narrow and leaves turds with Copy Timing
+
+* Sus has wonky mouse drag of Auto Record Bars, it looks like the y offset
+  is incorrect, may be related to his layout having an empty button area.
+
+* LoopSwitch sustainable messed up
+  We have isSustainable and isSustain, and a dormant isSustainableLoopTrigger
+  that needs to be called.  Unwind this mess so that buttons and keys
+  will do a SUSNextLoop when SwitchDuration=Sustain, but clicking on
+  loops in the UI do a permanent change.
+
+* Look at Shuffle closely, the conversion to ExValueList rather
+  than just an ExValue with a single value messed up the logic. 
+
+* Mac: changing display components will crash if any loop is running.
+  We can have refresh events posted that reference Component objects
+  then delete those objects before the events are processed.  Need to 
+
+* TimeCopyMode not working for TrackCopy
+  Should work now after we added the before/after track advance
+  frame adjustment? 
+  !! Revisit realign and make sure we don't have the problem there too.  
+
+----------------------------------------------------------------------
+Pause - Mac
+----------------------------------------------------------------------
+
+SyncOut8 - Pause
+ERROR: 0 0: WARNING: Internal MIDI events queued after global reset
+INFO: Sync drift -136
+   - intermittent
+
+----------------------------------------------------------------------
+See "quickly load .mob files" forum thread:
+----------------------------------------------------------------------
+
+G’day Jeff/All
+This script works fine in 1.42 – 1.45 but in M2.1 it loads the .mob file OK but fails to display the appropriate message associated to the click count.
+
+I’ve tried changing the “Wait msec 200” value from 10 to 2000 incrementally, but with no luck. Also I’ve repeated this test on 3 different computers with the same results.
+
+Any ideas why? 
+
+
+Plus... Just to complicate things… In stand-alone it works 100%
+
+As a VSTi in Cakewalk Sonar, Reaper and Live 7.0.3... message fails to display on screen
+
+----------------------------------------------------------------------
+Track Leave Action
+----------------------------------------------------------------------
+
+Saw this canceling Replace mode
+    ERROR: 101 74496: Loop: Still muted at end of Replace!
+
+Confirm mode cancel didn't work, probably not Threshold either
+
+----------------------------------------------------------------------
+EmptyTrackAction, Insert
+----------------------------------------------------------------------
+
+EmptyTrackAction=copyTime, TimeCopyMode=Insert
+  - we immediately add a cycle and start insert in the next cycle,
+    should start in the first cycle 
+
+EmptyLoopAction=coypTime, TimeCopyMode=Insert
+  - Correctly creating an empty loop and entering Insert mode
+    but the start frame is zero.  This may be what the EDP does
+    but it won't sync with other tracks, it would make more sense to
+    have the frame "follow"?  That's what Play and Overdub do.
+
+    Insert is a weird option, if it was empty
+    and we copied timing, Multiply has the same effect right?
+    Multiply is starting over too...
+
+Loop Counter screws up when it reaches double digits (glynndub)
+
+----------------------------------------------------------------------
+sustainiac's script:
+----------------------------------------------------------------------
+
+  - Be in Record, script Play then do Next Track with some form of track copy.
+    If we don't "Wait last" the recording may not be finished.  Leave Track 
+    Action may fix this.  
+
+  - Would be nice to have an autoWaitLast mode but it can't happen after
+    a function, it has to happen before the function following the one that
+    was just excecuted.  If the function is Multiply and we're rounding off
+    you don't want to keep the script alive till then end of the multiply
+    if there is nothing in it that needs to wait.
+
+
+----------------------------------------------------------------------
+Action Function Mismatch Warninmg
+----------------------------------------------------------------------
+
+Had to soften this because it happens in a few cases where we clone
+the Action and pass it through another function's invoke handler
+to implement a secondary action.  For example MuteMidiStart schedules
+a Mute event even though that wasn't the function in the action.  
+In at least one place this happens due to an alternate ending, 
+see UndoRedo with Mute->scheduleEvent.
+
+
+SyncOut 3 - OutRealign=MidiStart, Realign, MuteRealign, Mute/Multiply
+INFO: Sync drift -136
+INFO: Realign
+INFO: Sync drift -136
+INFO: MuteRealign
+ERROR: 0 0: EventManager: functions don't match!
+INFO: Sync drift -136
+INFO: Mute/Multiply (Realign)
+ERROR: 0 0: EventManager: functions don't match!
+
+This is because some function handlers schedule other function events
+for example in RealignFunction:
+
+			if (mute && !l->isMuteMode()) {
+
+                // Schedule an internal event to mute, must clone
+                // the action
+                Mobius* m = l->getMobius();
+                Action* muteAction = m->cloneAction(action);
+
+				muteEvent = Mute->scheduleEvent(muteAction, l);
+
+We're redirecting the Action through MuteFunction but the functions won't be 
+the same. 
+
+SyncOut5: Stops and Starts: Mute, Retriggers
+INFO: Sync drift -136
+INFO: MuteMode=Start
+INFO: Sync drift -136
+INFO: MuteMode=Continuous, Mute/Undo
+ERROR: 0 0: EventManager: functions don't match!
+
+SyncOut6 - MidiStart, MuteMidiStart
+INFO: Sync drift -136
+INFO: MidiStart
+INFO: Sync drift 0
+INFO: MuteMidiStart
+ERROR: 0 0: EventManager: functions don't match!
+
+----------------------------------------------------------------------
+EmptyTrackAction
+----------------------------------------------------------------------
+
+EmptyTrackAction=Record
+
+1) Source track before target track
+
+Source track processes the track select event in the middle of the 
+interrupt, then advances.
+
+Destination track needs to start Record mode at the same relative
+offset in it's buffer.  
+
+I think we have similar issues for empty loops, we set the frame negative
+and put it in Run mode to let it ignore the first few frames before recording.
+This is for latency compensation.  For track switch we may already be
+post-latency but we can still use this for the buffer offset.
+
+To get out of Run mode we would need to schedule a Record event
+in the next track.  I actually like this...
+
+
+2) Source track after target track
+
+This is harder because the target track has already advanced and 
+it should have started recording within this interrupt.  You can start
+it at the beginning of the next interrupt but it will be delayed by
+up to one buffer length from where it should have been.  In practice this
+only matters if the track switch was quantized which we can only
+do in scripts right now.  
+
+Ideally we would record for the remainder of the source track's interrupt
+into a temporary buffer, then splice that into the destination track.  
+Given how difficult it is to create synchronized tracks without
+time/sound copy this feels like more trouble than it's worth.
+
+
+EmptyTrackAction=Copy
+
+Current frame calculations should apply, but if the frame goes negative
+it means to wrap around to the end.  This will be an issue for Multiply
+and other extending modes.  We don't want the buffer offset skip to cross
+the loop boundary and trigger the addition of a cycle.  
+
+----------------------------------------------------------------------
+Script Arguments
+----------------------------------------------------------------------
+
+Arg passing styles:
+
+   old
+    Space delimited arguments are parsed into ScriptArgument objects.
+    References to parameters and variables are resolved, $() expansion
+    is allowed.
+
+   single expression
+    One argument is expected that is calculated from an expression
+    Move is the only one that uses this now
+
+   multiple expression
+    Complex list of any number of arguments that may be expressions
+    Shuffle and MidiOut are the only ones that use this.
+
+So the options can be:
+
+   expressionArgs=true
+     parse arguments using the expression parser
+   varArgs=true
+     the function takes more than one argument
+
+
+----------------------------------------------------------------------
+LoopCopy, TimeCopy Functions
+----------------------------------------------------------------------
+
+Need "Loop Copy" and "Time Copy" functions that Switch/Multiply
+and Switch/Insert can convert into.  Also have a switch remember
+the previous loop so they can be used as normal functions.
+

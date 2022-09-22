@@ -1,0 +1,211 @@
+
+On 20 Jun 2004, at 20:34, arne wrote:
+
+David Duncan wrote:
+On Jun 20, 2004, at 10:46 AM, arne wrote:
+I've written a custom control which supports embedding. When I embed a push button into it (in a non composite window) the push button erases the background with the back color or back pattern. In compositing mode this does not happen. Is there a way to tell the control not to erase the background in a non compositing window ?
+You can replace the quickdraw bottlenecks to prevent the erasing (a technique that I'm not familiar with) but Compositing mode is the recommended method. Why can't you use Compositing Mode?
+
+I need this for a plugin and the hosting app is the owner of the window.
+And there are hosts which use compositing and there are hosts which
+don't use compositing and I want to support both.
+How do I prevent that the erasing happens. I haven't found anything in
+the headers or in the docs.
+
+You could catch the kEventControlDraw event for the button and draw it yourself using the Appearance Manager. You may need to supply an ThemeEraseUPP which does no drawing for DrawThemeButton to stop the erasing. We do this for bevel buttons so we can make them look like Safari's metal buttons.
+
+Jerry
+_______________________________________________
+
+
+On Jun 20, 2004, at 12:34 PM, arne wrote:
+
+How do I prevent that the erasing happens. I haven't found anything in
+the headers or in the docs.
+
+There's really no good way to prevent all erasing that the control might perform. A control may draw at arbitrary times, including in response to an event loop timer (for example, a pulsing push button), and there's no way to intercept all of those drawing operations.
+
+If you're only concerned about non-default push buttons, you _might_ be able to catch all of the drawing done by the pushbutton control by installing a kEventControlDraw handler on the pushbutton and then hooking out the QD erase procs across a call to CallNextEventHandler.
+
+-eric
+
+--------------------------
+
+
+Unfortunately, there is no good way to do this with the current control manager. We are working on a new version of the control manager that makes this trivial.
+
+The standard workaround that developers have used in the past is to patch out the QD rectProc in the GrafPort you're drawing the control into, and just return when you see the EraseRect made by the control. I think this will still work in X, but I haven't tried it myself.
+
+-eric
+_______________________________________________
+carbon-development mailing lis
+
+I borrowed a page from Greg Dow--PowerPlant's LEditText is full of this
+kind of code (he replaces the text bottlenecks to draw password fields).
+
+To answer your second question first, I install my rectProc just before
+calling the next handler, and remove it just after.
+
+Here's my technique: 
+
+// pseudo-code, since my real code has some tangled friendships
+
+#include <QuickDraw.h>
+#include <UDrawingState.h>	// PowerPlant
+
+CQDProcs myEraseProcs;
+
+// kEventControlDraw handler
+OSStatus HandleButtonBG(EventHandlerCallRef nextH, EventRef inEvent)
+{
+ControlRef theControl;
+OSStatus stat = GetEventParameter(theEvent,
+kEventParamDirectObject, 
+typeControlRef,NULL, 
+sizeof theControl, NULL, &theControl); // OK, I
+trust the API...
+// handle error
+
+StRegion halo;
+stat = GetControlRegion(theControl, kControlStructureMetaPart,
+halo);
+// handle error
+
+// make sure the correct port is set
+StClipRgnState clip(halo);
+
+// ***draw background image here***
+
+StCQDProcsState eraseProcs(true, &myEraseProcs, /* currentPort
+*/ );
+
+OSStatus result = CallNextEventHandler(nextH, theEvent);
+
+return result;
+}
+
+// rectProc
+pascal void RectNoErase(GrafVerb verb, const Rect* r)
+{
+if (kQDGrafVerbErase != verb)
+StdRect(r);
+}
+
+// initialization
+{
+SetStdCProcs(&myEraseProcs);
+myEraseProcs.rectProc = NewQDRectUPP(RectNoErase);
+}
+
+--
+OK, so perhaps I could set some externs and check to see that the Rect
+being erased is the same as the bounds as the control structure, but I
+didn't. The short duration of the rect proc seems good enough.
+
+Comments?
+
+Jim H 
+
+----------------------------------------------------------------------
+
+
+Hmm, I was looking at this from a different perspective. I was looking 
+at have a picture control in the background of my dialog with other 
+controls layered ontop. T do that, it seems that I'd have to intercept a 
+bunch of carbon events and patch out the erase proc.
+
+I remember reading somewhere that someone had success with using a user 
+pane. If I remember, all the controls, except the picture were embedded 
+into the user pane and the user pane was set on top of the picture. 
+Then, when the user pane was asked to set up its background, it'd do 
+nothing, thus allowing the picture to work. (Or maybe the picture was 
+embedded into the user pane?!?)
+
+That way everything related to the Control Manager "just worked".
+
+I'll have to search the archives, though if anyone has experience with 
+this, I'd appreciate hearing about it.
+
+Thanks
+
+----------------------------------------------------------------------
+
+
+I remember reading somewhere that someone had success with using a user
+pane. If I remember, all the controls, except the picture were embedded
+into the user pane and the user pane was set on top of the picture.
+Then, when the user pane was asked to set up its background, it'd do
+nothing, thus allowing the picture to work. (Or maybe the picture was
+embedded into the user pane?!?)
+
+I think that wouldn't work because the control that's embedded in the user pane will still call EraseRect and still erase part of the picture. When the user pane is called, it's not called to erase; it's called to set up the port properly for the erase that the embedded control will do when the call to the user pane returns.
+
+-eric
+_______________________________________________
+
+
+I'm not sure how replacing the erase proc in the port works when all that is used are controls. i guess I just don't know when I would replace the proc and the restore it again.
+
+Just replace Quickdraw's rect proc with something likethe following proc after having created your window. That works for me just fine:
+
+pascal void	 CBdWdRectProc( GrafVerb verb, const Rect* r )
+{
+if( verb != kQDGrafVerbErase )	// call through when not requested to erase.
+StdRect( verb, r );
+else
+{
+StdRect( verb, r );
+
+RgnHandle	 oldClip = NewRgn(),
+newClip = NewRgn();
+Rect	 vPicRect;
+GrafPtr	 vCurrPort;
+PicHandle	 vPicture;
+PixPatHandle	vPixPat = NewPixPat();
+
+GetPort( &vCurrPort );
+GetPortBackPixPat( vCurrPort, vPixPat );
+if( QDError() == noErr && (**vPixPat).patType == 1 ) // Have a pix pat? Then we're doing background and not solid color.
+{
+CBackdropWindow*	 vWindowObj = dynamic_cast<CBackdropWindow*>((CWindow*) GetWRefCon( GetWindowFromPort( vCurrPort ) ));
+
+// Calc intersection between old clip and rect we are to erase:
+GetClip( oldClip );
+RectRgn( newClip, r );
+SectRgn( oldClip, newClip, newClip );
+
+// Clip to clipped erase area:
+SetClip( newClip );
+vPicture = GetPicture( vWindowObj->GetBgPictID() );
+vPicRect = (**vPicture).picFrame;
+OffsetRect( &vPicRect, -vPicRect.left, -vPicRect.top );
+DrawPicture( vPicture, &vPicRect );	// Draw picture at window rect's size.
+ReleaseResource( (Handle) vPicture );
+SetClip( oldClip );	// Restore old clip rgn.
+}
+DisposePixPat( vPixPat );
+DisposeRgn( oldClip );
+DisposeRgn( newClip );
+}
+}
+
+Here's a code excerpt of what I use to install the proc:
+
+static CQDProcs	 myProcs = { 0 };
+
+if( myProcs.rectProc == NULL )
+{
+SetStdCProcs( &myProcs );
+myProcs.rectProc = NewQDRectUPP( CBdWdRectProc );
+}
+
+SetPortGrafProcs( GetWindowPort( GetMacWindow() ), &myProcs );
+
+Oh yeah, the rect proc draws a PICT resource as the background image. If you need something different, just replace the part from GetPicture to ReleaseResource. This code gets the PICT ID from my window object, which you'll likely have to change as well for your code.
+
+The GetPortBackPixPat() was the hardest to figure out. This detects whether the background is set to a color or to a pixel pattern. If it is a color, we simply call StdRect(), as that is only the case when e.g. the contents of an edit field are erased. If it's a PixPat we're very likely really erasing the window background, and thus the code draws the PICT. The PICT has transparent areas, which is why I always call through to StdRect(). You may want to do differently.
+
+Does that help?
+--
+Cheers,
+M. Uli Kusterer

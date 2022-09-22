@@ -1,0 +1,8 @@
+*.pdb
+*.exp
+*.obj
+*.exe
+*.opt
+*.lib
+libmidi.a
+miditest

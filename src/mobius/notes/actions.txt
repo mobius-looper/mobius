@@ -1,0 +1,295 @@
+
+Key/MIDI Bindings
+
+  - BindingConfigs are parsed to build a BindingResolver
+  - Actions are created to hold the information from the Binding, 
+    plus the resolved targets
+  - when an event is received the Action is found and copied
+  - copied action is augmented with specific trigger info, timestamped
+  - copied action is given to Mobius
+  - Mobius either queues or processes action immedidately
+  - during processing action may be copied again and placed in Events
+  - after processing copied Action is returned to the pool
+
+UI Bindings
+ 
+  - parses button config
+  - creates an Action for each button and registers it
+  - registration of an Action resolves the target, it becomes owned
+    by Mobius but may be reused by the UI
+  - on button press button passes Action to Mobius for processing
+  - Mobius recognizes this is a registerd Action and copies it 
+
+Host Parameter Bindings
+
+  - MobiusPlugin parses binding config
+  - For each host binding an Action is created and registered
+  - on parameter change Action is copied and augmented with
+    current parameter value
+  - augmented Action is passed to Mobius
+
+OSC Bindings
+
+  - OscRuntime parses OscConfig
+  - For each binding an Action is created and registered
+  - on OSC message 
+    - if Action was registered
+      - copy and augment with current OSC argument
+      - pass to Mobius
+    - if Action not registered
+      - create Action on the fly and register it
+
+Script Actions
+
+  - ScriptInterpreter makes an Action on the fly, resolves it, and
+    gives it to Mobius for synchronous processing
+  - Expects Action to be annoted with results like scheduled events
+
+KEY POINT
+
+  A "registered" action is simply resolved and will track changes
+  to the underlying objects that can move like Script Functions
+  and config objects.  
+
+  Registered actions have to be copied for processing because there
+  can be many queued actions with different trigger values, down/up
+  transitions, etc.
+
+  We could make a distinction between the resgiered and resolved
+  Action and an ActionInstance that references it.  ActionInstance would
+  contain:
+
+     id, triggerValue, triggerOffset, down, longPress, repeat
+     value, 
+
+     escapeQuantization, noLatency, rescheduling 
+     mobius, millisecond, streamTime
+     event, threadEvent
+
+  Hmm, that's basically everything except the target and arguments.
+
+  RegisteredTarget
+
+     // this much is always there
+     Target* target;
+     class Function* function;
+     class Controller* controller;
+     class Parameter* parameter;
+     class UIControl* uiControl;
+     class Bindable* bindable;
+
+     // this makes it binding specific
+     int track;
+     int group;
+     char bindingArgs[MAX_ARG_LENGTH];
+     ActionOperator* actionOperator;
+     int operand;
+
+PHASES
+
+  - parse a binding config object, create an Action
+  - call Mobius::registerAction
+    - or maybe Mobius::resolveBinding like we have now but return
+      an Action rather than a RuntimeBinding
+
+
+
+    
+
+
+
+----------------------------------------------------------------------
+
+Actions is a model to represent requests to do something
+in Mobius.  This includes:
+
+   MIDI events
+   Keyboard key
+   Host parameters
+   UI buttons
+   OSC events
+   Host event (start, stop, etc.)
+   Internal state events (loop start, reset, etc.)
+   Script statements (set, function, wait)
+
+The first three use Bindings to associate the Trigger with a Target.
+Bindings are resolved by the BindingResolver which passes requests 
+to Mobius.
+
+UI buttons uses an external binding mechanism that passes requests to Mobius
+without core Mobius code knowning how that binding behaved.
+
+OSC events is similar to UI buttons, but Mobius has a bit more knowledge
+about OSC config.  
+
+Host events aren't all there yet but it would be something understood
+by MobiusPlugin, and would behave a bit like UI buttons.  There is no
+explicit binding, we just pass the events down and Mobius can associated
+them with a script.
+
+Internal state events aren't there yet, they ware similar to host events
+but we discover them internally.
+
+Script statemeents should look the same as if the action being
+taken was initiated from the outside, but we can make some optimizations
+since we know we are in the interupt.
+
+----------------------------------------------------------------------
+
+With the possible exception of internal events, these should all
+start by creating an Action and submitting it for processing.
+
+  Action
+
+    Who
+      - what is requesting the action
+      - equivalent to Trigger but maybe more?
+
+    What
+      - what do they want to do: execute function, start script, set
+        parameter, set control
+      - equivalent to a target
+      - UI should be able to register extended functions, controls, and
+        parameters
+    
+    When
+      - when should this happen, currently this will always be immediate,
+        but could allow scheduling in the future, for example with OSC
+
+    Where
+      - scoping: global, track, group, focused
+      - could allow more than one track or group
+
+    Why
+      - can't think of a great example, external vs script
+        could be a why or how
+
+    How
+      - extra state to convey to the action handler
+      - arguments from binding or script
+      - new config objects for config changes
+      - binding range position
+      - ControlChange options: min, max, center, inc, dec, set
+        - applies to all ranged targets including parameters?
+      - action characteristics like insideInterrupt, sustainable, down, 
+        longpress, 
+
+    Status
+      - tracks progress of the action once it has been received
+      - millisecond, streamTime, event, threadEvent, rescheduling,
+         escapeQuantization, noLatency, other things from Function
+         Context
+      - most of these feel like "how" parameters
+
+Actions are typically created as stack objects, these should
+be quickly copied to autonomous objects for processing.  
+    
+The How options needed internally are more complicated than what
+we need to expose for most triggers: rescheduling, escapeQuantization,
+noLatency, etc.  Ideally these would be hidden, maybe they could
+be added to a wrapper object, but it's hard to subclass and still
+allow apps to create them as stack objects, e.g. no factory methods.
+
+----------------------------------------------------------------------
+
+Model Review
+
+Binding
+  - the definition of an association between an trigger and target,
+     still relevant
+
+RuntimeBinding
+  - a cache of a resolved Binding
+  - duplicates most of what is in Binding so the definitions can change
+    without corrupting this object
+  - would be better named ResolvedBinding
+  - not like Action, these are intended for repeated use
+
+BindingContext
+  - created at runtime for every invocation
+  - references a RuntimeBinding or copies just the relevant parts 
+  - used consistently for Functions, Parameters, Controllers, Bindables
+
+TriggerContext    
+  - should be merged with BindingContext
+
+Action
+  - should replace both BindingContext and TriggerContext
+  - can be run synchrously or scheduled 
+
+----------------------------------------------------------------------
+Current Uses
+----------------------------------------------------------------------
+
+MIDI
+
+  - MidiEvent received on MIDI listener thread, passed to Mobius midiEvent
+  - Mobius may redirect to another listener (the config uis)
+  - Eventually passed to a BindingResolver
+  - BindingResolver maintains a lookup structure that maps MIDI events
+    into RuntimeBindings
+  - RuntimeBindings are evaluated one at a time
+
+  - MidiExporter consumes the BindingConfig like BindingResolver but it only
+    does exports
+    - reading requires direct synchronous access to controls, parameters
+      and probably variables
+
+  * Change this to generating a list of Actions, then pass the Actions
+    to a queue
+
+OSC
+
+  - OscBinding and OscRuntime are similar to RuntimeBinding and 
+    BindingResolver
+  - OscRuntime also handles exports like MidiExporter
+
+Keyboard
+  - key events received in UI event thread
+  - UI is notified via registered listener 
+  - creates a TriggerContext 
+  - calls Mobius::doTrigger
+  - Mobius forwards to BindingResolver
+
+UI
+  - can call functions in response to configurable buttons or to 
+    mouse actions like clicking on loops in the loop stack
+  - builds a FunctionContext and calls Mobius::doFunction
+
+Script:function
+
+  - Function is resolved when the script is parsed similar to   
+    resolving a RuntimeBinding
+  - when invoked, build a FunctionContext and call Mobius::doFunction
+  - loop Event is returned in the FunctionContext for waits
+
+Script:set
+
+  - resolves name to a ScriptArgument
+  - ScriptArgument behaves a bit like RuntimeBinding holding a refernce
+    to the resolved ScriptInternalVariable or Parameter
+    - for variables gets a UserVariables object from the Mobius, Track,
+      or the ScriptInterpreter and sets the value
+    - for parameters makes a binding context and calls 
+      Parameter::setValue
+      * this is the thing we need to be able to defer or run
+        synchronously depending on trigger type
+
+    - should support controls here too, but at the moment we have
+      parameters for all of them
+
+
+Script:load/save
+   - creating ThreadEvents for these
+   - these probably don't need Actions though we could do it
+   - consistently and have the Actions schedule the ThreadEvents,
+     - we do need to get the ThreadEvents back though for waiting
+
+----------------------------------------------------------------------
+New Uses
+----------------------------------------------------------------------
+
+MIDI 
+  - Build a MidiRuntime object to hold the BindingResolver 
+    - matches OscRuntime and I guess KeyboardRuntime
+  - MidiRuntime is send MidiEvents and returns a list of Actions

@@ -1,0 +1,2530 @@
+<html>
+<head>
+<title>Getting Started With Mobius</title><style type='text/css'>
+<!-- 
+div.constraint,div.issue,div.note,div.notice     { margin-left: 2em; }dt.label       { display: run-in; }li           { margin-top: 0.3em; margin-bottom: 0.3em; }p           { margin-top: 0.6em; margin-bottom: 0.6em; }.diff-chg	{ background-color: orange; }.diff-del	{ background-color: red; text-decoration: line-through;}.diff-add	{ background-color: lime; }table          { empty-cells: show; }div.exampleInner { margin-left: 1em;                       margin-top: 0em; margin-bottom: 0em}div.exampleOuter {border: 4px double gray;                  margin: 0em; padding: 0em}div.exampleInner { background-color: #d5dee3;                   border-top-width: 4px;                   border-top-style: double;                   border-top-color: #d3d3d3;                   border-bottom-width: 4px;                   border-bottom-style: double;                   border-bottom-color: #d3d3d3;                   padding: 4px; margin: 0em }div.exampleWrapper { margin: 4px }div.exampleHeader { font-weight: bold; margin: 4px}body {  padding: 2em 1em 2em 70px;  margin: 0;  font-family: sans-serif;  color: black;  background: white;  background-position: top left;  background-attachment: fixed;  background-repeat: no-repeat;}:link { color: #00C; background: transparent }:visited { color: #609; background: transparent }a:active { color: #C00; background: transparent }a:link img, a:visited img { border-style: none } /* no border on img links */a img { color: white; }        /* trick to hide the border in Netscape 4 */@media all {                   /* hide the next rule from Netscape 4 */  a img { color: inherit; }    /* undo the color change above */}th, td { /* ns 4 */  font-family: sans-serif;}h1, h2, h3, h4, h5, h6 { text-align: left }/* background should be transparent, but WebTV has a bug */h1, h2, h3 { color: #005A9C; background: white }h1 { font: 170% sans-serif }h2 { font: 140% sans-serif }h3 { font: 120% sans-serif }h4 { font: bold 100% sans-serif }h5 { font: italic 100% sans-serif }h6 { font: small-caps 100% sans-serif }.hide { display: none }div.head { margin-bottom: 1em }div.head h1 { margin-top: 2em; clear: both }div.head table { margin-left: 2em; margin-top: 2em }p.copyright { font-size: small }p.copyright small { font-size: small }@media screen {  /* hide from IE3 */a[href]:hover { background: #ffa }}dd { margin-top: 0.3em; margin-bottom: 0.6em }dt { margin-top: 0; margin-bottom: 0 } /* opera 3.50 */dt { font-weight: bold }pre, code { font-family:monospace; font-size: medium }ul.toc {  list-style: disc;		/* Mac NS has problem with 'none' */  list-style: none;}-->
+</style>
+</head>
+<body>
+<h1 class=title1>Getting Started With Mobius</h1>
+<h2 class=title2>January 2011</h2>
+<br>
+<h1 class=sec1>Contents</h1>
+<table>
+<tr align=left><th>1</th><td></td><td><a href='#Introduction'>Introduction</a></td>
+<tr align=left><th>2</th><td></td><td><a href='#Concepts'>Concepts</a></td>
+<tr align=left><th>2.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Channel'>Channel</a></td>
+<tr align=left><th>2.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Port'>Port</a></td>
+<tr align=left><th>2.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Frame'>Frame</a></td>
+<tr align=left><th>2.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Loop'>Loop</a></td>
+<tr align=left><th>2.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Layer'>Layer</a></td>
+<tr align=left><th>2.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Cycle'>Cycle</a></td>
+<tr align=left><th>2.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Subcycle'>Subcycle</a></td>
+<tr align=left><th>2.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Track'>Track</a></td>
+<tr align=left><th>2.9</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Loop Switch'>Loop Switch</a></td>
+<tr align=left><th>2.10</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Synchronization'>Synchronization</a></td>
+<tr align=left><th>2.11</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Function'>Function</a></td>
+<tr align=left><th>2.12</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#modeDefinition'>Mode</a></td>
+<tr align=left><th>2.13</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Event'>Event</a></td>
+<tr align=left><th>2.14</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Quantization'>Quantization</a></td>
+<tr align=left><th>2.15</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Script'>Script</a></td>
+<tr align=left><th>2.16</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Parameter'>Parameter</a></td>
+<tr align=left><th>2.17</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Preset'>Preset</a></td>
+<tr align=left><th>2.18</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Control'>Control</a></td>
+<tr align=left><th>2.19</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Setup'>Setup</a></td>
+<tr align=left><th>2.20</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Project'>Project</a></td>
+<tr align=left><th>2.21</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Trigger'>Trigger</a></td>
+<tr align=left><th>2.22</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Sustainable Trigger'>Sustainable Trigger</a></td>
+<tr align=left><th>2.23</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Target'>Target</a></td>
+<tr align=left><th>2.24</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Binding'>Binding</a></td>
+<tr align=left><th>2.25</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Binding Scope'>Binding Scope</a></td>
+<tr align=left><th>2.26</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Sustain Function'>Sustain Function</a></td>
+<tr align=left><th>2.27</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Long Press'>Long Press</a></td>
+<tr align=left><th>3</th><td></td><td><a href='#User Interface'>User Interface</a></td>
+<tr align=left><th>3.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Menus'>Menus</a></td>
+<tr align=left><th>3.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Button Area'>Button Area</a></td>
+<tr align=left><th>3.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Status Area'>Status Area</a></td>
+<tr align=left><th>3.3.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#trackControlsComponent'>Track Controls</a></td>
+<tr align=left><th>3.3.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Instant Parameters'>Instant Parameters</a></td>
+<tr align=left><th>3.3.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Loop Status Cluster'>Loop Status Cluster</a></td>
+<tr align=left><th>3.3.3.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Counter'>Counter</a></td>
+<tr align=left><th>3.3.3.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Audio Meter'>Audio Meter</a></td>
+<tr align=left><th>3.3.3.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Loop Meter'>Loop Meter</a></td>
+<tr align=left><th>3.3.3.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Mode'>Mode</a></td>
+<tr align=left><th>3.3.3.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Beaters'>Beaters</a></td>
+<tr align=left><th>3.3.3.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#minorModesComponent'>Minor Modes</a></td>
+<tr align=left><th>3.3.3.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Sync Status'>Sync Status</a></td>
+<tr align=left><th>3.3.3.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Message'>Message</a></td>
+<tr align=left><th>3.3.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Layer Bars'>Layer Bars</a></td>
+<tr align=left><th>3.3.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Loop Bars'>Loop Bars</a></td>
+<tr align=left><th>3.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Track Strips'>Track Strips</a></td>
+<tr align=left><th>3.4.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#trackNumberStrip'>Track Number</a></td>
+<tr align=left><th>3.4.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Loop Radar'>Loop Radar</a></td>
+<tr align=left><th>3.4.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#loopStatusStrip'>Loop Status</a></td>
+<tr align=left><th>3.4.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Output Level Control'>Output Level Control</a></td>
+<tr align=left><th>3.4.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#outputLevelStrip'>Output Level Meter</a></td>
+<tr align=left><th>4</th><td></td><td><a href='#Controlling Mobius'>Controlling Mobius</a></td>
+<tr align=left><th>4.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Binding Popup Windows'>Binding Popup Windows</a></td>
+<tr align=left><th>4.1.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Binding Set Selector'>Binding Set Selector</a></td>
+<tr align=left><th>4.1.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Bindings List'>Bindings List</a></td>
+<tr align=left><th>4.1.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Selecting Targets'>Selecting Targets</a></td>
+<tr align=left><th>4.1.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Selecting a Scope'>Selecting a Scope</a></td>
+<tr align=left><th>4.1.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Binding Arguments'>Binding Arguments</a></td>
+<tr align=left><th>4.1.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Trigger Binding Fields'>Trigger Binding Fields</a></td>
+<tr align=left><th>4.1.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Command Buttons'>Command Buttons</a></td>
+<tr align=left><th>4.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#MIDI Bindings'>MIDI Bindings</a></td>
+<tr align=left><th>4.2.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Selecting MIDI Triggers'>Selecting MIDI Triggers</a></td>
+<tr align=left><th>4.2.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Multiple MIDI Binding Sets'>Multiple MIDI Binding Sets</a></td>
+<tr align=left><th>4.2.2.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Multiple MIDI Bindings Example'>Multiple MIDI Bindings Example</a></td>
+<tr align=left><th>4.2.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Showing MIDI Bindings'>Showing MIDI Bindings</a></td>
+<tr align=left><th>4.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Keyboard Bindings'>Keyboard Bindings</a></td>
+<tr align=left><th>4.3.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Showing Keyboard Bindings'>Showing Keyboard Bindings</a></td>
+<tr align=left><th>5</th><td></td><td><a href='#Using Mobius'>Using Mobius</a></td>
+<tr align=left><th>5.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Using Presets'>Using Presets</a></td>
+<tr align=left><th>5.1.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Preset Window'>Preset Window</a></td>
+<tr align=left><th>5.1.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Preset Switch Tab'>Preset Switch Tab</a></td>
+<tr align=left><th>5.1.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Preset Effects Tab'>Preset Effects Tab</a></td>
+<tr align=left><th>5.1.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Preset Synchronization Tab'>Preset Synchronization Tab</a></td>
+<tr align=left><th>5.1.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Setting Parameters'>Setting Parameters</a></td>
+<tr align=left><th>5.1.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Managing Multiple Presets'>Managing Multiple Presets</a></td>
+<tr align=left><th>5.1.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#presetMenu'>Selecting Presets with Menus</a></td>
+<tr align=left><th>5.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Using Functions'>Using Functions</a></td>
+<tr align=left><th>5.2.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Modal and Instant Functions'>Modal and Instant Functions</a></td>
+<tr align=left><th>5.2.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Major Modes'>Major Modes</a></td>
+<tr align=left><th>5.2.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Minor Modes'>Minor Modes</a></td>
+<tr align=left><th>5.2.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Reset, Empty, Clear, and Silent'>Reset, Empty, Clear, and Silent</a></td>
+<tr align=left><th>5.2.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Record'>Record</a></td>
+<tr align=left><th>5.2.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Reset'>Reset</a></td>
+<tr align=left><th>5.2.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Overdub'>Overdub</a></td>
+<tr align=left><th>5.2.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Undo and Redo'>Undo and Redo</a></td>
+<tr align=left><th>5.2.9</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Mute and Pause'>Mute and Pause</a></td>
+<tr align=left><th>5.2.10</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Multiply'>Multiply</a></td>
+<tr align=left><th>5.2.11</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Instant Multiply and Divide'>Instant Multiply and Divide</a></td>
+<tr align=left><th>5.2.12</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Replace'>Replace</a></td>
+<tr align=left><th>5.2.13</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Insert'>Insert</a></td>
+<tr align=left><th>5.2.14</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Reverse'>Reverse</a></td>
+<tr align=left><th>5.2.15</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Speed'>Speed</a></td>
+<tr align=left><th>5.2.16</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Next Loop'>Next Loop</a></td>
+<tr align=left><th>5.2.17</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Shuffle'>Shuffle</a></td>
+<tr align=left><th>5.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Using Controls'>Using Controls</a></td>
+<tr align=left><th>5.3.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Input Level'>Input Level</a></td>
+<tr align=left><th>5.3.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Output Level'>Output Level</a></td>
+<tr align=left><th>5.3.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Feedback'>Feedback</a></td>
+<tr align=left><th>5.3.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Secondary Feedback'>Secondary Feedback</a></td>
+<tr align=left><th>5.3.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Pan'>Pan</a></td>
+<tr align=left><th>5.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Common Parameters'>Common Parameters</a></td>
+<tr align=left><th>5.4.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Loops Per Track'>Loops Per Track</a></td>
+<tr align=left><th>5.4.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Quantize Mode'>Quantize Mode</a></td>
+<tr align=left><th>5.4.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Subcycles'>Subcycles</a></td>
+<tr align=left><th>5.4.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Overdub Quantized'>Overdub Quantized</a></td>
+<tr align=left><th>5.4.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Switch Quantize'>Switch Quantize</a></td>
+<tr align=left><th>5.4.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Empty Loop Action'>Empty Loop Action</a></td>
+<tr align=left><th>5.4.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Switch Location'>Switch Location</a></td>
+<tr align=left><th>5.4.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Switch Duration'>Switch Duration</a></td>
+<tr align=left><th>5.4.9</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Enable Secondary Feedback'>Enable Secondary Feedback</a></td>
+<tr align=left><th>5.4.10</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Record Threshold'>Record Threshold</a></td>
+<tr align=left><th>5.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Using Feedback'>Using Feedback</a></td>
+<tr align=left><th>5.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Using Tracks'>Using Tracks</a></td>
+<tr align=left><th>5.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Using Scripts'>Using Scripts</a></td>
+<tr align=left><th>6</th><td></td><td><a href='#Next Steps'>Next Steps</a></td>
+<tr align=left><th>7</th><td></td><td><a href='#Troubleshooting'>Troubleshooting</a></td>
+<tr align=left><th>7.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Mobius is just frozen, it doesn't do anything!'>Mobius is just frozen, it doesn't do anything!</a></td>
+<tr align=left><th>7.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Record Stops Suddenly'>Record Stops Suddenly</a></td>
+<tr align=left><th>7.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#editingXml'>I edited an XML file, now everything is screwed up!</a></td>
+<tr align=left><th>7.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#I registered my script files but they won't run'>I registered my script files but they won't run</a></td>
+</table>
+<a name='Introduction'>
+<h1 class=sec1>1 Introduction</h1>
+</a>
+<p>This manual will help you quickly get started doing basic looping
+with Mobius.  We will introduce some of the major concepts and terms,
+describe the user interface, and give examples of some of the most
+common ways to use Mobius.  You are expected to have read
+the <a href='installation.htm'>Installation Guide</a>
+ and completed a
+successful installation test.</p>
+<p>Once you have finished this manual, 
+<a href='exploring.htm'>Exploring Mobius</a>
+ will give you more information
+about how Mobius can be controlled and customized.</p>
+<p>The <a href='techniques.htm'>Mobius Techniques</a>
+ manual has
+detailed information and tutorials for some of the major looping
+techniques.</p>
+<p>The <a href='reference.htm'>Mobius Reference</a>
+ manual will have an
+exhaustive description of every function, parameter, control and
+variable.  You can skim this to get a feel for what is available, but 
+normally you should read this last.</p>
+<p>The <a href='scripts.htm'>Mobius Scripting</a>
+ manual will have 
+all the details about how to write and use Mobius scripts.  Most users
+will want to use scripts at some point but it is recommended that you
+first become comfortable with basic Mobius use.</p>
+<a name='Concepts'>
+<h1 class=sec1>2 Concepts</h1>
+</a>
+<p>Mobius is a complex application and it is difficult to talk about
+it without using some peculiar jargon.  In this section we will
+introduce some of the fundamental concepts and terminology that you
+will see throughout the documentation.  You should read this section
+before you read anything else.  Don't feel like you need to fully
+understand everything right away, just read through it and remember
+the terms so that when you see them later you can return here for
+review.</p>
+<a name='Channel'>
+<h2 class=sec2>2.1 Channel</h2>
+</a>
+<p>A <i>channel</i> is a stream of digital audio samples.  Channels
+correspond to the physical inputs and outputs of your audio interface,
+or to the "pins" in the VST or AU plugin.  Mobius is continually
+receiving audio from two or more channels and continually sending
+audio out to two or more channels.</p>
+<a name='Port'>
+<h2 class=sec2>2.2 Port</h2>
+</a>
+<p>A <i>port</i> is a collection of adjacent channels.  Mobius always
+processes digital audio in stereo, so it organizes channels into
+stereo pairs, one for the left channel and one for the right.  These
+pairs of channels are called ports.  If for example you have an audio
+interface with 8 input channels, channels 1 and 2 will be port 1,
+channels 3 and 4 will be port 2, and so on.</p>
+<p>Mobius does not currently support ports with more than two
+channels, such a the 6 channels necessary for 5.1 surround.  This may
+be addressed in future releases.</p>
+<a name='Frame'>
+<h2 class=sec2>2.3 Frame</h2>
+</a>
+<p>A <i>frame</i> is the* smallest unit of digital audio that Mobius will use.
+Frames consist of a set of <i>samples</i> of digital audio, captured
+at a moment in time from one <a href='#Port'>Port</a>.  Currently Mobius always
+processes audio in stereo, so a frame always contains two samples, one
+for the left channel and one for the right.</p>
+<p>Most of the time you can think of a <i>frame</i> and a <i>sample</i>
+as the same thing.  It is a single slice of audio, whether it be
+mono, stereo, or surround.  So what is commonly called "sample rate" is 
+really "frame rate" in Mobius.</p>
+<a name='Loop'>
+<h2 class=sec2>2.4 Loop</h2>
+</a>
+<p>A <i>loop</i> can be thought of as one as one independent digital
+audio recording.  Loops are typically allowed to play from beginning
+to end then repeat indefinitely, but you can use loops in other ways.
+Loops may be of any length and contain audio from any port.  After a
+loop has been recorded you may add more audio by <i>overdubbing</i>.
+A loop may be altered in many ways using <a href='#Function'>Function</a>s.  Loops
+can be made to evolve over time using <a href='#Feedback'>Feedback</a>.</p>
+<a name='Layer'>
+<h2 class=sec2>2.5 Layer</h2>
+</a>
+<p>While you can think of a loop as one digital audio recording, it
+may actually be built from several pieces known as <i>layers</i>.
+When you record a loop for the first time it will have one layer.
+Every time you modify the loop with <i>Overdub</i> or some other loop
+editing function, a new layer is created.  Layers are the history of
+the loop and you can change which layer is currently playing.</p>
+<p>The most common use for layers is to <i>undo</i> a change
+you don't want.  For example, if you're overdubbing new audio
+and you play a wrong note, you can delete the current layer and
+return to the previous layer.</p>
+<a name='Cycle'>
+<h2 class=sec2>2.6 Cycle</h2>
+</a>
+<p>A <i>cycle</i> is a subdivision of the loop.  Loops initially
+will contain only one cycle, but through various operations such
+as <i>Multiply</i> additional cycles may be added.   Cycles are always
+the same length.   Cycles are sometimes the same as <i>measures</i> 
+in music notation, but not always.</p>
+<p>Cycles are primarily of interest for <a href='#Quantization'>Quantization</a>.</p>
+<a name='Subcycle'>
+<h2 class=sec2>2.7 Subcycle</h2>
+</a>
+<p>A <i>subcycle</i> is a subdivision of a <a href='#Cycle'>Cycle</a>.  The number
+of subcycles in a cycle is defined by a <a href='#Parameter'>Parameter</a> that
+can be changed at any time.  Subcycles are sometimes the same
+as <i>beats</i> in music notation, but not always.</p>
+<p>Subcycles are primarily of interest for <a href='#Quantization'>Quantization</a>.</p>
+<a name='Track'>
+<h2 class=sec2>2.8 Track</h2>
+</a>
+<p>A <i>track</i> contains a set of loops with <i>controls</i> that
+determine how the loops are recorded and played.  Mobius tracks are
+similar to tracks in other audio applications.  All tracks can be
+playing at the same time and can be mixed together using traditional
+controls like <i>output level</i> and <i>pan</i>.</p>
+<p>If you are familiar with looping hardware you can think of each
+track as one hardware looper that can be used independently and
+mixed together.</p>
+<p>Tracks can contain several loops but only one loop can be playing
+at a time.  This is called the <i>active loop</i>.  Changing loops in
+a track is called <a href='#Loop Switch'>Loop Switch</a>ing.</p>
+<p>The loops in a track can be of any length but most of the time
+various <a href='#Synchronization'>Synchronization</a> methods are used to create loops
+that are exact multiples of each other so that they are rhythmically
+compatible.</p>
+<a name='Loop Switch'>
+<h2 class=sec2>2.9 Loop Switch</h2>
+</a>
+<p>A <i>loop switch</i> is the act of changing the loop that is
+currently playing within a track.  This is an important event because
+there are many options available to control when the switch happens
+and what happens to the new loop after it is activated.</p>
+<a name='Synchronization'>
+<h2 class=sec2>2.10 Synchronization</h2>
+</a>
+<p><i>Synchronization</i> is a very complex topic but in general it
+refers to techniques that can be used to create loops with precise
+control over their size.  This is important if you want to create
+loops that play together with a consistent rhythm.</p>
+<p>It is practically impossible to create loops in different tracks
+that are exactly the same size by just tapping the start and end with
+a footswitch.  They may be close but there will always be a few
+milliseconds of difference and the loops will gradually go out of
+phase if you let them play long enough.</p>
+<p>If you wish to create loops in different tracks that will play
+together without drifting apart, you will always want to use some form of 
+synchronization.</p>
+<a name='Function'>
+<h2 class=sec2>2.11 Function</h2>
+</a>
+<p>A <i>function</i> is a named action performed by Mobius at the
+request of the user.  Examples include <i>Record</i>, <i>Overdub</i>,
+and <i>Reset</i>.  Causing a function to be performed is called <i>executing</i>
+the function.</p>
+<p>Mobius provides many functions, some like <i>Record</i> will be
+used frequently, others are used only is special situations.
+We will introduce the most commonly used functions in this manual, 
+the rest will be discussed in
+the <a href='reference.htm'>Reference Manual</a>
+.</p>
+<p>The behavior of a function may be altered by
+setting <a href='#Parameter'>Parameter</a>s</p>
+<p>Functions may be combined in complex ways using <a href='#Script'>Script</a>s</p>
+<a name='modeDefinition'>
+<h2 class=sec2>2.12 Mode</h2>
+</a>
+<p>A <i>mode</i> is a temporary state that a track can be in.  Modes
+are usually caused by <a href='#Function'>Function</a>s.  Some functions take effect
+immediately and are then finished.  Other functions have both a start
+and an end time.  Functions that have both a start and end time
+are called <i>modal</i> functions.  While the function is active
+the track is in a <i>mode</i>.  The current mode is displayed in the user 
+interface.</p>
+<p>The most common example is <i>Record</i> mode.  When the <i>Record</i>
+function starts the track enters <i>Record</i> mode, when it ends
+the track enters another mode, usually the <i>Play</i> mode.</p>
+<p>While you are in a mode, functions may have different behavior.  A
+function that does one thing when in <i>Reset</i> mode may have a
+different behavior when in <i>Switch Quantize</i> mode.  This
+will be discussed in the detailed documentation for each function.</p>
+<a name='Event'>
+<h2 class=sec2>2.13 Event</h2>
+</a>
+<p>An event is an action Mobius performs at a certain time in the future.  
+Events are <i>scheduled</i> during the execution of a function.  A function
+may schedule more than one event.</p>
+<p>In the user interface, events are displayed on a timeline so you
+can see what will be happening as the loop plays.</p>
+<p>Each track has its on list of scheduled events.</p>
+<p>The most common use for events is to perform a <i>quantized</i>
+function.</p>
+<a name='Quantization'>
+<h2 class=sec2>2.14 Quantization</h2>
+</a>
+<p><i>Quantization</i> causes the execution of functions to happen
+at a precise time.  When quantization is disabled functions
+are executed immediately.  When quantization is enabled, the execution of the
+function will be delayed until the next <i>quantization boundary</i>.
+Quantization is frequently used to build loops that have a regular
+rhythmic quality.</p>
+<p>The three quantization boundaries are <i>Loop</i>, <a href='#Cycle'>Cycle</a>,
+and <a href='#Subcycle'>Subcycle</a>.</p>
+<p>You will see several phrases used in the documentation to describe
+the effects of quantization, such as "when quantizing", "during
+quantization", or "quantized function".  All of these refer to the
+same concept.</p>
+<a name='Script'>
+<h2 class=sec2>2.15 Script</h2>
+</a>
+<p>A <i>script</i> is a text file containing statements in a
+programming language that allows you control Mobius in very complex
+ways.  In the simplest case scripts can be used as "macros" to perform
+a set of functions at exactly the same time.  In more complex cases
+scripts can use conditional logic to adjust their behavior depending
+on what is currently happening.</p>
+<p>Scripting is a complex topic that will be covered in detail in the
+<a href='scripts.htm'>Mobius Scripting</a>
+ manual.  For now you can think of
+scripts as a way to extend and customize the built-in Mobius
+functions.  You don't need to understanding scripting right away, 
+but most people will eventually use them.</p>
+<a name='Parameter'>
+<h2 class=sec2>2.16 Parameter</h2>
+</a>
+<p>A <i>parameter</i> is named value that can be changed to 
+control how Mobius behaves. There are three categories of
+parameters: <i>global parameters</i>, <i>track parameters</i> and
+<i>preset parameters</i>.</p>
+<p>Global parameters control general operating characteristics such as
+whether input monitoring is enabled, or the amount of latency
+compensation.  Global parameters are usually set in a popup window
+opened by the <i>Global Parameters</i> item from the <i>Configuration</i>
+menu.</p>
+<p>Preset parameters change the way functions are performed, examples
+include <i>Record Threshold</i>, <i>Quantize Mode</i>, and <i>Sync
+Mode</i>.  Most of the time when we talk about parameters we're
+referring to preset parameters.  Preset parameters are usually
+set in a popup window opened by the <i>Presets</i> item from
+the <i>Configuration</i> menu.</p>
+<p>Track parameters control a few characteristics of each track such
+as the track name, group number, and input focus.  These are relatively
+unusual and are used mostly in scripts.</p>
+<p>Parameters have a <i>type</i> which determines how they are shown
+in the UI and used in scripts.</p>
+<ul>
+<li><b>Integer</b> - a small positive number</li>
+<li><b>String</b> - a short line of text</li>
+<li><b>Boolean</b> - a true or false value, displayed as a checkbox</li>
+<li><b>Enumeration</b> - one of a fixed set of values, displayed as a menu</li>
+</ul>
+<a name='Preset'>
+<h2 class=sec2>2.17 Preset</h2>
+</a>
+<p>A <i>preset</i> is a named collection of parameter values.  While
+you can change parameters individually using MIDI or scripts, you will
+usually change parameters in bulk by selecting presets.</p>
+<p>You may need only one preset, or you may define several with
+parameters chosen for different looping styles.  Each track has an <i>active
+preset</i> that may be changed at any time, even while a loop is
+playing.  Each track may have a different active preset.</p>
+<a name='Control'>
+<h2 class=sec2>2.18 Control</h2>
+</a>
+<p>A <i>control</i> is a named value that controls how audio is
+recorded and played in a track.  Controls are similar
+to <a href='#Parameter'>Parameter</a>s but their values are always integers and they have
+a larger range than most parameters.  They are usually set by a MIDI
+device that sends <i>continuous controller</i> messages such as a
+rotating knob or a foot pedal.</p>
+<p>There are five built-in controls: <a href='#Input Level'>Input Level</a>, 
+<a href='#Output Level'>Output Level</a>, <a href='#Feedback'>Feedback</a>, <a href='#Secondary Feedback'>Secondary Feedback</a>, 
+and <a href='#Pan'>Pan</a>.  See the <a href='#Using Controls'>Using Controls</a> section for
+more information.</p>
+<a name='Setup'>
+<h2 class=sec2>2.19 Setup</h2>
+</a>
+<p>A <i>setup</i> is a named collection of parameters, presets, and
+controls for all tracks.  You may define several setups to configure
+tracks in different ways.</p>
+<p>There is always one <i>active setup</i>.  Setups may
+be changed at any time, even while loops are playing.</p>
+<p>There are many ways to use setups, but usually they are designed
+with a particular performance piece in mind.  You can name each 
+track to indicate which instruments will be used in them, define
+a level and pan mix for those instruments, and decide which preset
+to use in each track.</p>
+<a name='Project'>
+<h2 class=sec2>2.20 Project</h2>
+</a>
+<p>A <i>project</i> is a complete snapshot of Mobius state.  It
+includes the current <a href='#Setup'>Setup</a> plus the current control
+settings for each track which may be different than the setup.  It
+also includes all the audio content: tracks, loops, and layers.  Once
+a project has been saved it may be loaded back into Mobius at a later time.</p>
+<p>Projects are not saved as a single file on the file system,
+there is a <i>project directory</i> file contain all the non-audio
+information, plus one or more audio files for each loop.  The audio
+files are stored as standard wave files and may be loaded into
+other music applications.</p>
+<a name='Trigger'>
+<h2 class=sec2>2.21 Trigger</h2>
+</a>
+<p>A <i>trigger</i> is an external stimulus that causes Mobius to
+do something.  There are several types of trigger:</p>
+<ul>
+<li>User Interface - clicking a button or turning a knob with the mouse</li>
+<li>Computer Keyboard - pressing and releasing a key</li>
+<li>MIDI - receiving MIDI messages from a foot controller or control surface</li>
+<li>Plugin Parameter Automation - receiving messages from the VST or AU host application</li>
+<li>OSC - receiving messages in the Open Sound Control network protocol</li>
+</ul>
+<p>While Mobius supports all of these trigger types, by far the most
+common trigger is a MIDI foot controller, which are often called
+footswitches.  Because of this, you will see phrases like "tap
+the Record switch" or "press Reset" in the documentation.  Just remember
+that while we usually talk about MIDI footswitches, you can also
+do the same thing with other triggers.</p>
+<a name='Sustainable Trigger'>
+<h2 class=sec2>2.22 Sustainable Trigger</h2>
+</a>
+<p>A <i>sustainable</i> trigger causes Mobius to take action twice, 
+once when the trigger is <i>pressed</i> or <i>turns on</i> 
+and another when the trigger is <i>released</i> or <i>turns off</i>.
+The sustainability of a trigger is important if you want to use
+<a href='#Sustain Function'>Sustain Function</a>s or <a href='#Long Press'>Long Press</a> functions.</p>
+<p>The following triggers are usually sustainable:</p>
+<ul>
+<li>UI Button</li>
+<li>Computer keyboard key</li>
+<li>MIDI Note</li>
+<li>MIDI Continuous Control</li>
+<li>OSC message</li>
+</ul>
+<p>With UI buttons, Mobius is notified when the mouse button is
+pressed and when it is released.  Similarly with computer keyboard
+keys, Mobius is notified when the key is pressed and released.</p>
+<p>With MIDI notes, Mobius expects to receive a <i>NOTE ON</i> message 
+when the key (or footswitch) is pressed and a <i>NOTE OFF</i> message when the
+key is released.</p>
+<p>With MIDI control changes, Mobius will treat a non-zero CC value as
+"on" and a zero value as "off".  This is useful for some footswitches
+that cannot send MIDI notes.</p>
+<p>MIDI <i>Program Change</i> messages are however not sustainable.
+There is no on/off state for a program change.</p>
+<p>If you are just starting Mobius you do not need to fully understand
+sustainable triggers, except for one common problem.  If you are using
+a MIDI controller that sends <i>note</i> or <i>continuous control</i>
+messages you must make sure that the controller sends messages
+when you press a switch <b>and</b> when you release a switch.  This is 
+usually called "momentary" mode.  If your controller operates in "toggle" 
+mode or if it does not send messages at all when the switch is released
+Mobius will not work correctly.  The most common problem caused by this
+is pressing a switch to do the <i>Record</i> function and having the
+record continue for about 1/2 second then stop.  See the 
+<a href='#Record Stops Suddenly'>Record Stops Suddenly</a> item in the <a href='#Troubleshooting'>Troubleshooting</a>
+section for more information.</p>
+<a name='Target'>
+<h2 class=sec2>2.23 Target</h2>
+</a>
+<p>A <i>target</i> is anything in Mobius that can respond to a 
+<a href='#Trigger'>Trigger</a>.  These include <a href='#Function'>Function</a>s,
+<a href='#Control'>Control</a>s, <a href='#Parameter'>Parameter</a>s, <a href='#Preset'>Preset</a>s,
+and <a href='#Setup'>Setup</a>s.</p>
+<p>For example triggers can be used to start and stop a function,
+to change the value of a control, or to select a preset.</p>
+<a name='Binding'>
+<h2 class=sec2>2.24 Binding</h2>
+</a>
+<p>A <i>binding</i> is the association of a <a href='#Trigger'>Trigger</a> with
+a <a href='#Target'>Target</a>.  Once a binding is defined, every time a 
+trigger is received it will be sent to the target.</p>
+<p>A simple example is to bind the computer keyboard key 'R' to
+the function <i>Record</i>.  Once this is done, every time you press
+R a recording will start or stop.</p>
+<p>Most users will bind MIDI messages from a footswitch or control
+surface to functions and controls so they can operate Mobius without
+being near the computer.</p>
+<p>In the user interface, bindings are performed several popup dialog
+windows for each trigger type.  Just remember that while the
+user interface may be different they're all doing the same thing,
+associating a trigger with a target.</p>
+<a name='Binding Scope'>
+<h2 class=sec2>2.25 Binding Scope</h2>
+</a>
+<p>A <a href='#Binding'>Binding</a> may be given a <i>scope</i> to more precisely
+specify which tracks will respond to the trigger.  In this manual we
+will always assume the default <i>global</i> scope which means that
+triggers are sent to the currently selected track.</p>
+<p>It is also possible to cause a trigger to be sent to a specific
+track even if it is not selected.  This is an advanced topic that will
+be discussed in the <a href='exploring.htm#Advanced Control'>Advanced Control</a>
+
+section of the <a href='exploring.htm'>Exploring Mobius</a>
+ manual.</p>
+<a name='Sustain Function'>
+<h2 class=sec2>2.26 Sustain Function</h2>
+</a>
+<p>A <i>sustain function</i> is a special type of <a href='#Function'>Function</a>
+that can respond to a trigger twice, the first when the trigger
+is <i>pressed</i> and the second when the trigger is <i>released</i>.
+This can only be used with <a href='#Sustainable Trigger'>Sustainable Trigger</a>s.</p>
+<p>One example is <i>Sustain Record</i>.  With the normal <i>Record</i>
+function you tap a footswitch once to start recording and again to stop.
+With the <i>Sustain Record</i> function you press and hold the footswitch
+to start recording, and the recording stops as soon as you release
+the footswitch.  Many functions have both normal and sustain versions,
+these will be displayed as different items in the UI.</p>
+<p>If you bind a sustainable trigger to a non-sustainable function,
+the release event is simply ignored.  If you bind a non-sustainable
+trigger to a sustainable function it will not work properly.  The function
+may never turn off or it may begin its <a href='#Long Press'>Long Press</a>
+behavior.</p>
+<p><a href='#Script'>Script</a>s always behave as sustainable functions and they
+can use the sustain time in powerful ways.</p>
+<a name='Long Press'>
+<h2 class=sec2>2.27 Long Press</h2>
+</a>
+<p>A <i>long press</i> happens when you use a <a href='#Sustainable Trigger'>Sustainable
+Trigger</a> and you hold it in the "on" position for a certain
+period of time.  By default this time is 500 milliseconds or 1/2 of a
+second.</p>
+<p>When a long press happens, the function that was begun when the
+trigger was pressed may change what it does.  This is called the "long
+press behavior".  One example is the <i>Record</i> function.  If you
+bind a trigger to the <i>Record</i> function and you hold that trigger
+down for 1/2 second, it will change into the <i>Reset</i> function and
+the loop will be erased and all layers lost.</p>
+<p>Not all functions have long press behavior, if they do it will be
+highlighted in the documentation for that function, these are referred
+to as "long press functions".  If a function supports long press, you
+must use a <a href='#Sustainable Trigger'>Sustainable Trigger</a> in order to use it.  If you
+use a long press function with a non-sustainable trigger such as a
+MIDI program change, the long press behavior will never activate.</p>
+<p>A common problem that new users encounter is trying to bind
+the <i>Record</i> command to a trigger that sends a MIDI <i>NOTE
+ON</i> message but does not send a corresponding <i>NOTE OFF</i>
+message.  This can happen with some footswitches.  What happens is
+that the recording starts but within 1/2 second the loop resets.  
+Mobius keeps waiting for the <i>NOTE OFF</i> but it never comes
+so it activates the long press behavior and resets the loop.</p>
+<p>If this happens to you then it is almost always a problem with the
+footswitch.  This problem is also common when you try to bind
+the <i>Record</i> function to a plugin host parameter if the host does
+not support the "momentary button" concept.</p>
+<a name='User Interface'>
+<h1 class=sec1>3 User Interface</h1>
+</a>
+<p>The Mobius window is divided into three areas.  The <i>button
+area</i> at the top is where the configurable function buttons are
+arranged.  The <i>status area</i> in the center contains many
+components that display the status of the current loop in the active
+track.  The <i>track strips</i> at the bottom have controls and status
+indicators for each of the tracks.</p>
+<img alt='Graphic' src='images/starting-areas.gif'/>
+<p>Each of these areas is highly customizable.  You can remove things
+you don't want and add optional things that aren't shown here.  In the
+status area you can move the components around to create alternate
+layouts that might look better to you.  This ability to customize the
+display is one of the reasons why Mobius has a rather primitive
+appearance compared to most modern applications.  Photo-realistic
+brushed aluminum faceplates with bouncing analog needles will not
+be found here.</p>
+<p>In this manual we will only talk about the default user interface.
+See <a href='exploring.htm#Customizing the User Interface'>Customizing the User Interface</a>
+
+in the <a href='exploring.htm'>Exploring Mobius</a>
+ manual for more information
+on changes you can make to the user interface.</p>
+<a name='Menus'>
+<h2 class=sec2>3.1 Menus</h2>
+</a>
+<p>Configuration of Mobius is performed using a set of popup
+dialog windows you open from the menus.  There are several ways to 
+access the menus depending on which operating system you use and
+whether you are running Mobius standalone or as a plugin.</p>
+<p>In all situations, the Mobius menus are accessible when you
+right-click the mouse button somewhere inside the status area.  
+A popup menu will appear near the current location of the mouse.</p>
+<p>When Mobius is running standalone an application menu bar is also
+available.  Under the <i>Windows</i> operating system, the application
+menu is displayed at the top of the Mobius window.  Under the <i>OS
+X</i> operating system, the application menu is displayed at the top
+of the screen when the Mobius window is selected.</p>
+<p>When Mobius is running as a VST or AU plugin, the application menu bar
+is usually not available.  The one exception is under <i>Windows</i> when the
+<i>Dual Plugin Windows</i> option is enabled.  In this case, Mobius is in 
+full control over the window and adds a menu bar.</p>
+<p>We will talk frequently about opening various
+configuration windows.  These are all opened by first selecting
+<i>Configuration</i> from the main menu, then one of the submenu
+items that appear.</p>
+<a name='Button Area'>
+<h2 class=sec2>3.2 Button Area</h2>
+</a>
+<p>The button area may contain any number of buttons to perform
+functions and scripts.  This can be convenient for infrequently used
+functions that you don't need have accessible from a footswitch.  To
+perform the function simply click the button with the mouse.  Buttons
+are <a href='#Sustainable Trigger'>Sustainable Trigger</a>s so you can use them
+with <a href='#Sustain Function'>Sustain Function</a>s.  The function will begin when you
+press the mouse button and end when you release it.</p>
+<p>Any number of buttons may be added.  They will automatically be
+arranged on one or more rows in the button area.  As you resize the
+Mobius window, the buttons will be rearranged to fit within the new
+window width.  If you make the window narrower, more rows of buttons
+may be added.  This will shift the status area down which may cause it
+to overlap with the track strips.  If this happens you will need to
+make the window taller.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-buttons.gif'/></td></tr><tr><td><b><i>Multi-line button area</i></b></td></tr></table>
+<p>See <a href='exploring.htm#Customizing Buttons'>Customizing Buttons</a>
+
+in the <a href='exploring.htm'>Exploring Mobius</a>
+ manual for more information
+on changing buttons.</p>
+<a name='Status Area'>
+<h2 class=sec2>3.3 Status Area</h2>
+</a>
+<p>The status area contains many <i>components</i> that display the
+state of the selected track.  You can add or remove components and
+move them to new locations.  Some components are initially invisible
+and will appear only when certain things happen in the track.  To see
+the names and outlines of all active components, press and hold
+the <b>Z</b> key on the computer keyboard.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-outlines.gif'/></td></tr><tr><td><b><i>Default status area component outlines</i></b></td></tr></table>
+<p>As you add or move components in the status area you may notice
+that some of the components are erased with a black rectangular area.
+This indicates that one or more components overlap.  When this happens
+you need to use <b>Z</b> to switch to outline mode, and 
+drag the components so that they no longer overlap.  To drag a component
+in outline mode, click over it with the left mouse button, hold
+the button down, and move the mouse to a new location.</p>
+<p>Moving components is not necessary unless you customize them and
+sometimes after upgrading to a new release.  
+See <a href='exploring.htm#Customizing the Status Area'>Customizing the Status Area</a>
+
+in the <a href='exploring.htm'>Exploring Mobius</a>
+ manual for more information
+on changes you can make to the status area.</p>
+<a name='trackControlsComponent'>
+<h3 class=sec3>3.3.1 Track Controls</h3>
+</a>
+<p>In the default layout, the <i>Track Controls</i> component is shown
+on the left edge of the status area.  This component contains
+knobs to control levels in the currently selected track.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-track-controls.gif'/></td></tr><tr><td><b><i>Default track controls</i></b></td></tr></table>
+<p>As you select different tracks the knobs will be redrawn to display
+the current levels in that track.  To change the value of a knob,
+press and hold the left mouse button over the knob.  To raise the
+value drag the mouse down or to the right.  To lower the value drag
+the mouse up or to the left.  Release the mouse button when the
+desired value is reached.   See the <a href='#Using Controls'>Using Controls</a> section for more
+information about what each of the controls do.</p>
+<a name='Instant Parameters'>
+<h3 class=sec3>3.3.2 Instant Parameters</h3>
+</a>
+<p>In the default layout, the <i>Instant Parameters</i> component is
+shown to the right of the <a href='#trackControlsComponent'>Track Controls</a>.  
+This component displays the values of selected parameters and allows you to change
+them.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-instant-parameters.gif'/></td></tr><tr><td><b><i>Default instant parameters</i></b></td></tr></table>
+<p>When using the default set of keyboard bindings, you can change
+the highlighted parameter using the 8 (up) and 2 (down) keys on the
+numeric keypad.  Use the 6 (right) and 4 (left) keys to change the 
+selected value.  Changes you make here are not stored permanently
+in the preset, they temporarily override the value from the preset.
+The original preset value will be restored as soon as you select
+a different preset, or you perform a <i>Full Reset</i>.</p>
+<p>You can change which parameters are displayed in this component, 
+this is described in detail in the <a href='exploring.htm#Visible Parameters'>Visible Parameters</a>
+
+section of the <a href='exploring.htm'>Exploring Mobius</a>
+ manual.</p>
+<a name='Loop Status Cluster'>
+<h3 class=sec3>3.3.3 Loop Status Cluster</h3>
+</a>
+<p>In the default layout, the <i>loop status cluster</i> is shown
+in the center of the screen.  This is not a single component but
+a set of components that are often arranged to be near each other.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-loop-status.gif'/></td></tr><tr><td><b><i>Default loop status components</i></b></td></tr></table>
+<a name='Counter'>
+<h4 class=sec4>3.3.3.1 Counter</h4>
+</a>
+<p>The <i>counter</i> displays several pieces of loop information including
+the active loop number, the current playback position within the loop, and 
+the current cycle within the loop.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-counter.gif'/></td></tr><tr><td><b><i>Example Counter</i></b></td></tr></table>
+<p>On the left is a small number that displays the active loop number.
+Recall that a track may contain any number of loops, but only one can
+be active at a time.</p>
+<p>In the center the larger digits show the current location in the
+loop in seconds.  The digits to the left of the decimal point
+represent seconds, and the digits to the right represent tenths of a
+second.</p>
+<p>On the right are two smaller numbers separated by a slash.  The
+number to the right of the slash is the number of <i>cycles</i> in the
+current loop, the number to the left of the slash is the number
+of the cycle that is currently being played or recorded.</p>
+<p>Cycles are created when you extend the loop using functions
+such as <i>Multiply</i> and <i>Insert</i>.  Until you use those
+functions the loop will always have one cycle and the counter
+will always display <i>1/1</i>.</p>
+<a name='Audio Meter'>
+<h4 class=sec4>3.3.3.2 Audio Meter</h4>
+</a>
+<p>The <i>audio meter</i> displays the level of the audio signal being
+received by the current track. It is a thin horizontal rectangle
+displayed between the <a href='#Counter'>Counter</a> and the <a href='#Loop Meter'>Loop
+Meter</a>.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-audio-meter.gif'/></td></tr><tr><td><b><i>Audio meter showing the presence of a signal</i></b></td></tr></table>
+<p>The audio meter will fill with color from the left to
+right as the signal becomes louder.  The meter will usually flicker as
+the level changes.  Note that the level displayed here is what mixing
+consoles call "post fader".  It is the level of the track input after
+it has passed through the <a href='#Input Level'>Input Level</a> control and
+represents the level of the signal that will be recorded.</p>
+<a name='Loop Meter'>
+<h4 class=sec4>3.3.3.3 Loop Meter</h4>
+</a>
+<p>The <i>loop meter</i> is a very useful component that shows your
+current location in the loop using a graphical "thermometer".  When
+you are at the loop start point, the loop meter will be empty.  As the
+loop plays it will gradually fill with color until you reach the end
+point where the loop meter will be completely full.  Then the meter
+is cleared and begins filling again.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-loop-meter.gif'/></td></tr><tr><td><b><i>Loop meter with a scheduled event</i></b></td></tr></table>
+<p>To give you an even better idea of where you are in the loop, a series
+of tick marks is drawn under the loop meter.  The longer marks represent
+cycles and the smaller marks represent subcycles.</p>
+<p>When you use quantization functions may be delayed until some time
+in the future.  When this happens an <i>event</i> is displayed under
+the tick marks with a small triangle showing when the event will
+happen.  There may be several events scheduled to happen at the same
+time.  In this example at the beginning of the 3rd cycle the loop will
+enter reverse mode and half-speed mode at exactly the same time.</p>
+<p>If the event triangle points up it means the event will happen as soon
+as the loop meter reaches that point.  If the triangle points to the right
+(or the left if going in reverse) it means the event will happen during
+a later repetition of the loop.</p>
+<a name='Mode'>
+<h4 class=sec4>3.3.3.4 Mode</h4>
+</a>
+<p>Recall that at any given time a loop is in a
+<a href='#modeDefinition'>Mode</a>, such
+as <i>Reset</i>, <i>Record</i>, or <i>Play</i>.  The name of the current
+mode is displayed to the right of the <a href='#Audio Meter'>Audio Meter</a>.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-mode.gif'/></td></tr></table>
+<p>The names of the possible modes are described in the section
+<a href='#Major Modes'>Major Modes</a>.</p>
+<a name='Beaters'>
+<h4 class=sec4>3.3.3.5 Beaters</h4>
+</a>
+<p>The <i>beaters</i> are a set of three "lights" that flash briefly
+when the loop playback position reaches certain important points.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-beaters.gif'/></td></tr></table>
+<p>The first light flashes whenever a subcycle boundary is reached.  The
+second light flashes whenever a cycle boundary is reached, and the
+third light flashes whenever the loop start/end point is reached.</p>
+<p>Watching the beaters can help give you a sense of the loop rhythm
+if you are overdubbing over a non-rhythmic loop.</p>
+<a name='minorModesComponent'>
+<h4 class=sec4>3.3.3.6 Minor Modes</h4>
+</a>
+<p>The <i>Minor Modes</i> component displays a number of interesting
+loop states.  These differ from the major
+<a href='#modeDefinition'>Mode</a>s because a loop can be in any
+number of minor modes at the same time.   The minor modes are displayed
+in a line above the <a href='#Counter'>Counter</a>.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-minor-modes.gif'/></td></tr></table>
+<p>The possible minor modes are:</p>
+<ul>
+<li>Overdub</li>
+<li>Mute</li>
+<li>Reverse</li>
+<li>1/2 Speed</li>
+<li>Rate <i>x</i></li>
+<li>Pitch <i>x</i></li>
+<li>Master</li>
+<li>TrackMaster</li>
+<li>MIDIMaster</li>
+</ul>
+<p>See the <a href='#Minor Modes'>Minor Modes</a> section for more
+information on what each of these modes means.</p>
+<a name='Sync Status'>
+<h4 class=sec4>3.3.3.7 Sync Status</h4>
+</a>
+<p>The <i>Sync Status</i> component is a small line of text displayed
+above the <a href='#minorModesComponent'>Minor Modes</a>.  When 
+synchronization is enabled for the track, this component will display
+information the nature of the synchronization.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-sync-status.gif'/></td></tr></table>
+<p>If the <i>Sync Mode</i> parameter is set to <i>Out</i> and this is 
+the MIDI sync master track, this will display the tempo of the MIDI clocks
+being generated.</p>
+<p>If <i>Sync Mode</i> parameter is set to <i>In</i>, <i>MIDI
+Beat</i>, or <i>MIDI Bar</i>, the component will display the tempo of
+the MIDI clocks being received, and the number of the current beat and
+bar.  Beat and bar numbers are guesses since MIDI clocks do not say
+what the time signature is.  The way the counters work is every time
+we receive a MIDI <i>start</i> event we reset the beat and bar
+counters to 1.  Then we start counting clocks, every 24 clocks is
+considered to be one beat.  The number of beats in a bar is determined
+by the preset parameter named <i>Record Beats/Bar</i>.  When this
+number of beats is received, we reset the beat counter back to 1 and
+increment the bar counter.</p>
+<p>If the <i>Sync Mode</i> parameter is set to <i>Host Beat</i> or
+<i>Host Bar</i>, the component will display the tempo of the host transport
+as well as the current beat and bar number of the host transport.</p>
+<a name='Message'>
+<h4 class=sec4>3.3.3.8 Message</h4>
+</a>
+<p>The <i>Message</i> component is used to display messages from
+scripts and a few messages generated internally by Mobius.
+It is a large rectangular area normally positioned under the
+loop meter and above the track strips.  Because this component is
+normally invisible you will need to press the <i>Control-Z</i> key
+(assuming you have the default key bindings) to see where it is.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-messages.gif'/></td></tr></table>
+<p>Whenever a preset is changed, Mobius will display the name of the
+new preset in the message area.</p>
+<p>Scripts may use the <i>Message</i> statement to display a short
+message to let the user know what the script is doing.</p>
+<p>Messages from scripts will be displayed for a few seconds then be
+erased.  The amount of time a message is displayed can be controlled
+by the global parameter named <i>Message Duration</i>.</p>
+<p>Using messages is an advanced topic that is primarily of interest
+to scripters.  If you never intend to use scripts you can remove this
+component to save space, though this is not recommended since even
+non-scripters will often use scripts written by someone else.</p>
+<a name='Layer Bars'>
+<h3 class=sec3>3.3.4 Layer Bars</h3>
+</a>
+<p>The <i>Layer Bars</i> component is displayed just under the <a href='#Button Area'>Button
+Area</a>.  It consists of a set of vertical rectangles or "bars"
+that resemble dominoes.  The bars represent the <a href='#Layer'>Layer</a>s in
+the active loop.  The layer bars are initially invisible.  When the
+loop is recorded one layer is created and one bar is shown.  As you
+modify the loop and create more layers, more bars are added.  The
+bar for the current layer is shown in an brighter color than the other
+layers.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-layers.gif'/></td></tr><tr><td><b><i>Layer bars before undo</i></b></td></tr></table>
+<p>Until you use the <a href='#Undo and Redo'>Undo</a> function, 
+the current layer will
+always be the last one displayed on the right.  When you use undo, you
+move backwards to the previous layers.  Each time you press undo
+you move back one layer.  The highlighted layer will appear somewhere in the
+middle of the list.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-layers-undo.gif'/></td></tr><tr><td><b><i>Layer bars after undo</i></b></td></tr></table>
+<p>The component can be constrained to have a fixed number of bars.
+The default maximum number of layer bars is 10.  A loop may have more
+layers than this, but only 10 bars will be displayed.  Once the number
+of layers is greater than 10, a small number is displayed in the upper
+left corner.  This number indicates the number of
+layers that are not being displayed on the left.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-layers-max.gif'/></td></tr><tr><td><b><i>Layer bars with maximum bars and overflow counter</i></b></td></tr></table>
+<p>A special layer bar is displayed if you use the <i>Checkpoint</i>
+function.  A checkpoint can be used to collapsing a number of layers
+together if you don't care about the layers in between two checkpoints.  When
+you use <i>Undo</i> and <i>Redo</i> you will move between checkpoints
+and jump over all the layers in between.  A checkpoint layer is shown 
+in a highlighted color different than the color used for the current layer.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-layers-checkpoint.gif'/></td></tr><tr><td><b><i>Layer bars with a checkpoint</i></b></td></tr></table>
+<a name='Loop Bars'>
+<h3 class=sec3>3.3.5 Loop Bars</h3>
+</a>
+<p>The <i>Loop Bars</i> component displays the number of loops in the current
+track and highlights the one that is active.  It displays loops using
+colored rectangles similar to the <a href='#Layer Bars'>Layer Bars</a> except that the
+rectangles are horizontal and stacked vertically.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-loop-list.gif'/></td></tr></table>
+<p>The loop bars component is not enabled by default because there are
+several other ways to show the current loop.  The <a href='#Counter'>Counter</a>
+displays the current loop as a number.  There is also a graphical
+representation of the loops that can be displayed in the <a href='#Track Strips'>Track
+Strips</a> that many people find more useful.</p>
+<a name='Track Strips'>
+<h2 class=sec2>3.4 Track Strips</h2>
+</a>
+<p>The <i>Track Strips</i> area displays summary status for all of the
+tracks.  Each track has one track strip arranged in a row
+along the bottom of the window.  The components in each track strip
+can be changed, but each strip will have the same components.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-track-strip.gif'/></td></tr><tr><td><b><i>Default track strip</i></b></td></tr></table>
+<p>The example above shows the default track strip components.
+Notice that the selected track will have a white rectangle drawn
+around its track strip.</p>
+<a name='trackNumberStrip'>
+<h3 class=sec3>3.4.1 Track Number</h3>
+</a>
+<p>The <i>Track Number</i> component will display either the track number
+or the track name that was defined in the <a href='#Setup'>Setup</a>.  When the track
+has focus lock the number or name will be displayed in a different
+color.  Clicking on the number or name will toggle focus lock.</p>
+<a name='Loop Radar'>
+<h3 class=sec3>3.4.2 Loop Radar</h3>
+</a>
+<p>The <i>Loop Radar</i> displays progress through the
+loop as a pie-chart which is often lovingly referred to as the
+"loop pacman".  When the loop is at its start point the radar will be
+empty, as the loop plays it will draw a clockwise filled arc.  When
+the loop is at the end point it will display as a complete filled
+circle, then clear and start over.</p>
+<a name='loopStatusStrip'>
+<h3 class=sec3>3.4.3 Loop Status</h3>
+</a>
+<p>The <i>Loop Status</i> component shows the status of each loop
+in the track.  Each row represents one loop.  If the loop has content
+a green rectangle is drawn.  The active loop will be drawn with a white
+border.  If you are performing a <a href='#Loop Switch'>Loop Switch</a>, the next loop will
+be drawn with a red border.</p>
+<a name='Output Level Control'>
+<h3 class=sec3>3.4.4 Output Level Control</h3>
+</a>
+<p>This knob controls the output level of the track, it is a duplicate
+of what is displayed in the 
+<a href='#trackControlsComponent'>Track Controls</a> component in the
+status area. Being able to instantly access the output level control
+for all tracks makes it easier to mix them.</p>
+<a name='outputLevelStrip'>
+<h3 class=sec3>3.4.5 Output Level Meter</h3>
+</a>
+<p>The <i>Output Level Meter</i> is similar to the <a href='#Audio Meter'>Audio Meter</a>
+except that it shows the level of the audio signal being played in the loop.
+It is another "thermometer" that will bounce around according to the average
+loop level being played.</p>
+<a name='Controlling Mobius'>
+<h1 class=sec1>4 Controlling Mobius</h1>
+</a>
+<p>While you can control Mobius with the mouse by clicking on buttons
+and dragging knobs, most users will want to control Mobius using a
+MIDI footswitch or some other form of MIDI control surface.  The keys
+on the computer keyboard also provide a convenient way to control
+Mobius.</p>
+<p>Recall from the <a href='#Concepts'>Concepts</a> section that
+a <a href='#Trigger'>Trigger</a> is an external stimulus that causes Mobius to do
+something.  The most common examples of triggers are receiving MIDI
+events and detecting a computer keyboard key press.
+A <a href='#Binding'>Binding</a> is the association of a trigger with
+a <a href='#Target'>Target</a>, the most common type of target is a function,
+script, or track control.  By configuring bindings you can control
+almost every aspect of Mobius using MIDI or the keyboard.</p>
+<a name='Binding Popup Windows'>
+<h2 class=sec2>4.1 Binding Popup Windows</h2>
+</a>
+<p>Bindings are defined through a set of popup dialog windows.  The
+windows for binding MIDI events, computer keyboard keys, and plugin
+parameters all share some components.  The following image shows the
+binding window for MIDI events.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-general.gif'/></td></tr><tr><td><b><i>Example Binding Window</i></b></td></tr></table>
+<p>The binding windows for MIDI events, keyboard events, and plugin
+parameters all use this style of user interface with a few differences
+that are described in later sections.</p>
+<a name='Binding Set Selector'>
+<h3 class=sec3>4.1.1 Binding Set Selector</h3>
+</a>
+<p>At the top are the <i>Binding Set Selector</i> components.  This is
+displayed only in the MIDI binding window.  The components here allow
+you to create several sets of bindings which may be activated at
+different times.  The <a href='#MIDI Bindings'>MIDI Bindings</a> section describes these
+components in more detail.</p>
+<a name='Bindings List'>
+<h3 class=sec3>4.1.2 Bindings List</h3>
+</a>
+<p>On the left is the <i>Bindings</i> panel.  This lists all of the
+bindings that are defined.  The first column will have the name of the
+target, the second text representation of the trigger.  The third
+<i>arguments</i> column is for use in a future release, for now it will
+always be blank.</p>
+<a name='Selecting Targets'>
+<h3 class=sec3>4.1.3 Selecting Targets</h3>
+</a>
+<p>On the upper right is the <i>Targets</i> panel where you select a
+target for binding.  This is a tabbed panel with each tab containing
+the names of one type of target.</p>
+<p>The <i>Functions</i> tab will have a list of all built-in functions arranged
+in alphabetical order.  Function names that begin with <i>Sustain</i> 
+are <a href='#Sustain Function'>Sustain Function</a>s and are normally bound to a trigger that
+has both a "down" and an "up" state such as MIDI notes.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-target-functions.gif'/></td></tr><tr><td><b><i>Function Targets</i></b></td></tr></table>
+<p>The <i>Scripts</i> tab will have a list of all loaded scripts.  If you have
+not added any script files or directories from the <i>Scripts</i> 
+configuration window then this tab will be empty.</p>
+<p>The <i>Controls</i> tab will have a list of all the built-in track controls.
+See <a href='#Using Controls'>Using Controls</a> for more information on what these do.  
+Control targets are almost always bound to MIDI continuous controllers.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-target-controls.gif'/></td></tr><tr><td><b><i>Control Targets</i></b></td></tr></table>
+<p>The <i>Parameters</i> tab will have a list of all the built-in loop
+and track parameters.  Global parameters are not on this list.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-target-parameters.gif'/></td></tr><tr><td><b><i>Parameter Targets</i></b></td></tr></table>
+<p>Parameter bindings are relatively uncommon, but one use for them is to
+bind a MIDI continuous controller to a parameter with a fixed set of
+values such as <i>Quantize Mode</i>.  The MIDI controller range will be
+divided by the number of values in the parameter.  With the MIDI
+controller at zero the first parameter value is selected, with the
+MIDI controller at 127 the last parameter value is selected.  Other
+parameter values are selected as the MIDI controller sweeps between 0
+and 127.</p>
+<p>The <i>Configurations</i> tab will have a list of all the
+user-defined presets, setups, and extended MIDI bindings.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-target-configurations.gif'/></td></tr><tr><td><b><i>Configuration Targets</i></b></td></tr></table>
+<p>The name of the configuration will be prefixed with <i>Preset:</i>, 
+<i>Setup:</i>, or <i>Bindings:</i> to indicate what it is.  The example
+above shows a few of each type.  If you are running Mobius for the first
+time, you should see only one preset and one setup in the list named
+"Default".</p>
+<p>Configurations are commonly bound to MIDI program changes though
+MIDI notes and computer keys may also be used.  When this trigger is
+received the preset, setup, or binding set is made active.</p>
+<a name='Selecting a Scope'>
+<h3 class=sec3>4.1.4 Selecting a Scope</h3>
+</a>
+<p>The <i>Scope</i> selector restricts the target to a particular
+track or track group. When the scope is <i>Global</i> the binding is
+performed in currently selected track, this is the most common binding
+scope.  The scopes <i>Track 1</i> through <i>Track 8</i> force the
+binding to be performed in a specific track no matter which is
+currently selected.  The scopes <i>Group A</i> through <i>Group D</i>
+force the binding to be performed on all tracks in one of the track
+groups.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-scope.gif'/></td></tr><tr><td><b><i>Scope Selector</i></b></td></tr></table>
+<p>The most common use for scoping is to assign different MIDI
+continuous controllers to specific track <a href='#Control'>Control</a>s such
+as <i>Output Level</i>.  This is typically done with control surfaces
+that have groups of faders and knobs similar to a mixing console.
+Each group of faders and knobs can be scoped to a specific Mobius
+Track.</p>
+<p>When you are just getting started we recommend you only use
+<i>Global</i> scope.  The <a href='exploring.htm#Advanced Control'>Advanced Control</a>
+ 
+section of the <a href='exploring.htm'>Exploring Mobius</a>
+ manual
+has more detail on the use of binding scopes.</p>
+<a name='Binding Arguments'>
+<h3 class=sec3>4.1.5 Binding Arguments</h3>
+</a>
+<p>The <i>Arguments</i> text field is used for a binding feature
+that is still in development.  It should always be left blank.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-arguments.gif'/></td></tr><tr><td><b><i>The Mysterious Arguments</i></b></td></tr></table>
+<a name='Trigger Binding Fields'>
+<h3 class=sec3>4.1.6 Trigger Binding Fields</h3>
+</a>
+<p>Between the <i>Scope</i> selector and the
+inscrutable <i>Arguments</i> are fields that define the binding
+trigger.  These will change depending on the trigger type and are
+discussed in more detail in the sections below.  This example shows
+the trigger fields for MIDI bindings.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-trigger-midi.gif'/></td></tr><tr><td><b><i>MIDI Trigger Fields</i></b></td></tr></table>
+<a name='Command Buttons'>
+<h3 class=sec3>4.1.7 Command Buttons</h3>
+</a>
+<p>Under the <i>Bindings</i> panel are the <i>Command Buttons</i>
+which are used to create new bindings, update existing bindings, and
+delete bindings.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-buttons.gif'/></td></tr><tr><td><b><i>Command Buttons</i></b></td></tr></table>
+<p>To create a new binding select a target, scope, and
+trigger and click <i>New</i>, a new binding will be added to the list.
+To delete a binding select it in the binding list and
+click <i>Delete</i>.  To modify a binding select it in the binding
+list and notice that the target, scope, and trigger components change
+to have the values for the selected binding.  Now change the target,
+scope, or trigger and click the <i>Update</i> button.  The previous
+binding is changed to have the new values.</p>
+<a name='MIDI Bindings'>
+<h2 class=sec2>4.2 MIDI Bindings</h2>
+</a>
+<p>To create MIDI bindings, open the <i>Configuration</i> menu and
+select the <i>MIDI Control</i> item.  The major sections of this window
+were described in <a href='#Binding Popup Windows'>Binding Popup Windows</a>, here we will describe
+the features specific to MIDI bindings.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-midi.gif'/></td></tr><tr><td><b><i>MIDI Binding Window</i></b></td></tr></table>
+<a name='Selecting MIDI Triggers'>
+<h3 class=sec3>4.2.1 Selecting MIDI Triggers</h3>
+</a>
+<p>The <a href='#Trigger'>Trigger</a> for MIDI bindings is specified with a set of
+three fields.  The first is a menu that selects the type of MIDI
+event, the second the MIDI event channel, and the third the MIDI
+event value.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-trigger-midi.gif'/></td></tr><tr><td><b><i>MIDI Trigger Fields</i></b></td></tr></table>
+<p>The MIDI event type is specified with a menu containing these items.</p>
+<ul>
+<li><b>Note</b> - Note On or Note Off event</li>
+<li><b>Control</b> - Continuous controller event</li>
+<li><b>Program</b> - Program change event</li>
+</ul>
+<p>The <i>Channel</i> field is used to select one of the MIDI channels
+from 1 to 16.  The binding will only be executed if the MIDI event comes
+in on this channel.  There is no <i>omni</i> mode, you must select a channel.</p>
+<p>The <i>Value</i> field is use to specify the note number,
+continuous controller number, or program change number.  It is a text
+field, you must type in the number.</p>
+<p>To make it easier to create MIDI bindings, Mobius supports what is commonly
+called a "MIDI learn".  The read-only text area below the <i>Value</i> field
+will show the MIDI events currently being received.  To use this feature you
+must have previously selected one or more MIDI Devices.  Just press keys or turn
+knobs on your MIDI controller and you should see them in the MIDI capture field.
+If you check the <i>MIDI Capture</i> box, the three trigger fields are changed 
+to reflect the last MIDI event that was received.  This makes entering the
+type, channel, and value for a MIDI binding much easier.</p>
+<p>The typical steps for creating MIDI bindings are:</p>
+<ol>
+<li>Check the <i>MIDI Capture</i> box</li>
+<li>Select a target (function, control, parameter, or configuration)</li>
+<li>Select a scope</li>
+<li>Press a key, turn a knob, or move a fader on your MIDI device, 
+the trigger fields should change to reflect the MIDI event</li>
+<li>Click the <i>New</i> command button to add the binding</li>
+</ol>
+<a name='Multiple MIDI Binding Sets'>
+<h3 class=sec3>4.2.2 Multiple MIDI Binding Sets</h3>
+</a>
+<p>MIDI bindings are unusual in that you can create more than one
+set of bindings.  The first set of bindings is always named 
+<i>Common Bindings</i> and are always active.  Additional sets of
+bindings may be optionally enabled and merged with the common bindings.
+These are called <i>extended</i> bindings and sometimes <i>overlay</i>
+bindings.</p>
+<p>You might want to create several extended bindings if you have
+several MIDI controllers that you use at different times.  Or to make
+different bindings for different locations such as a home studio
+and a performance space.  This is an advanced feature, the majority of
+Mobius users only have a single set of MIDI bindings.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-extended.gif'/></td></tr><tr><td><b><i>Binding Set Selector</i></b></td></tr></table>
+<p>At the top of the MIDI binding window is the <i>binding set
+selector</i> The field at the top labeled <i>Active Bindings</i> is a
+menu containing all of the defined binding sets, the selected binding
+set is active.  Note that this menu is a little confusing because the
+first binding set named <i>Common Bindings</i> is always active so you
+use this menu to select which binding set you want active <b>in
+addition</b> to the common bindings.  If <i>Common Bindings</i> is
+selected here it means only the common bindings are active with no
+extensions.  If anything else is selected it means that that binding
+set is active and it will be combined with the common bindings.</p>
+<p>Below the active binding menu is a text field labeled <i>Name</i>
+which has the name of the binding set.  The first binding set has no
+name, it is always displayed as "Common Bindings" and this cannot be
+changed.  Extended binding sets may be given any name.  When you first
+create them they will be given automatically generated names like
+"Bindings 1" and "Bindings 2".  Edit the name field to set the
+preferred name.</p>
+<p>To create a new extended binding set click the small <i>New</i>
+button to the right of the active bindings menu.  A new empty binding
+set is created and added to the menu.  To delete a binding set, first
+select it from the active bindings menu then click the
+small <i>Delete</i> button.</p>
+<p>When you click <i>Ok</i> in the MIDI bindings window the extended
+binding set that is currently shown in the active bindings menu is
+made active.  If you have been editing several binding sets be sure to
+leave the one you want to use now selected when you close the
+window.</p>
+<p>After you create extended binding sets, the binding sets
+themselves may be bound to a MIDI event, when that MIDI event is
+received it causes that set to be activated.  Binding sets will be
+shown under the <i>Configurations</i> tab in the target selector.</p>
+<a name='Multiple MIDI Bindings Example'>
+<h4 class=sec4>4.2.2.1 Multiple MIDI Bindings Example</h4>
+</a>
+<p>While several uses for multiple MIDI binding sets have been
+discovered by users, the original goal of this was to provide more
+flexibility for the <i>Ground Control Pro</i> foot controller.  This
+controller has some nice features but one unfortunate design choice is
+that it can only be configured with 12 "instant access" buttons.  An
+instant access button is what you must use if you want momentary
+switches that send something both when they're pressed and when they're
+released.  The problem is that there are no "banks" of instant access 
+switches like there are on other footswitches, you only get 12 of them
+and what they send cannot be changed without reprogramming.</p>
+<p>To help work around this limitation you can create several extended
+binding sets that bind the same MIDI events from the instant access
+switches to different Mobius functions.  In effect the binding sets
+become "banks" that reassign what the switches do.  To switch between
+banks you then bind one row of switches (usually the top or bottom)
+to the binding sets themselves.  For example switch 1 selects binding
+set A, switch 2 selects binding set B, etc.  When set up in this way
+the top four switches are effectively bank select switches that change
+the behavior of the bottom 8 switches.  This raises the number of
+Mobius functions at your disposal from 12 to 32.</p>
+<a name='Showing MIDI Bindings'>
+<h3 class=sec3>4.2.3 Showing MIDI Bindings</h3>
+</a>
+<p>A window containing a summary of all the MIDI bindings may be
+displayed by pulling down the <i>Help</i> menu and selecting the
+<i>MIDI Bindings</i> item.  This is a "modeless dialog" that you can leave open
+while you interact with the main Mobius window.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-help-midi.gif'/></td></tr><tr><td><b><i>MIDI Bindings Summary Window</i></b></td></tr></table>
+<a name='Keyboard Bindings'>
+<h2 class=sec2>4.3 Keyboard Bindings</h2>
+</a>
+<p>To create keyboard bindings, open the <i>Configuration</i> menu and
+select the <i>Keyboard Control</i> item.  The major sections of this window
+were described in <a href='#Binding Popup Windows'>Binding Popup Windows</a>, here we will describe
+the features specific to keyboard bindings.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-key.gif'/></td></tr><tr><td><b><i>Keyboard Binding Window</i></b></td></tr></table>
+<p>The <a href='#Trigger'>Trigger</a> for keyboard bindings is specified with a
+single field labeled <i>Key</i>.  This is a text field into which you
+type the name of the key you want to bind.  The key names must follow
+certain rules, for example letters must be in upper case and control
+key combinations are written as "Ctrl+" followed by the key letter.  It
+is possible to learn these rules but by far the easiest way to make key
+bindings is to check the <i>Capture</i> checkbox.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-trigger-key.gif'/></td></tr><tr><td><b><i>Keyboard Trigger Fields</i></b></td></tr></table>
+<p>When key capture is checked, the name of any key you press,
+including combinations of shift and modifier keys, is automatically
+entered into the text field.</p>
+<p>The <i>Caps Lock</i> key is not recognized as a shift modifier and
+cannot be bound.  The <i>Print Screen</i> and <i>Num Lock</i> keys cannot be
+bound.  The right <i>Windows</i> key may be bound, but cannot be used as a
+key modifier.  The left <i>Windows</i> key may also be bound but it is not 
+recommended since Windows will popup the start menu whenever this key is
+pressed.</p>
+<p>The keys in the number pad will have different names depending on
+the state of the <i>Num Lock</i> key.  If Num Lock is down, the keys will
+appear as "Num 0", "Num 1", etc.  If Num Lock is up, the keys will be
+duplicates of the arrow and page keys.  Keeping <i>Num Lock</i> down will
+provide you with more unique keys to bind.  The keys in the number pad are
+different than the number keys in the row above the letter keys.  For
+example, "1" and "Num 1" may be bound to different functions.</p>
+<p>The typical steps for creating key bindings are:</p>
+<ol>
+<li>Check the <i>Key Capture</i> box</li>
+<li>Select a target (function, control, parameter, or configuration)</li>
+<li>Select a scope</li>
+<li>Press a key with or without modifier keys on the computer keyboard</li>
+<li>Click the <i>New</i> command button to add the binding</li>
+</ol>
+<p>Note that while it is possible to bind keys to track controls 
+(Output Level, Pan, etc.) this is not normally done because keys
+cannot behave like continuous controllers.</p>
+<p>Keys are however <a href='#Sustainable Trigger'>Sustainable Trigger</a>s so they may be
+used with the sustain functions.  If the key is bound to a sustain function, 
+the function is active for as long as the key is pressed.</p>
+<a name='Showing Keyboard Bindings'>
+<h3 class=sec3>4.3.1 Showing Keyboard Bindings</h3>
+</a>
+<p>A window containing a summary of all the keyboard bindings may be
+displayed by pulling down the <i>Help</i> menu and selecting the
+<i>Key Bindings</i> item.  This is a "modeless dialog" that you can leave open
+while you interact with the main Mobius window.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-help-key.gif'/></td></tr><tr><td><b><i>Keyboard Bindings Summary Window</i></b></td></tr></table>
+<a name='Using Mobius'>
+<h1 class=sec1>5 Using Mobius</h1>
+</a>
+<p>In this section we will discuss some of the more common ways to use
+Mobius and describe some of the menu items and configuration windows.
+When you have finished this section you should have a good overview of
+what Mobius can do.  The <a href='techniques.htm'>Mobius Techniques</a>
+
+manual will go into more depth on functions and techniques.
+The <a href='reference.htm'>Mobius Reference</a>
+ manual will have an
+exhaustive description of every function, parameter, control and
+variable.</p>
+<a name='Using Presets'>
+<h2 class=sec2>5.1 Using Presets</h2>
+</a>
+<p>Before we dive into Mobius functions, it is important to understand
+presets.  Recall that <a href='#Parameter'>Parameter</a>s are named values that can
+change how Mobius behaves.  Many functions are sensitive to one or
+more parameters so in order to understand what a function does, you
+need to understand the parameters that may effect it and what the
+parameter values mean.</p>
+<p>In this section we will not document what every parameter means,
+but we will show you how to change them.  The <a href='#Using Functions'>Using
+Functions</a> section will talk about how a few parameters are used
+with certain functions and the <a href='#Common Parameters'>Common Parameters</a> section
+will describe more parameters that are used with many functions.</p>
+<p>Parameters are usually set by using <a href='#Preset'>Preset</a>s, a named
+collection of parameter values.  You may define several presets with
+different parameter values.  Each track always has one <i>active</i>
+preset.  Presets may be changed at any time and each track can have a
+different preset.</p>
+<p>To manage presets, open the <i>Configuration</i> menu and select
+the <i>Presets</i> item.</p>
+<a name='Preset Window'>
+<h3 class=sec3>5.1.1 Preset Window</h3>
+</a>
+<p>The preset window is divided into two sections.  At the top are
+components for selecting, renaming, creating, and deleting presets.
+The large area at the bottom contains of a tab panel with the
+parameter values for the selected preset.  The first tab
+labeled <i>General</i> has the most common parameters you will see
+referenced in the function documentation.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-preset.gif'/></td></tr><tr><td><b><i>Preset Window</i></b></td></tr></table>
+<a name='Preset Switch Tab'>
+<h3 class=sec3>5.1.2 Preset Switch Tab</h3>
+</a>
+<p>The <i>Switch</i> tab contains parameters that define what
+happens when you switch between loops.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-preset-switch.gif'/></td></tr><tr><td><b><i>Loop Switch Parameters</i></b></td></tr></table>
+<a name='Preset Effects Tab'>
+<h3 class=sec3>5.1.3 Preset Effects Tab</h3>
+</a>
+<p>The <i>Effects</i> tab contains parameters related to pitch
+and rate shifting.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-preset-effects.gif'/></td></tr><tr><td><b><i>Effects Parameters</i></b></td></tr></table>
+<a name='Preset Synchronization Tab'>
+<h3 class=sec3>5.1.4 Preset Synchronization Tab</h3>
+</a>
+<p>The <i>Synchronization</i> tab contains parameters related to loop
+and track synchronization.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-preset-synchronization.gif'/></td></tr><tr><td><b><i>Synchronization Parameters</i></b></td></tr></table>
+<a name='Setting Parameters'>
+<h3 class=sec3>5.1.5 Setting Parameters</h3>
+</a>
+<p>Parameter values are either numeric, text, boolean, or
+"enumerations".  Numeric parameters are displayed with a small text
+field where you can type in a number.  There is usually a minimum and
+maximum value defined for numeric parameters.  Text parameters have a
+longer text field where you can type in free-form text.  Boolean
+parameters are displayed with a checkbox to turn them on or off.
+Enumeration parameters are displayed with a menu where you select one
+of the allowed values.</p>
+<p>When you see a parameter referenced in the documentation for a
+function and would like to try it out, bring up the preset window,
+locate the parameter in one of the tabs, change the parameter, and
+click <i>Ok</i>.  Be careful though.  Until you are comfortable with
+the basic operation of Mobius it is recommended that you not make
+changes to parameters unless you are certain about what they will do.
+If Mobius starts acting weird or if something that worked yesterday
+suddenly stops working, it is very often because you were
+experimenting with parameters and forgot to put them back to their
+default values.</p>
+<p>Mobius installs with one default preset named oddly enough
+"Default".  You can change this preset but if you're just getting
+started it is recommended that you make a copy of it and change the
+copy.  That way you can always get back to the default parameter set
+if something goes wrong.</p>
+<a name='Managing Multiple Presets'>
+<h3 class=sec3>5.1.6 Managing Multiple Presets</h3>
+</a>
+<p>At the top of the preset window is a set of components that let you
+create, delete, select, and rename presets.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-preset-header.gif'/></td></tr><tr><td><b><i>Preset Management Components</i></b></td></tr></table>
+<p>To create a new preset simply click the <i>New</i> button.  
+A new preset is created and
+selected.  The new preset will have a copy of the parameters from the
+preset that was selected when you clicked <i>New</i>.  If you want to
+make a new preset that is similar to an existing preset, be sure to
+select the right existing preset before you click <i>New</i>.</p>
+<p>When a new preset is created it will be given a generated unique name
+starting with "Preset" followed by a number.  To change this name, click
+on the <i>Name</i> text field and type in the desired name.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-preset-rename.gif'/></td></tr><tr><td><b><i>Renaming a new preset</i></b></td></tr></table>
+<p>Once you have created several presets you can switch between them
+by using the <i>Selected Preset</i> menu at the top.  The preset that
+is selected in this menu will become the active track preset when
+you click <i>Ok</i> on the preset window.  If you are making changes
+to several presets, be sure to remember to select the one you want
+to be active before closing the window.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-preset-selector.gif'/></td></tr><tr><td><b><i>Selecting a preset</i></b></td></tr></table>
+<p>To delete a preset simply select it and click the <i>Delete</i> button.
+The preset is deleted and removed from the selection menu.  Be careful
+with the delete button, there is no "are you sure" prompt.  If you delete
+a preset by accident click <i>Cancel</i> at the bottom of the preset
+window and open the window again.</p>
+<p>After making changes to one more presets that you are happy with, you
+must click the <i>Ok</i> button.  If you click <i>Cancel</i> or the
+window close button all changes you have made will be lost.</p>
+<a name='presetMenu'>
+<h3 class=sec3>5.1.7 Selecting Presets with Menus</h3>
+</a>
+<p>Another way to select presets is by using the <i>Presets</i> menu
+in the menu bar.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-preset-topmenu.gif'/></td></tr><tr><td><b><i>Selecting a preset</i></b></td></tr></table>
+<p>This menu will contain the names of all defined presets with a check
+next to the one that is active in the current track.  To change presets
+simply select another one from the menu.  If you just need to change
+presets without editing any parameter values using this menu is easier
+than opening the preset dialog.</p>
+<a name='Using Functions'>
+<h2 class=sec2>5.2 Using Functions</h2>
+</a>
+<p>Recall that a <a href='#Function'>Function</a> is a named action performed by
+Mobius at the request of the user.  In order to make Mobius do
+anything you have to use functions.  Several phrases are used to
+describe the act of using a function, we usually say "executing a
+function" though "running a function", "performing a function", and
+"triggering a function" are sometimes seen in forum conversation.</p>
+<p>To execute a function you must associate it with
+a <a href='#Trigger'>Trigger</a> through a processed called <a href='#Binding'>Binding</a>.
+In the initial installation there are a few functions bound to buttons
+in the UI and to keys on the computer keyboard.  While you can use
+Mobius with just the computer almost everyone will at some point
+invest in a MIDI hardware controller, usually a
+footswitch.  The <a href='#Controlling Mobius'>Controlling Mobius</a> section describes the
+most common ways to make function bindings.</p>
+<p>In this section we focus on what the functions do and not on how
+they are executed.  We will use the terms "press" and "release" when
+talking about using a trigger to execute a function.  Sometimes the
+trigger will be referred to as "the button".  The trigger may
+actually be a UI button, computer key, MIDI footswitch, or something else.  But
+in all cases function triggers are normally buttons of some kind that
+can be pressed and released.</p>
+<p>So instead of saying something technically accurate like "perform
+the down transition of a sustainable trigger bound to the Record
+function" we will just say "press Record".</p>
+<a name='Modal and Instant Functions'>
+<h3 class=sec3>5.2.1 Modal and Instant Functions</h3>
+</a>
+<p>When some functions are executed they will continue to have an
+effect on the loop until they are canceled.  These are called
+<i>modal functions</i> while the function is active the loop
+is said to be <i>in a mode</i>.  While the loop is in a mode some
+functions may change their behavior.</p>
+<p>There are two types of modal functions: <i>major modal
+functions</i> and <i>minor modal functions</i>.  The difference
+between these is that a loop can only be in one major mode at a time,
+but it may be in several minor modes at a time.  If you are in a major
+mode and you use a function that has a different major mode, the first
+major mode is canceled.</p>
+<p>If a function is not modal, it is said to be an <i>instant</i> function
+which means it has a one-time effect on the loop and then it is finished.</p>
+<p><a href='#Reset'>Reset</a> and 
+<a href='#Instant Multiply and Divide'>Instant Multiply</a> are examples of
+instant functions.  <a href='#Record'>Record</a> and <a href='#Overdub'>Overdub</a> are 
+examples of modal functions.</p>
+<a name='Major Modes'>
+<h3 class=sec3>5.2.2 Major Modes</h3>
+</a>
+<p>A loop is always in one <i>major mode</i> which is displayed in
+the <a href='#Mode'>Mode</a> component in the user interface.  Most of the
+major modes are temporary and caused by the execution of a function.
+A few represent the basic states a loop can be in when no function 
+is active.  The possible major modes are:</p>
+<ul>
+<li><b>Reset</b> - The loop is empty</li>
+<li><b>Run</b> - A short-lived mode used during latency compensation, not usually seen</li>
+<li><b>Play</b> - The loop is playing without being affected by a function</li>
+<li><b>Record</b> - The Record function is active</li>
+<li><b>Threshold</b> - The loop is waiting to begin recording until an audio signal of sufficient loudness is received</li>
+<li><b>Overdub</b> - The Overdub function is active</li>
+<li><b>Multiply</b> - The Multiply function is active</li>
+<li><b>Insert</b> - The Insert function is active</li>
+<li><b>Stutter</b> - The Stutter function is active</li>
+<li><b>Rehearse</b> - The Rehearse function is active, and is in the <i>review</i> phase </li>
+<li><b>Rehearse Record</b> - The Rehearse function is active, and is in the <i>record</i> phase</li>
+<li><b>Replace</b> - The Replace function is active</li>
+<li><b>Substitute</b> - The Substitute function is active</li>
+<li><b>Mute</b> - The Mute function is active</li>
+<li><b>Pause</b> - The Pause function is active</li>
+<li><b>Confirm</b> - The loop is waiting for confirmation after a loop switch</li>
+<li><b>Switch</b> - The loop is waiting for a quantize point before performing a loop switch</li>
+<li><b>Synchronize</b> - The loop is waiting for a synchronization point before beginning recording</li>
+</ul>
+<a name='Minor Modes'>
+<h3 class=sec3>5.2.3 Minor Modes</h3>
+</a>
+<p>A loop may be in any number of minor modes at the same time.  Most of the
+minor modes are activated by the execution of a function, but some are
+related to synchronization and reflect various sync states a loop
+may be in once it has been recorded.</p>
+<ul>
+<li><b>Overdub</b></li>
+<li><b>Mute</b></li>
+<li><b>Reverse</b></li>
+<li><b>1/2 Speed</b></li>
+<li><b>Rate <i>x</i></b></li>
+<li><b>Pitch <i>x</i></b></li>
+<li><b>Master</b></li>
+<li><b>TrackMaster</b></li>
+<li><b>MIDIMaster</b></li>
+</ul>
+<p>The <i>Reverse</i>, <i>1/2 Speed</i>, <i>Rate x</i>, and <i>Pitch
+x</i> modes are called "effect" modes because they behave like
+applying audio effects to the track in real-time.</p>
+<p>The <i>Master</i>, <i>TrackMaster</i>, and <i>MIDIMaster</i> are
+synchronization modes you will see after recording the track that has
+been designated the <i>sync master</i> track.  <i>TrackMaster</i>
+means that it is behaving as the track sync master, <i>MIDIMaster</i>
+means that the track is behaving as the MIDI sync master, and
+just <i>Master</i> means it is both track and MIDI sync master.</p>
+<p><i>Overdub</i> is strange because it is both a minor mode and a
+major mode.  Unlike other major modes if you start in <i>Overdub</i>
+mode then change to a different mode like <i>Multiply</i> when you
+leave <i>Multiply</i> mode you will return to <i>Overdub</i> mode.  In
+effect the system always remembers if you started in <i>Overdub</i>
+mode and returns you there.  This "pending" overdub mode is indicated
+by showing <i>Overdub</i> in the minor mode list.</p>
+<p>The <i>Reverse</i>, <i>1/2 Speed</i>, <i>Rate x</i>, and <i>Pitch
+x</i>, and <i>Overdub</i> modes may be active while the loop is
+in <i>Reset</i> mode.  Even though the loop is empty, the minor modes
+are "armed" and will become active once you start recording a new loop.</p>
+<a name='Reset, Empty, Clear, and Silent'>
+<h3 class=sec3>5.2.4 Reset, Empty, Clear, and Silent</h3>
+</a>
+<p>There are two important states that a loop can be in but the terms
+used to describe those states are sometimes used inconsistently in the
+forums and even in the documentation.  Usually it is clear from the
+context what the meaning is, but in this section we will give precise
+definitions for these terms.</p>
+<p>When you first start Mobius, all loops are in a state
+called <b>Reset</b>.  The loops contain nothing, they cannot be played
+or manipulated in any way until you record something into them. While
+the official term for this is <i>Reset</i> we sometimes use the
+term <b>Empty</b> to mean the same thing.  An empty loop contains
+nothing.</p>
+<p>When you use certain features like <a href='#Empty Loop Action'>Empty Loop Action</a> loops
+can be created that have a size but they do not contain any 
+audible content.  Loops in this state are said to be <b>Clear</b>
+or <b>Silent</b>.</p>
+<p>The problem word is <i>Empty</i>.  It is common to think of a
+silent loop as "empty" but technically this is not correct.  The loop
+is not empty, it can play and be operated upon just like any other
+loop.  It just doesn't have anything audible in it yet.</p>
+<p>This is especially important in the discussion of "loop switching"
+with <a href='#Next Loop'>Next Loop</a> and <a href='#Empty Loop Action'>Empty Loop Action</a> because
+"empty" loops will behave differently than "silent" loops.</p>
+<a name='Record'>
+<h3 class=sec3>5.2.5 Record</h3>
+</a>
+<p>It all starts with <i>Record</i>.  When a loop is empty is said
+to be in a <i>reset</i> state.  Unless you choose to work only with
+pre-recorded loops you must always begin by recording audio into an
+empty loop.</p>
+<p>There are several ways to record loops but the one that most people
+start with is to use the <i>Record</i> function.  You
+press <i>Record</i> once to begin recording and again to end the
+recording.  Immediately after ending the recording the loop begins
+playing and continues forever until you modify it in some way.</p>
+<p>Another function that can be used to record a loop is
+<i>Sustain Record</i>.  With this function recording starts when
+you press <i>Sustain Record</i> and ends when you release it.  This
+is especially useful if you want to create very short loops.</p>
+<p>Some people like to have recording start automatically when they
+begin playing, then press Record to stop.  You can do this by setting
+the <a href='#Record Threshold'>Record Threshold</a> preset parameter.  When this parameter
+is zero, recording always starts immediately.  When this parameter is
+set between 1 and 8, it the input level of the track must exceed the
+threshold before recording will start.  Until then the track
+enters <i>Threshold</i> mode.  Small values for the threshold will
+make it very sensitive, higher values will require a very loud signal.
+You will need to experiment with thresholds to find the one that works
+best for your input signal.</p>
+<a name='Reset'>
+<h3 class=sec3>5.2.6 Reset</h3>
+</a>
+<p>So now you've recorded a loop, how do you get rid of it?
+The <i>Reset</i> function will throw away the loop and return it
+to <i>reset</i> mode.  You can bind a footswitch to the <i>Reset</i>
+function but if you are using a controller that supports
+<a href='#Sustainable Trigger'>Sustainable Trigger</a>s it is easier to use a <a href='#Long Press'>Long Press</a>
+of the <a href='#Record'>Record</a> function.  Just press and hold <i>Record</i>
+for about 1/2 second and the loop will be reset.</p>
+<p>There are three versions of the <i>Reset</i> function.</p>
+<ul>
+<li><b>Reset</b> - reset the current loop</li>
+<li><b>Track Reset</b> - reset all loops in the current track</li>
+<li><b>Full Reset</b> - reset all loops in all tracks</li>
+</ul>
+<a name='Overdub'>
+<h3 class=sec3>5.2.7 Overdub</h3>
+</a>
+<p>Once you have recorded a loop one of the most common looping
+techniques is to add more audio to the loop as it is playing, then
+when the loop plays back from the beginning you hear the original loop
+plus the new material.  This process is called "overdubbing" and
+is done with the <i>Overdub</i> function.</p>
+<p>As the loop is playing, press <i>Overdub</i> to begin overdubbing
+and press <i>Overdub</i> again to stop.  You should hear what you
+overdubbed the next time the loop plays from the beginning.  You 
+can also overdub using the <i>Sustain Overdub</i> function.  Like other
+sustain functions, the overdub starts when you press the button and
+ends when you release it.</p>
+<p>If you do a lot of overdubs, the combined audio can reach the point
+of digital clipping and sound like harsh distortion.  You may need
+to reduce the input level of the track so you can overdub several times
+without overloading.</p>
+<p>Overdub is often used in combination with the <a href='#Feedback'>Feedback</a>
+control.  If you reduce feedback and keep overdub on, you can create
+an endlessly evolving loop as old layers fade out and new overdubs
+take over.</p>
+<a name='Undo and Redo'>
+<h3 class=sec3>5.2.8 Undo and Redo</h3>
+</a>
+<p>Once you start overdubbing, you will notice bars being added to
+the <a href='#Layer Bars'>Layer Bars</a> in the user interface.  Each bar represents
+one pass over the loop during which an overdub was applied. If you
+decide you don't like something you've overdubbed you can use
+the <i>Undo</i> function to return to the previous layer. You can keep
+using <i>Undo</i> to move back layers until you reach the first
+recorded layer.</p>
+<p>If you have the <i>Maximum Redo</i> parameter set, then as you
+undo, the current layer will be moved to the <i>redo list</i>, displayed
+to the right of the highlighted layer bar.  When you have one or more
+redo layers you can use the <i>Redo</i> function to move forward to the
+next redo layer.</p>
+<p>A <a href='#Reset'>Reset</a> of the loop will delete all layers.</p>
+<a name='Mute and Pause'>
+<h3 class=sec3>5.2.9 Mute and Pause</h3>
+</a>
+<p>Sometimes you want to silence a loop but not completely throw it
+away like the <a href='#Reset'>Reset</a> function does.  There are several ways
+to do this, the most common is to use the <i>Mute</i> function.</p>
+<p>When you press <i>Mute</i> the loop will be silenced but it will
+continue to play.  You will see the loop meter advancing but no sound
+will be output from the track.  To end mute mode, press <i>Mute</i> a
+second time or use another function that is configured to end a mute
+(see below).</p>
+<p>There are several options for what happens when you end a mute.
+These are controlled by the <i>Mute Mode</i> preset parameter.
+The possible values for this parameter are:</p>
+<ul>
+<li><b>Continue</b> - resume playing at the current playback location without moving</li>
+<li><b>Start</b> - restart the loop from the beginning</li>
+<li><b>Pause</b> - resume from the paused location</li>
+</ul>
+<p>The last mute mode <i>Pause</i> actually changes the <i>Mute</i>
+function so that it behaves the same as the <i>Pause</i> function.
+<i>Pause</i> behaves like pause button on an old tape machine,
+when you press <i>Pause</i> the first time it freezes the loop, no sound
+is output and the loop does not advance.  When you press <i>Pause</i> a second
+time it unfreezes the loop and continuous playback from the last location.</p>
+<p>The most common way to end mute mode is to press <i>Mute</i> a second time.
+But other functions can be configured to automatically cancel mute
+mode without having to press <i>Mute</i>.  This is controlled by the
+preset parameter <i>Mute Cancel</i> which has these values:</p>
+<ul>
+<li><b>Never</b> - mute is never canceled automatically, you must use the <i>Mute</i> function</li>
+<li><b>Edits</b> - mute is canceled by an editing function as <i>Overdub</i></li>
+<li><b>Triggers</b> - mute is canceled by an editing function or a loop triggering function such as <i>NextLoop</i></li>
+<li><b>Effects</b> - mute is canceled by editing functions, triggering functions, or by effects functions such as <i>Reverse</i></li>
+<li><b>Custom</b> - mute is canceled by a set of functions you choose</li>
+<li><b>Always</b> - mute is canceled by any function</li>
+</ul>
+<p>When you use the <i>Custom</i> mute cancel mode, you specify the functions
+you want to cancel with a global parameter.  From the <i>Configuration</i> 
+menu select <i>Global Parameters</i>, select the <i>Functions</i> tab then
+find the selector labeled <i>Mute Cancel Functions</i>.  Move the functions
+you want to cancel mute to the panel on the right.</p>
+<p>Note that another option for silencing a loop is to simply turn the 
+<a href='#Output Level'>Output Level</a> down. If you bind a MIDI expression pedal
+to the <i>Output Level</i> control you can quickly sweep the track output
+level up or down using the pedal.</p>
+<a name='Multiply'>
+<h3 class=sec3>5.2.10 Multiply</h3>
+</a>
+<p>Often after recording a loop you would like to overdub something
+that is longer than the original loop.  If you just use
+the <a href='#Overdub'>Overdub</a> function the overdub will "fold" over on itself
+rather than making the loop longer.  The <i>Multiply</i> function is
+similar to <i>Overdub</i> except that it will extend the loop for as
+long as you are in multiply mode.</p>
+<p>When you press <i>Multiply</i> for the first time you will enter
+the <i>Multiply</i> major mode.  During this mode whenever
+you let the loop play for the length of one cycle, a new cycle is
+appended or inserted.  Recording is active during the multiply so you
+may overdub new material over the cycles being multiplied.</p>
+<p>It is important to understand that <i>Multiply</i> can behave
+differently if you use it again after the loop has been multiplied
+once.  This behavior is determined by the <i>Multiply Mode</i> preset
+parameter which has these values.</p>
+<ul>
+<li><b>Normal</b> - Multiply behaves similar to the Echoplex EDP</li>
+<li><b>Simple</b> - Multiply simply extends the loop when necessary it never reduces the loop length</li>
+</ul>
+<p>The default multiply mode is <i>Normal</i> which makes it behave
+similar to the multiply function on the Echoplex EDP.  We will not go
+into full detail on how multiply behaves but the most important thing
+to know is that if the loop has already been multiplied once, using it
+again will perform a "Remultiply" which can end up reducing the loop
+length as well as extending it.  You can think of it like marking a
+region of text in a text editor and cutting it.  When you use multiply
+in an already multiplied loop, the section of the loop between the
+beginning and the end of the multiply is cut out and the content on
+either side is discarded.  A new layer is created containing only the
+section of the loop that was covered by the multiply.</p>
+<p>Multiply behavior is complicated and difficult to understand for
+new users.  If you do not already understand roughly how the EDP does
+multiply, it is recommended that you set <i>Multiply Mode</i>
+to <i>Simple</i>.</p>
+<a name='Instant Multiply and Divide'>
+<h3 class=sec3>5.2.11 Instant Multiply and Divide</h3>
+</a>
+<p>While the <a href='#Multiply'>Multiply</a> function is a "modal" function that
+you must start and stop, <i>Instant Multiply</i> will instantly
+multiply the current loop by some number.  There are three built-in
+versions of instant multiple, more multiples are available using scripts.</p>
+<ul>
+<li><b>Instant Multiply 2</b></li>
+<li><b>Instant Multiply 3</b></li>
+<li><b>Instant Multiply 4</b></li>
+</ul>
+<p>The <i>Divide</i> function is similar to <i>Instant Multiply</i> but
+it works the other way, the loop is instantly divided by some divisor.
+There are three built-in versions of this function, more divisors are
+available using scripts.</p>
+<ul>
+<li><b>Divide 2</b></li>
+<li><b>Divide 3</b></li>
+<li><b>Divide 4</b></li>
+</ul>
+<a name='Replace'>
+<h3 class=sec3>5.2.12 Replace</h3>
+</a>
+<p>The <i>Replace</i> function is similar to what recording systems call
+"punch in".  While the replace function is active, the previous
+contents of the loop are erased and replaced with the audio signal
+currently being received by the track.</p>
+<p><i>Replace</i> is a modal function, the replace begins when you press the
+button for the first time and ends when you press the button a second
+time.  It is fun to use <i>Replace</i> with the <a href='#Quantize Mode'>Quantize Mode</a>
+parameter set to <i>Sub Cycle</i>.  This allows you to create punches
+that follow a strict rhythm.</p>
+<a name='Insert'>
+<h3 class=sec3>5.2.13 Insert</h3>
+</a>
+<p>The <i>Insert</i> function will insert new material into the loop.
+Unlike <a href='#Replace'>Replace</a> it does not overwrite the existing loop,
+instead it makes the loop longer by inserting space at the beginning,
+middle, or end of the loop.  <i>Insert</i> is a modal function, the
+insert begins when you press the button the first time and ends when
+you press it a second time.</p>
+<p>Insert will normally "round off" so that a full cycle is inserted.
+When you press Insert a second time, an event to end the insert is 
+scheduled for some time in the future, and Insert mode will continue
+until that time is reached.  This is useful if you want to create
+rhythmic loops and think of cycles like one or more measures in the
+time signature.</p>
+<p>If you want to create non-rhythmic or "glitchy" loops you can
+create an "unrounded insert" by ending insert mode by pressing
+the <i>Record</i> button rather than the <i>Insert</i> button.</p>
+<a name='Reverse'>
+<h3 class=sec3>5.2.14 Reverse</h3>
+</a>
+<p>The <i>Reverse</i> function will toggle the playback direction.
+This is a <i>minor modal</i> function, reverse starts when you press
+the button the first time and ends when you press the button a second
+time.  But unlike <i>major modal</i> functions you can be in reverse
+mode at the same time you are in other modes like <a href='#Multiply'>Multiply</a>
+or <a href='#Overdub'>Overdub</a>.  Changing direction as you overdub can result
+in some very interesting effects.</p>
+<p>While you are in reverse mode, the word <i>Reverse</i> will appear
+in the <a href='#minorModesComponent'>Minor Modes Component</a> in 
+the user interface.  You will also see the <a href='#Loop Meter'>Loop Meter</a>
+and <a href='#Loop Radar'>Loop Radar</a> draw in reverse.</p>
+<a name='Speed'>
+<h3 class=sec3>5.2.15 Speed</h3>
+</a>
+<p>The <i>Reverse</i> function will toggle half-speed mode.  This is
+a <i>minor modal</i> function, half-speed starts when you press the
+button the first time and ends when you press the button a second
+time.  Like <a href='#Reverse'>Reverse</a>, minor modal functions can be active at
+same time you are in other modes like <a href='#Multiply'>Multiply</a>
+or <a href='#Overdub'>Overdub</a>.  You can even have <i>Speed</i>
+and <i>Reverse</i> active at the same time.</p>
+<p>While you are in 1/2 speed mode, the word <i>1/2 Speed</i> will appear
+in the <a href='#minorModesComponent'>Minor Modes Component</a> in 
+the user interface.  You will also see the <a href='#Loop Meter'>Loop Meter</a>
+and <a href='#Loop Radar'>Loop Radar</a> draw more slowly and in a different color.</p>
+<p>A common use for the <i>Speed</i> function is to record something
+while in half-speed mode, then when you return to normal speed what
+you recorded plays twice as fast and one octave higher. <i>Speed</i>
+(like <i>Reverse</i>) can be used while the loop is in <i>Reset</i>
+mode.  Although the loop is empty you will see "1/2 Speed" appear in
+the in the <a href='#minorModesComponent'>Minor Modes Component</a>.
+This means that 1/2 speed is "armed" and will be active when you eventually
+record the loop.</p>
+<a name='Next Loop'>
+<h3 class=sec3>5.2.16 Next Loop</h3>
+</a>
+<p>The <i>Next Loop</i> function will move to the next loop in the track.
+This is a rather complex process called <i>loop switching</i>.  Many things
+can happen when you switch loops, these are discussed in more detail
+in the <a href='techniques.htm'>Mobius Techniques</a>
+ manual.</p>
+<p>For now you can experiment with using <i>Next Loop</i> to record
+different loops, then cycle over them.  As you will see, with the
+default preset parameters, switching to an empty loop halts playback
+and the next loop sits in <i>Reset</i> mode until you
+press <i>Record</i> to begin recording.  Trying to create another loop
+that is the same size as the first "by ear" is also next to impossible.</p>
+<p>There are many options for creating new loops that don't disrupt
+the flow of the performance.  One is to set the <a href='#Empty Loop Action'>Empty Loop Action</a>
+parameter to <i>Record</i>.  If this is set, whenever you
+switch to an empty loop, recording begins automatically.  You do however
+still need to press <i>Record</i> to stop the recording.</p>
+<p>To create loops that are exactly the same size, or an exact multiple,
+set <a href='#Empty Loop Action'>Empty Loop Action</a> to <i>Copy Timing</i>.  Now when
+you switch to an empty loop, a new <i>clear</i> loop
+will be automatically created that is exactly the same size as the
+original loop.  You can then begin overdubbing into this new loop.</p>
+<p><i>Next Loop</i> is just one of many functions that perform 
+loop switches.</p>
+<ul>
+<li><b>Next Loop</b></li>
+<li><b>Previous Loop</b></li>
+<li><b>Sustain Next Loop</b></li>
+<li><b>Sustain Previous Loop</b></li>
+<li><b>Loop 1</b></li>
+<li><b>Loop 2</b></li>
+<li><b>Loop 3</b></li>
+<li><b>Loop 4</b></li>
+<li><b>Loop 5</b></li>
+<li><b>Loop 6</b></li>
+<li><b>Loop 7</b></li>
+<li><b>Loop 8</b></li>
+<li><b>Retrigger</b></li>
+</ul>
+<p><i>Previous Loop</i> works the same as <i>Next Loop</i> but it selects
+the loop in the other direction.  The numbered <i>Loop</i> functions
+cause a switch to a specific loop. </p>
+<p>The <i>Sustain Next Loop</i> and <i>Sustain Previous Loop</i> functions
+must be bound to a <a href='#Sustainable Trigger'>Sustainable Trigger</a>.  If they are not, they
+behave the same as <i>Next Loop</i> and <i>Previous Loop</i>.  What
+the sustain functions do is switch to the new loop for as long as the
+function button is held down, then return to the original loop.</p>
+<p>The <i>Retrigger</i> function retriggers the current loop.  It
+doesn't sound like it would be a loop switch function but it is
+essentially a switch away from and then immediately back to the
+current loop.  All of the features that are available when switching
+to a different loop are also available with <i>Retrigger</i>.  The
+numbered <i>Loop</i> functions are similar.  If you are not
+in the numbered loop, then it switches to that loop.  If you are
+already in the numbered loop then it does the same thing
+as <i>Retrigger</i>.</p>
+<a name='Shuffle'>
+<h3 class=sec3>5.2.17 Shuffle</h3>
+</a>
+<p><i>Shuffle</i> is a fun function you can use to slice a loop
+into pieces then reorder them.  This is an "instant function" that
+will have immediate effect on the loop rather than placing you
+into a mode.  When the <i>Shuffle</i> button is pressed all of
+the subcycles of the loop are immediately arranged.  You can change
+the granularity of this slicing by changing the <a href='#Subcycles'>Subcycles</a>
+parameter.</p>
+<p>How the slices are rearranged is controlled by the <i>Shuffle Mode</i>
+parameter.  It has these values:</p>
+<ul>
+<li><b>Reverse</b></li>
+<li><b>Shift</b></li>
+<li><b>Swap</b></li>
+<li><b>Random</b></li>
+</ul>
+<p>With <i>Reverse</i> the slices are arranged in reverse order.  For
+example starting with slices 1234 the new order will be 4321.</p>
+<p>With <i>Shift</i> the slices are shifted to the right by one.  For
+example 1234 becomes 2341.</p>
+<p>With <i>Swap</i> pairs of slices are reversed.  For example
+1234 becomes 2143.</p>
+<p>With <i>Random</i> the slices are reordered randomly.</p>
+<a name='Using Controls'>
+<h2 class=sec2>5.3 Using Controls</h2>
+</a>
+<p>A <i>control</i> is a named value that controls how audio is
+recorded and played in a track.  Controls are similar
+to <a href='#Parameter'>Parameter</a>s but their values are always integers and have
+a larger range than most parameters.  They are usually set by a MIDI
+device that sends <i>continuous controller</i> messages such as a
+rotating knob or a foot pedal.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-track-controls.gif'/></td></tr><tr><td><b><i>Default track controls in the status area</i></b></td></tr></table>
+<a name='Input Level'>
+<h3 class=sec3>5.3.1 Input Level</h3>
+</a>
+<p><i>Input Level</i> controls the amount of attenuation (volume
+reduction) applied to the audio stream coming in from the audio
+interface or the plugin host.  A value of <i>127</i> means that the
+audio is unmodified.  Lowering the value attenuates the audio using
+an approximate logarithmic curve.  Usually input level is left all the
+way up, but you may want to reduce it if you have different
+instruments routed to each track and you want to balance their input
+levels.</p>
+<a name='Output Level'>
+<h3 class=sec3>5.3.2 Output Level</h3>
+</a>
+<p><i>Output Level</i> controls the amount of attenuation applied to
+the track output as it is sent to the audio device or plugin host.
+Like <a href='#Input Level'>Input Level</a> a value of <i>127</i> means the is passed
+unmodified.  Output levels are frequently changed to balance the track
+mix.  Functions that add new material to a loop such as <i>Overdub</i>
+can cause a loop to become progressively louder.  After several
+overdubs it may be necessary to reduce the output level to match the
+other tracks.  Output levels are also commonly changed as an effect,
+such as temporarily muting tracks or performing a gradual fade in or
+fade out.</p>
+<a name='Feedback'>
+<h3 class=sec3>5.3.3 Feedback</h3>
+</a>
+<p><i>Feedback</i> controls how the loop decays over time.  With
+feedback set at <i>127</i> the loop does not decay, it will play that
+way forever or until you change it with looping functions.  With
+feedback reduced the loop will gradually become softer every time it
+plays until it eventually decays to silence.  A common looping
+technique is to use <a href='#Overdub'>Overdub</a> with feedback reduced.  You can
+keep adding new layers to the loop but old layers will decay.  In this
+way you can create evolving loops that change gradually over time.</p>
+<a name='Secondary Feedback'>
+<h3 class=sec3>5.3.4 Secondary Feedback</h3>
+</a>
+<p><i>Secondary Feedback</i> is like <i>Feedback</i> except that it is
+active at different times.  It must be enabled by selecting
+the <a href='#Enable Secondary Feedback'>Enable Secondary Feedback</a> preset parameter.</p>
+<p>For more on using feedback see the section <a href='#Using Feedback'>Using Feedback</a>.</p>
+<a name='Pan'>
+<h3 class=sec3>5.3.5 Pan</h3>
+</a>
+<p><i>Pan</i> adjusts the relative output levels of the left and right
+channels of the track.</p>
+<a name='Common Parameters'>
+<h2 class=sec2>5.4 Common Parameters</h2>
+</a>
+<p>In the <a href='#Using Presets'>Using Presets</a> we described how you can change
+parameters and in the <a href='#Using Functions'>Using Functions</a> we introduced a few
+parameters and showed how they are used with certain functions.  In
+this section we will introduce a few more of the most commonly used
+parameters.   The <a href='techniques.htm'>Mobius Techniques</a>
+
+manual has more information on each of these parameters and how
+they can be used.</p>
+<a name='Loops Per Track'>
+<h3 class=sec3>5.4.1 Loops Per Track</h3>
+</a>
+<p>The <i>Loops per Track</i> parameter determines how many loops will
+be in the track.  The default is 4, the minimum number is 1 and the 
+maximum is 8.</p>
+<p>Note that since this is a preset parameter, and since each track
+can have a different preset, it is possible for each track to have
+a different number of loops.  This can be useful when done carefully,
+but when you're just starting out it is recommended that you make
+all tracks have the same number of loops to ensure that functions
+like <i>Next Loop</i> and <i>Loop Trigger</i> work consistently.</p>
+<p><b>Bug Alert:</b> There are some glitches in the user interface
+when you change the <i>Loops per Track</i> parameter and the
+<a href='#loopStatusStrip'>Loop Status</a> component is selected
+in the track strip.  Since this component displays a row for each
+loop if you increase the number of loops this component will need
+to grow taller which makes the entire track strip taller.  Currently
+the track strip will not automatically resize to show the additional
+loops, you must close and restart Mobius to rebuilt the track strips
+with the new size.</p>
+<a name='Quantize Mode'>
+<h3 class=sec3>5.4.2 Quantize Mode</h3>
+</a>
+<p>Recall that <a href='#Quantization'>Quantization</a> is a general term used to
+describe how Mobius can adjust the timing of a function so that it
+begins or ends at a precise point in the loop.  The <i>Quantize
+Mode</i> parameter is the primary way to enable quantization for most
+functions.
+
+<p>Not all functions obey quantization and some
+like <a href='#Overdub'>Overdub</a> have other parameters that determine whether
+they are quantized.  But most do, so if you feel like functions are
+not happening when you want them too then quantization is probably
+enabled.</p>
+
+
+The parameter may have these values.</p>
+<ul>
+<li><b>Off</b></li>
+<li><b>Subcycle</b></li>
+<li><b>Cycle</b></li>
+<li><b>Loop</b></li>
+</ul>
+<p>When <i>Quantize</i> is <i>Off</i> quantization is disabled.
+Functions start immediately and usually end immediately.  Some
+functions like <a href='#Multiply'>Multiply</a> and <a href='#Insert'>Insert</a> have their
+own <i>rounding</i> behavior and will sometimes defer their ending
+even when quantization is off.</p>
+<p>When <i>Quantize</i> is <i>Subcycle</i>, <i>Cycle</i>, or <i>Loop</i>
+quantization is said to be enabled.  The three values define what are
+called the "quantize points" or "quantization boundaries".  When quantization
+is enabled and a function that obeys quantization is executed, the
+execution is delayed until the next quantize point.</p>
+<p>When <i>Quantize</i> is <i>Loop</i> the quantization point is
+the beginning of the loop (or the end depending on how you look at it).
+Functions are delayed until the loop plays to the end and wraps back around
+to the start point.</p>
+<p>When <i>Quantize</i> is <i>Cycle</i> the quantization points are at the
+beginning of each cycle.  Until you use functions such as <a href='#Multiply'>Multiply</a>
+that add cycles, a loop will have only one cycle and this quantize mode
+behaves the same as <i>Loop</i>.  If you have cycles, you will see them
+in the <a href='#Loop Meter'>Loop Meter</a> as longer tick marks.</p>
+<p>When <i>Quantize</i> is <i>Subcycle</i> the quantization points are
+at the beginning of each subcycle.  A subcycle is an even division of
+the cycle and is determined by the <a href='#Subcycles'>Subcycles</a> parameter.  Depending
+on how you build the loop, subcycles are often the same as "beats" and cycles
+the same as "bars" in a time signature.  But this does not have to 
+be the case, cycles and subcycles can represent any span of time.</p>
+<p>Though it is not a hard rule, in general most people use cycles to 
+split the loop up into a relatively small number of major sections.  These
+might be bars, phrases, or even one full chord progression.  Dividing
+these into subcycles is then a matter of preference, the subcycles may
+represent beats, bars, or even finer grains like 8th or 16th notes.</p>
+<p>The point of using quantization is to make changes to the loop at
+rhythmically exact times.  This is often used when you are
+synchronizing with an external device such as a drum machine or
+sequencer.  For example you may want to enter <i>Reverse</i> mode at
+the exact moment the loop reaches the start point.  Or you may want to
+use <a href='#Replace'>Replace</a> to punch in notes on a precise quarter note
+grid.</p>
+<a name='Subcycles'>
+<h3 class=sec3>5.4.3 Subcycles</h3>
+</a>
+<p>The <i>Subcycles</i> parameter sets the number of subdivisions in 
+each cycle.  This is used most often with the <a href='#Quantize Mode'>Quantize Mode</a> 
+parameter to define quantization points.    You can see subcycles
+in the <a href='#Loop Meter'>Loop Meter</a> as the shorter tick marks.</p>
+<p>While the number of cycles in a loop stays the same until you extend
+or shorten it, you can change the number of subcycle divisions at any
+time just by changing the <i>Subcycles</i> parameter.  You will see
+the subcycle tick marks in the <a href='#Loop Meter'>Loop Meter</a> change but otherwise
+the loop is unaffected.</p>
+<a name='Overdub Quantized'>
+<h3 class=sec3>5.4.4 Overdub Quantized</h3>
+</a>
+<p>As mentioned in the <a href='#Quantize Mode'>Quantize Mode</a> section, not all
+functions obey quantization.  One of these is the <a href='#Overdub'>Overdub</a>
+function.  The reason is that usually you want more flexible control
+over when overdubs begin and end, and since overdubs merge with the
+existing loop the exact start and end points are not as important
+rhythmically.</p>
+<p>There may be cases though where you want overdubs to be quantized.
+If for example you are overdubbing into an empty loop you might want
+to make an exact grid of quarter notes similar to what you can
+accomplish with the <a href='#Replace'>Replace</a> function.  It is possible to
+make <i>Overdub</i> sensitive to quantization by checking
+the <i>Overdub Quantized</i> preset parameter.  This parameter applies
+only to <i>Overdub</i> and dependent on  <a href='#Quantize Mode'>Quantize Mode</a> parameter.
+If <i>Overdub Quantized</i> is checked
+but <i>Quantize Mode</i> is <i>Off</i>, the <i>Overdub</i> function
+will not be quantized.</p>
+<a name='Switch Quantize'>
+<h3 class=sec3>5.4.5 Switch Quantize</h3>
+</a>
+<p>Loop switching is a very powerful operation with many options.  Because
+so much can be done during a loop switch it is given it's very own
+quantization mode set using the <i>Switch Quantize</i> parameter.  The
+various loop switching functions described in <a href='#Next Loop'>Next Loop</a> do not
+obey the <a href='#Quantize Mode'>Quantize Mode</a> parameter, they will only obey the
+<i>Switch Quantize</i> parameter.</p>
+<p><i>Switch Quantize</i> is similar to <i>Quantize Mode</i> but has a few
+extra values:</p>
+<ul>
+<li><b>Off</b></li>
+<li><b>Confirm</b></li>
+<li><b>Subcycle</b></li>
+<li><b>Confirm Subcycle</b></li>
+<li><b>Cycle</b></li>
+<li><b>Confirm Cycle</b></li>
+<li><b>Loop</b></li>
+<li><b>Confirm Loop</b></li>
+</ul>
+<p>When the value is <i>Off</i> the switch happens immediately.</p>
+<p>When the value is <i>Subcycle</i>, <i>Cycle</i> or <i>Cycle</i> the
+switch happens at the next quantization point.  When you use one of
+the loop switch functions the loop will enter <i>Switch</i> mode while
+it waits for the next quantization point.</p>
+<p>The three "Confirm" modes require an extra confirmation action
+before the switch will happen.  When you use one of the loop switch
+functions the loop will enter <i>Confirm</i> mode.  To exit confirmation
+mode press the <i>Undo</i> button.  What happens now is determined by
+the combination of the confirmation option and the quantization point.
+If the value is <i>Confirm</i> the switch happens immediately, if it
+is any of the other three the loop enters <i>Switch</i> mode and waits
+for the next quantization point before doing the switch.</p>
+<p>While the loop is in <i>Switch</i> or <i>Confirm</i> modes you can
+execute other functions to control what happens to the next loop when
+the switch is eventually performed.  This is sometimes referred to as
+the "switch quantization period" and more casually on the forums as
+the "lame duck period".</p>
+<p>This is a complex topic that is described fully in the reference
+guide.  But here are a few examples of functions you can use during
+the switch quantization period.</p>
+<ul>
+<li><b>Record</b> - forces the next loop to be rerecorded</li>
+<li><b>Overdub</b> - copies the original loop to the next loop if it is empty</li>
+<li><b>Insert</b> - copies the timing from original loop to the next loop if it is empty</li>
+<li><b>Reverse</b> - toggles the playback direction of the next loop</li>
+<li><b>Speed</b> - toggles the speed of the next loop</li>
+</ul>
+<p>You can press any number of functions during the switch
+quantization period.  In the <a href='#Loop Meter'>Loop Meter</a> You will see them
+"stack" under the switch quantization point.  This is referred to as
+"function stacking".  Some stacked functions are simply queued for
+execution after the loop switch, similar to normal quantization.
+Other functions have special behavior when they are
+stacked, <i>Overdub</i> for example does not simply turn on overdub
+mode in the next loop, it performs a <i>sound copy</i> from one loop
+to the next.</p>
+<a name='Empty Loop Action'>
+<h3 class=sec3>5.4.6 Empty Loop Action</h3>
+</a>
+<p>The <i>Empty Loop Action</i> parameter is used when switching to a
+loop that is "empty" or in <i>Reset</i> mode.  If <i>Empty Loop
+Action</i> is <i>Off</i> nothing happens and the track usually
+enters <i>Reset</i> mode waiting for you to record something in the
+empty loop.</p>
+<p>If <i>Empty Loop Action</i> is set to <i>Record</i>,
+the <i>Record</i> function begins immediately.</p>
+<p>If <i>Empty Loop Action</i> is set to <i>Copy Timing</i>,
+a new silent loop is created that has the same length and
+number of cycles as the original loop.  This is a very useful option
+for creating several loops that are exact multiples of each other.
+This is important if you want to maintain a steady rhythm as you
+switch between loops.  Once the silent loop has been created you can
+then use <a href='#Overdub'>Overdub</a> or <a href='#Multiply'>Multiply</a> to add audio
+content.</p>
+<p>If <i>Empty Loop Action</i> is set to <i>Copy</i>, 
+the current loop is copied entirely to the next loop.
+Again this is useful to create loops that will play in rhythm.
+Copying the sound in addition to the timing can be useful if the
+original loop has a simple backing rhythm that you want to carry over
+and then overdub something on top of.</p>
+<a name='Switch Location'>
+<h3 class=sec3>5.4.7 Switch Location</h3>
+</a>
+<p>The <i>Switch Location</i> parameter determines where the playback
+position will be after you switch to another loop.  The values are:</p>
+<ul>
+<li><b>Follow</b> - keep the same location you had in the previous loop</li>
+<li><b>Restore</b> - restore the location the new loop had the last time it was playing</li>
+<li><b>Start</b> - start the new loop from the beginning</li>
+<li><b>Random</b> - move to a randomly chosen subcycle</li>
+</ul>
+<p>When using <i>Follow</i>, if the new loop is smaller than the
+current loop the playback position may need to be "wrapped" so that it 
+fits within the new loop.  For example if the current loop is 6 seconds
+long and you are currently at the start of second 5, then you switch
+to a loop that is 3 seconds long, the new loop location will be at
+the start of second 2.</p>
+<p>When using <i>Restore</i>, if the new loop has never been played the
+location will be at the start.  If you are using one of the methods
+to perform a sound copy or a timing copy (see <a href='#Empty Loop Action'>Empty Loop Action</a>) then
+the location will not be restored.</p>
+<a name='Switch Duration'>
+<h3 class=sec3>5.4.8 Switch Duration</h3>
+</a>
+<p>The <i>Switch Duration</i> parameter determines how long you will
+stay in the new loop after a switch.  The values are:</p>
+<ul>
+<li><b>Permanent</b> - you stay in the new loop until you manually change it</li>
+<li><b>Once</b> - the new loop plays till the end then automatically enters <i>Mute</i> mode</li>
+<li><b>Once Return</b> - the new loop plays till the end then returns to the previous loop</li>
+<li><b>Sustain</b> - the new loop plays as long as the function button is held down, then it automatically enters <i>Mute</i> mode</li>
+<li><b>Sustain Return</b> - the new loop plays as long as the function button is held down, then it returns to the previous loop</li>
+</ul>
+<p><i>Once</i> when combined with a <a href='#Switch Location'>Switch Location</a> of <i>Start</i>
+makes the loop triggering functions behave similar to a sampler.  The loop starts from the beginning, plays once, then stops (enters mute mode).</p>
+<p>The <i>Sustain</i> option requires that the function be bound to a 
+<a href='#Sustainable Trigger'>Sustainable Trigger</a>.  If it is not, then this option behaves
+the same as <i>Once</i>.</p>
+<p>The <i>Sustain Return</i> option also requires a sustainable trigger.  If it
+is not, then this option behaves the same as <i>Permanent</i>.</p>
+<p>Recall from the <a href='#Next Loop'>Next Loop</a> section that there are two 
+functions that always have sustained switching behavior, <i>Sustain 
+Next Loop</i> and <i>Sustain Previous Loop</i>.  These two functions do not
+use the <i>Switch Duration</i> parameter.  They will always return
+you to the original loop when the sustain ends (subject to the
+<a href='#Switch Quantize'>Switch Quantize</a> parameter).</p>
+<a name='Enable Secondary Feedback'>
+<h3 class=sec3>5.4.9 Enable Secondary Feedback</h3>
+</a>
+<p>The <i>Enable Secondary Feedback</i> parameter is a boolean that is
+either on or off.  When on, the <a href='#Secondary Feedback'>Secondary Feedback</a> control
+is enabled while in a certain recording modes.  These include <i>Overdub</i>,
+<i>Multiply</i>, <i>Stutter</i>, and <i>Substitute</i>.</p>
+<p>See the <a href='#Using Feedback'>Using Feedback</a> section for more about how
+feedback can be applied.</p>
+<a name='Record Threshold'>
+<h3 class=sec3>5.4.10 Record Threshold</h3>
+</a>
+<p>The <i>Record Threshold</i> parameter determines how loud an audio
+signal must be before a new loop can be recorded.  It is relevant
+only for the <a href='#Record'>Record</a> function.  With a default value of 0, 
+recording begins immediately after you press the <i>Record</i> button.
+When set to a value from 1 to 8, recording will be delayed until the
+input signal reaches a certain level.</p>
+<p>This parameter is useful if you would rather start recording
+automatically as soon as you begin playing an instrument rather than
+having to coordinate your playing with a press of the <i>Record</i>
+button.  It should be noted though that it can take some experimentation
+to get the threshold level set correctly for your playing style.  Many
+people find it easier to create loops with the correct timing by
+manually pressing the <i>Record</i> function.  But if you play
+an instrument with a sharp attack and there is little background noise,
+threshold recording may work for you.</p>
+<a name='Using Feedback'>
+<h2 class=sec2>5.5 Using Feedback</h2>
+</a>
+<p><i>Feedback</i> controls how the loop decays over time.  With
+feedback set at <i>127</i> the loop does not decay, it will play that
+way forever or until you change it with looping functions.  With
+feedback reduced the loop will gradually become softer every time it
+plays until it eventually decays to silence.  A common looping
+technique is to use <a href='#Overdub'>Overdub</a> with feedback reduced.  You can
+keep adding new layers to the loop but old layers will decay.  In this
+way you can create evolving loops that change gradually over time.  This
+style of feedback is popular for "ambient" looping.</p>
+<p>At the extreme setting of zero, loops will play once then
+the loop will be empty.  Low feedback settings can be used to achieve
+effects similar to using a digital delay, loops will play a few
+times then be silent.</p>
+<p>Feedback can be kept at a fixed level or it may be dynamically
+controlled with a MIDI expression pedal.  By dynamically sweeping feedback
+up and down you can sculpt the previous layers so they fade in and out
+under your control.</p>
+<p>You may wish to have different feedback levels when the loop
+is playing and when it is being modified through functions such 
+as <i>Overdub</i>.  For example, you may want old layers
+to decay when the loop is playing, but while you are overdubbing
+you want the old layers to not decay.  Alternately you may want the
+old layers to not decay when a loop is playing, but have them decay
+while you are overdubbing.  This can be achieved through the use
+of <a href='#Secondary Feedback'>Secondary Feedback</a>.</p>
+<p>To enable secondary feedback you must check the
+<a href='#Enable Secondary Feedback'>Enable Secondary Feedback</a> parameter in a preset.  When
+enabled, the <a href='#Secondary Feedback'>Secondary Feedback</a> control will be used to set
+the feedback when in certain editing modes.  By default the modes
+obeying secondary feedback are <i>Overdub</i>, <i>Multiply</i>, 
+<i>Stutter</i>, and <i>Substitute</i>.</p>
+<p>You can control which modes will obey secondary feedback
+by setting a global parameter.  From the <i>Configuration</i> menu
+select <i>Global Parameters</i>, select the <i>Modes</i> tab and locate
+the selector labeled <i>Modes Ignoring Secondary Feedback</i>.  By default
+the listed modes will use secondary feedback.  You can disable secondary
+feedback for certain modes by moving them to the panel on the right.</p>
+<a name='Using Tracks'>
+<h2 class=sec2>5.6 Using Tracks</h2>
+</a>
+<p>Each Mobius track is an independent stereo looper.  They can all record
+and play audio and are mixed together with <i>output level</i>
+and <i>pan</i> controls.  Tracks play simultaneously but you can use
+functions like <i>Mute</i> or <i>Pause</i> to silence them.  Many 
+synchronization options are available to record tracks that stay in 
+perfect sync with other tracks.</p>
+<p><b>NOTE:</b> If you have several loud tracks playing at the same time,
+it is easy to cause digital clipping when the track outputs are summed
+and sent to the audio interface.  This sounds very nasty.  Mobius is
+not smart about compression.  If you experience this, turn down the
+output level in one or more tracks.</p>
+<p>Tracks are visually represented with a row of <i>track strips</i>
+at the bottom of the main window.  There is always one <i>selected
+track</i> that is indicated by a white border around its track strip.
+You can change the selected track by clicking within its track strip,
+by using the left or right arrow keys, or by using one of the 
+track selection functions.  The selected track has <i>input
+focus</i> which means that it will respond to buttons in
+the <a href='#Button Area'>Button Area</a>, MIDI commands, or keyboard keys.</p>
+<p>To make a track do things you will usually configure them to
+respond to MIDI events through a process called <i>binding</i>.  See
+the <a href='#Controlling Mobius'>Controlling Mobius</a> section for more information on how
+to create bindings.</p>
+<p>There are many ways to use tracks, a few of the more common
+techniques are:</p>
+<ul>
+<li>Record different instruments or sounds in each track, for
+example rhythm, bass, chords, and solo.  Use muting or the output
+level to bring parts in and out of the mix.</li>
+<li>Record the same instrument in several tracks.  The effect is
+similar to <i>overdubbing</i> but you have control over the levels of
+each layer.</li>
+<li>Using advanced MIDI binding, give different musicians control
+over different tracks.</li>
+<li>Use tracks to simultaneously record the same loop, but with different
+effects such as rate shift and reverse applied to each track.  After 
+recording, the loop will play back differently in each track.</li>
+<li>Load tracks with pre-recorded loops and use them like a sample
+player, triggering the track to play once then stop while you loop
+in other tracks.</li>
+<li>"Bounce" a mix of several tracks down to one track and reclaim
+the source tracks for new uses.</li>
+</ul>
+<p>In this section we'll describe the most common use for tracks:
+recording and mixing a set of background rhythm tracks for soloing.
+The <a href='techniques.htm'>Mobius Techniques</a>
+ manual will discuss
+some of the more advanced uses of tracks.</p>
+<p>Note that the steps described here assume that you have not made
+changes to the track setups.  Setups are an advanced topic that are
+not described in this manual so this isn't a problem if you're
+installing Mobius for the first time.  But if you're an experienced
+just make sure that all tracks are set to use the same preset and they
+all receive on the same port.</p>
+<p>Start by making sure you can record a loop into the first track
+then reset it.  Verify that you can click the mouse in the track strip
+to select tracks, or select them using the left and right arrow
+keys.</p>
+<p>Next enable track sync.  Open the <i>Preset</i> window and click
+the <i>Synchronization</i> tab.  Locate the <i>Sync Mode</i> parameter
+and set it to <i>Off</i>.  Locate the <i>Track Sync Mode</i> parameter
+and set it to <i>Loop</i>.</p>
+<p>Select track 1 and record a simple rhythm part for a few seconds.
+The first track you record becomes the <i>track sync master</i> track
+for all other tracks.  Listen the first track and watch the
+<i>loop radar</i>.  When the master is at the very beginning of the
+loop the loop radar will be blank and the loop is said to be
+at its <i>start point</i>.</p>
+<p>Now select track 2 and get ready to play a bass line.  Wait until
+the master track is near the middle of its loop and
+press <i>Record</i>.  It doesn't matter exactly when you
+press <i>Record</i> as long as you press it before the master
+track start point.</p>
+<p>Track 2 will now enter <i>Synchronize</i> mode.  It is ready to
+record but the recording will be delayed until the master track
+reaches the next track synchronization point.  Since <i>Track Sync
+Mode</i> was set to <i>Loop</i> the synchronization point is the start
+point of the loop.  As soon as the master track reaches the start
+point, track 2 will change to <i>Record</i> mode and you can begin
+playing the bass line.</p>
+<p>Sometime during the recording of track 2, press <i>Record</i>
+again.  You will see the event marker <i>Record Stop</i> appear at the
+end of the <a href='#Loop Meter'>Loop Meter</a> in the center of the window.  This is
+a <i>pending event marker</i> which means that the recording is
+waiting for something before it can stop.  In this case it is waiting
+for the master track to reach its start point.  Continue playing the
+bass line.  As soon the master track reaches its start
+point <i>Record</i> mode will end and <i>Play</i> mode will begin.
+Track 2 will begin playing the bass line loop in sync with the rhythm
+loop in track 1.  If you're not satisfied with the result
+use <i>Reset</i> and start again.</p>
+<p>Continue this process to record other tracks.  Experiment with the
+<i>output level</i> and <i>pan</i> controls.  When you are ready to 
+start over use the <i>Full Reset</i> function to reset all tracks
+at the same time.</p>
+<p>Note that if you are doing a track sync recording and you let the
+master track play beyond its start point before you
+press <i>Record</i> a second time, the recording will be delayed until
+the master track reaches its start point again and the new loop will
+be twice as long as the master loop.  This often desirable if the
+master track is short and you want to record another track that is an
+exact multiple, such as 4 times as long.</p>
+<a name='Using Scripts'>
+<h2 class=sec2>5.7 Using Scripts</h2>
+</a>
+<p>Scripting is a very powerful feature that lets you customize the
+way Mobius behaves.  We will not describe how to write scripts in this
+manual, but we will show you how to use the scripts you might 
+find posted in the forum or in the old Yahoo group files.  For a complete
+discussion of writing scripts see the 
+<a href='scripts.htm'>Mobius Scripting</a>
+ manual.</p>
+<p>Scripts are simply text files that can be written or viewed in any
+text editor.  It is critical though that they be stored on your file
+system as plain text files, not converted into word processor files.
+There are also several "encodings" that can be used with text files, it
+is important to select ones that Mobius can use.</p>
+<p>If you are using <i>Notepad</i> on Windows, you must
+save the file using the <i>ANSI</i> encoding, you must <b>not</b>
+use <i>Unicode</i>.  If you are using <i>Wordpad</i>, in 
+the <i>Save as type:</i> menu you must select either <i>Text Document</i>
+or <i>Text Document - MS-DOS Format</i>.</p>
+<p>If you are using <i>TextEdit</i> on a Mac, you need to save the
+file in a plain text encoding, either <i>Western (Mac OS Roman)</i>
+or <i>Western (Windows Latin 1)</i>.  When you use the <i>Save As</i>
+menu item, if you see a <i>File Format:</i> menu with items like
+<i>Rich Text Format</i> or <i>Web Page (.html)</i> then you are editing
+the file using rich text rather than plain text.   Open the TextEdit
+Preferences window and under the <i>New Document</i> tab select 
+the <i>Plain Text</i> radio button under the <i>Format</i> section.  Once
+you do this create a new document and the <i>Save As</i> window should
+show a <i>Plain Text Encoding:</i> menu, select <i>Western (Mac OS Roman)</i>.</p>
+<p>There are many text editors available that present encoding options
+in different ways or using different words.  The presentation may also be
+different on different versions of the operating system.  The main thing
+to keep in mind is that you must always pick the simplest text format 
+available, usually this is referred to as "plain text" with encodings
+such as "ansi", "latin 1", "roman", or "MS-DOS".  Stay away from anything
+that says "rich" or "unicode" or that looks like a word processor format.</p>
+<p>Though it isn't always required, it is recommended that you name
+script files using the extension ".mos".</p>
+<p>Once you have created the script file, you need to tell Mobius
+about it through a process called <i>script registration</i>.  There
+are two ways to register scripts: by file and by directory.  When you
+register a script file, that file is loaded into Mobius when it
+starts.  If you register a script directory, all scripts in that
+directory are loaded.  Registering script directories is convenient if
+you have a lot of scripts and you don't want to register all of them
+one at a time.  You do need to be careful though to only put things in
+this directory you really need.</p>
+<p>To register a script open the <i>Configuration</i> menu and
+select <i>Scripts</i>, the Script Registration window will open.</p>
+<img alt='Graphic' src='images/starting-scripts-windows.gif'/>
+<p>On Windows you will see <i>Add Script</i> and <i>Add Directory</i>
+buttons that will bring up standard selection dialogs for files or
+directories.  On Mac you will see a similar window but it will only
+have a single <i>Add</i> button because the standard Mac file selector
+lets you select both files and directories.</p>
+<p>To register a new script or script directory, click one of the add buttons,
+navigate to the file or directory you want to register and click <i>Open</i>
+on Windows or <i>Choose</i> on Mac.   The name of the file or directory
+should now appear in the list in the center of the script registration window.
+If you want to remove an item from the list, click on it so that it
+becomes highlighted then click the <i>Delete</i> button.  Finally
+click the <i>Ok</i> button at the bottom of the widow to save
+the changes.  The new set of scripts will be loaded into Mobius and
+are available for binding.</p>
+<p>See the <a href='#Controlling Mobius'>Controlling Mobius</a> for a full description of how
+to associate triggers like MIDI foot switches to scripts.  Once you
+have registered some scripts or script directories you will start
+seeing their names in the <i>Scripts</i> tab of the binding windows.</p>
+<p>Note that scripts will usually appear in the binding windows with
+a name other than the raw file name.  Most scripts include a line
+starting with <i>!name</i> at the top that specifies a user friendly name
+you want to see in the binding windows.  For example:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    !name Global Fade Out
+</pre>
+</div></div>
+<p>A typical script file may have a name like "fadeoutall.mos" but the
+name you see in the binding windows might be "Global Fade Out" or something
+else more meaningful than the file name.  You will need to look in each
+script to see if it contains a <i>!name</i> line and remember to look for
+that name in the binding windows.  If the script doesn't have a <i>!name</i>
+line you will just see the name of the script file without the ".mos" 
+extension.</p>
+<a name='Next Steps'>
+<h1 class=sec1>6 Next Steps</h1>
+</a>
+<p>This manual has given you an overview of Mobius user interface
+and some of the more common ways to use Mobius.  Experiment with
+what you have learned then proceed to the 
+<a href='exploring.htm'>Exploring Mobius</a>
+ manual for information
+about more advanced features.</p>
+<a name='Troubleshooting'>
+<h1 class=sec1>7 Troubleshooting</h1>
+</a>
+<p>In this section we will discuss a few commonly encountered problems
+and suggest ways to solve them.</p>
+<a name='Mobius is just frozen, it doesn't do anything!'>
+<h2 class=sec2>7.1 Mobius is just frozen, it doesn't do anything!</h2>
+</a>
+<p>If you click on buttons and Mobius doesn't respond it is usually because
+you have not selected any audio devices.  Mobius does most of its work
+within the "audio stream" that is constantly being received from the
+audio device.  If you have not selected a device there will be no
+stream so Mobius can't do anything.</p>
+<a name='Record Stops Suddenly'>
+<h2 class=sec2>7.2 Record Stops Suddenly</h2>
+</a>
+<p>If you press a button that has been bound to the <i>Record</i>
+function and the record runs for about 1/2 a second then stops 
+and resets the loop, you are not using a properly programmed
+<a href='#Sustainable Trigger'>Sustainable Trigger</a>.</p>
+<p>The <i>Record</i> function has <a href='#Long Press'>Long Press</a> behavior, if you
+press and hold the button bound to the <i>Record</i> function longer
+than 1/2 second, it will execute the <i>Reset</i> function.  To prevent
+this from happening you must use a trigger that sends a message both when
+the button is pressed and when it is released.  Usually this means
+that your footswitch must be programmed to send MIDI notes or MIDI
+continuous controller messages on both the up and down transitions.  If
+your MIDI footswitch sends a MIDI <i>Note On</i> message when it is pressed
+but does not send a MIDI <i>Note Off</i> message when it is released, Mobius
+will think the button is being held down and will reset the loop.</p>
+<a name='editingXml'>
+<h2 class=sec2>7.3 I edited an XML file, now everything is screwed up!</h2>
+</a>
+<p>The most common reason for problems after editing the mobius.xml
+or ui.xml files is that you used a text editor that did not save the
+file as plain text.</p>
+<p>Text editors can sometimes store files in different formats such a
+text, rich text, HTML, and as word processor files.  You must always
+save Mobius files as plain text.  There are also several "encodings"
+that can be used with text files, it is important to select ones that
+Mobius can use.</p>
+<p>If you are using <i>Notepad</i> on Windows, you must
+save the file using the <i>ANSI</i> encoding, you must <b>not</b>
+use <i>Unicode</i>.  If you are using <i>Wordpad</i>, in 
+the <i>Save as type:</i> menu you must select either <i>Text Document</i>
+or <i>Text Document - MS-DOS Format</i>.</p>
+<p>If you are using <i>TextEdit</i> on a Mac, you need to save the
+file in a plain text encoding, either <i>Western (Mac OS Roman)</i>
+or <i>Western (Windows Latin 1)</i>.  When you use the <i>Save As</i>
+menu item, if you see a <i>File Format:</i> menu with items like
+<i>Rich Text Format</i> or <i>Web Page (.html)</i> then you are editing
+the file using rich text rather than plain text.   Open the TextEdit
+Preferences window and under the <i>New Document</i> tab select 
+the <i>Plain Text</i> radio button under the <i>Format</i> section.  Once
+you do this create a new document and the <i>Save As</i> window should
+show a <i>Plain Text Encoding:</i> menu, select <i>Western (Mac OS Roman)</i>.</p>
+<p>There are many text editors available that present encoding options
+in different ways or using different words.  The presentation may also be
+different on different versions of the operating system.  The main thing
+to keep in mind is that you must always pick the simplest text format 
+available, usually this is referred to as "plain text" with encodings
+such as "ansi", "latin 1", "roman", or "MS-DOS".  Stay away from anything
+that says "rich" or "unicode" or that looks like a word processor format.</p>
+<a name='I registered my script files but they won't run'>
+<h2 class=sec2>7.4 I registered my script files but they won't run</h2>
+</a>
+<p>If you have registered script files and you see the names in the binding
+windows, but when you try to trigger them nothing happens, the script
+file either contains errors or it was saved in an format that Mobius
+does not recognize.  See <a href='#editingXml'>this section</a> for 
+information on how to properly edit script files.</p>
+<p>If you're sure that the files are in the right format there
+may be bugs in the script.  See 
+<a href='scripts.htm#Debugging Scripts'>Debugging Scripts</a>
+ in 
+the <i>Mobius Scripting</i> manual for more information.</p>
+</body>
+</html>

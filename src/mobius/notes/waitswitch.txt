@@ -1,0 +1,67 @@
+
+Transition Script Wait Events During Loop Switch
+
+
+Original algorithm removed the switch frame as the 
+event basis and then added the delta relative to the new frame:
+
+    newFrame = (event->frame - originalLoop->getFrame()) + nextLoopFrame
+
+The problem is that if the event was scheduled prior to the loop frame
+the result would go negative.
+
+This only happens in a script if you wait immediately after doing
+a  loop switch and don't do "Wait last" to wait for the switch
+to complete:
+
+    PrevLoop
+    Wait until subcycle 1
+
+The wait will be scheduled relative to original loop, then the SwtichEvent
+will be processed and we have to carry the ScriptEvent over to the
+next loop.  In 2.0, it doesn't really carry over since events are maintained
+at the track level but it does potentially need to be adjusted for the
+size of the new loop.
+
+The following waits are not used:
+
+  none, event, up, long
+
+The following waits do not schedule events:
+
+   last, function, switch, script, block, thread
+
+The following waits schedule pending events:
+
+   start, end, externalStart, driftCheck, pulse, beat, bar, realign, return
+
+These wait types schedule non-pending events:
+
+   time, until
+
+Wait type "time" is used for relative waits and is the default:
+
+   Wait msec 1000
+   Wait frame 1000
+   Wait cycle
+   Wait subcycle
+
+Wait type "until" is internally WAIT_ABSOLUTE.
+
+  Wait until subcycle 1
+
+In both of the time and until waits, a frame is calculated relative to
+the loop that was active at the time the Wait event was evaluated.
+
+Ideally we would reschedule the Wait relative to the new loop length.
+We almost have enough because we save the wait type in the Event but 
+we've lost the unit.  For example if the wait is "Wait until subcycle 1"
+this might be at frame 22000 in the original loop but 40000 in the
+next loop because it is longer.  We don't carry enough information
+in the Event to recalculate this.
+
+Instead, the best we can do is calculate the remaining wait time 
+and wait the same amount of time in the next loop.  For relative waits
+this will be the same if the loops are the same size.  Absolute waits
+effectively become relative waits and won't be as accurate.
+

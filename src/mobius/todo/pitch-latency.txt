@@ -1,0 +1,43 @@
+Pitch Latency
+
+Enabling any form of pitch shift or time stretch adds a large amount
+of latency, around 5120 frames.  This needs to be added to output
+latency when doing latency compensation.  This may also influence the
+smallest loop size since I think if the frames is less than IL + OL
+bad things happen.
+
+SoundTouch latency is unfortunately variable and may be expensive to
+calculate so we can pick a maximum latency and add a layer of
+buffering.  Look at the latest release, it apparently lets you query
+latency with more accuracy.
+
+When going from no pitch/stretch to any amount of pitch/stretch it
+will add a massive amount of latency.  This will cause a play jump and
+insert a gap of silence as we wait for the SoundTouch buffer to fill.
+When the amount changes I think we also start over to avoid a click
+which introduces another gap.  On the first gap we need to continue
+playing the old audio until the new becomes available.
+
+Keeping the output stream seamless requires that we add new concepts
+to Stream.  Options
+
+   1) Dual play cursors.  The first one jumps ahead by true latency and sends things
+      through the plugin.  The second one stays at the current location and sends things
+      out until the plugin has something ready, then it is disabled.
+
+   2) Queing jump.  When we need to make the output latency jump we first send
+      frames from the current location to the jump point through the plugin, the
+      plugin queues these for later play.  Then we start sending frames to the plugin
+      normally.  When we ask the plugin for frames it first returns the unmodified 
+      queued frames until those are exhasted at which point the ones passing through
+      the pitch algorithm should be leaking out the back end.
+
+I like 2 because it pushes the complexity into the PitchPlugin.  Will
+need something similar if we change pitches while we're already
+buffering.
+
+Once we exit we need to make a big jump backward.  If we're sweeping
+may want to stay buffering for awhile to see if we cross zero, if we
+stay at zero for a few millis then we can return to normal.
+
+

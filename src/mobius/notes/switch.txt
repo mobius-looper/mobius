@@ -1,0 +1,293 @@
+Newer Loop Switch Design
+
+switchLocation - determines where to play the new loop
+  follow, restore, start, random
+
+switchDuration - determines how long the new loop plays and what to do when it 
+                 stops
+   permanent, once, once return, sustain, sustain return
+
+returnLocation - determines where to play the previous loop when returning
+  follow, restore, start, random
+
+permanent
+  the loop switch remains permanent
+
+once
+  the loop plays from switchLocation until the end, then goes into 
+  mute or pause, mute better if this is the sync master?
+
+once return
+  the loop plays from switchLocation until the end, then returns
+  to the previous loop
+
+sustain
+  the loop plays from the switchLocation for as long as the trigger
+  is held down, then it enters Mute
+  if the trigger is not sustainable this is the same as once
+
+sustain return
+  the loop plays from the switchLocation for as long as the trigger
+  is held down, then it returns to the previous loop
+  if the trigger is not sustainable this is the same as once return
+
+Trigger, Next/Prev, Sustain Next/Prev
+
+We don't have SUSTrigger but switchDuration=sustain accomplishes that.
+
+SUSNext is the same as Next with switchDuration=sustainReturn
+SUSPrev is the same as Prev with switchDuration=sustainReturn
+  When SUSNext/Prev is used switchDuration is ignored?  
+  I think the EDP just implements as a Next when down and a Prev when up,
+  wonder what would happen if samplerStyle was Once?
+
+SamplePlay
+  Same as Retrigger with switchDuration=once, ignores switchLocation 
+  and switchDuration
+  Undo cancels the "return" to mute and lets the loop play
+
+EDP Mapping
+  samplerStyle=Run
+     switchLocation=restore, switchDuration=permanent
+  samplerStyle=Start
+     switchLocation=start, switchDuration=permanent
+  sampelrStyle=once
+     * when triggered with LoopTrigger X
+       switchLocation=start, switchDuration=once
+     * when triggered with NextLoop/PrevLoop
+       switchLocation=start, switchDuration=onceReturn
+  samplerStyle=attack
+     * when triggered with LoopTrigger X
+       switchLocation=start, switchDuration=sustain
+     * when triggered with NextLoop/PrevLoop
+       switchLocation=restore, switchDuration=permanent
+
+I don't like the differences in behavior with Next/PrevLoop and TriggerX.
+NextLoop with switchDuration=once that does not return is kind of odd
+but it's consistent and easier to explain.
+
+----------------------------------------------------------------------
+New Loop Switch Design
+
+I don't like using Undo as a switch confirmation function, to me it
+should cancel the switch.  But everything else stacks events to happen
+after the switch.
+
+GENERAL ISSUES
+
+Play functions (reverse, speed, pitch, rate) toggle or accumulate independent
+of other stacked functions.
+
+Record functions (record, insert, multiply, mute) cancel other
+record functions, but leave play functions.  Note that mute is considered
+a recording function here, though "major mode function" may be more accurate.
+
+If a record function is done a second time, it cancels the first stacked event
+but leaves the play functions.
+
+If a play function is done a second time, it may toggle or adjust the
+previous event.  Reverse and speed toggle.  Pitch and rate adjust.
+
+SUS doesn't really make sense, though I suppose it could mean to 
+do what is necessary then return to the previous loop.  Schedule
+a Return event like SUSNextLoop?  Should we schedule the Return immediately
+or wait for the SUS up?  
+
+
+
+GlobalReset
+Reset
+GeneralReset
+  cancel switch
+
+GlobalMute
+  if this is a track mute it does not affect switch, otherwise it
+  stacks the mute for each switching track 
+  Another mute toggles
+
+Mute
+  ignore?
+  Can stack, but how does this interact with other stacked events?
+  Should it cancel Record/Multiply/Insert and other "recording" modes?
+  Another mute toggles
+  
+Record
+  EDP forces record
+  stack record event, cancels Multiply and Insert, Mute
+  Another record toggles
+
+Rehearse
+  stack rehearse, cancel other recording modes, mute mode
+
+Bounce
+  global function, immune
+
+Play
+  cancel switch and all stacked events
+
+Overdub
+  EDP does simple copy if next loop in Reset, otherwise just turns on overdub
+
+Multiply
+  EDP forces LoopCopy=Sound
+  cancels other recording modes and mute
+  need an option to simply go into multiply mode?
+    not really because can do that after the switch, even after
+    an overdub if we need a seamless recording
+
+InstantMultiply
+  LoopCopy=Sound with multiply
+
+Insert
+InsertOnly
+  EDP forces LoopCopy=Timing
+
+Stutter
+  Copy current cycle only, enter stutter/multiply mode.
+
+Replace
+  LoopCopy=Sound, then enter Replace
+
+Substitute
+  LoopCopy=Sound, then enter Substitute
+
+Mute
+  If loop is not empty, enter mute.
+  If loop is empty, LoopCopy=Sound then mute.
+  Toggle of mute already stacked.
+  Cancel all other record modes.
+
+Solo
+  A track level function, ignored.
+
+Undo
+  EDP has this as a confirmation action.
+  If not in Confirm mode, undo stacked events.
+  Would be cute if we could incrementally undo self-modifying
+  functions like pitch/rate, but maybe it's best just to undo them all.
+
+ShortUndo
+  ignore
+
+Redo
+  cancel everything and redo?
+  maybe best just to ignore
+
+Speed
+FullSpeed
+HalfSpeed
+  Schedule/toggle the stacked function.
+
+RateUp
+RateDown
+RateNext
+RatePrev
+RateShift
+  Schedule stacked function, self-modifying.
+
+RateNormal
+  Cancel all stacked rate functions.
+
+PitchUp
+PitchDown
+PitchNext
+PitchPrev
+PitchShift
+  Schedule stacked function, self-modifying.
+
+PitchNormal
+  Cancel all stacked rate functions.
+
+Reverse
+Forward
+Backward
+  Schedule/toggle stacked function.
+
+StartPoint
+TrimStart
+TrimEnd
+   LoopCopy=Sound, with immediate StartPoint or edge truncation.
+
+SamplePlay
+  Normally restarts loop and plays once.
+  During SwitchQuant, toggle a pending mute at end of loop?
+
+Retrigger
+NextLoop
+PrevLoop
+Loop X
+  Change target loop
+
+NextTrack
+PrevTrack
+Track X
+Focus Lock
+Track Group
+  Track level, immune to loop switch.
+
+Checkpoint
+  Stacks event.  Should the first layer always be a checkpoint?
+  May want to do LoopCopy=Sound, then checkpoint.
+  Or we could just checkpoint the current layer before leaving?
+
+SUSRecord
+SUSRehearse
+  Force record mode, but schedule a Return.
+SUSOverdub
+  Simple copy if in Reset (like EDP) or just turn on overdub.
+  Schedule Return.
+SUSMultiply
+  LoopCopy=Sound, schedule Return.
+SUSUnroundedMultiply
+  Would be nice if we did the unrounded multiply, then copied
+  the splied section to the next loop.  
+SUSInsert
+  LoopCopy=Timing, schedule Return.
+  This doesn't seem very useful.
+SUSUnroundedInsert
+  Not useful?
+SUSStutter
+  Copy current cycle, schedule return.  
+SUSReplace
+  LoopCopy=Sound, Replace, schedule Return.
+SUSSubstitute
+  LoopCopy=Sound, Substitute, schedule Return.
+SUSMute
+  LoopCopy=Sound, Mute, schedule Return.
+  ignore?
+SUSNextLoop
+SUSPrevLoop
+SUSReverse
+SUSSpeed
+  Ignore, unless we let the SUS carry over the loop switch
+  in which case it would do a Return.
+SUSMuteRetrigger
+  ignore
+	
+Sample X
+  ignore
+
+Realign
+MuteRealign
+  Stack a realing?
+
+StartSong
+MuteStartSong
+StopSong
+  stack
+
+QuantMidiStartPoint
+  ignore, or treat like StartPoint?
+
+SyncMaster
+  ignore
+
+ResumeScript
+StartScriptRecording
+SaveScriptRecording
+StopScriptRecording
+StartAudioRecording
+SaveAudioRecording
+StopAudioRecording
+SaveLoop
+  ignore

@@ -1,0 +1,648 @@
+The most common host will be TouchOsc, which sends 0.0 to 1.0 by default.
+
+Sliders are easier to configure if we do auto scaling from 0.0 to 1.0
+to the parameter range.  
+
+Buttons are easier if we send ordinal rather than having to know the
+float subranges, but it's even easier if we just put the desired
+value in the path:
+
+    /mobius/global/output/100
+    /mobius/global/quantize/subcycle
+
+When any non-zero value is received we set the value to the value on the
+path (maybe require 1.0).  When zero or negative is received we ignore the
+request so that momentary buttons don't try to set it twice.
+
+If you want to program a button to send an ordinal use the ordinal suffix
+
+    /mobius/global/quantize/ordinal 
+
+Then send a floating point value from 0.0 to 1 less than the maximum value.
+
+I like this better than having to add continuous(x,y) for the more common
+case of assigning sliders to parameters.
+
+This means that no parmaeter values, or configuration object names
+can be be "ordinal", seems reasonable.  
+
+Relatives work as before:
+
+
+   /mobius/global/quantize/up
+      - up by the argument which is expected to be a positive integer
+             
+   /mobius/global/quantize/down
+   /mobius/global/quantize/min
+   /mobius/global/quantize/max
+   /mobius/global/quantize/center
+
+Could add the delta to the path too:
+
+   /mobius/global/quantize/up/5 which can then be used with fixed 0.0/1.0 buttons.
+
+Use cases handled:
+
+   - slider sweep evenly over parameter range
+   - button sets specific values, or relative values
+
+To consider:
+
+   - sliders could be more usable for params if you could
+     restrict the range
+
+      /mobius/global/quantize/off,cycle,loop
+        - reconfigures the range scaling so that it selects
+          from the enumerated values rather than all of them
+        - switches from assuming 1.0 is the "action" message
+          to being continuous 0-1, messy
+
+  - if sliders send in a fixed range, have to specify it
+
+    /mobius/global/quantize/continuous(x,y)
+    or
+    /mobius/global/quantize/range(x,y)
+
+    like "ordinal" this specifies the quality of the argument
+    in theory could use this for ordinal if the button can't
+    be programmed to send a negative on up
+
+    /mobius/global/quantize/off/button(x,y)
+      - rare, ignroe
+
+Functions:
+
+  /mobius/global/record
+    - continue to expect > 0.0 and 0.0 for down/up
+
+  /mobius/global/record/noup
+    - ignore argument, change when message received
+      do not expect an up event
+
+  /mobius/global/record
+
+          
+Functions with arguments:
+
+    /mobius/global/divide/4
+      - divide by 4, expect usual trigger args
+
+    /mobius/global/divide/arg
+      - divisor specified as the OSC arg
+      - similar to using /ordinal for parmeters
+        - exactly the same it means integer value
+
+  
+    I don't think we need both, function args are rare
+    and it seems to make more sense to put them in the 
+    path like we do when setting parameter values.
+
+TouchOSC use cases
+
+  - sliders, not recommend but works, just have zero at the bottom
+
+  - momentary buttons, works with default 0.0 and 1.0
+
+  - can pass function args on path with default values,
+    or use /ordinal to pass as an arg
+
+
+
+
+----------------------------------------------------------------------
+
+When programming TouchOsc to set enumerated parameters, it is much
+easier to set them using ordinals rather than knowing the 0.0 to 1.0
+threshold.  
+
+Unfortunately TouchOSC buttons send two values on down and up.  
+You can change the values but they're always down/up.  You can
+set them to the same value, but we'll process the action twice.  
+
+TouchOSC sliders can be bound to enumerated parameters.  You can
+set a range from say 0 to 6 but you still get fractional values
+between integers.  Integer truncation will work, but we'll
+send the Action many times.  Actually this is no different than
+it is now.
+
+The behavior of the trigger can't be known to Mobius without adding
+an argument or adjusting the address:
+
+  /mobius/global/parameter/quantize
+    - assumes ordinal
+
+  /mobius/global/parameter/quantize/ordinal
+    - explicit ordinal
+
+  /mobius/global/parameter/quantize/continuous
+    - expect 0.0 to 1.0
+
+For button bindings we have the up down problem.
+Making the button send the same thing on up and down
+works.  Could also do this:
+
+  /mobius/global/parameter/quantize/nozero
+
+Well, no that doesn't work because zero is a legal value.
+Instead program TouchOSC to send a negative number on "up".
+We'll ignore this.  
+
+
+For control bindings, the range is assumed to be 0.0 to 1.0.
+Hmm, don't like this.  If you're programming TouchOsc could just
+want to jump to a specific value
+
+   /mobius/global/control/output 127.0
+     - assumes ordinal, just like parameters
+
+  /mobius/global/parameter/output/continuous
+    - expect 0.0 to 1.0
+
+Yes, controls need to behave like parameters.  They have
+ordinal values and are set by ordinal.  Rarely will they
+be continuous.
+
+
+Function bindings expect to see greater than 0.0 when a button 
+is pushed and 0.0 when it is released.  If the device
+is unable to send both values use:
+
+  /mobius/global/function/record/noup
+  /mobius/global/function/record/nosustain
+
+So the rules are:
+
+  Functions
+     - expect 1.0 and 0.0 unless /nosustain
+
+  Controls, Parameters, Configurations
+     - expect ordinals unless /continuous
+
+In no cases are we expecting string args.
+
+When using OscConfig, setting the triggerType
+can be used instead of adding behavior qualifiers.
+
+   triggerType=continuous
+     - expect 0.0 to 1.0, forces /continuous
+   
+   triggerType=once
+     - expect value on down, won't send an up, forces /noup
+     - forces Action.sustainable=false
+
+   triggerType=momentary
+     - expect up/down values, the default
+     - send down value negative to ignore
+
+   triggerType=toggle
+     - expect up/down values
+     - send down value negative to ignore
+     - forces Action.sustainable=false
+
+     - we probably don't need this one, you can
+       program the device to not toggle, there
+       really aren't any interesting toggling things
+       in Mobius, maybe modes but that's not how
+       you do them, would need something like this:
+
+           set mode record - becomes Record function
+           set mode play   - becomes Play function
+
+       currently not used anywhere
+
+     triggerType=XY
+       - not used
+
+
+The relationship between TriggerMode and the various action flags
+is inconsistent.  TriggerMode should be a Binding thing, Action
+doesn't need it?
+
+If the OSC device can't program ranges, then more qualifiers are needed
+
+   /mobius/global/control/output/continuous/0/100
+
+The argument is expected to be in the range of 0 to 100.  Since
+it doesn't make much sense to have different containers, could also do:
+
+   /mobius/global/control/output/continuous:0:100
+
+or
+
+   /mobius/global/control/output/continuous(0,100)
+
+So, the OSC address qualifiers are....
+
+    /continuous
+      - value expected to be 0.0 to 1.0
+
+    /continuous(low,high)
+      - value expected to be within the given range
+
+    /noup
+      - without /continuous we expect values on press and release
+        this says there will be no release, 
+        so force Action.sustainable=false
+
+    /toggle
+      - will get press and release values but with a delay
+        force Action.sustainable=false
+
+The difference between /noup and /toggle isn't useful yet, 
+/nosustain would handle both.
+
+Binding args would be interesting...
+
+
+     /mobius/global/control/output/up
+       - increment the output by the argument
+         rather than set it to the argument
+       - incompatible with /continuous
+
+    /down
+    /min
+    /max
+    /center
+
+For function bindings, could be an argument
+
+    /mobius/global/function/Divide/6
+
+Blurs the distinction between the up/down transition and the argument.
+Why not just this:
+
+    /mobius/global/function/Divide 6.0
+
+Only works for instant functions, need to make sure -1 is passed 
+for the up transition.
+
+For parameter bindings would be nice to accept a string argument.
+
+  /mobius/global/parameter/quantize off
+
+TouchOsc can't do this, but could with a qualifier:
+
+  /mobius/global/parameter/quantize/off 
+
+    - zero or less is ignored
+    - value greater than zero causes the parameter
+      to be set to the enumeration value
+
+For controls these would be the same:
+
+    /mobius/global/control/output 127
+    /mobius/global/control/output/127 1
+
+Argument in the last case doesn't matter.
+
+What are the containers:
+
+   /mobius/<scope>/<type>/<target>/<triggerType>/<value>
+
+or
+
+   /mobius/<scope>/<type>/<target>/<value>/<triggerType>
+
+So
+
+    /mobius/global/function/divide/8
+    /mobius/global/control/output/127
+    /mobius/global/control/output/inc
+    /mobius/global/control/output/inc(5)
+    /mobius/global/control/output/inc/5
+    /mobius/global/parameter/quantize/subcycle
+
+When the value is specified in the path, the OSC argument
+is ignored.  Any argument value greater than 0 causes
+the binding to processed, a value 0 or negative is ignored.
+
+Setting values implies /nosustain.
+
+
+    /mobius/global/function/record/down
+    /mobius/global/function/record/up
+      - forces Action.sustainable to false
+
+There are only two trigger qualifiers
+
+      /continuous(x,y)
+      /continuous/x/y
+        - value is continuous within a range and is scaled
+          to match the target range
+        - this is another way to specify the value so it is consistent
+          with the <value> container
+        - used only when value is not in the addresss
+
+      /nosustain
+        - device will not send an up transition
+        - forces Action.sustainable=false
+        - used only when the value is not in the address 
+        
+      /ignore(x,y,z...)
+
+        - ignore the following arguments, necessary?
+
+The mixture of the target/value and the trigger properties is awkward.
+Could raise this:
+
+   /mobius/<trigger>/<scope>/<type>/<target>/<value>
+
+So:
+
+   /mobius/nosustain/global/function/record
+
+Confusing, like it at the end.  It's almost like a function argument.
+
+   /continuous(x,y)
+     - need this for scaling, range defaults to 0.0 to 1.0
+     - not sustainable
+     - not used when value is in the address
+
+   /momentary(x,y)
+      - the default, without range assumes 0.0 to > 0.0
+      - sustainable
+      - not used when the value is in the address
+
+   /toggle(x,y)
+      - not sustainable
+
+   /single
+      - not sustainable
+
+   /nosustain
+     - really need /toggle and /single?
+     - not used when the value is in the address
+
+   /value
+     - argument is fixed, pay attention if OSC arg
+       is positive
+
+Any combinations of address values and address triggers?
+
+  Function:
+
+      /mobius/global/function/record/down - ignore arg
+      /mobius/global/function/record/up - ignore arg
+      /mobius/global/function/record/nosustain - use arg if > 0
+
+/down means we don't care what the arg is?
+
+Device Properties:
+
+     - Buttons
+        - single x                      not sustainable
+        - momentary x,y                 sustainable
+        - toggle x,y                    not sustainable
+        - velocity/pressure
+
+      - Sliders
+        - continuous x,y                not sustainable
+
+
+
+/momentary is the default.  If a range is not specified
+0.0 is assumed to be the bottom.  For function bindings,
+0.0 is "up" and anything else is "down".    For non-function
+bindings, the value is an ordinal and a value less than the
+minimum is ignored.  
+
+We don't really need ranges on momentary, just assume 0.0 and
+non 0.0, but this fits if we need it.
+
+This assumes the trigger is sustainable.
+
+/continuous means the trigger sweeps through a range of values,
+the default range is 0.0 to 1.0.
+
+/single ignores the argument
+
+-----------------------------------------------------------------
+
+The container after the trigger name defines the value.
+It can either be an explicit value, a relative value, or
+a description of the behavior of the OSC value.
+
+For explict values, the OSC argument is ignored:
+
+   /mobius/global/control/output/127
+   /mobius/global/function/record/down
+   /mobius/global/function/divide/6
+
+   - Action.sustainable is forced false
+
+   - If the device sends an up transition it must be 0 
+     or negative to avoid triggering the action again
+
+For relative values, the OSC argument may be used:
+
+  /mobius/global/control/output/up
+    - amount comes from OSC arg
+
+  /mobius/global/control/output/up/5
+  /mobius/global/control/output/up(5)
+    - OSC arg is ignored
+
+  /down
+    - like up
+    
+  /min, /max, /center
+    - arg is ignored
+  
+  - relative values can only be used if the trigger behaves
+    as a single or momentary button and sends 0.0 or < 0.0
+    on the up transition
+
+For behavioral triggers the argument is always used:
+
+   /continuous(x,y)
+     - need this for scaling, range defaults to 0.0 to 1.0
+     - not sustainable
+
+   /momentary(x,y)
+      - the default, without range assumes 0.0 to > 0.0
+      - sustainable
+
+   /nosustain
+     - argument has the value, not sustainable
+
+
+This means that "continuous", "momentary" and "nosustain" must
+not be the values of any enumerated parameters.
+
+Parameter values can also not be: up, down, min, max, center.
+Though we could check the parameter definition and if declared
+as enums it cancels relative setting.
+
+So we're either specifying
+
+  1) an explicit value (OSC argument is ignored)
+
+  2) a relative value (OSC argument is applied)
+ 
+  3) a ranged value (OSC argument is used and qualified)
+
+In theory we might want relative range values?
+
+    /mobius/global/control/output/up/5
+
+    /mobius/global/control/output/up/continuous(x,y)
+      - what would this mean?  no, since the range
+        of possible increments isn't known
+        this isn't meaningful
+        
+    /mobius/global/control/output/up/momentary(x,y)
+      - this could be useful if the lower range isn't zero
+        so we know that the lower value shouldn't change
+        the control, unlikely
+
+    /mobius/global/control/output/up/nosustain  
+      - not relevant
+
+    /mobius/global/function/record/continuous(x,y)
+      - in theory relevant if the lower bound
+        is not zero, upper bound doesn't matter
+
+    /mobius/global/function/record/momentary(x,y) 
+      - in theory relevant if the lower bound
+        is not zero, upper bound doesn't matter
+
+    /mobius/global/function/record/nosustain
+      - this is relevant
+
+    /mobius/global/function/divide/3
+
+    /mobius/global/function/divide/3/continuous(x,y)
+      - not relevant since the range is not known
+
+    /mobius/global/function/divide/3/momentary(x,y)
+      - useful if the device doesn't send 0.0 on up
+
+    /mobius/global/function/divide/3/nosustain
+      - implied
+
+The only time we need something other than the <value> 
+container is is when the "up" value of a switch is something
+other than zero.  To simplify:
+
+
+    /mobius/global/function/divide/3/ignore/1
+
+What we're saying here is that the value is known and is
+not defined by the OSC argument.  The OSC argument only determines
+whether we trigger the action.  So:
+
+   /mobius/<scope>/<type>/<target>/<value>/<filter>
+
+The final <filter> term determines whether we set the target value
+based on the OSC argument. Possible filters.
+
+   arg greater than x
+   arg less than x
+   arg equal to x
+   arg lte x
+   arg gte x
+   arg in set
+
+In practive only lte is needed, and even then it would be very rare.
+We'll punt on filter for now.
+
+----------------------------------------------------------------------
+
+Setup, Preset, and Bindings 
+
+   /mobius/scope/setup/0
+     - select a setup by ordinal
+     - since setups are global, this is the same:
+
+        /setup/0
+     
+   /mobius/scope/setup/My+Setup
+     - select a setup by name with spaces
+
+  /mobius/scope/setup/continuous
+    - select a setup by scaling the arg
+
+  /mobius/scope/setup
+     - arg must be an ordinal
+
+Key point: some types do not have names.  The name
+container is collapsed and we go directly to the value.
+Normalizing this could be:
+
+   /mobius/global/configuration/setup/My+Setup
+
+or
+  
+  /mobius/global/setup/name/My+Setup
+
+The first one fits nicely with function and parameter,
+it's introducing a subtype.
+
+The second one is strange, for the type "setup"
+we're setting the "name" property, but there are no
+other properties to set.
+
+No, if we think of setup, preset, and bindings as just
+another kind of parameter (wich they are).  You can do:
+
+   /mobius/global/parameter/setup/My+Setup
+     - an explicit setup
+
+   /mobius/global/parameter/setup
+     - arg is an ordinal
+
+   /mobius/global/parameter/setup/continuous
+     - arg is a range
+
+So really, there are only functions and parameters.
+
+Parameters have ordinal values, and possibly symbolic values.
+
+Functions have up/down transitions and an optional argument.
+
+!! Take setup, preset, and binding out of the target type list,
+just use parameter names instead.
+
+Going back to hardware we have:
+
+  Sliders
+    - sweep between a range of values
+    - usable for parameters with scaling
+    - usable for functions if you assume 0.0 is "up"
+
+      /mobius/global/parameter/output
+
+  Buttons
+   - send a value when pressed, usually send when released
+
+
+Can we collapse the type?
+
+   Functions and Parameters both have to have unique names, so 
+   we could just do this:
+
+     /mobius/scope/target/value
+
+Or
+
+   /mobius/global/output/127
+   /output/127
+   /output
+   /4/output
+
+
+Targets must have unique names.  The VALUES of targets
+may be user defined, but we can enforce that function
+and parameter names be unique.
+
+
+The binding windows only segment them for visual organization,
+OSC doesn't matter.
+
+No, we don't need type at all.  For host bindings evertying
+needs to be a paramter anyway. 
+
+----------------------------------------------------------------------
+Conclusion
+
+

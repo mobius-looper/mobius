@@ -1,0 +1,77 @@
+Mute Tests
+
+Hung in Mute 3-2
+
+Ran through Speed Tests
+
+
+
+
+----------------------------------------------------------------------
+Pitch Tests
+----------------------------------------------------------------------
+
+Jump 4 - Basic Pitch
+This often fails when run with the full suite.
+The wav diffs are extremely minor, so check to be sure and ignore.
+Expect difference at frame 151046 or 151068
+jump4loop.wav - ok
+Files differ at frame 151068: 11 12: jump4rec.wav, c:/larson/dev/mobiustest/expected/jump4rec.wav
+  - if this happens in isolation too, rebless
+
+Jump 4-2 - Rapid Pitch
+This often fails when run with the full suite.
+The wav diffs are extremely minor, so check to be sure and ignore.
+Expect difference at frame 130844
+jump4-2loop.wav - ok
+Files differ at frame 130826: -2 -1: jump4-2rec.wav, c:/larson/dev/mobiustest/expected/jump4-2rec.wav
+  - ditto
+
+Jump 12 - Quantized Pitch Changes
+This often fails when run with the full suite.
+The wav diffs are extremely minor, so check to be sure and ignore.
+Expect difference at frame 238088
+jump12loop.wav - ok
+Files differ at frame 238088: -1 0: jump12rec.wav, c:/larson/dev/mobiustest/expected/jump12rec.wav
+  - ditto
+
+Jump 16 - Transfer Modes
+Started getting minor diff at 447002 in jump16rec around 1.39
+jump16loop.wav - ok
+Files differ at frame 447002: -8658 -8659: jump16rec.wav, c:/larson/dev/mobiustest/expected/jump16rec.wav
+  - ditto
+
+Jump 16-2 - Pitch Transfer Mode
+This may fail when run in the full suite.
+Expect difference at frame 182027
+jump16-2loop.wav - ok
+Files differ at frame 182057: -3 -2: jump16-2rec.wav, c:/larson/dev/mobiustest/expected/jump16-2rec.wav
+Jump Tests Suite Complete
+  - ditto
+
+Jump 17-2 - Switch Stack with Pitch
+This will often fail with a minor difference in the full suite.
+Expect difference at frame 357394
+Loop breakpoint
+Loop breakpoint
+jump17-2loop.wav - ok
+Files differ at frame 352455: 1 0: jump17-2rec.wav, c:/larson/dev/mobiustest/expected/jump17-2rec.wav
+
+----------------------------------------------------------------------
+Host Sync
+----------------------------------------------------------------------
+
+- Errors in 1/2 speed recording
+
+  This looks relatively benign.
+
+- 1/2 Speed Progressive Dealign
+
+  Each time we go in and out of 1/2 speed, one frame of dealign is added.
+
+    7396: 0 0: SyncTracker Host: Bar/Start offset 119 drift 1
+    7396: 101 2: Sync: Tracker Host start point, loop frame 2 dealign 2
+
+  This is most likely a rate rounding error, this is probably not
+  possible to fix easily.
+

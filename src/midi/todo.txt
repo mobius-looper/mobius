@@ -1,0 +1,32 @@
+
+! MidiTimer::transStart and transStop sleeps for 10ms, that's sure to 
+  screw up audio interrupts
+
+
+- MidiTimer::interrupt, if we reentered should we advance the time even
+  though we won't do full processing?
+
+- MidiTimer::interrupt, when sending MS_CONTINUE we are technically supposed
+  to delay 1ms before sending the MS_CLOCK
+
+- MidiTimer, decide if we need this "user clock" stuff, several issues
+
+
+- MacMidiEnv::getString, do we need to release the CFStringRef?
+
+- MacMidiInput::processPackets, in theory we can get F8 and other
+  realtime bytes in between the bytes of a mult-byte message like
+  NOTE ON, etc.  not stripping those, will get malformed events!
+
+- MidiInput::processShortMessage, we are now stamping events with the
+  millisecond counter rather than the MIDI clock, not sure if the old
+  sequencer can deal with this, may need both?
+
+- MidiInterface::getTempoDevice, some ambiguity if there are 
+  multiple devices
+
+- WinMidiInput::processLongData, lingering issues with errors during
+  buffer reception
+
+
+

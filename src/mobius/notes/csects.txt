@@ -1,0 +1,84 @@
+
+Critical Sections
+
+There are several threads that may need to access shared resources.
+
+  Audio Interrupt
+
+     This is either a PortAudio callback or VST processReplacing.
+     Most internal processing gets done in here with a few objects
+     being visible to code outside the interrupt.  For example the
+     Loop event lists.
+   
+  MobiusThread
+
+     Our housekeeping thread launched when Mobius starts.
+     This is where file operations are done and also the periodic
+     refresh of the UI.  Won't invoke functions but will call back
+     to Mobius for status which requires stable access to loop event lists.
+
+  MIDI Interupt
+  
+     When receiving from MIDI devices.  Can invoke functions.
+
+  OSC Callback
+
+     When receiving events from an OSC port.  Can invoke functions.
+
+  VST Idle
+
+     We don't use this but we should.  Typically used to refresh 
+     the plugin UI.
+
+  UI Event Loop
+
+     Handles mouse and keyboard events from the UI.  Can invoke functions.
+
+
+The following classes maintain CriticalSections.
+
+  Audio
+
+    Controls access to the buffer pool.  Necessary because Audio objects
+    can be created and freed in and out of the Mobius interrupt.
+
+  Loop
+
+    Controls access to the event list.  The event list must remain
+    stable while MobiusThread is refreshing the UI.
+    * taken out when we moved to EventManager
+
+  Mobius
+
+    Controls access to the registered action list.
+    Controls access to the pending action list.
+    Controls access to the script interpreter list.
+
+  MobiusThread
+   
+    Controls access to the ThreadEvent list.
+
+  Track
+
+     Controls access to the ParameterChanged flag.
+     Some kludgey thing to make the UI refresh parameter values.
+     The Function list is done with a ring buffer and doesn't need
+     a csect.
+
+  UI
+     Controls access to the updateUIEntered flag to detect 
+      reentries of the updateUI method.
+     Controls access to the prompts list.
+
+     Since the UI is autonomous it needs it's own csect.
+
+
+Most of these could share a single CriticalSection managed by Mobius,
+only Audio and UI need to be independent.
+
+It feels like there is potential for deadlock though if events
+are comming in from MIDI, OSC, and UI at the same time.  Sharing one
+interrupt makes this more likely?
+
+
+

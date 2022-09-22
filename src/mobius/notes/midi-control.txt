@@ -1,0 +1,319 @@
+----------------------------------------------------------------------
+Standard MIDI Controller Numbers
+----------------------------------------------------------------------
+
+0      00h	Bank Select (Controller # 32 more commonly used) 
+1      01h	Modulation Wheel 
+2      02h	Breath Contoller 
+3      03h	Undefined 
+4      04h	Foot Controller 
+5      05h	Portamento Time 
+6      06h	Data Entry MSB 
+7      07h	Main Volume 
+8      08h	Balance
+9      09h	Undefined 
+10     0Ah	Pan 
+11     0Bh	Expression
+12     0Ch	Effect Control 1 
+13     0Dh	Effect Control 2 
+
+14-15  0E-0Fh	Undefined 
+16-19  10-13h	General Purpose Controllers 1-4
+20-31  14-1Fh	Undefined 
+32-63  20-3Fh	LSB for Controllers 0-31 (rarely implemented) 
+
+64     40h	Damper Pedal (Sustain,Hold) [Data 0-63 = Off, 64-127 = On] 
+65     41h	Portamento (on/off)
+66     42h	Sostenuto (on/off)
+67     43h	Soft Pedal (on/off)
+68     44h	Legato Footswitch (on/off)
+69     45h	Hold 2 (on/off)
+70     46h	Sound Controller 1 (default: Sound Variation) 
+71     47h	Sound Controller 2 (default: Timbre/Harmonic Content) 
+72     48h	Sound Controller 3 (default: Release Time) 
+73     49h	Sound Controller 4 (default: Attack Time) 
+74     4Ah	Sound Controller 5 (default: Brightness) 
+75-79  4B-4Fh	Sound Controller 6-10 (no defaults) 
+80-83  50-53h	General Purpose Controllers 5-8 (on/off)
+84     54h	Portamento Control
+85-90  55-5Ah	Undefined 
+91     5Bh	Effects 1 Depth (previously External Effects Depth) 
+92     5Ch	Effects 2 Depth (previously Tremolo Depth) 
+93     5Dh	Effects 3 Depth (previously Chorus Depth) 
+94     5Eh	Effects 4 Depth (previously Detune or Celeste Depth) 
+95     5Fh	Effects 5 Depth (previously Phaser Depth) 
+96     60h	Data Increment 
+97     61h	Data Decrement 
+98     62h	Non-Registered Parameter Number LSB 
+99     63h	Non-Registered Parameter Number LSB 
+100    64h	Registered Parameter Number LSB 
+101    65h	Registered Parameter Number MSB 
+
+102-120 66-78h	Undefined 
+
+Channel Mode Messages 
+
+120     78h     All Sound Off
+121	79h     Reset All Controllers 
+122	7Ah	Local Control (on/off)
+123	7Bh	All Notes Off 
+124	7Ch	Omni Off 
+125	7Dh	Omni On 
+126	7Eh	Mono On (Poly Off) 
+127	7Fh	Poly On (Mono Off) 
+
+----------------------------------------------------------------------
+Remote 25
+----------------------------------------------------------------------
+
+There are 6 banks of 8 buttons and knobs, physically arranged as:
+
+
+  Pan Knobs	       Sliders
+  Pan Buttons	       Slider Buttons
+  Rotary Knobs
+  Rotary Buttons
+
+The F1-F4 buttons are usually reserved for template select, panic, and
+something called "snapshot" that sends a sysex.  We could repurpose
+the snapshot button.
+
+The transport buttons are:
+
+  Rewind, Forward, Stop, Play, Record
+
+The Record button has a latching LED, but the CC doesn't have to latch.
+
+The joystick normally sends Pitch Bend on the X axis and CC 1 (modulation)
+on the Y axis.
+
+The touchpad originally send CC x43 (Pedal Soft) on the X axis and
+CC x42 (Sostenuto) on the Y axis.  
+
+Keys always send Note on/off on the same channel.
+
+* Editing
+
+
+
+
+
+
+----------------------------------------------------------------------
+Trigger Finger
+----------------------------------------------------------------------
+
+Pads send on channel 10, sends NoteOn with velocity zero rather than 
+NoteOff.  Note assignments look pretty standard.
+
+The four sliders send on channel 10:
+
+  1: 07 volume
+  2: 01 modulation
+  3: 47 harmonic content
+  4: 4A brightness
+
+The 8 knobs send various CC's on channel 10.  The bottom row is numbered
+1-4, the top row 5-8.
+
+  1: 0A Pan
+  2: 0C Effect Control 1
+  3: 05 Portamento Time
+  4: 54 Portamento Control
+  5: 5B Reverb Depth
+  6: 5D Chorus Depth
+  7: 47 Harmonic Content
+  8: 48 Release Time
+
+Not sure if these are the default assignments, but it is annoying
+that Slider 3 and Knob 7 send the same thing.
+
+----------------------------------------------------------------------
+FCB1010
+----------------------------------------------------------------------
+
+All banks are configured to send Note On/Off on Channel 0 starting
+from note 0.  
+
+This can conflict with the Remote 25 so keep the control ranges far 
+enough apart.  It is convenient to use the same note channel
+for pitch/rate shifting, though I guess we don't have to.
+
+Pedal 1 sends CC 7 (volume) on channel 0.
+
+Pedal 2 sends CC 1 (modulation) on channel 0?
+
+----------------------------------------------------------------------
+Mobius Needs
+----------------------------------------------------------------------
+
+FCB1010
+  Notes, global volume, global feedback.
+
+Remote
+   Slider bank used for track output level.
+   Pan bank used for track pan.
+   Rotary bank used for track feedback.
+   Pan buttons used for track mute?
+   Rotary buttons used for track ?
+
+Trigger Finger
+
+   Pads used to trigger loops 1-4 on tracks 1-4.
+   Sliders for track volume 1-4.
+     
+   Don't really need the trigger finger if we have the Remote, though
+   the grid for loop triggers is nice.  
+
+----------------------------------------------------------------------
+Stylus Needs
+----------------------------------------------------------------------
+
+There are 8 "parts" which are similar to tracks.  Each part has
+the following controllers
+
+  Volume
+  Pan
+  Aux1
+  Aux2
+  Aux3
+  Aux4
+
+There are 8 part selection buttons, and 8 part "play" buttons.  The
+play buttons seem the most useful.
+
+There is a master volume slider, and global Play and Stop buttons.
+
+On the Easy Edit page we have sliders for Level, Pan, Tone, Emph,
+Pitch, Decay.   
+
+On the normal edit page we have more sliders for LFO, filter, envelope,
+and sample start.  And various buttons.  These all look amusing but
+keeping track of all of them would be hard.  Better to just
+reserve a bank or two of knobs and bind them on the fly.
+
+Chaos page, 17 more sliders and knobs.
+
+FX page, presumably a controller for every possible effect.
+
+The trigger finger is relatively useless for Stylus, though we
+can use the pads to trigger the 8 kit parts.  The 8 knobs for
+volume and the 4 sliders for something else.
+
+The part play buttons require a CC >= 64 to turn it on and < 64 to
+turn it off.  This sucks because almost no controllers can support
+this without dedicating two buttons.
+
+FCB1010
+  Not used.
+
+Trigger Finger
+  Relatively useless, except for trigger pads and volume.
+
+Remote
+  Will need a different bank since we want all the same knobs
+  as Mobius.  
+
+
+----------------------------------------------------------------------
+Configuration
+----------------------------------------------------------------------
+
+Using channels with the same CC's for volume and pan is nice and
+obvious but it doesn't fit as well once we start adding other
+instruments.  After Mobius and Stylus we've run out of channels and
+have to start overloading CC's anyway.  And we're using channel 10 for
+something which is usually reserved for drums.
+
+It is probably best to leave the first 14 CC's alone except for the
+obvious ones like volume and pan.
+
+CC's above 120 are reserved for "channel mode messages".
+
+So, putting these in nice blocks of 8 we have:
+
+0-15     00-0Fh		Common Controls
+16-23    10-17h
+24-31    18-1Fh
+32-39    20-27h
+40-47    28-2Fh
+48-55    30-37h
+56-63    38-3Fh
+64-71    40-47h
+72-79    48-4Fh
+80-87    50-57h
+88-95    58-5Fh
+96-103   60-67h
+104-111  68-6Fh
+112-119  70-77h
+120-128  78-7Fh		Channel Mode Messages
+
+Remote 25
+
+16-23    10-17h		Pan Knobs
+24-31    18-1Fh		Pan Buttons
+32-39    20-27h		Rotary Knobs
+40-47    28-2Fh		Rotary Buttons
+48-55    30-37h		Sliders
+56-63    38-3Fh		Slider Buttons
+64-71    40-47h		Transport
+72-79    48-4Fh		JoyX, JoyY, TouchX, TouchY (JoyX may use pitch bend)
+80-87    50-57h
+88-95    58-5Fh
+96-103   60-67h
+104-111  68-6Fh
+112-119  70-77h
+
+Trigger Finger
+
+16-23    10-17h		Knobs
+24-31    18-1Fh		Sliders (4)
+
+FCB1010
+
+7	7h		Pedal 1
+1	1h		Pedal 2
+
+----------------------------------------------------------------------
+Mobius Configuration
+----------------------------------------------------------------------
+
+Remote 25 
+
+Global channel 1
+
+16-23    10-17h		Pan Knobs		Track Pan
+24-31    18-1Fh		Pan Buttons		Track Mute
+32-39    20-27h		Rotary Knobs		Track Feedback
+40-47    28-2Fh		Rotary Buttons		Loop Trigger
+48-55    30-37h		Sliders			Track Volume
+56-63    38-3Fh		Slider Buttons		Track Select
+64-71    40-47h		Transport		NA
+72-79    48-4Fh		Joy,Touch		NA
+80-87    50-57h
+88-95    58-5Fh
+96-103   60-67h
+104-111  68-6Fh
+112-119  70-77h
+
+----------------------------------------------------------------------
+Stylus Configuration
+----------------------------------------------------------------------
+
+Based on the Mobius bank.
+
+Global channel 2
+
+16-23    10-17h		Pan Knobs		Part pan
+48-55    30-37h		Sliders			Part Volume
+56-63    38-3Fh		Slider Buttons		Part Enable
+64-71    40-47h		Transport		Stop, Play
+
+The Slider Button banks must be configured as toggles
+with a value > 64 to indiciate "on".
+
+The Transport bank is configured as Normal, but the minimum
+value must be > 64.
+
+
+

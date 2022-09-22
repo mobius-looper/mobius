@@ -1,0 +1,1009 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document>
+<document>
+<heading>
+<title>Mobius and the Echoplex Digital Pro</title>
+<date>January 2011</date>
+</heading>
+
+<TOC/>
+
+<section><title>Introduction</title>
+
+<p>Mobius obviously derived much of its design inspiration from
+the <i>Gibson Echoplex Digital Pro</i> with <i>Loop IV</i> software,
+commonly known as the "EDP".  If you are familiar with the EDP, this
+document will describe the EDP features that Mobius does and does not
+implement.  The sections are arranged in the same order they appear in
+the EDP manual, so if you are reading something in the EDP manual
+you should be able to easily find the corresponding section here.</p>
+
+<p>Note that we will not cover new features in Mobius that are
+not in the EDP, nor is this an exhaustive reference manual.  It is
+intended only to help people already familiar with the EDP
+transition to Mobius.</p>
+
+<p>In many cases a parameter will be described as "Not applicable".
+Typically these are related to the constraints of the EDP as a
+hardware device that are not relevant to a software application.</p>
+
+</section>
+
+<!-- ======================================================================
+
+  Parameters
+
+====================================================================== -->
+
+<section><title>Parameters</title>
+
+<section><title>8ths/Cycle</title>
+
+<p>Mobius calls this <b>Subcycles</b>.</p>
+
+<p>The algorithm for using the subcycle count to determine the
+MIDI output tempo is similar, but Mobius also uses the <i>Maximum Tempo</i>
+and <i>Minimum Tempo</i> parameters to constrain the tempo range.</p>
+
+<!-- TODO: If you change 8ths/Cycle the new tempo takes effect on the
+next start point, I don't think Mobius does this.
+-->
+
+</section>
+
+<section><title>AutoRecord</title>
+
+<p>This parameter is not implemented but you can achieve
+the same result by setting the <i>Empty Loop Action</i> parameter
+to <i>Record</i>.</p>
+
+</section>
+
+<section><title>Channel</title>
+<p>Not applicable.</p>
+</section>
+
+<section><title>ControlSource</title>
+<p>Not applicable.</p>
+</section>
+
+<section><title>FeedBkCont</title>
+<p>Not applicable.</p>
+</section>
+
+<section><title>Insert Mode</title>
+<p>On the EDP, this parameter lets you redefine what the <i>Insert</i> 
+button does on the EDP footswitch.  It is not implemented in Mobius because
+most people use MIDI footswitches with many buttons and you can bind
+any MIDI message to any function.</p>
+</section>
+
+<section><title>Loop/Delay (InterfaceMode)</title>
+
+<p>This parameter is not implemented, but you can get similar behavior
+with scripts and bindings.  The most important thing that
+<i>InterfaceMode</i> provides is a second feedback control that is
+used during Overdub, Multiply, and Substitute.  This second feedback control
+is enabled in the EDP by setting <i>Loop/Delay</i> to <i>EXP</i>, also known as 
+<i>ExpertMode</i>.</p>
+
+<p>Mobius has two feedback controls, one named <i>Feedback</i> and the
+other named <i>Secondary Feedback</i>.  You can enable secondary feedback
+for all modal editing functions with the <i>Enable Secondary Feedback</i>
+preset parameter.</p>
+
+<p>Instead of setting <i>Loop/Delay</i> to <i>Stu</i> for <i>StutterMode</i>,
+Mobius has the <i>Stutter</i> function.</p>
+
+<!-- TODO: Think more about Delay
+      set delay time with two presses of Record
+      feedback is usually low
+      Overdub becomes the "hold" function and forces feedback to 127
+       and Input Level to zer
+-->
+
+</section> <!-- Interface Mode -->
+
+<section><title>Loop Copy</title>
+
+<p>Mobius has a similar parameter named <i>Empty Loop Action</i>
+which may have these values:</p>
+
+<ul>
+<li>None</li>
+<li>Record</li>
+<li>Copy</li>
+<li>Copy Timing</li>
+</ul>
+
+</section> <!-- LoopCopy -->
+
+<section><title>LoopTrig</title>
+<p>Not applicable.</p>
+</section>
+
+<section><title>MoreLoops</title>
+<p>Mobius calls this <b>Loop Count</b>.</p>
+</section>
+
+<section><title>MuteMode</title>
+<p>Mobius calls this <b>Mute Mode</b>.  It is the same except that
+Mobius adds the <i>Pause</i> option to make the <i>Mute</i> function
+behave like the <i>Pause</i> function.</p>
+
+<!-- TODO: !! don't like MuteMode=Pause, just make them use Pause?
+-->
+
+</section>
+
+<section><title>OverdubMode</title>
+<p>This parameter is not implemented.  If you want what the
+EDP calls <i>SUSOverdub</i> you can use the Mobius 
+function <i>Sustain Overdub</i>.</p>
+</section>
+
+<section><title>Overflow</title>
+<p>Not applicable.</p>
+</section>
+
+<section><title>Quantize</title>
+
+<p>Mobius calls this <b>Quantize Mode</b>.   Escaping quantization
+by executing a function again after it has been quantized works the 
+same way.</p>
+
+<!-- TODO: SyncRecord
+   Records a loop exactly the size of the external loop but doesn't
+   have to wait for a sync pulse, it rounds at the end
+   !! need this, EDP does this if Quantize=Off, 
+   if Quantize=Loop|Cycle|Subcycle, Record is quantized to the 
+   next downbeat and not rounded
+-->
+
+</section>
+
+<section><title>Presets</title>
+<p>Not applicable.</p>
+</section>
+
+<section><title>RecordMode</title>
+<p>This parameter is not implemented.  If you want what the EDP calls
+<i>SUSRecord</i> use the Mobius function <i>Sustain Record</i>.
+The equivalent of <i>RecordMode=Safe</i> in Mobius is setting the
+<i>Record Resets Feedback</i> parameter to <i>true</i>.</p>
+</section>
+
+<section><title>RoundMode</title>
+<p>Mobius calls this <b>Overdub While Rounding</b>.</p>
+</section>
+
+<section><title>SamplerStyle</title>
+
+<p>This parameter is not implemented but you can achieve similar
+results with the parameters <i>Switch Location</i>, <i>Switch Duration</i>,
+and <i>Return Location</i>.</p>
+
+<ul>
+<li><b>SamplerStyle=Run</b> = SwitchLocation=Restore + SwitchDuration=Permanent</li>
+<li><b>SamplerStyle=Start</b> = SwitchLocation=Start + SwitchDuration=Permanent</li>
+<li><b>SamplerStyle=Once</b> = SwitchLocation=Start + SwitchDuration=OnceReturn</li>
+<li><b>SamplerStyle=Attack</b> not implemented</li>
+</ul>
+
+<!-- TODO: SamplerStyle=Attack
+  - supposed to trigger from the beginning and be a SUS function
+    would be nice to have SwitchDuration=Sustain and SustainReturn?
+
+SamplerStyle=Once, NextLoop, Mute
+   - supposed to mute the loop and cancel the return, I don't
+     think we do that
+
+SamplerStyle=Once, NextLoop, Insert
+   - Retriggers, but will still return if you let it play to the end
+   - don't have this, would be nice
+
+SamplerStyle=Once, NextLoop, Multiply
+   - says "not available", we would probably cancel the return and
+     to into multiply
+
+SamplerStyle=Once, NextLoop, Overdub
+    - Turns on overdub and cancels the return
+      
+SamplerStyle=Once, NextLoop, NextLoop
+    - lets you create a chain of returns, not sure we do this, the 
+      Return might be canceled after the switch
+
+SamplerStyle=Once, NextLoop, AutoRecord
+    - AutoRecord -> now EmptyLoopAction=Record
+    - a recording begins right away but as soon as you tap Return to
+      finish it returns to the previous loop.  I don't think we do this,
+      would need a pending Return
+    - Multiply, Insert, and presumably any other editing ending to Record
+      cancel the return
+
+SamplerStyle=Once, NextLoop, LoopCopy or Time Copy
+    - does the copy, but when ending the Multiply/Insert jump back to the 
+      previous loop - I'm pretty sure we don't do this
+-->
+
+</section> <!-- SamplerStyle -->
+
+<section><title>Source#</title>
+<p>Not applicable.</p>
+</section>
+
+<section><title>Switch Quant</title>
+
+<p>Mobius calls this <b>Switch Quantize</b>.</p>
+
+<p>On the EDP the <i>Undo</i> function is always a confirmation
+action for the three <i>Confirm</i> options.  In Mobius, you use
+the <i>Confirm</i> function and <i>Undo</i> behaves normally allowing you
+to remove functions that have been "stacked".  If you want <i>Undo</i>
+to be a confirmation action add it to the global parameter
+<i>Switch Confirmation Functions</i>.</p>
+
+<p>During the switch quantization period, <i>Record</i>, <i>Overdub</i>,
+<i>Multiply</i>, and <i>Insert</i> can be used to rerecord loops
+or do a sound or time copy.  Most other functions can also be stacked,
+they are simply executed after the switch.</p>
+
+<!-- TODO: LoopCopy
+   - I suspect we're doing this wrong if you do the copy at some point
+     other than the start point.  Since the EDP always does things in real time,
+     it is probably that doing the LoopCopy from the middle of the loop will
+     result in a copied loop whose start point is the middle of the original
+     loop, rounded so that what was first half is now the second half
+-->
+
+<!-- TODO: SwitchQuant, Retrigger
+   - if you NextLoop to the current loop SwitchQuant is supposed
+     to just delay the functions so you can quantize Overdub,
+     make sure we disable loopcopy/timecopy when retriggering the same loop
+-->
+
+</section> <!-- SwitchQuant -->
+
+<section><title>Sync</title>
+
+<p>Mobius calls this <b>Sync Mode</b>.  What the EDP calls <i>Out User Start</i>
+Mobius calls <i>Out Manual Start</i>.   Mobius does not implement 
+the <i>In</i> sync mode, instead if provides <i>MIDI Beat</i> and 
+<i>MIDI Bar</i> which are similar and don't have to be based on the
+<i>Subcycles</i> (8ths/Cycle) parameter.</p>
+
+</section>
+
+<section><title>Threshold</title>
+
+<p>Mobius calls this <b>Record Threshold</b>.</p>
+
+<!-- TODO: This should be disabled (or at least optionally disabled)
+     for EmptyLoopAction=Record, or Record during Switch mode
+-->
+
+</section>
+
+<section><title>Velocity</title>
+<p>Mobius calls this <b>Switch Velocity Sensitive</b>.</p>
+</section>
+
+</section> <!-- Parameters -->
+
+<!-- ======================================================================
+
+  Functions
+
+====================================================================== -->
+
+<section><title>Functions</title>
+
+<section><title>Dump</title>
+
+<p>Dumping loops over MIDI is not implemented but you can save loops
+to files using the <i>Save Loop</i> function, or one of several items
+from the <i>File</i> menu.</p>
+</section>
+
+<section><title>Feedback</title>
+
+<p>Mobius calls <i>Feedback</i> a <i>track control</i> rather than
+a function but it behaves the same.  You can undo loop passes that apply
+feedback, and you can set the global parameter <i>No Feedback Undo</i> if
+you would rather not make layers if the only change was applying feedback.</p>
+</section>
+
+<section><title>GeneralReset</title>
+
+<p>Mobius calls this <b>Track Reset</b>.   A long press of <i>Multiply</i>
+will also perform a <i>Track Reset</i> if the current loop is in
+<i>Reset</i> mode.</p>
+</section>
+
+<section><title>HalfSpeed</title>
+
+<p>In Mobius, the function that toggles half-speed is named <b>Speed</b>.
+You must bind a trigger directly to this function, you do not use
+it by setting <i>Insert Mode</i>.  Like the EDP you can "arm" half-speed
+mode while a loop is in Reset mode.</p>
+
+<p>In addition there are two other functions that changes speed without
+toggling.  <i>Halfspeed</i> forces the loop into half-speed if it is
+not already there.  <i>Fullspeed</i> cancels half-speed if it is active.</p>
+</section> <!-- HalfSpeed -->
+
+<section><title>Insert</title>
+
+<p>In Mobius, the <i>Insert</i> function always does an insert, it is not
+redefinable using the <i>Insert Mode</i> parameter.  Insertion should
+behave the same as it does on the EDP.  All of the alternate endings
+work the same including <i>Record</i> to perform an "unrounded insert".  
+In addition most Mobius functions that aren't found on the EDP will
+end the insert and be executed immediately after the rounding period.</p>
+
+<p>On the EDP, a long-press of <i>Insert</i> will convert the Insert
+into a <i>Replace</i>.  Mobius does not support this.</p>
+
+<!-- TODO: Could support long-insert but we'd have to do some
+ugly reorg of the segments 
+-->
+
+</section> <!-- Insert -->
+
+<section><title>Load</title>
+
+<p>Loading loops over MIDI is not implemented, but you can load loops
+from files using several items in the <i>File</i> menu.</p>
+</section>
+
+<section><title>LoopDivide</title>
+
+<p>What the EDP calls <i>LoopDivide</i> isn't a function, it's
+really a way of thinking about how the <i>Quantize</i> can be used.
+Mobius supports quantization of all functions where quantization 
+makes sense.</p>
+</section> <!-- LoopDivide -->
+
+<section><title>LoopTriggering</title>
+
+<p>What the EDP calls <i>LoopTriggering</i> is implemented in Mobius
+by a set of numbered functions: <i>Loop 1</i>, <i>Loop 2</i>, <i>Loop 3</i>, 
+on up to <i>Loop 8</i>.  Mobius does not implement the <i>LoopTrig</i>
+parameter, you simply bind any MIDI button to any loop.</p>
+
+<p>In the EDP, a long-press of one of the loop trigger functions
+will reset the loop.  Mobius does not support this.</p>
+
+<!-- TODO: This has been requested, do it! -->
+
+</section> <!-- LoopTriggering -->
+
+<section><title>LoopWindowing</title>
+
+<p><i>LoopWindowing</i> is not implemented, but we have plans to do
+something similar in the near future.  A consequence of this is that
+the <i>Undo</i> parameter has no restrictions about what it can undo.
+For example, with LoopWindowing you cannot undo an Unrounded
+Multiply, once you do an Unrounded Multiply it sets the loop window
+size and Undo can only shift backward by the size of the window.  
+In Mobius, you can undo the unrounded multiply and return to the original
+layer without changing its size.</p>
+
+</section> <!-- Loop Windowing -->
+
+<section><title>MultiIncrease</title>
+
+<p>We don't consider this a function, it is more like an adjustment to
+the way <i>Multiply</i> mode is ended.  Mobius supports this though it
+isn't called a function and you can't bind a trigger to it.  It is
+simply what happens if you keep executing <i>Multiply</i> during the
+rounding period.</p>
+
+<!-- TODO: On 5-27 it talks about MultiIncrease with Quantize=Loop
+adding entire loops.  Not sure what this means, we probably don't
+implement this the same.
+-->
+</section> <!-- MultiIncrease -->
+
+
+<section><title>Multiply</title>
+
+<p>Mobius implements <i>Multiply</i> but in a slightly different way.
+There are two implementations of multiply selected with the
+<i>Multiply Mode</i> parameter.  For the behavior closest to the EDP
+select <i>Normal</i>.  Mobius supports all of the alternate endings
+including <i>Record</i> for an "unrounded multiply".</p>
+
+<p>Long-pressing <i>Multiply</i> to convert it to a <i>SUSMultiply</i>
+is not implemented.</p>
+
+<p>We have not attempted to exactly duplicate the EDP's Multiply, and
+instead implemented what made the most sense to us.  The main
+difference between the EDP and Mobius appears to be where the start
+point of the loop is left after the Multiply.  The EDP leaves it where
+the Multiply began, while Mobius "rounds backward" so that the start
+point is the beginning of the cycle in which the Multiply began.  We
+prefer our implementation.</p>
+
+<p>The distinction is subtle and most people won't notice, especially
+if you are quantizing.  This has been a source of frustration for a
+few users over the years, who believe that the differences are more
+important than this but we have not been able to precisely define what
+the differences are.  If you can describe exactly what you think the
+differences are, please contact us.</p>
+
+<!-- TODO: Should be easy to support long-press to SUSMultiply 
+-->
+
+</section> <!-- Multiply -->
+
+<section><title>Mute</title>
+
+<p><i>Mute</i> in Mobius works mostly the same as the EDP.  Mobius
+has an extra <i>Mute Mode</i> parameter value named <i>Pause</i>
+that makes the <i>Mute</i> function behave the same as the <i>Pause</i>
+function.</p>
+
+<p>The <i>Insert</i> (SamplePlay) and <i>Multiply</i> (Realign) alternate
+endings for <i>Mute</i> mode are supported.</p>
+
+<p>In the EDP, the <i>Undo</i> alternate ending to <i>Mute</i> will
+unmute and use the opposite value of the <i>Mute Mode</i> parameter
+when determining where the unmuted loop should begin playing.  Mobius
+does not implement this.</p>
+
+<p>In the EDP, a long-press of <i>Mute</i> converts it to a <i>SUSMute</i>.
+Mobius does not implement this.</p>
+
+
+<!-- TODO: Could do the Undo alternate ending, but it feels strange,
+use scripts.
+
+Longpress Mute->SUSMute seems more useful.
+-->
+
+</section> <!-- Mute -->
+
+<section><title>NextLoop</title>
+
+<p>Mobius calls this <b>Next Loop</b>.  It works mostly the same.  
+<i>Switch Quantize</i> can be used to quantize the ending or enter
+a "confirm" mode.  The EDP <i>AutoRecord</i>, <i>LoopCopy</i> parameters
+are implemented in Mobius as the <i>Empty Loop Action</i> parameter.</p>
+</section>
+
+<section><title>Overdub</title>
+
+<p><i>Overdub</i> in Mobius is the mostly same as the EDP except that
+Mobius does not support the <i>OverdubMode</i> parameter.  <i>Overdub</i>
+and <i>Sustain Overdub</i> are both functions but they must be bound
+to different triggers.  In Mobius, <i>Overdub</i> may be quantized by
+setting the <i>Overdub Quantized</i> preset parameter.</p>
+
+<p>In the EDP, a long-press of <i>Overdub</i> converts it to a
+<i>SUSOverdub</i>. Mobius does not support this.</p>
+
+<!-- TODO: Long-Overdub would be easy --> 
+
+</section> <!-- Overdub -->
+
+<section><title>PreviousLoop</title>
+
+<p>Mobius calls this <b>Previous Loop</b>.  It works mostly the same,
+see <ref>NextLoop</ref> for a discussion of the differences.</p>
+</section>
+
+<section><title>Record</title>
+
+<p>The <i>Record</i> function in Mobius is mostly the same as the EDP.
+Mobius does not implement the <i>Record Mode</i> parameter.  <i>Record</i>
+and <i>Sustain Record</i> are available functions but they must be bound
+to different triggers.  A long-press of Record will do a <i>Reset</i>
+and the <i>Record Threshold</i> parameter can be used to wait for
+an appropriate signal level.  All of the alternate endings are
+implemented.</p>
+
+<p>There are some differences in the way synchronized recordings work.
+See <ref>Synchronization</ref> for more information.</p>
+
+</section> <!-- Record -->
+
+<section><title>Rehearse</title>
+
+<p>This function is partially implemented, but there are a few differences.
+We are considering removing support for this function.</p>
+</section>
+
+<section><title>Replace</title>
+
+<p>Mobius implements this function.</p>
+</section>
+
+<section><title>Reset</title>
+
+<p>Mobius implements this function.</p>
+</section>
+
+<section><title>Retrigger</title>
+
+<p>Mobius implements this function.</p>
+</section>
+
+<section><title>Reverse</title>
+
+<p>Mobius implements this function.  In the EDP, you can only use <i>Undo</i>
+back to the point where the <i>Reverse</i> happened. Mobius does not have
+this restriction, you can undo all the way back to the first layer while
+remaining in <i>Reverse</i> mode.</p>
+
+<p>On the EDP, a long-press of <i>Reverse</i> will convert it to 
+a <i>SUSReverse</i>, Mobius does not implement this.</p>
+
+<!-- TODO: Long-reverse would be easy, probably the same for HalfSpeed -->
+
+</section> <!-- Reverse -->
+
+
+<section><title>SamplePlay</title>
+
+<p>Mobius does not implement this function but you can achieve similar
+behavior with the numbered loop trigger functions (<i>Loop 1</i>, 
+<i>Loop 2</i>, etc.) combined with the <i>Switch Location</i> and 
+<i>Switch Duration</i> parameters.  When <i>Switch Duration</i> is set
+to <i>Once</i> the loop plays to the end then goes into <i>Mute</i> mode.
+If you set <i>Switch Location</i> to <i>Start</i> the behavior is the
+same as the EDP's <i>SamplePlay</i>.  If you want this behavior
+without permanently setting <i>Switch Location</i> and <i>Switch Duration</i>
+in the preset, you can use scripts to set them temporarily.</p>
+
+</section> <!-- SamplePlay -->
+
+<section><title>StartPoint</title>
+
+<p>Mobius implements this function.  A long-press of the <i>Start Point</i>
+function will do what Mobius calls <i>Sync Start Point</i> which
+is the same as what the EDP calls <i>QuantMIDIStartPoint</i>.</p>
+
+</section>
+
+<section><title>Stutter</title>
+
+<p>In the EDP this is accessible from the <i>Insert</i> button
+when <i>Interface Mode</i> is set to <i>Stu</i>.  In Mobius this
+is a normal bindable function.</p>
+
+<p>During stutter mode, repetitions of the current cycle will be inserted
+whenever the end of the cycle is reached.  Mobius stutters the cycle
+you were in when the function was performed.  The EDP manual suggests
+that the stuttered cycle should be the one AFTER the current cycle.  We 
+prefer stuttering the current cycle because you can get to the next
+one just by quantizing.</p>
+
+</section> <!-- Stutter -->
+
+<section><title>Substitute</title>
+
+<p>Mobius implements this function.   To use the <i>Secondary Feedback</i>
+control, set the <i>Enable Secondary Feedback</i> preset parameter
+to <i>true</i>.</p>
+
+</section> <!-- Substitute -->
+
+<section><title>SUS Commands</title>
+
+<p>Mobius does not have <i>InsertMode=Sustain</i> but the functions
+<i>Sustain Multiply</i> and <i>Sustain Insert</i> are bindable functions
+as are most other "modal" editing functions.</p>
+
+<!-- TODO: Docs on page 5-69 make it sound like 
+InsertMode=Sus, Quantize=Off,Multiply will behave like SUSUnroundedMultiply
+-->
+
+<p>All of the following EDP functions that are accessible with MIDI
+have normal Mobius functions.  The first bold name is the EDP name, the
+second name is the Mobius name.</p>
+
+<ul>
+<li><b>SUSRecord</b> - Sustain Record</li>
+<li><b>SUSOverdub</b> - Sustain Overdub</li>
+<li><b>SUSMultiply</b> - Sustain Multiply</li>
+<li><b>SUSUnroundedMultiply</b> - Sustain Unrounded Multiply</li>
+<li><b>SUSInsert</b> - Sustain Insert</li>
+<li><b>SUSUnroundedInsert</b> - Sustain Unrounded Insert</li>
+<li><b>SUSMute</b> - Sustain Mute</li>
+<li><b>SUSReplace</b> - Sustain Replace</li>
+<li><b>SUSSubstitute</b> - Sustain Substitute</li>
+<li><b>SUSReverse</b> - Sustain Reverse</li>
+<li><b>SUSSpeed</b> - Sustain Speed</li>
+<li><b>SUSNextLoop</b> - Sustain Next Loop</li>
+<li><b>SUSMuteRetrigger</b> - Sustain Mute Retrigger</li>
+</ul>
+
+<p>Mobius also supports sustain variants for these functions.</p>
+
+<ul>
+<li>Sustain Previous Loop</li>
+<li>Sustain Rehearse</li>
+<li>Sustain Stutter</li>
+</ul>
+
+</section> <!-- SUS Commands -->
+
+<section><title>SUSNextLoop</title>
+
+<p>Mobius implements this function, see <ref>NextLoop</ref> for a 
+discussion of the differences in the loop switching functions.</p>
+
+</section> <!-- SUSNextLoop -->
+
+<section><title>Undo</title>
+
+<p>Mobius <i>Undo</i> is similar to <i>Undo</i> on the EDP.  Mobius does
+not have the distinction between "Long Undo" and "Short Undo".  In Mobius,
+<i>Undo</i> behaves the most like EDP's "Long Undo".</p>
+
+<p>Mobius <i>Undo</i> will first remove any scheduled events (quantized
+functions), then it will cancel any modal functions (Multiply, Insert, etc.),
+then it will roll back to the previous layer.</p>
+
+<p><i>Undo</i> can be used to escape what the EDP calls "SamplePlay" and
+what Mobius calls "SwitchDuration=Once" because it removes the <i>Return</i>
+event scheduled at the end of the loop.</p>
+
+<p><i>Undo</i> is not by default a switch confirmation action for
+the various <i>Confirm</i> values for the <i>Switch Quantize</i> parameter.
+If you want to use <i>Undo</i> for this you must add it to the
+<i>Switch Confirmation Actions</i> global parameter.</p>
+
+<p>The long discussion of <i>Undo</i> memory management in the EDP
+manual does not apply to Mobius.</p>
+
+<p>On the EDP, <i>Undo</i> will move the <i>Loop Window</i> backward.
+Mobius does not implement loop windowing so <i>Undo</i> simply returns
+to the previous layer.</p>
+
+</section> <!-- Undo -->
+
+</section> <!-- Functions -->
+
+<!-- ======================================================================
+
+  Synchronization
+
+====================================================================== -->
+
+<section><title>Synchronization</title>
+
+<section><title>Auto Start Point</title>
+
+<p>Mobius does not currently support what the EDP calls <i>Auto Start
+Point</i>. When any form of synchronization is on, Mobius will
+periodically retrigger the loop so that it stays in sync with the MIDI
+clock.  This "drift retriggering" is disabled when <i>Overdub</i> or
+another recording mode is active.  If retriggering were allowed during
+recording, it could cause gaps in the recording which you would hear
+as clicks.</p>
+
+<p>If drift retrigger is disabled and an overdub is left on for several
+iterations of the loop, the loop can go out of alignment with the MIDI clocks.
+What <i>Auto Start Point</i> does is automatically set the start point
+of the loop rather than retriggering it, but only if the feedback level
+is low enough that the old content of the loop will be inaudible.</p>
+
+<p>Currently in Mobius, if you leave overdub on, the loop will gradually
+go out of sync with the external device.  This may be corrected by leaving
+overdub and performing a <i>Realign</i>.</p>
+
+</section> <!-- Auto Start Point -->
+
+<section><title>Beat Sync</title>
+
+<p>What the EDP refers to as "beat sync" is not implemented since
+it relies on hardware specific to the EDP.  Mobius can synchronize
+with other devices using MIDI.</p>
+
+</section> <!-- BeatSync -->
+
+<section><title>Brother Sync</title>
+
+<p>What the EDP refers to as "brother sync" is not implemented since
+it relies on hardware specific to the EDP.  Mobius has a similar
+concept called <i>Track Sync</i> that can be used to synchronize
+loops in multiple tracks.</p>
+
+</section>
+
+<section><title>Global/Local MIDI Clock</title>
+
+<p>Mobius implements a similar system called the <i>External Loop</i> that
+works not only with MIDI but with sync pulses from the plugin host
+and other sources of sync pulses.</p>
+</section>
+
+<section><title>MIDI Sync Indicators</title>
+
+<p>The EDP will send MIDI note messages at various synchronization 
+points such as the loop start point, global MIDI start point, cycle
+start point, and sub-cycle start point.  Mobius does not.</p>
+
+</section> <!-- MIDI Sync Indicators -->
+
+<section><title>MuteQuantMIDIStatSong</title>
+
+<p>Mobius calls this <i>Mute MIDI Start</i>.</p>
+</section>
+
+<section><title>QuantMIDIStatSong</title>
+
+<p>Mobius calls this <i>Sync Start Point</i>.</p>
+</section>
+
+<section><title>QuantStartPoint</title>
+
+<p>Mobius calls this <i>MIDI Start</i>. It applies to both
+MIDI slave sync and plugin host sync.</p>
+</section>
+
+<section><title>ReAlign</title>
+
+<p>Mobius calls this <b>Realign</b>.  When Mobius does the realign
+is controlled by the <i>Realign Time</i> parameter.  Setting this
+to <i>External</i> is closest to the EDP, the realign will happen
+when the "external loop" reaches its start point, a concept the
+EDP calls the "global MIDI start point".</p>
+
+<p>When the <i>Sync Mode</i> parameter is <i>Out</i> or <i>Out Manual Start</i>
+what <i>Realign</i> does is controlled by the <i>Realign Mode</i> parameter.
+Setting this to <i>MIDI Start</i> will cause Mobius to send a MIDI <i>Start</i>
+message at the Mobius loop start point.  Setting this to <i>Retrigger</i>
+will cause Mobius to retrigger its loop when the external loop reaches
+its start point.</p>
+
+<p>The EDP also has the <i>MIDIMuteReAlign</i> function which 
+Mobius calls <i>Mute Realign</i>.</p>
+
+</section> <!-- ReAlign -->
+
+<section><title>SongPositionPointer and Continue</title>
+
+<p>Mobius does not respond to MIDI <i>Song Position</i> 
+and <i>Continue</i> messages.  If you are synchronizing with 
+a hardware sequencer or drum machine you need to restart the
+pattern from the beginning for Mobius to properly track
+where the "global start point" is.</p>
+
+<!-- TODO: Could try to do this... -->
+
+</section> <!-- SongPositionPointer and Continue -->
+
+<section><title>StartSong, StopSong, Continue</title>
+
+<p>Mobius should send MIDI <i>Clock</i>, <i>Start</i> and <i>Stop</i> 
+messages in mostly the same way as the EDP.  We haven't done
+an exhaustive analysis of the differences, but a few are obvious.</p>
+
+<p>Mobius does not send MIDI <i>Start</i> when the <i>Undo</i>
+function is executed when the loop is in <i>Reset</i> mode.  You can
+however execute the <i>MIDI Start</i> function.</p>
+
+</section> <!-- StartSong, StopSong, Continue -->
+
+<section><title>Stop Sync</title>
+
+<p>On the EDP, pressing overdub when the track is reset and Sync=In
+toggles reception of incoming sync.  It also toggles adherence to the
+tempo specified by TempoSelect.  We assume a side effect of this
+is that you lose the ability to "arm" overdub mode during reset.</p>
+
+<p>Mobius does not support this feature.</p>
+
+</section> <!-- Stop Sync -->
+
+<section><title>SyncStartPoint</title>
+
+<p>Mobius does not send MIDI <i>Start</i> when the <i>Undo</i>
+function is executed when the loop is in <i>Reset</i> mode.  You can
+however execute the <i>MIDI Start</i> function.</p>
+
+</section> <!-- SyncStartPoint -->
+
+<section><title>SyncRecord</title>
+
+<p>This feature from page 5-52 of the manual is how recording
+is done when SyncMode=In and Quantize=Off.  The recording begins
+immediately after the button is pressed but it is rounded up
+at the end so that the loop will be an even multiple of the MIDI
+beat length.  Mobius does not support this.</p>
+
+<!-- TODO: SyncRecord
+   Records a loop exactly the size of the external loop but doesn't
+   have to wait for a sync pulse, it rounds at the end
+   !! need this, EDP does this if Quantize=Off, 
+   if Quantize=Loop|Cycle|Subcycle, Record is quantized to the 
+   next downbeat and not rounded
+-->
+</section> <!-- SyncRecord -->
+
+<section><title>Tempo Select</title>
+
+<p>On the EDP, pressing Undo while in reset mode when Sync=Out
+activates <i>Tempo Select</i> mode.  While in Tempo Select mode, the
+Feedback knob sets the tempo and the Overdub function cancels
+Tempo Select rather than it's usual behavior of arming Overdub mode.</p>
+
+<p>Mobius does not support this feature.</p>
+
+</section> <!-- Tempo Select -->
+
+</section> <!-- Synchronization -->
+
+<!-- ======================================================================
+
+  MIDI Control
+
+====================================================================== -->
+
+<section><title>MIDI Control</title>
+
+<p>Most of the things you can do with MIDI in the EDP you can do in
+Mobius.  Since Mobius doesn't have a hardware interface, it is almost always
+used with a MIDI footswitch or control surface.  Every function and almost
+every parameter can be directly controlled with MIDI.  So what the EDP 
+calls "DirectMIDI" is just the normal way of controlling Mobius. We won't
+draw comparisons with every section in the <i>MIDI Control</i> chapter
+but a few need to be mentioned.</p>
+
+<section><title>MIDI Data Wheel</title>
+
+<p>Mobius does not support a single continuous controller for editing
+the currently selected preset parameter.  Instead you bind different
+controllers to each parameter.</p>
+
+</section> <!-- MIDI Data Wheel -->
+
+<section><title>MIDI Pipe</title>
+
+<p>Mobius does not implement this, and it is normally not necessary
+since the computer running Mobius is rarely a "MIDI Thru" device.</p>
+
+</section <!-- MIDI Pipe -->
+
+<section><title>MIDI Virtual Buttons</title>
+
+<p>Since Mobius does not have a hardware front panel most of these
+are not applicable.  You can however bind MIDI messages to a few
+functions that control the <i>Instant Parameters</i> user interface
+component.  These let you scroll up and down the parameter list
+to select one of the, then scroll through the list of possible values
+for the selected parameter.</p>
+
+</section> <!-- MIDI Virtual Buttons -->
+
+<section><title>SysEx</title>
+
+<p>Mobius does not support SysEx data dumps but most things can
+be saved to and loaded from files.  The Mobius <i>project</i> is
+the closest thing to a SysEx dump.</p>
+
+</section> <!-- SysEx -->
+
+<section><title>Transmitting MIDI Commands</title>
+
+<p>Mobius does not send out MIDI <i>Note</i> or <i>Controller</i> messages
+when functions are triggered from the user interface.  If this were
+absolutely necessary you could do something similar with scripts.</p>
+
+</section> <!-- Transmitting MIDI -->
+
+</section> <!-- MIDI Control -->
+
+<!-- ======================================================================
+
+  Parameter Presets
+
+====================================================================== -->
+
+<section><title>Parameter Presets</title>
+
+<p>The Mobius concept of a <i>preset</i> is almost the same as the
+EDP.  Mobius has many more parameters than the EDP and doesn't
+implement some of the parameters the EDP has.  Mobius presets have
+names to make them easier to identify.</p>
+
+<p>You can select presets with menus in the user interface and
+also with any MIDI message.  There are however no functions
+for <b>editing</b> presets using MIDI.  You can only edit presets
+by interacting with the popup preset editor window.</p>
+
+</section> <!-- Presets -->
+ 
+<!-- ======================================================================
+
+  User Interface
+
+====================================================================== -->
+
+<section><title>User Interface</title>
+
+<p>Obviously the Mobius user interface is quite different than the
+EDP user interface.  A few of the same visual elements are there
+such as the Mobius <i>Loop Counter</i> which is similar to what the
+EDP calls the <i>Loop Display</i>.  But we have no desire to make
+the Mobius user interface resemble the EDP front panel.</p>
+
+<p>All of the EDP documentation regarding "knobs" and "jacks" is
+of course not applicable.  Mobius has <i>controls</i> that correspond
+to all the EDP knobs and jacks.</p>
+
+<p>Most of the things that are displayed in the EDP front panel
+using LEDs are displayed in a different way in the Mobius user interface.
+We won't describe all of those, but a few user interface elements
+deserve special mention.</p>
+
+<section><title>Smart Buttons aka Double Clicks</title>
+
+<p>This is also known as "double clicking" and applies only
+to the MIDI messages that trigger individual loops.  The following EDP
+features are <b>not</b> supported, but you can get similar behavior
+from scripts.</p>
+
+<p><b>Double-click Loop Trigger/Copy</b>.  Triggering a loop twice
+when <i>SwitchQuant</i> is on will do a <i>LoopCopy</i> from the current
+loop to the triggered loop.</p>
+
+<p><b>Double-click Loop Trigger/Record</b>.  Triggering a loop twice
+when the loop is in <i>Reset</i> will start the <i>Record</i> function.</p>
+
+<p><b>Double-click Loop Trigger/Multiply</b>.  Triggering the current
+loop twice while it is playing will start the <i>Multiply</i> function.
+Presumably <i>Quantize</i> must be on.</p>
+
+<p><b>Double-Click Loop Trigger/StopRecord</b>.  If the loop is
+in <i>Record</i> or <i>Multiply</i> mode, and you send the MIDI note
+for the current loop, the record or multiply is ended.  Mobius kind
+of supports this, the loop will be ended and the loop will be retriggered.</p>
+
+<p><b>Long-press Loop Trigger/Reset</b>.  If you long-press the
+MIDI note that triggers a loop, the <i>Reset</i> function is performed.</p>
+
+<!-- TODO: These double-click options are all useful, think...
+-->
+</section> <!-- Smart buttons -->
+
+<section><title>Visual Tempo Guide</title>
+
+<p>Mobius uses the <i>Beaters</i> display component to flash a light
+on each subcycle, cycle, and loop start point.  If you are using
+MIDI slave sync, the beat and bar counters are displayed above
+the loop counter.</p>  
+
+<p>Mobius does not currently have flashing lights to convey 
+the global MIDI start point, when a sync correction happens, 
+or when an AutoUndo happened.</p>
+
+</section> <!-- Visual Tempo Guide -->
+
+</section <!-- User Interface -->
+
+<!-- ======================================================================
+
+  General Concepts
+
+====================================================================== -->
+
+<section><title>General Concepts</title>
+
+<section><title>Event Gravity</title>
+
+<p>Event "gravity" refers to the EDP's behavior of quantizing events
+back to a previous quantization boundary rather than moving to the
+next one if you are within a few milliseconds of the last boundary.
+Mobius does not implement this.  When you are quantizing you need to 
+be sure to press the trigger at least a little bit ahead of the
+quantization point.</p>
+
+</section> <!-- Event Gravity -->
+
+</section> <!-- General Concepts -->
+
+</document>

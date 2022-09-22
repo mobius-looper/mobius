@@ -1,0 +1,155 @@
+Mon Oct 13 21:53:43 2008
+
+The Xcode samples in the 2.4 SDK are typically convoluted and use
+a lot of options that don't seem to be necessary.
+
+What I gleaned from this is that none of the compiler options
+beyond the ones we're already using are necessary, though this
+may be interesting:
+
+    -mmacosx-version-min=10.4 
+
+Of the linker flags only -bundle is necessary.
+
+----------------------------------------------------------------------
+COMPILER OPTIONS
+----------------------------------------------------------------------
+
+/Developer/usr/bin/gcc-4.0 -x c++ 
+    same as g++ ?
+
+-arch ppc 
+    we build both
+
+-g 
+-isysroot /Developer/SDKs/MacOSX10.4u.sdk 
+    already using these
+
+-pipe 
+    use pipes rather than temporary files for communication
+    between stages of compilation, unnecessary
+
+-Wno-trigraphs 
+    no warnings about trigraphs in comments, unnecessary
+
+-fpascal-strings 
+    allow Pascal style string literals to be constructed, I don't
+    think this is necessary for VST sources
+
+-faltivec 
+    This flag is provided for compatibility with Metrowerks CodeWarrior
+    and MrC compilers as well as previous Apple versions of GCC.  It
+    causes the -mpim-altivec option to be turned on.
+
+-mpim-altivec (via -faltivec)
+    Enable built-in compiler support for the syntactic
+    extensions as well as operations and predicates defined in the
+    Motorola AltiVec Technology Programming Interface Manual (PIM).
+    This includes the recognition of "vector" and "pixel" as (con-
+    text-dependent) keywords, the definition of built-in functions such
+    as "vec_add", and the use of parenthesized comma expression as
+    AltiVec literals.
+
+    I doubt this is necessary for VST.    
+
+-fasm-blocks 
+    Enable the use of blocks and entire functions of assembly code
+    within a C or C++ file.  The syntax follows that used in CodeWar-rior. 
+    (APPLE ONLY)
+
+    Not necessary for VST?
+
+-O0 
+    Do not optimize.  This is the default.
+
+-Wreturn-type -Wunused-variable 
+    common warnings
+
+-fmessage-length=0 
+    Try to format error messages so that they fit on lines of about n
+    characters.  The default is 72 characters for g++ and 0 for the
+    rest of the front ends supported by GCC.  If n is zero, then no
+    line-wrapping will be done; each error message will appear on a
+    single line.
+  
+-mtune=G4 
+    Tune to cpu-type everything applicable about the generated code,
+    except for the ABI and the set of available instructions.  The
+    choices for cpu-type are:...many...
+
+    Since we're building universal binaries, this can't be used?
+
+-fvisibility-inlines-hidden 
+    This switch declares that the user does not attempt to compare
+    pointers to inline methods where the addresses of the two functions
+    were taken in different shared objects.
+    ???
+
+-mmacosx-version-min=10.4 
+
+    The earliest version of MacOS X that this executable will run on is
+    version.  Typical values of version include 10.1, 10.2, and 10.3.9.
+
+    This seems reasonable, but necessary?
+
+-I/Users/jeff/dev/mobius/src/vst/vstsdk2.4/public.sdk/samples/vst2.x/mac/build/vst\ 2.4\ examples.build/Debug/again.build/again.hmap
+
+    A precompiled header file?
+
+-F/Users/jeff/dev/mobius/src/vst/vstsdk2.4/public.sdk/samples/vst2.x/mac/build/Debug 
+    Adds the framework directory to the head of the header file search list.
+    This is the output directory and doesn't seem to be necessary.
+
+-I/Users/jeff/dev/mobius/src/vst/vstsdk2.4/public.sdk/samples/vst2.x/mac/build/vst\ 2.4\ examples.build/Debug/again.build/DerivedSources
+
+    This doesn't exist, not sure what it does normally.
+
+----------------------------------------------------------------------
+LINKER FLAGS
+----------------------------------------------------------------------
+
+/Developer/usr/bin/g++-4.0 -o /Users/jeff/dev/mobius/src/vst/vstsdk2.4/public.sdk/samples/vst2.x/mac/build/Debug/again.vst/Contents/MacOS/again
+
+    A normal g++ link into the final bundle directory
+
+-L/Users/jeff/dev/mobius/src/vst/vstsdk2.4/public.sdk/samples/vst2.x/mac/build/Debug
+    Not necessary for most examples since we don't build libraries?
+
+-F/Users/jeff/dev/mobius/src/vst/vstsdk2.4/public.sdk/samples/vst2.x/mac/build/Debug
+    Framework directory, I guess to be used in linking.  Not necessary
+
+-filelist /Users/jeff/dev/mobius/src/vst/vstsdk2.4/public.sdk/samples/vst2.x/mac/build/vst\ 2.4\ examples.build/Debug/again.build/Objects-normal/ppc/again.LinkFileList 
+    A list of .o files 
+
+-arch ppc 
+
+    we use both
+
+-Wl,-Y,1455 
+    -Wl,option  
+    Pass option as an option to the linker.  If option contains commas,
+    it is split into multiple options at the commas.
+
+    -Y number (32-bit only)
+        For  the  first  number undefined symbols, displays each file in
+        which the symbol appears, its type and whether the file  defines
+        or  references it (that is, the same style of output produced by
+        the -y option). To keep the output manageable, this option  dis-
+        plays at most number references.
+
+    Whew, not sure why this is necessary.
+
+-bundle 
+    Produce a Mach-O bundle format file.  The headers are placed  in
+    the first segment.  All sections are placed in their proper seg-
+    ments and they are padded to the segment alignment.  This has  a
+    file type of MH_BUNDLE.
+
+    !! The secret sauce
+
+-mmacosx-version-min=10.4
+    The earliest version of MacOS X that this executable will run on
+    This seems reasonable, but necessary?
+
+-isysroot /Developer/SDKs/MacOSX10.4u.sdk
+    already using this

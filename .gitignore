@@ -1,0 +1,114 @@
+
+# /src/SoundTouch/
+/src/SoundTouch/libsoundtouch.a
+
+# /src/au/
+/src/au/libau.a
+/src/au/MultitapAU
+/src/au/MultitapAU-phase1.rsrc
+/src/au/MultitapAU.rsrc
+/src/au/MultitapAUView
+/src/au/MultitapAU.component
+
+# /src/audio/
+/src/audio/audiotest
+/src/audio/devices
+/src/audio/libaudio.a
+
+# /src/midi/
+/src/midi/*.pdb
+/src/midi/*.exp
+/src/midi/*.obj
+/src/midi/*.exe
+/src/midi/*.opt
+/src/midi/*.lib
+/src/midi/libmidi.a
+/src/midi/miditest
+
+# /src/mobius/
+/src/mobius/*.rsrc
+/src/mobius/.DS_Store
+/src/mobius/libui.a
+/src/mobius/libmobius.a
+/src/mobius/expr
+/src/mobius/mobiusvst
+/src/mobius/mobius
+/src/mobius/AUMobius
+/src/mobius/save
+/src/mobius/temp
+/src/mobius/mobius-install
+/src/mobius/mobius-install*.dmg
+
+# /src/mobius/functions/
+/src/mobius/functions/mobiusfunc.a
+
+# /src/mobius/mac/bundles/
+/src/mobius/mac/bundles/.DS_Store
+/src/mobius/mac/bundles/Mobius.app
+/src/mobius/mac/bundles/Mobius.vst
+/src/mobius/mac/bundles/Mobius.component
+
+# /src/mobius/mac/xcode/auval/
+/src/mobius/mac/xcode/auval/build
+
+# /src/mobius/mac/xcode/mobius/
+/src/mobius/mac/xcode/mobius/build
+
+# /src/osc/
+/src/osc/*.exe
+/src/osc/*.obj
+/src/osc/*.lib
+/src/osc/libosc.a
+/src/osc/osctest
+
+# /src/osc/oscpack/
+/src/osc/oscpack/*.exe
+/src/osc/oscpack/*.obj
+/src/osc/oscpack/*.lib
+/src/osc/oscpack/liboscpack.a
+/src/osc/oscpack/oscdump
+
+# /src/qwin/
+/src/qwin/*.sln
+/src/qwin/*.suo
+/src/qwin/*.ilk
+/src/qwin/*.pdb
+/src/qwin/*.obj
+/src/qwin/*.exe
+/src/qwin/*.exp
+/src/qwin/*.res
+/src/qwin/*.RES
+/src/qwin/*.opt
+/src/qwin/*.lib
+/src/qwin/libqwin.a
+/src/qwin/mactest
+/src/qwin/qwintest
+/src/qwin/.DS_Store
+
+# /src/qwin/bundle/mactest.app/Contents/MacOS/
+/src/qwin/bundle/mactest.app/Contents/MacOS/mactest
+
+# /src/qwin/bundle/qwintest.app/Contents/MacOS/
+/src/qwin/bundle/qwintest.app/Contents/MacOS/qwintest
+
+# /src/qwin/bundle/qwintest.app/Contents/Resources/
+/src/qwin/bundle/qwintest.app/Contents/Resources/*.icns
+
+# /src/util/
+/src/util/*.exe
+/src/util/*.obj
+/src/util/*.lib
+/src/util/*.exp
+/src/util/*.pdb
+/src/util/doc2html
+/src/util/threadtest
+/src/util/utiltest
+/src/util/wavtest
+/src/util/xomtest
+
+# /src/vst/2.4/
+/src/vst/2.4/*.lib
+/src/vst/2.4/*.pdb
+/src/vst/2.4/libvst.a
+/src/vst/2.4/again
+/src/vst/2.4/bundles

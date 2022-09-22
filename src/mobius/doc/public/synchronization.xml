@@ -1,0 +1,2208 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document>
+<document>
+<heading>
+<title>Mobius Synchronization</title>
+<date>March 2012</date>
+</heading>
+
+<TOC/>
+
+<!-- ======================================================================
+
+  Synchronization
+
+  Realign, MuteRealign, MuteStartSong
+  SyncMaster, SyncMasterTrack, SyncMasterMIDI
+  SyncMode, TrackSyncMode
+  ResizeSyncAdjust, SpeedSyncAdjust, SwitchSyncAdjust
+  MinTempo, MaxTempo, RealignTime, OutRelagnMode
+
+====================================================================== -->
+
+<section><title>Introduction</title>
+
+<p>Unless you intend to record only one loop into one track, you will
+eventually be faced with the problem of synchronization.  At a high
+level, synchronization is the creation of multiple loops and tracks that
+will play with a consistent rhythm without drifting apart.  If you
+like to record "ambient" loops you may not need synchronization,
+but most users will eventually need some form of synchronization.</p>
+
+<p>There are three techniques for creating synchronized loops:</p>
+
+<ul>
+<li><b>Loop Copy</b> - copying some or all of a loop from one location to another</li>
+<li><b>Synchronized Recording</b> - creating a new live recording whose size is controlled by another loop</li>
+<li><b>MIDI Clock Generation</b> - controlling the tempo of loops in another device such as a drum machine with MIDI clocks</li>
+</ul>
+
+<p><i>Loop Copy</i> instantly copies one loop to another.  The target
+loop can be in the same track or a different track.
+Since the loops are exactly the same size or have <ref>Related Sizes</ref> 
+they will play together without drifting apart.</p>
+
+<p><i>Synchronized Recording</i> involves adjusting the beginning and ending
+of a new loop recording so that the finished loop has a size that
+is exactly related to another loop.  There are three ways to make
+synchronized recordings: <i>track sync</i>, <i>host sync</i>, and 
+<i>MIDI slave sync</i>.  With track sync, recording will be synchronized
+to the playback location of another track.   With host sync,
+recording is synchronized with beat or bar pulses from the transport
+running in the plugin host application.  With MIDI slave sync, recording
+is synchronized to beat or bar pulses coming from an external MIDI clock.
+All of these are sometimes referred to as forms of <i>slave sync</i> since
+you are letting another loop or clock source determine the length 
+of a recording.</p>
+
+<p><i>MIDI Clock Generation</i> is a form of synchronization that
+causes MIDI clocks to be sent out at a tempo that is calculated from
+the length of one of the Mobius tracks.  Devices following this MIDI
+clock will then play in sync with the loop in the Mobius track.  Here
+the loop you are synchronizing isn't inside Mobius, it is being played
+by another device such as a drum machine or sequencer.  This
+is sometimes referred to as <i>master sync</i> since Mobius is 
+controlling another device.</p>
+
+<p>Each of these techniques will be discussed in more detail in later 
+sections.  But first it is important to understand a few concepts
+described in the next section.  Be sure to read <ref>Concepts</ref>
+before jumping to the other sections.</p>
+
+</section> <!-- Introduction -->
+
+<section><title>Concepts</title>
+
+<section><title>Start Point and End Point</title>
+
+<p>You can think of the <i>Start Point</i> as simply the beginning of
+a loop.  The loop normally plays from the start point to the end and
+then repeats.  We also use the confusing term <i>End Point</i>.  You
+can almost always think of the start point and the end point as being
+the same thing.  It is that moment in time after the last sample of
+the loop has played and before we have gone back to playing the first
+sample in the loop.</p>
+
+<p>If you get deeper into Mobius scripting you will find that there are
+actually some subtle differences between start point and end point,
+but you do not need to be concerned about that to understand
+synchronization.</p>
+
+</section> <!-- Start Point and End Point -->
+
+<section><title id='emptyclear'>Reset, Empty, Clear, and Silent</title>
+
+<p>There are two important states that a loop can be in but the terms
+used to describe those states are sometimes used inconsistently in the
+forums and even in the documentation.  Usually it is clear from the
+context what the meaning is, but here we will give precise definitions
+for these terms.</p>
+
+<p>When you first start Mobius, all loops are in a state
+called <b>Reset</b>.  The loops contain nothing, they cannot be played
+or manipulated in any way until you record something into them. While
+the official term for this is <i>Reset</i> we sometimes use the
+term <b>Empty</b> to mean the same thing.  An empty loop contains
+nothing.</p>
+
+<p>When you use certain features like <i>Empty Loop Action</i>
+or <i>Empty Track Action</i>, loops
+can be created that have a size but they do not contain any 
+audible content.  Loops in this state are said to be <b>Clear</b>
+or <b>Silent</b>.</p>
+
+<p>The problem word is <i>Empty</i>.  It is common to think of a
+silent loop as empty but technically this is not correct.  The loop
+is not empty, it can play and be operated upon just like any other
+loop.  It just doesn't have anything audible in it.</p>
+
+</section>
+
+<section><title>Related Sizes</title>
+
+<p>When we say that two loops have a <i>related size</i> it means that
+their sizes have an exact mathematical relationship that will allow
+them to play together consistently forever.  In the simplest case two
+loops may be exactly the same size.  But if one loop is exactly twice
+as long as another the sizes are still related and they will play
+consistently.  The smaller loop will play twice each time the larger
+loop plays and this pattern will continue forever.</p>
+
+<p>In mathematical terms, loops with related sizes have a <i>common
+factor</i>.  There is some fraction of the loop that can be multiplied
+to equal the size of all of the related loops.  For example, assume we
+have three loops, one is 2 seconds long, one is 4 seconds long, and
+one is 8 seconds long.  Although the loops are not the same size, they
+will play together consistently because they share a common factor of
+2 seconds. When the 8 second loop plays once the 4 second loop will
+have played exactly twice and the 2 second loop will have played
+exactly 4 times.  This pattern will repeat consistently forever.</p>
+
+<p>Now assume we have a loop that is 2 seconds long and one that is 3
+seconds long.  These loops also have a related size, the common factor
+is 1 second.  What is interesting about this relationship is that when
+the 3 second loop is finished playing for the first time the 2 second
+loop will have repeated once and will be in the middle.  The next time
+the 3 second loop plays it will sound different because the 2 second
+loop is starting from a different location.  When the 3 second loop
+finishes playing a second time, the 2 second loop will be at its start
+point again.  This pattern will continue consistently forever.</p>
+
+<p>The set of loops in the first example (2, 4, and 8 seconds) were
+all <i>even multiples</i> of the common factor of 2 seconds.  Each
+time the longest loop plays the combination will sound the same.</p>
+
+<p>The set of loops in the second example (1, and 3 seconds) were not
+even multiples of the common factor of 1 second.  The second time the
+3 second loop plays it will not sound the same as the first time it
+played because the two loops are <i>out of phase</i>.  If you have a
+set of loops that are not all even multiples of the common factor it
+may take many plays of the longest loop before they are all once again
+in phase.  This can be used to create interesting polyrhythms.  You can
+also create a set of loops that when played together result in complex
+evolving patterns that continue to change over a long period of time.
+You can also create a bunch of unlistenable noise.</p>
+
+</section> <!-- Related Size -->
+
+<section><title>Cycles and Subcycles</title>
+
+<p>When you record a loop for the first time it will have one cycle.
+You add cycles to a loop by using functions such as <i>Multiply</i>
+and <i>Insert</i>.  The easiest way to add cycles is by using
+the <i>Instant Multiply 2</i> function, each time you use this
+function the loop is copied and appended to the end of itself, and the
+number of cycles is doubled.  The cycle count is the number of times
+the original loop has been multiplied.</p>
+
+<p>For example, record a loop about 2 seconds long, then execute
+the <i>Instant Multiply 2</i> function.  The loop will now be 4
+seconds long and contain 2 cycles.  From the listener's perspective
+nothing has changed, they continue to hear the original loop repeating
+over and over.  But structurally the loop has changed, it now contains
+two copies of the original loop.  One use for this technique is to
+record a short loop representing a measure or two of a rhythmic
+pattern.  Then multiply this loop by 4 or 8 to create a longer loop
+with several repetitions of the pattern.  Finally use
+the <i>Overdub</i> function to record a long bass line over the
+repeating rhythm pattern.</p>
+
+<p>A <i>subcycle</i> is simply a division of a cycle.  It is defined
+by the <i>Subcycles</i> preset parameter which defaults to 4.  When a
+loop is first recorded it will have one cycle and 4 subcycles which
+you can see as white tick marks under the loop meter.  The number of
+cycles in a loop will stay the same until you change the loop length
+with functions like <i>Multiply</i>.  But you can change the number of
+subcycles at any time just by changing the <i>Subcycles</i> parameter.
+Changing the number of subcycles does not modify the loop in
+any way, it simply changes the number of tick marks under the loop
+meter.</p>
+
+<p>Often the number of subcycles is chosen so that they represent
+"beats" in the time signature of the loop.  For example if you record
+a loop representing two measures of music in 4/4 time, then
+set <i>Subcycles</i> to 8, each subcycle will be the same length as
+one quarter note.  Subcycles can also represent larger units of music.
+If you record a loop containing an entire 12-bar blues chord
+progression, then set the <i>Subcycles</i> parameter to 12, each
+subcycle will represent one measure of music.</p>
+
+<p>Cycles and subcycles are important for <i>quantization</i>.  You
+can make functions execute exactly on a cycle or subcycle boundary
+which is useful for rhythmic effects and also for track
+synchronization.</p>
+
+</section> <!-- Cycles and Subcycles -->
+
+</section> <!-- Concepts -->
+
+<section><title>Loop Copy</title>
+
+<p>The simplest form of synchronization is to create several loops in
+one track whose sizes are either the same, or multiples of a common
+factor.  For example the first loop may represent 2 bars of music,
+the second loop 4 bars, and the third 8 bars.  Though the loops aren't
+the same size, they are all multiples of a bar so you can switch among
+them without changing the perceived tempo.</p>
+
+<p>When you switch from one loop to another, there are many automated
+actions that can be taken when the switch occurs.  If the next loop
+is empty, by default the track simply halts and sits in <i>Reset</i>
+mode waiting for you to do something.  You can now use
+the <i>Record</i> function and attempt to record another loop that is
+rhythmically related to the first loop, but without some fancy
+footwork there will always be a little delay from when the switch
+happens till you get around to pressing the <i>Record</i> button. This
+disrupts the rhythm and is usually noticeable to the
+listener.</p>
+
+<p>To maintain a consistent rhythm, you need the recording of the next
+loop to begin immediately and automatically after the switch happens.
+Luckily there are several ways to do that which we'll discuss later.</p>
+
+<p>Another problem synchronizing loops is controlling when the loop
+switch happens.  By default, the switch happens immediately so you
+need to be careful to press the footswitch (or whatever trigger
+device you are using) at exactly the right time.  If you have good
+footswitch technique this may work for you but many people find it
+easier to have Mobius automatically switch loops when the loop reaches
+an interesting synchronization point.  This is called <i>switch
+quantization</i>.</p>
+
+<p>Switch quantization is controlled by the <i>Switch Quantize</i>
+preset parameter which may have these values:</p>
+
+<image src='images/synchronization-preset-switch-quantize.gif'
+    caption='Switch Quantize'/>
+
+<!--
+<ul>
+<li><b>Off</b></li>
+<li><b>Confirm</b></li>
+<li><b>Subcycle</b></li>
+<li><b>Confirm Subcycle</b></li>
+<li><b>Cycle</b></li>
+<li><b>Confirm Cycle</b></li>
+<li><b>Loop</b></li>
+<li><b>Confirm Loop</b></li>
+</ul>
+-->
+
+<p>For a thorough discussion of switch quantization see 
+<a href='techniques.htm#switching'>Loop Switching</a>.  
+For the purpose of creating new synchronized loops
+the most common values are <i>Loop</i> and <i>Cycle</i>.</p>
+
+<p>When <i>Switch Quantize</i> is set to <i>Loop</i>, the switch will
+be delayed until the current loop plays to the end and wraps
+back around to it's <i>Start Point</i>.  All you need to do is execute the
+loop switch function any time before the end of the loop and
+Mobius will enter <i>Switch Quantize</i> mode.  At the exact
+moment the loop reaches the start point, Mobius will automatically
+perform the loop switch.</p>
+
+<p>If you have used one of the <i>Multiply</i> functions to create
+a loop with more than one cycle, you may wish to set <i>Loop Quantize</i>
+to <i>Cycle</i> instead.  Mobius will wait until the end
+of the current cycle and then switch.  If the loop has only one cycle,
+then this will behave the same as setting <i>Switch Quantize</i> to
+<i>Loop</i>.</p>
+
+<p>Now that we know how to switch loops at exactly the right time,
+we'll discuss what happens after the switch.  As mentioned earlier, if
+you switch to an empty loop the default behavior is for Mobius to just
+sit there in <i>Reset</i> mode waiting for you to do something.  If
+you keep playing your instrument you can give the audience something
+to listen to for awhile and then use the <i>Record</i> function when
+you're ready to record the next loop.  This can work fine if your
+timing is very good, but recording synchronized loops is easier if you
+use the <i>Empty Loop Action</i> preset parameter.</p>
+
+<image src='images/synchronization-preset-empty-loop-action.gif'
+    caption='Empty Loop Action'/>
+
+<section><title>Empty Loop Action = Record</title>
+
+<p>When <i>Empty Loop Action</i> is set to <i>Record</i>,
+the <i>Record</i> function will begin automatically whenever you
+switch to an empty loop.  This can help you maintain a consistent
+rhythm, you won't have to fill for a few bars before you manually
+start recording the new loop, recording begins immediately after the
+switch.  The only thing you need to remember to do is press
+the <i>Record</i> button when you are done recording.</p>
+
+<p>If you have a good sense of time, you can create several loops
+using this technique that are very close to the same size.  But it is
+almost impossible for humans to make loops exactly the same size, they
+will always be off by a few milliseconds or more.  Depending on the
+style of music you perform, this may not be noticeable.  But if you
+want the most accurate timing possible, you will need to use some form
+of <i>loop copy</i> described in the next two sections.</p>
+
+</section> <!-- Empty Loop Action = Record -->
+
+<section><title>Empty Loop Action = Copy Sound</title>
+
+<p>When <i>Empty Loop Action</i> is set to <i>Copy Sound</i> and you switch
+to an empty loop, the current loop will be instantly copied to the
+next loop.  This is called a <i>Sound Copy</i>.  From the listener's
+perspective, they won't know the copy happened, they will still be
+hearing the original loop.</p>
+
+<p>You may now begin changing the copied loop using <i>Overdub</i>,
+<i>Multiply</i> or any other function.  When you are finished
+modifying the copied loop you can use the same technique to create
+another loop, or you may switch back to the original loop.</p>
+
+<p>When you first switch to a copied loop, you will be placed in a mode
+defined by the <i>Sound Copy Mode</i> preset parameter.  The possible
+values are:</p>
+
+<ul>
+<li><b>Play</b></li>
+<li><b>Overdub</b></li>
+<li><b>Multiply</b></li>
+<li><b>Insert</b></li>
+</ul>
+
+<p>The default value is <i>Play</i>.</p>
+
+<p>When <i>Sound Copy Mode</i> is set to <i>Play</i> the copied loop
+will simply start playing.  When set to any of the other values, it
+behaves as if that function were automatically executed immediately
+after the copy. If you know you want to immediately
+begin overdubbing into the copied loop set the parameter to <i>Overdub</i> or 
+<i>Multiply></i>.  <i>Insert</i> is less common, you will immediately begin
+the insertion of a new empty cycle so the listener will not hear the 
+copied loop until you end the insert.</p>
+
+<p>If you set this parameter to <i>Overdub</i>, <i>Multiply</i>, or 
+<i>Insert</i>, you must then remember to execute that function again
+to cancel that mode.  For example, when <i>Sound Copy Mode</i> is set
+to <i>Multiply</i> you will immediately begin multiplying the copied
+loop.  You must press the button for the <i>Multiply</i> function when
+you are finished multiplying.</p>
+
+<p>Some people find it convenient to assign the <i>Play</i> function
+to a button.  <i>Play</i> is like a universal mode canceling function,
+if you are in any recording mode (<i>Record</i>, <i>Multiply</i>,
+<i>Insert</i> etc.) pressing <i>Play</i> will cancel that mode and return
+you to <i>Play</i> mode.  So after you have performed a loop copy you don't
+need to think about <i>Sound Copy Mode</i> and execute the corresponding
+function to end the mode, just use <i>Play</i> and it will cancel whatever
+mode you are in.</p>
+
+</section> <!-- Empty Loop Action = Copy -->
+
+<section><title>Empty Loop Action = Copy Timing</title>
+
+<p>When <i>Empty Loop Action</i> is set to <i>Copy Timing</i> and you
+switch to an empty loop, a new <i>clear</i> loop will be instantly
+created that is exactly the same size as the previous loop.  This is
+called a <i>Time Copy</i>.  Review the 
+<a href='starting.htm#Reset, Empty, Clear, and Silent'>Reset, Empty, Clear, and Silent</a>
+section of the <i>Getting Started</i> manual if you are not sure about
+the difference between "empty" and "clear".  A <i>clear</i> loop has a
+size and it can be played and modified, it just starts out with no
+audio content.</p>
+
+<p>In addition to copying the size, time copy will also copy the
+number of cycles.</p>
+
+<p>When you first switch to a time copied loop, you will be placed in a mode
+defined by the <i>Time Copy Mode</i> preset parameter.  The possible
+values are:</p>
+
+<ul>
+<li><b>Play</b></li>
+<li><b>Overdub</b></li>
+<li><b>Multiply</b></li>
+<li><b>Insert</b></li>
+</ul>
+
+<p>The default value is <i>Play</i>.</p>
+
+<p>This parameter has the same possible values as <i>Sound Copy
+Mode</i> described in the <ref>Empty Loop Action = Copy Sound</ref> section.
+You can select <i>Multiply</i> but this is less useful here because
+there is no audio content to repeat so it behaves almost the same
+as <i>Insert</i>.  The main reason to use <i>Multiply</i> here is if
+the source loop had several cycles and you wanted to immediately use
+"remultiply" to remove some of the cycles from the end.
+See <a href='techniques.htm#Resizing Loops'>Resizing Loops</a> 
+for more information on using
+the <i>Multiply</i> function to make the loop smaller.</p>
+
+</section> <!-- Empty Loop Action = Copy Timing -->
+
+<section><title>Other Ways To Copy Loops</title>
+
+<p>While setting the <i>Empty Loop Action</i> parameter is a
+convenient way to create synchronized loops, there are other
+ways to accomplish the same thing.  When you set the <i>Switch Quantize</i>
+parameter and use one of the loop switching functions, you will see
+<i>Switch Quantize</i> displayed as the mode in the user interface.   Older
+users of the EDP sometimes refer to this as the "lame duck period".</p>
+
+<p>While you are in <i>Switch Quantize</i> mode you may trigger other
+functions that will "stack" and be executed immediately after the loop
+switch.  Some stacked functions behave normally, <i>Reverse</i> for
+example is just delayed until after the switch, then you will immediately
+change direction.  A few functions however have special meaning when they
+are used during <i>Switch Quantize</i> mode:</p>
+
+<ul>
+<li><b>Record</b> - perform an unconditional <i>Record</i> even if the loop
+is not empty</li>
+<li><b>Overdub</b> - perform a <i>Sound Copy</i> and enter <i>Overdub</i> mode</li>
+<li><b>Multiply</b> - perform a <i>Sound Copy</i></li>
+<li><b>Stutter</b> - perform a <i>Sound Copy</i></li>
+<li><b>Insert</b> - perform a <i>Time Copy</i></li>
+</ul>
+
+<p>Note that the <i>Sound Copy</i> or <i>Time Copy</i> will always
+happen, even if the next loop is not empty.  If <i>Overdub</i> is used
+you will always end up in <i>Overdub</i> mode.  If the <i>Multiply</i>
+or <i>Stutter</i> is used the ending mode will be determined by
+the <i>Sound Copy Mode</i> parameter.  If <i>Insert</i> is used the
+ending mode will be determined by the <i>Time Copy Mode</i>
+parameter.</p>
+
+<p><b>NOTE:</b> This is behavior carried over from the EDP.  It is
+likely to be replaced in a later release with a more flexible way to
+specify how functions stacked during <i>Switch Quantize</i> mode behave.</p>
+
+</section> <!-- Other Ways To Copy Loops -->
+
+</section> <!-- Loop Copy -->
+
+<section><title>Track Copy</title>
+
+<p>In the previous section we discussed ways to create synchronized
+loops by coping one loop into another within the same track.
+Similar techniques exist for copying loops from one track to another
+track which can then play at the same time.  We refer to this technique
+as <i>track copy</i> but note that the term is a bit misleading.  When we
+say <i>track copy</i> it sounds like that might mean copying the entire 
+contents of one track into another.  But what this actually
+means is copying a single loop from one track into a single loop
+of a different track.</p>
+
+<section><title>Empty Track Action</title>
+
+<p><i>Empty Track Action</i> is a preset parameter that can cause
+the loop playing in the active track to be immediately copied
+to an empty loop in a different track when that track is selected.</p>
+
+<image src='images/synchronization-preset-empty-track-action.gif'
+  caption='Empty Track Action'/>
+
+<p>We first need to clarify what "empty track" means.  Tracks contain
+some number of loops, but only one of these loops can be selected for
+playing or recording.  An empty track is one whose selected loop is
+<ref id='emptyclear'>empty</ref>.
+The track may contain other loops that are not empty, but if
+the selected loop is empty, then the track is considered to be
+empty.</p>
+
+<p>To use the <i>Empty Track Action</i> parameter you must select an
+empty track.  This can be done in several ways:</p>
+
+<ul>
+<li>Clicking the mouse over a track in the user interface</li>
+<li>Using the left or right arrow keys to select the track to the left or
+right of the current track</li>
+<li>Executing one of the track selection functions: <i>Next Track</i>,
+<i>Previous Track</i>, or <i>Track X</i></li>
+</ul>
+
+<p>If you are familiar with Mobius scripting note that the <b>for</b>
+statement does <b>not</b> select tracks.  This means you can use
+the <i>for</i> statement to manage tracks without activating
+the <i>Empty Track Action</i>.</p>
+
+<p>It is important to note that selecting a track will never be
+quantized, it always happens immediately.  Quantization is important
+when you switch loops since you will be changing what is heard, but
+when you select tracks, you continue to hear what is playing in the
+original track so it doesn't matter as much when the change happens.</p>
+
+<section><title>Empty Track Action = Copy Sound</title>
+
+<p>When <i>Empty Track Action</i> is set to <i>Copy Sound</i> and you select
+an empty track, the current loop in the current track will be
+instantly copied to the empty loop in the new track.  This is
+a <i>Sound Copy</i> which means that all of the audio content will be
+copied.  This is a relatively unusual option to use for track
+synchronization since it will change what you hear.  To the audience
+it will sound like the loop you are copying from suddenly became
+twice as loud since you are now playing two copies the same loop.</p>
+
+<p>This mode is usually used only in scripts where in addition to the
+sound copy you can immediately take other actions like muting the
+source track, changing the playback speed or direction, or altering the
+copy with a function like <i>Shuffle</i>.  The overall volume level
+may still increase, but the resulting sound will be more interesting
+than simply making it louder.</p>
+
+<p>When you first switch to a copied loop, you will be placed in a mode
+defined by the <i>Sound Copy Mode</i> preset parameter.  The possible
+values are: <i>Play</i>, <i>Overdub</i>, <i>Mulitply</i>, and <i>Insert</i>.
+The default value is <i>Play</i>.</p>
+
+<p>See <ref>Empty Loop Action = Copy Sound</ref> for more information on
+using <i>Sound Copy Mode</i></p>
+
+</section> <!-- Empty Track Action = Copy  Sound -->
+
+<section><title>Empty Track Action = Copy Timing</title>
+
+<p>When <i>Empty Track Action</i> is set to <i>Copy Timing</i> and you
+switch to an empty track, a new <ref id='emptyclear'>clear</ref> loop will be instantly
+created that is exactly the same size as the source loop and will have
+the same number of cycles.  A <i>clear</i> loop has a size and it can be
+played and modified, but it starts without any audio content.</p>
+
+<p>This is the most common value to use with the <i>Empty Track
+Action</i> parameter because it will not immediately change what is
+being heard.  The new clear loop will begin playing but the audience
+will not hear any change until you begin modifying the new loop.</p>
+
+<p>When you first switch to a copied loop, you will be placed in a mode
+defined by the <i>Time Copy Mode</i> preset parameter.  The possible
+values are: <i>Play</i>, <i>Overdub</i>, <i>Mulitply</i>, and <i>Insert</i>.
+The default value is <i>Play</i>.  The most common alternative is
+<i>Overdub</i>.</p>
+
+<p>See <ref>Empty Loop Action = Copy Timing</ref> for more information on
+using <i>Time Copy Mode</i></p>
+
+</section> <!-- Empty Track Action = Copy Timing -->
+
+</section> <!-- Empty Track Action -->
+
+<section><title>Track Copy Functions</title>
+
+<p>You can also accomplish sound or timing copies by executing functions.
+The copy happens immediately when the function is executed.  There 
+are two functions <i>Track Copy</i> and <i>Track Copy Timing</i>.</p>
+
+<p>The <i>Track Copy</i> function will copy the sound
+the loop playing in the track to the left of the active track into the 
+active track.  The contents of the loop in the active track will
+be lost and replaced with the copy.  If the active track is track number 1,
+then the copy is taken from the highest numbered track (which is 8 unless you have changed it).  The effect is similar
+to <ref>Empty Track Action = Copy Sound</ref> except that the active track
+doesn't have to be empty.</p>
+
+<p>The <i>Track Copy Timing</i> function will copy the length of the loop
+playing in the track to the left but not the sound.  The new loop is 
+<ref id='emptyclear'>clear</ref> which means that has a length and can
+be played but it starts with no audible content.  The effect is similar
+to <ref>Empty Track Action = Copy Timing</ref> except that the active
+track doesn't have to be empty.</p>
+
+</section <!-- Track Copy Timing Function -->
+
+</section> <!-- Track Copy -->
+
+<section><title>Synchronization Parameters</title>
+
+<p>In the remainder of this document we will discuss various forms
+of <i>synchronized recording</i>.  There are several parameters that
+can be used to control these forms of synchronization, all are defined
+in the <i>Track Setup</i>.  See
+<a href='exploring.htm#Track Setups'>Track Setups</a> in the 
+<i>Exploring Mobius</i> manual for more information about creating 
+track setups.</p>
+
+<p>Bring up the <i>Track Setup</i> configuration window and select
+the <i>Synchronization</i> tab.</p>
+
+<img alt='Graphic' src='images/exploring-setup-sync.gif'/>
+
+<p>Most of the parameters under the <i>Synchronization</i> tab
+apply to all tracks.  For example when you set <i>Realign Time</i>
+the same realign time will be used for all tracks.  Two of the
+parameters however can be overridden so that each track may have
+a different value.  The two parameters are <i>Sync Source</i>
+and <i>Track Sync Unit</i>.</p>
+
+<section><title>Sync Source</title>
+
+<p>Each track may have a <i>Sync Source</i> which defines how the
+track will be synchronized.  Often you will want all 
+tracks to have the same sync source, but sometimes you may have
+tracks that need a different synchronization style.  The
+default sync source for all tracks is set in the <i>Default Sync Source</i>
+field under the <i>Synchronization</i> tab.</p>
+
+<img alt='Graphic' src='images/synchronization-setup-default.gif'/>
+
+<p>The possible values are:</p>
+
+<ul>
+<li><b>None</b> - The tracks are not synchronized</li>
+<li><b>Track</b> - The tracks synchronize with a master track</li>
+<li><b>Out</b> - A master track sends MIDI clocks out, non-master tracks sync with the master track</li>
+<li><b>Host</b> - The tracks synchronize with the plugin host</li>
+<li><b>MIDI</b> - The tracks synchronize with an incoming MIDI clock</li>
+</ul>
+
+<p>The value selected here will be used by all tracks unless they
+override it.  To override the <i>Default Sync Source</i> parameter
+select the track under the <i>Tracks</i> tab and set the <i>Sync Source</i>
+field.</p>
+
+<img alt='Graphic' src='images/synchronization-setup-default2.gif'/>
+
+<p>In the previous example the default sync source was <i>MIDI</i> 
+and track 1 has the sync source set to <i>Default</i>.  This means
+that track 1 and all other tracks with sync source <i>Default</i>
+will be using sync source <i>MIDI</i>.  This is the easiest way to make
+all tracks use the same sync source.  Have all tracks set their
+sync source to <i>Default</i> then you can just change the one 
+parameter <i>Default Sync Source</i> to set the sync source for all tracks.</p>
+x`
+<p>Occasionally though you may want tracks that use different sync sources.
+For example most tracks would use <i>MIDI</i> to sync with an external 
+drum machine but one track is used for arrhythmic drones and should not
+sync to MIDI clocks.  To override the sync source in selected tracks set the
+<i>Sync Source</i> parameter to something other than <i>Default</i>.</p>
+
+<img alt='Graphic' src='images/synchronization-setup-override.gif'/>
+
+<p>In the previous example track 8 has <i>Sync Source</i> set to <i>None</i>
+which will disable the default MIDI sync source.</p>
+
+</section> <!-- Sync Source -->
+
+</section> <!-- Synchronization Parameters -->
+
+<section><title>Track Sync</title>
+
+<p>The simplest way to create synchronized tracks is to set
+the <ref>Sync Source</ref> parameter to <i>Track</i>.  When this is enabled, 
+the <i>Record</i> function will be quantized so that it aligns with divisions
+of a loop playing in another track.  Unlike using <i>Empty Track Action</i> the
+new loop may be smaller or larger than the other loop.  But because the loops
+will both be multiples of a common factor (such as a beat or measure), 
+they will play in sync.</p>
+
+<image src='images/synchronization-setup-sync-source.gif'
+  caption='Sync Source Track'/>
+
+<section><title>Track Sync Master</title>
+
+<p>To use track sync, you first record a track freely without synchronization.
+The first track recorded becomes the <i>track sync master</i> and
+you will see the words "Track Master" appear above the loop meter.  Once
+the track sync master has been set, other tracks that are recorded will
+be forced to have a size that is exactly related to the master track.  If
+the master track is reset, the next available track to the right that is
+not empty is chosen as the new master.</p>
+
+</section> <!-- Track Sync Master -->
+
+<section><title>Track Sync Unit</title>
+
+<p>When enabling track sync, you also must set the <i>Track Sync Unit</i>
+setup parameter which has these values:
+<i>Subcycle</i>, <i>Cycle</i>, and <i>Loop</i>.  This is one of the
+synchronization parameters that may be set differently for
+each track.  The default unit is set with the <i>Default Track Sync Unit</i>
+parameter under the <i>Synchronization</i> tab of the track setup window.
+Unless you override this the parameter will be used for all tracks.</p>
+
+<image src='images/synchronization-setup-track-unit.gif'
+  caption='Default Track Sync Unit'/>
+
+<p>To override this value for some tracks, set the <i>Track Sync Unit</i>
+parameter under the <i>Tracks</i> tab.</p>
+
+<image src='images/synchronization-setup-track-unit-override.gif'
+  caption='Track Sync Unit Override'/>
+
+<p>The default is <i>Loop</i>.  In this example we have overridden this
+in track 1 to be <i>Subcycle</i>.</p>
+
+<p>When the track sync unit is <i>Loop</i> the starting and ending of
+a recording will be aligned with the loop start point of the master track.
+Setting this parameter to <i>Cycle</i> or <i>Subcycle</i> allows you to record
+synchronized tracks that are shorter than the master track but will still play
+in sync.</p>
+
+</section> <!-- Track Sync Unit -->
+
+<section><title>Track Sync Example</title>
+
+<p>To experiment with track sync, open the preset window, select the
+<i>Synchronization</i> tab and make sure <i>Empty Track Action</i>
+is set to <i>None</i>.  Then open the track setup window, select
+the <i>Synchronization</i> tab, and make sure that <i>Default Sync Source</i>
+is set to <i>Track</i> and <i>Default Track Sync Unit</i> set to <i>Loop</i>.
+Then select the <i>Tracks</i> tab and make sure
+that the track you want to use has both <i>Sync Source</i> and
+<i>Track Sync Unit</i> set to <i>Default</i>.</p>
+
+<p>Now record a loop in the <i>master track</i>.  Any track can be
+the master track, it is simply the first one you record a loop into.
+The word <b>Track Master</b> will be displayed in
+the <a href='starting.htm#Sync Status'>Sync Status</a> area near the
+center of the Mobius window.  The loop playing in the master track
+is called the <i>master loop</i>.  Make the loop at least a few seconds
+long so you can experiment with <i>Track Sync Unit</i> values.</p>
+
+<p>Now select an empty loop in another track.  Wait until the master
+loop is near its midpoint and press <i>Record</i>.  You should
+see the word <i>Synchronize</i> displayed as the mode in the Mobius
+window.  This means that Mobius is waiting until the master loop
+reaches an interesting synchronization point before beginning the
+recording.  In this case we have set <i>Track Sync Unit</i>
+to <i>Loop</i> so Mobius will begin recording exactly when the master
+loop reaches its start point.</p>
+
+<p>Wait for the recording to start, then press the <i>Record</i>
+button again.  You will see the words <b>Record Stop</b> with a white
+triangle pointing to the right underneath the loop meter.  This is
+an <i>event marker</i> that indicates when something will happen as
+the loop advances.</p>
+
+<img alt='Graphic' src='images/synchronization-tracksync.gif'/>
+
+<p>Normally event markers have a triangle pointing up at the exact
+location within the loop where the event will happen.  When the
+triangle is on the right edge of the loop meter pointing to the right
+it means that the event will happen at an unknown time in the future,
+in this case when the master track reaches its start point.  When that
+happens the recording stops, the event marker is removed, and the new
+loop enters <i>Play</i> mode.  The new loop will have the same
+number of cycles as the master loop.</p>
+
+<p>By setting <i>Track Sync Unit</i> to <i>Cycle</i>
+or <i>Subcycle</i> you can create loops that are not an exact multiple
+of the master loop length.  Recording will begin and end whenever the
+master loop reaches a cycle or subcycle boundary.  If the master loop
+only has one cycle, the <i>Cycle</i> sync unit will behave the same as
+the <i>Loop</i> sync unit.</p>
+
+<p>To experiment with this set <i>Default Track Sync Unit</i>
+to <i>Subcycle</i> and set the <i>Subcycles</i> preset parameter to 4.
+Record a master loop that represents one measure of music in 4/4 time.
+Now each subcycle will represent one quarter note "beat" in the master
+loop.  Select an empty loop in another track, wait until the master
+loop is almost at its start point and press <i>Record</i>.  The new
+track will enter <i>Synchronize</i> mode for a moment then begin
+recording when the master loop reaches its start point which is also
+the start of the first subcycle.  Let the recording proceed for 6
+beats then press <i>Record</i> again slightly after the beginning of
+the 6th beat.  A <i>Record Stop</i> event will appear and the
+recording will be rounded up to the end of the 6th beat.  The
+resulting loop will be two beats longer than the master loop but its
+size is still a multiple of the same beat length.  It will go in an
+out of phase with the master loop but will always stay in sync.  This
+can be used to create interesting polyrhythms.</p>
+
+<p>When you record a synced loop, we try to keep the same cycle length
+as the master loop.  If <i>Track Sync Unit</i> is set to <i>Loop</i>
+or <i>Cycle</i> the cycle length in the synced track will always be
+the same as the cycle length in the master track.  Every time the
+master track reaches a cycle boundary, the cycle count in the synced
+loop is increased.  This is another way to create loops with several
+cycles.</p>
+
+<p>When <i>Track Sync Unit</i> is set to <i>Subcycle</i> we may not be
+able to keep the same cycle length.  If the number of subcycles
+you record is an even multiple of the <i>Subcycles</i> parameter then
+we can keep the same cycle length.  For example if
+the <i>Subcycles</i> parameter is 4 and you record 12 subcycles of the
+master loop, the synced loop will have 3 cycles since 12 divides
+evenly by 4.  But if you had recorded 10 subcycles or any other number
+that can't be divided evenly by 4 we cannot maintain the same cycle
+length.  In these cases the synced loop will have only one cycle.</p>
+
+</section> <!-- Track Sync Example -->
+
+<section><title>Changing the Track Sync Master Track</title>
+
+<p>Normally once a track becomes the track sync master it will
+continue to be the master for the entire performance.  In some special
+cases though you may want to make a different track the master.  This
+can be accomplished in two ways: using the <i>Sync Master Track</i>
+function or the <i>Reset</i> function.</p>
+
+<p>The <i>Sync Master Track</i> function will make the currently
+selected track the new track sync master.  This is the most flexible
+way to select a sync master track.</p>
+
+<p>If you use the <i>Reset</i> function to reset the current track
+sync master, Mobius will automatically select a new sync master. 
+It will select the first track to the right of the old master track
+that has a non-empty loop.</p>
+
+</section> <!-- Changing the Track Sync Master -->
+
+</section> <!-- Track Sync -->
+
+<section><title>Host Sync</title>
+
+<p><i>Host Sync</i> can be used to record Mobius
+loops that are in sync with something being played by the plugin host
+application.  Typically this is used when you want the host to play
+pre-recorded background tracks or drum patterns that are then combined
+with Mobius loops created in real-time.  This option is only available
+when Mobius is running as a plugin in a host that supports the concept
+of a "transport".  Transports usually have buttons like "start",
+"stop", and "pause", they have a place where you can enter a tempo and
+a time signature, and while they are running they count off beats and
+bars.  All hosts do this differently.</p>
+
+<p><b>NOTE:</b> Mobius currently does not support host sync in
+the Audio Units plugin, host sync is only available in the VST plugin.
+This will be fixed soon.</p>
+
+<p>When the host transport is running, it will notify the plugins
+whenever a the start of a beat or bar is reached.  Mobius calls these
+notifications "pulses".  If the transport is not running, Mobius will
+not be receiving any pulses and it will not be able to record loops.
+You may need to manually click a "start" button to get the transport
+started.</p>
+
+<p>To use host sync, set the <ref>Sync Source</ref> parameter 
+to <i>Host</i>, then set the parameter <i>MIDI/Host Sync Unit</i> to either
+<i>Beat</i> or <i>Bar</i>.</p>
+
+<image src='images/synchronization-setup-host.gif'
+  caption='Sync Source Host'/>
+
+<p>The <i>Record</i> function will now be
+quantized so that it starts exactly on a beat or bar pulse from the plugin host.
+This is a bit like using <ref>Track Sync</ref> with
+<i>Default Track Sync Unit</i> set to <i>Cycle</i> or <i>Subcycle</i>.  
+You can record loops that are exact multiples of the host bar length, 
+or you can record loops with an odd number of beats so that the loop goes 
+in and out of phase with the host.  Most people set <i>MIDI/Host Sync Unit</i>
+to <i>Bar</i>.</p>
+
+<p>The procedure for creating a host synced loop is usually this:</p>
+
+<ol>
+<li>Create an audio or MIDI track in the host application</li>
+<li>Start the host transport, the host track begins to play</li>
+<li>In Mobius, use the <i>Record</i> function, recording will be quantized
+to the next beat or bar of the host transport</li>
+<li>After the desired amount of loop has been recorded, use the
+<i>Record</i>
+function again, the end of the recording if rounded up to the next host beat
+or bar</li>
+</ol>
+
+<p>There are several important points here.  First because the start
+and ending of the recording are being quantized, you need press the
+button ahead of the beat/bar.  If you press the record button right
+when you hear the beat/bar in the backing track, you may actually be a
+little bit late which means that recording will be
+delayed until the <i>next</i> beat/bar.  This may take some practice.
+Always press early, if you try to land right on the beat it will often
+be too late.</p>
+
+<p>Another important point is that the track in the host application
+will be playing and is normally audible before you ever get around to
+doing anything with Mobius.  Occasionally though you may want the host
+track and the Mobius loop recording to start at exactly the same time.
+To do that you have to "arm" Mobius for recording before you start the
+host's transport.  With the transport in the "stop" state, select the
+loop you want to record and execute the <i>Record</i> function, Mobius
+will enter <i>Synchronize</i> mode waiting for a pulse from the host.
+When you are ready click the "start" button in the host transport, the
+host tracks will begin playing, Mobius will receive a beat/bar pulse
+and will begin recording.</p>
+
+<p>Once Mobius loops have been created it will constantly monitor the
+pulses coming from the host application to check for <i>drift</i>.
+If we notice that the Mobius loop has drifted away from the host
+pulses we will make an instant adjustment to the playback position to
+bring it back into alignment.  For example, if a host synced loop was
+recorded with 4 bar pulses, every time we receive 4 pulses we check
+the Mobius loop position and expect it to be at its start point. If
+instead the loop is a little before or after the start point this may
+indicate that drift has occurred.  If this keeps getting worse we make
+a drift correction.  Usually this is not a problem for host sync
+unless the host is doing a bad job sending beat/bar pulses.  What can
+cause problems though is changing the host transport
+tempo <i>after</i> the Mobius loop has been recorded.  We will start
+seeing beat/bar pulses come in at a different rate, they will never
+match the loop playback position and we will keep jumping around
+trying to bring the Mobius loop back in sync with the transport.  This
+can be done on purpose to achieve a "glitchy" effect but it is usually
+not what you want.  Once you have recorded host synced loops in Mobius
+you should never change the host transport tempo.</p>
+
+<p>See the section <ref>Drift Correction</ref> for more information
+on how we compensate for drift.</p>
+
+<section><title>Synchronizing Stop</title>
+
+<p>It is important to note that Mobius does not respond when you stop
+the host transport.  It will continue merrily along playing loops
+while the host tracks become silent.  This will be addressed in a
+future release, but until then if you want to stop the host tracks and
+the Mobius loops at the same time you will need to use one of
+the following techniques.</p>
+
+<p>The easiest thing may be to simply arrange your performance so that
+you don't have to stop both the host and Mobius tracks at the same time.
+First do a <i>Global Reset</i> or <i>Global Pause</i> in Mobius to
+make it silent, then let the host backing tracks play a little, maybe
+with a fade out, then stop the host transport.  Or stop the host
+transport first and let the Mobius loops play a little longer, maybe
+using feedback or a fade script to let the loops decay gradually.</p>
+
+<p>If it is important that you silence the host tracks and the Mobius
+tracks at exactly the same time, one of these techniques must be used.</p>
+
+<ul>
+<li>Program the host and Mobius so that they respond to the same MIDI
+message</li>
+<li>Program the MIDI controller so that it sends two messages, one for the
+host and the other for Mobius</li>
+<li>Execute a Mobius script that stops the host transport using a MIDI
+"loopback" device</li>
+</ul>
+
+<p>Unfortunately, none of these are very easy to set up.  In the first
+case you would select a MIDI message like <i>NOTE 32</i> and program the
+host so that it stops the transport when it receives this note, then
+in Mobius bind this note to the <i>Global Pause</i> function.  The
+problem with this approach is that most hosts will not pass MIDI
+messages to the plugins if they use them for their own control.  The
+host might pass <i>NOTE 33</i> but it knows that <i>NOTE 32</i> is used
+to stop its own transport and assumes that the plugins will not be
+interested in the note.</p>
+
+<p>The problem with hosts not passing MIDI messages can be avoided if
+you have a MIDI controller that is capable of sending different MIDI
+messages for the same button.  Program the device to send one message
+like <i>NOTE 32</i> to stop the host transport and <i>NOTE 33</i> to
+do a <i>Global Pause</i> in Mobius.  As long as the note numbers are
+different, the host will pass the ones it doesn't use to the plugins.
+Unfortunately not many inexpensive MIDI controllers can send multiple
+notes from the same button.  It may be possible however to simply
+press two buttons at nearly the same time.  Either the host or Mobius
+may stop a few milliseconds before the other, but it may not be
+noticeable.</p>
+
+<p>The final option is the most complex but also the most flexible.
+Here, you bind a MIDI message to run a Mobius script.  The script
+first does a <i>GlobalPause</i> to silence Mobius, then it uses
+the <i>MidiOut</i> script function to send a MIDI message to the MIDI
+device configured in the <i>Plugin Output Devices</i> panel of the
+<i>MIDI Control</i> window.  The device selected must be a "loopback"
+device such as <i>MIDI Yoke</i> (available only on Windows).  The plugin
+host then opens this same MIDI loopback device to receive its control
+messages.  To the host it looks like Mobius is just another footswitch
+sending MIDI messages.  Program the Mobius script so that it sends the
+MIDI message the host will recognize to stop the transport.  Now by pressing
+one switch on the MIDI controller, both Mobius and the Host will stop
+at the same time.  Note though that you don't have to just stop
+the host transport, the script can make the host do anything that is
+controllable with MIDI messages such as gradually decreasing the levels
+of the host tracks for a fade out effect.</p>
+
+<p>See the <ref>Controlling Plugin Host Tempo</ref> section
+for more information on using loopback devices.</p>
+
+</section> <!-- Synchronizing Stop -->
+
+<section><title id='hostSyncRecomendations'>Recommended Track Configurations</title>
+
+<p>There are two recommended track configurations for <i>Host Sync</i>.
+The simplest is to have all tracks set <ref>Sync Source</ref> to <i>Host</i>
+and <i>MIDI/Host Sync Unit</i> to <i>Bar</i>.  All tracks will follow bar 
+pulses from the host.</p>
+
+<p>The second configuration is to have one track use <i>Sync Source = Host</i>
+and record that first so that it becomes the track sync master track.
+Then have all other tracks use <i>Sync Source = Track</i>.  Then you will have
+only one track that needs to follow the host and the others will follow
+the Mobius master track.</p>
+
+<p>The differences between the two approaches are subtle.  We
+recommend that new users use the first approach and have all tracks
+use <i>Sync Source = Host</i>.  The main reason to use the second approach
+is to have more control over the granularity of the synchronization points.
+For example you can record synced loops that are fractions of the size
+of a host beat by setting <i>Track Sync Unit = Subcycle</i> and setting
+<i>Subcycles</i> to a large value.  Or you can record synced loops that
+are many host bars in length by setting <i>Track Sync Unit = Loop</i>.</p>
+
+<p>Since each track can have a different <i>Sync Source</i> it is possible for
+tracks to use a combination of <ref>Host Sync</ref>,
+<ref>MIDI Master Sync</ref> and <ref>MIDI Slave Sync</ref> at the same time.
+We are aware of no practical reason to do this, unless you know exactly why you
+are doing this it is strongly not recommended.</p>
+
+</section> <!-- Recommended Track Configurations -->
+
+</section> <!-- Host Sync -->
+
+<section><title>MIDI Slave Sync</title>
+
+<p><i>MIDI Slave Sync</i> can be used to create loops that stay in
+sync with another device that generates MIDI "beat clocks".  Usually
+this will be a hardware drum machine or sequencer but it could also be
+another software applications that send MIDI clocks.  In this manual
+we will refer to this as a "drum machine" though it can be any
+hardware or software that generates MIDI beat clocks.</p>
+
+<p>When using MIDI Slave Sync, Mobius receives a stream of MIDI clock
+messages and identifies which clocks represent "beats" and "bars".  When you
+record loops, the start and end of the recording will be quantized to
+either a beat or bar boundary.  This is similar to using <ref>Host Sync</ref> 
+except the beats and bars are defined by an external
+hardware device or another application.  This type of synchronization
+is usually not as accurate as <ref>Host Sync</ref> so you may
+experience <ref>Drift Correction</ref> more often.</p>
+
+<p>MIDI Slave Sync is almost never used if you are running
+Mobius as a plugin.  In that case it is usually better to
+use <ref>Host Sync</ref> instead.</p>
+
+<p><b>NOTE:</b> MIDI "beat clock" is not the same thing as "MIDI Time Code".
+Mobius does not support MIDI Time Code, it only recognizes the simple
+beat clock messages: <i>Start</i>, <i>Stop</i>, <i>Continue</i>,
+and <i>Clock</i>.</p>
+
+<section><title>Configuring MIDI Devices for Slave Sync</title>
+
+<p>To use MIDI Slave Sync you will need to arrange to have MIDI beat
+clock messages from the drum machine routed into Mobius.  If you are
+running Mobius standalone there is only one way to do this.  Open
+the <i>MIDI Devices</i> configuration window and select the MIDI
+device connected to the drum machine in the panel labeled <i>Input
+Devices</i> on the left side.  You can select more than one device in
+this panel, but only one of them should be connected to something that
+sends MIDI beat clock.</p>
+
+<p>As mentioned earlier it is almost never necessary to use MIDI Slave
+Sync when running Mobius as a plugin.  Instead you usually use
+<ref>Host Sync</ref> mode and let the host control the tempo.  There
+are however a few cases where you may need to use MIDI Slave Sync
+with the plugin:</p>
+
+<ul>
+<li>The host application does not support VST synchronization or does not
+have a "transport".</li>
+<li>A hardware device such as a drum machine is to be the sync master for
+both the host application and Mobius.</li>
+</ul>
+
+<p>In these cases you can get MIDI beat clock into Mobius in two ways:</p>
+
+<ul>
+<li>Let the host open the MIDI device and route MIDI beat clock
+messages into Mobius through the VST interface</li>
+<li>Let Mobius open a private MIDI device and receive MIDI beat clock
+directly from the device</li>
+</ul>
+
+<p>For normal Mobius control, we always recommend the first approach,
+letting the host open the MIDI device.  This prevents conflicts that
+can happen when Mobius and the host attempt to open the same
+devices.  Unfortunately this usually does not work very well for
+MIDI Slave Sync.  Hosts usually add a significant amount of timing
+jitter to MIDI clock messages.  This can make it difficult for Mobius to
+correctly calculate the size of synchronized loops which will cause
+them to drift out of sync more rapidly.</p>
+
+<p>If you seem to be doing <ref>Drift Correction</ref> too often you
+may need to take the second approach and have Mobius open its own
+private connection to a MIDI device.  This will result in a smoother
+stream of clock pulses and more accurate loop lengths.  To do this
+open the <i>MIDI Devices</i> configuration window and select the MIDI
+device connected to the drum machine in the panel labeled
+<i>Plugin Input Devices</i> on the right side.</p>
+
+<p>The problem with letting Mobius open a private MIDI device when
+running as a plugin is that the host often tries to open the same
+device.  Sometimes this is unavoidable, the host will simply open
+every available device and not let you choose which ones you actually
+need.  Sometimes there will be a preferences window where you can
+select the devices to open.  If at all possible, try to make the host
+open MIDI devices that are different than the devices Mobius uses.
+If Mobius and the host try to open the same device there can be
+conflicts that in some cases can lead to crashes, usually when you
+delete the Mobius plugin.</p>
+
+<p>Whether this will work or not depends on your host and the MIDI
+device drivers.  You will simply have to try it to see if it works.
+If you are unable to specify exactly which MIDI devices the host will
+open and you have crashes deleting the Mobius plugin then you will
+probably need to use a different host.  If this happens please contact
+us so we can see if there is something we can do to make Mobius behave
+better in that host.</p>
+
+</section> <!-- MIDI Devices for Slave Sync -->
+
+<section><title id='MidiSlaveSyncMode'>Configuring the MIDI Sync Source</title>
+
+<p>After configuring a MIDI device from which we can receive beat
+clock messages, locate the <i>Default Sync Source</i> setup parameter and set
+it to <i>MIDI</i>.  Then set <i>MIDI/Host Sync Unit</i> to either <i>Beat</i>
+or <i>Bar</i>.  The <i>Record</i> function will then be quantized and
+executed exactly on the MIDI clock at the start of the next beat or bar.
+Finally set the <i>Beats Per Bar</i> parameter to the number of beats
+in one bar.</p>
+
+<image src='images/synchronization-setup-midi.gif'
+  caption='Sync Source MIDI'/>
+
+<p>Determining when the next MIDI beat occurs is relatively easy.  The
+MIDI specification says that there will be 24 <i>Clock</i> messages in
+every beat, so Mobius simply counts clocks.  Every time 24 clocks are
+received, Mobius generates a <i>beat pulse</i> for synchronization.
+Note that for this to work it is important that the device that is
+generating clocks also sends a MIDI <i>Start</i> message when it has
+begun playing.  Mobius will see the <i>Start</i> message and reset the
+clock counter so the beats in the drum machine and the beat pulses
+inside Mobius will be aligned.  If <i>Start</i> is not sent Mobius
+can't tell if a clock is at the beginning, middle, or end of a beat.
+It will generate beat pulses at the correct tempo but the timing of
+the beats may not align with the drum machine.</p>
+
+<p>Determining when the next MIDI bar occurs is more complicated
+because MIDI does not have a way to say what the time signature is or
+where bars are located.  Instead you define the length of a MIDI bar
+using one of two Mobius parameters: <i>Beats Per Bar</i>
+or <i>Subcycles</i>.  <i>Beats Per Bar</i> is found under the
+<i>Synchronziation</i> tab of the track setup window as shown in 
+the previous capture.</p>
+
+<p>If <i>Beats Per Bar</i> is set to a value other than zero, 
+that will be the number of beats in one bar.  If <i>Beats Per Bar</i>
+is empty or zero, the number of bar beats is determined by the value
+of the <i>Subcycles</i> preset parameter.  It is recommended that you set the
+<i>Beats Per Bar</i> parameter so that you can use <i>Subcycles</i>
+for quantization that is not dependent on the size of a bar.  For
+example you may set <i>Beats Per Bar</i> to 4 if you are using 4/4 time
+but have <i>Subcycles</i> set to 8 so the smallest quantization
+unit is an eighth note.</p>
+
+<!-- confusing and unnecessary
+<p>Each time Mobius generates a beat pulse, it increments another
+counter that counts the beats in the bar.  When this counter reaches
+the value of <i>Beats Per Bar</i> Mobius generates a <i>bar
+pulse</i> for synchronization.</p>
+-->
+
+</section> <!-- Configuring MIDI Sync -->
+
+<section><title>Using MIDI Slave Sync</title>
+
+<p>The procedure for creating a MIDI synced loop is usually this:</p>
+
+<ol>
+<li>Start Mobius and have it open a MIDI device for input</li>
+<li>Set Mobius sync source to <i>MIDI</i></li>
+<li>Connect a drum machine to the MIDI device that Mobius is watching</li>
+<li>Start the drum machine, it sends a MIDI <i>Start</i> message and then
+begins sending <i>Clock</i> messages</li>
+<li>The tempo, beat, and bar counters should be visible in the Mobius
+window</li>
+<li>Execute the <i>Record</i> function, the recording will be quantized
+and start on the next MIDI beat or bar</li>
+<li>After the desired amount of loop has been recorded, execute the
+<i>Record</i> function again, the end of the recording if rounded up
+to the next MIDI beat or bar</li>
+</ol>
+
+<p>Like <ref>Host Sync</ref> you need to remember to press
+the <i>Record</i> button ahead of the beat/bar where you want
+recording to begin.  If you try to press the record button right when
+you hear the beat/bar in the drum machine, you may actually be a
+little bit late which means that recording will be delayed until
+the <i>next</i> beat/bar.  Always press early.</p>
+
+<p>Also like <ref>Host Sync</ref> the drum machine will be playing
+and is normally audible before you ever get around to
+doing anything with Mobius.  If you want the drum machine and the Mobius
+loop recording to start at exactly the same time you have to "arm"
+Mobius for recording before starting the drum machine.  To do this
+press <i>Record</i> in Mobius before starting the drum machine.  Mobius
+will enter <i>Synchronize</i> mode waiting for a sync pulse.  Then start
+the drum machine.</p>
+
+<p>Once Mobius loops have been created it will constantly monitor the
+MIDI clocks to check for <i>drift</i>.  If we notice that the Mobius
+loop is drifted away from the MIDI clocks we will make an instant
+adjustment to the playback position to bring it back into alignment.  For
+example, if a MIDI synced loop was recorded over 96 MIDI clocks, every
+time we receive 96 clocks we check the Mobius loop position and expect
+it to be at its start point. If instead the loop is a little before or
+after the start point this may indicate that drift has occurred.  If
+this keeps getting worse we make the drift adjustment.  This is
+frequently a problem with MIDI sync because there can be
+considerable <i>jitter</i> in MIDI clocks that make accurate timing of
+the start and end of the recording difficult.  Even if the clocks were
+just slightly early or late, this can result in the loop being too
+short or too long which will cause noticeable drift after several
+repetitions.</p>
+
+<p>Once MIDI synced loops have been recorded it is important that you
+do not change the tempo of the MIDI clocks.  Mobius will start seeing
+clocks come in at a different rate, they will never match the
+loop playback position and we will keep jumping around trying to bring
+the Mobius loop back in sync with the transport.  This can be done on
+purpose to achieve a "glitchy" effect but it is usually not what you
+want.  Once you have recorded MIDI synced loops in Mobius you should
+never change the tempo of the MIDI clocks.  See the section
+<ref>Drift Correction</ref> for more information on how we
+compensate for drift.</p>
+
+<p>Since Mobius does not respond to the MIDI <i>Stop</i> message, it can
+be difficult getting the drum machine and Mobius to stop at exactly
+the same time.  The simplest thing is to just do a <i>Global Pause</i>
+in Mobius to silence it, let the drum machine continue for a few bars
+then stop it.  See the <ref>Synchronizing Stop</ref> section for some
+other ways to stop Mobius, this was written for <ref>Host Sync</ref>
+but the techniques can be used with MIDI sync as well.</p>
+
+</section> <!-- Using MIDI Slave Sync -->
+
+<section><title id='slaveSyncRecomendations'>Recommended Track Configurations</title>
+
+<p>There are two recommended track configurations for <i>MIDI Slave Sync</i>.
+The simplest is to have all tracks set <ref>Sync Source</ref> to <i>MIDI</i>.
+Tracks will all follow the MIDI clocks and not each other.</p>
+
+<p>The second configuration is to have one track use the <i>MIDI</i>
+sync source and record that first so that it becomes
+the track sync master track.  Then have all other tracks set <ref>Sync Source</ref>
+to <i>Track</i>.  Then you will have only one track that needs to follow MIDI
+clocks and the others will follow the Mobius master track.</p>
+
+<p>The differences between the two approaches are subtle.  We
+recommend that new users use the first approach and have all tracks
+use the MIDI sync source.  Because MIDI clocks are subject to more jitter
+than other sync sources, the second approach can result in tracks that play
+together more reliably over time since only one of them will be
+syncing to the MIDI clock and all the others will have an
+<ref id='Related Sizes'>exact size relationship</ref> with the
+track following the MIDI clocks.</p>
+
+</section> <!-- Recommended Track Configurations -->
+
+</section> <!-- MIDI Slave Sync -->
+
+<section><title>MIDI Master Sync</title>
+
+<p>Most people that synchronize Mobius with external devices use
+<i>MIDI Master Sync</i> for one important reason: you get to control
+the tempo from Mobius, rather than trying to follow a previously set
+tempo.  For example, when using <ref>Host Sync</ref> or 
+<ref>MIDI Slave Sync</ref>, 
+you need to start playing a pre-recorded sequence,
+drum pattern, or click track so you can hear the tempo to follow.  Then
+you record Mobius loops in sync with that tempo.  When you use
+<i>MIDI Master Sync</i> you start by freely recording a loop in Mobius
+in whatever tempo you feel like at that moment.  As soon as the loop
+is recorded, Mobius starts sending out MIDI "beat clocks" that drum
+machines, sequencers, or other devices can lock onto and begin playing
+backing tracks in sync with the Mobius loop.  You make the other devices
+follow your loop tempo rather than the other way around.  In the looping
+community this is commonly called "first loop capability".</p>
+
+<p>If you prefer to have backing tracks that are audible before you
+start creating loops, you can still use <i>MIDI Master Sync</i> to set
+the tempo.  Start by recording a silent Mobius loop just to set the
+tempo of the MIDI clocks.  Then after the slave device starts playing,
+select a different Mobius track and use <ref>Track Sync</ref>
+to record loops that are in sync with the original silent loop.</p>
+
+<p>Note that the MIDI messages that Mobius will send for master
+synchronization are <i>"beat clock"</i> messages: <i>Start</i>,
+<i>Stop</i>, <i>Continue</i>, and <i>Clock</i>.  This is <b>not</b>
+the same thing as <i>"MIDI Time Code"</i>.  If you have a device or
+application that requires <i>MIDI Time Code</i> for slave sync, you
+will not be able to use it with Mobius.</p>
+
+<section><title>Configuring MIDI Devices for Master Sync</title>
+
+<p>To use MIDI Master Sync you will need to select a MIDI output
+device.  Open the <i>MIDI Devices</i> configuration window.  If you
+are running Mobius standalone select a device in the <i>Output
+Device</i> panel, if you are running Mobius as a plugin select a
+device in the <i>Plugin Output Device</i> panel.  You may only
+select one device in each panel.</p>
+
+<p>If you are running Mobius as a plugin this is one of those rare
+circumstances where you must create a private connection directly to a
+MIDI device rather than sending MIDI through the plugin host
+application.  While it is possible for a VST or Audio Unit plugin to
+send MIDI messages to the host and then have the host pass those to a
+MIDI device, Mobius does not do this.  Mobius can only send MIDI beat
+clock messages directly to a MIDI device.  This is because plugin
+hosts almost always introduce timing jitter to the MIDI messages sent
+by plugins.  This isn't always bad for MIDI messages like notes or
+continuous controllers, but it is unacceptable for MIDI clocks.</p>
+
+<p>If you select a <i>Plugin Output Device</i> in Mobius, look at the
+MIDI configuration in your host application and try to make the host
+<b>not</b> select the same device.   There are occasionally problems
+with certain combinations of hosts and MIDI device drivers that can
+cause a crash when you delete the Mobius plugin.  What happens
+is that the host opens a connection to a MIDI device and assumes
+that it has complete control over the device.  Then when the Mobius
+plugin is inserted, Mobius opens another connection to the same device.
+When you delete the Mobius plugin, Mobius thinks it is in control of
+the device and closes the connection.  With some MIDI device drivers, this
+makes the original MIDI connection opened by the host invalid
+and if the host attempts to use it, it may crash.</p>
+
+</section> <!-- Configuring MIDI Devices for Master Sync -->
+
+<section><title>Configuring MIDI Master Sync Source</title>
+
+<p>To select MIDI Master Sync, locate the <i>Default Sync Source</i>
+setup parameter and set it to <i>Out</i>.  Then make sure all
+tracks in the set have their <i>Sync Source</i> parameter set to 
+<i>Default</i>.  Also set <i>Default Track Sync Unit</i> to the
+desired value.</p>
+
+<image src='images/synchronization-setup-out.gif'
+  caption='Sync Source Out'/>
+
+<p>The first track you record a loop into will become the <i>MIDI Sync
+Master</i> track.  A tempo will be calculated based on the loop length
+and a few parameters, a MIDI <i>Start</i> message will be sent to the
+configured MIDI output device followed by a stream of
+MIDI <i>Clock</i> messages at the calculated tempo.  If you have a
+drum machine or sequencer configured to listen to the same MIDI device
+it should begin playing.</p>
+
+<p>Once a track becomes the MIDI sync master, all other tracks that
+have <i>Sync Source</i> set to <i>Out</i> will behave as if they
+were using <ref>Track Sync</ref>.  There can only be one
+master track in control over the MIDI clocks being sent, the other tracks
+will slave to the master track.  This is important so it deserves repeating.
+Setting <i>Sync Source</i> to <i>Out</i> is almost exactly the same as
+setting it to <i>Track</i>.  One track will be designated the master
+and other tracks will sync to the master track.  The primary difference
+between this and <ref>Track Sync</ref> is that the master track will 
+also send out MIDI clocks.</p>
+
+<p>When the <i>MIDI Sync Master</i> track is selected, the word
+<i>Master</i> or less often <i>MIDI Master</i> will be displayed in
+the <a href='starting.htm#Sync Status'>Sync Status</a> component near the
+center of the Mobius window.  <i>Master</i> means that the track
+is functioning as both the <i>MIDI Sync Master</i> track and the 
+<ref>Track Sync Master</ref> track.  This is usually
+what happens.  If you see the words <i>MIDI Master</i> it means that
+the track is functioning only as the <i>MIDI Sync Master</i> track and
+some other track is the <i>Track Sync Master</i>.  Above the
+<i>Sync Status</i> component you will see the word <i>Tempo</i> followed by
+the tempo of the master loop, rounded to one tenth.</p>
+
+<image src='images/starting-sync-status.gif'/>
+
+<p>Once you have recorded the master loop you must be careful about
+changing it.  It is permissible to change the master loop, or even
+record a different loop in the master track, but this may change the
+cycle length of the loop which may in turn change the tempo of the
+generated MIDI clocks.  See the <ref>Adjusting The Tempo</ref> section
+for more information.</p>
+
+<p>A common technique to ensure that the tempo remains consistent is
+to first record a silent loop in the master track and let it run
+forever.  Then use <ref>Track Sync</ref> to record audible content in
+other tracks synced to the master track.</p>
+
+</section> <!-- Configuration Sync Source -->
+
+<section><title id='masterSyncRecomendations'>Recommended Track Configurations</title>
+
+<p>For normal <i>MIDI Master Sync</i> looping, set the
+<i>Default Sync Source</i> to <i>Out</i> and make sure the <i>Sync Source</i>
+parameter for each track is set to <i>Default</i>.  Also set <i>Default Track Sync Unit</i> to your desired unit for syncing tracks when they are not the master track.</p>
+
+<p>Only one track can be the sync master, it will be the first one
+that is recorded and is normally never changed.  Since the other
+tracks cannot be the sync master, they will behave as if the sync source
+was set to <i>Track</i>.</p>
+
+</section> <!-- Recommended MIDI Sync Master -->
+
+<section><title>MIDI Master Sync Parameters</title>
+
+<p>There are several setup parameters that control how MIDI master
+sync behaves.  These are all found on the bottom half of the 
+<i>Synchronization</i> tab in the <i>Track Setups</i> window.  The
+names of these parameters all begin with "Out Sync".  These will
+be discussed in sections below.</p>
+
+<image src='images/synchronization-setup-out-parameters.gif'/>
+
+</section> <!-- MIDI Master Sync Parameters -->
+
+<section><title id='outManualStart'>Out Sync Manual Start</title>
+
+<p>Normally when you use the sync source <i>Out</i>, a MIDI <b>Start</b>
+message is sent immediately after recording the master track to the
+slave device.  Sometimes though you may want to delay starting
+the slave device, possibly to evolve the loop a bit before bringing in
+a background rhythm.  This can be done by checking the 
+<i>Out Sync Manual Start</i> setup parameter.</p>
+
+<p>After finishing the recording of the master track Mobius will calculate
+the clock tempo and begin sending MIDI clocks, but it will not send
+a <i>Start</i> message.  This allows the slave device to begin locking
+onto the MIDI tempo.  When you are ready to start the slave device,
+execute the <i>MIDI Start</i> or <i>Mute MIDI Start</i> functions.</p>
+
+<p>The <i>MIDI Start</i> function will wait for the start point of the
+master loop, then send a MIDI <i>Start</i> message.  There is no way
+to control the quantization, it will always happen at the master
+loop's start point.</p>
+
+<p>The <i>Mute MIDI Start</i> function will immediately mute the
+master loop as if the <i>Mute</i> function had been used, wait for the
+start point, send a MIDI <i>Start</i> message, and at the same time unmute the
+loop.</p>
+
+<p>There is another relatively obscure way to perform <i>MIDI
+Start</i> that was copied from the EDP.  If you are already in
+<i>Mute</i> mode and you use the <i>Multiply</i> function, the
+<i>Multiply</i> function will be converted to the <i>Mute MIDI Start</i>
+function.  For this to work <i>Multiply</i> must be added to the
+<a href='reference.htm#Mute Cancel Functions'>Mute Cancel Functions</a>
+global parameter.</p>
+
+<!-- TODO: I don't like this, consider removing it and making them use a
+script.
+If nothing else we should have a big "EDP Mode" parameter that enables
+all these little obscurities for those that want them. -->
+
+</section> <!-- SyncMode=OutManualStart -->
+
+<section><title>Calculating The Tempo</title>
+
+<p>When a <i>MIDI Sync Master</i> loop has been recorded, the tempo
+of the generated MIDI clocks is calculated with this formula:</p>
+
+<pre>
+   beatsPerMinute = 60 / ((cycleFrames / beatsPerBar) / sampleRate)
+</pre>
+
+<p>Or broken up for clarity:</p>
+
+<pre>
+   framesPerBeat = cycleFrames / beatsPerBar
+   secondsPerBeat = framesPerBeat / sampleRate
+   beatsPerMinute = 60 / secondsPerBeat
+</pre>
+
+<p>The <i>cycleFrames</i> term has the number of frames (pairs of
+stereo samples) in one cycle of the loop.  This is usually the same as
+the number of frames in the entire loop since new loops usually have
+only one cycle.</p>
+
+<p>The <i>beatsPerbar</i> term will be the value of the <i>Beats Per Bar</i>
+setup parameter if it is greater than zero, otherwise
+it will be value of the <i>Subcycles</i> preset parameter.  It is recommended
+that you set <i>Beats Per Bar</i> in the setup so that you can
+use <i>Subcycles</i> for quantization without affecting the MIDI clock
+tempo.  For example a common value for <i>Beats Per Bar</i> is 4
+but you might want <i>Subcycles</i> set to 16 for fine grained
+quantization.</p>
+
+<p>The cycle is assumed to be one bar long so <i>cycleFrames</i>
+divided by <i>beatsPerBar</i> results in <i>framesPerBeat</i>.
+The <i>sampleRate</i> term is the sample rate of the audio device,
+this will usually 44100 (the CD sample rate) or 48000 but other rates
+are possible.  
+<i>framesPerBeat</i> divided by <i>sampleRate</i> results in
+<i>secondsPerBeat</i>. Finally dividing 60 by <i>secondsPerBeat</i>
+results in the base tempo expressed in the most common unit of
+<i>Beats Per Minute</i> (BPM).</p>
+
+<!--
+  Talking about speed shift adjustment here is confusing, and may
+  be wrong.  If I record while speed shifted, I would expect the 
+  tempo to start with what I played.  If OutSyncSpeedAdjust=ChangeTempo
+  then this could mean that the tempo would be immediately normalized after
+  recording, for example record a 120 BPM loop at 1/2 speed, the tempo
+  becomes 60 BPM since that is what it would be if you recorded the
+  loop in normal speed and went to half speed.
+-->
+
+<!-- 
+<p>Next we factor in <i>speed shift</i>.  A speed shift is a non-destructive
+temporary effect that can be applied to a loop to make it sound
+like it is playing faster or slower than normal.  It can be accomplished
+in several ways, see the 
+<a href='techniques.htm#Speed Shifting'>Speed Shifting</a> section for more
+information.   When the <i>MIDI Sync Master</i> loop is being
+speed shifted you can also apply a matching change to the tempo
+of the generated MIDI clocks.  This is controlled by the
+<i>Out Sync Speed Adjust</i> setup parameter.</p>
+
+<p>When <i>Out Sync Speed Adjust</i> is <i>None</i> the MIDI clock tempo
+is not affected by speed shift.  When the parameter is <i>Change
+Tempo</i> the MIDI clock tempo will be adjusted to match the master
+loop playback speed.  The amount of speed shift is represented as a
+floating point number.  1.0 means "normal speed", 0.5 means "half
+speed" and 2.0 means "double speed".  The base tempo calculated above
+is simply multiplied by the speed shift modifier.  For example if the
+calculated base tempo was 120 and the master loop is in half speed,
+120 times .5 is 60 so the rate adjusted tempo would be 60 BPM.</p>
+
+-->
+
+<p>This tempo formula can result in very small or very large tempos which
+are usually undesirable.  To keep the tempo within a usable range, we make
+a final adjustment to the tempo using two setup parameters:
+<i>Out Sync Min Tempo</i> and <i>Out Sync Max Tempo</i>.</p>
+
+<p>First the tempo is divided by 2 until it reaches a value that is
+less than or equal to the value of the <i>Out Sync Max Tempo</i> parameter.
+For example if the tempo was 450 and the <i>Out Sync Max Tempo</i>
+parameter was 200, the adjusted tempo would be 112.5 (450 / 2 = 225 /
+2 = 112.5).</p>
+
+<p>Next the tempo is multiplied by 2 until it reaches a value that is
+greater than or equal to the value of the <i>Out Sync Min Tempo</i>
+parameter.  For example if the tempo was 20 and <i>Out Sync Min Tempo</i>
+was 60, the adjusted tempo will be 80 (20 * 2 = 40 * 2 = 80).</p>
+
+<p>Note that it is possible for the <i>Out Sync Min Tempo</i>
+and <i>Out Sync Max Tempo</i> parameters to be in conflict if the values
+are not far apart.  In this case the <i>Out Sync Min Tempo</i> wins.  For
+example assume <i>Out Sync Max Tempo</i> is 200, <i>Out Sync Min Tempo</i> is
+150, and the base tempo is 450.  We first make the <i>Out Sync Max Tempo</i>
+adjustment which divides it down to 112.5.  Since this is
+below <i>Out Sync Min Tempo</i> it gets multiplied back up to 225.  You will
+never have tempos that are below <i>Out Sync Min Tempo</i> but you may have
+tempos that are above <i>Out Sync Max Tempo</i> if the tempo range isn't
+large enough.</p>
+
+</section> <!-- Calculating the Tempo -->
+
+<section><title>Adjusting The Tempo</title>
+
+<p>Once you have recorded a MIDI Sync Master track there are several
+actions you can make that may disrupt the tempo of the MIDI
+clocks being generated. These include:</p>
+
+<ul>
+<li>Resizing the master loop with functions such as <i>Trim</i> and
+<i>Unrounded
+Multiply</i></li>
+<li>Moving between layers of the master loop with <i>Undo</i> or <i>Redo</i>
+if the layers have different sizes</li>
+<li>Switching between loops in the master track that have different
+sizes</li>
+<li>Changing the speed of the master loop with <i>Speed Shift</i></li>
+</ul>
+
+<p>In these cases, two setup parameters control what will happen
+to the tempo of the generated MIDI clocks:</p>
+
+<ul>
+<li><b>Out Sync Speed Adjust</b> - used when changing the playback speed</li>
+<li><b>Out Sync Resize Adjust</b> - used when the loop changes size</li>
+</ul>
+
+<p>These parameters have may either be set to <b>None</b> which means
+that the current tempo is not changed, or <b>Change Tempo</b> which means
+that the tempo will be recalculated so that it matches the new
+characteristics of the loop.</p>
+
+<section><title>Out Sync Speed Adjust</title>
+
+<p><i>Out Sync Speed Adjust</i> is the most important.  It is used whenever
+the master loop playback speed changes.
+A common looping technique is to change the playback speed of a loop so that it
+either an octave higher or lower and thereby either half as long or
+twice as long.  These changes can be made while keeping the master
+sync tempo at a consistent speed and the drum machine pattern still
+"fits" with the loop.  For example if a drum pattern plays once when
+the loop is at normal speed, it will play twice if the loop is at half
+speed.  But the rhythm of the drum pattern is still usually compatible
+with the rhythm of the loop even though the drum machine is now twice
+as fast.  To accomplish this effect set <i>Out Sync Speed Adjust</i>
+to <i>None</i>.</p>
+
+<p>If you speed shift the master loop at intervals other than an
+octave, the resulting length of the loop will no longer fit within the
+drum machine pattern evenly.  This can be used to create interesting
+polyrhythms.  If you set <i>Out Sync Speed adjust</i> to <i>Change
+Tempo</i> then the drum machine tempo will follow the loop tempo.  One
+use for this technique is to gradually reduce the speed of both the
+master loop and the drum pattern until they practically halt as a way
+to end a performance.</p>
+
+</section> <!-- Out Sync Speed Adjust -->
+
+<section><title>Out Sync Resize Adjust</title>
+
+<p><i>Out Sync Resize Adjust</i> used whenever the loop playing in the
+master track changes size.  This is relatively unusual but it can
+happen when switching loops, using <i>Undo</i> and <i>Redo</i>, or
+after applying some functions to the loop.  If you are creating
+strictly synchronized loops using quantization and time copy, the
+loops and layers will tend be the same size, or a multiple of a common
+factor.  Switching between these loops and layers can be done without
+changing the tempo of the generated clocks.  If however you have been
+using functions like <i>Unrounded Insert</i>, <i>Unrounded Multiply</i>
+and <i>Trim</i> you may have loops and layers that do not have
+compatible sizes.  In those cases if <i>Out Sync Resize Adjust</i> is
+set to <i>Change Tempo</i> a new tempo will be calculated based on the
+size of the new loop.  If this parameter is set to <i>None</i> the
+original sync tempo will be preserved but since the loop is not of a
+related size it will drift in and out of phase with the drum machine
+or sequencer.</p>
+
+</section> <!-- Out Sync Resize Adjust -->
+
+</section> <!-- Adjusting The Tempo -->
+
+<section><title>Changing the MIDI Sync Master Track</title>
+
+<p>Normally once a track becomes the MIDI sync master it will
+continue to be the master for the entire performance.  In some special
+cases though you may want to make a different track the master.  This
+can be accomplished in two ways: using the <i>Sync Master MIDI</i>
+function or the <i>Reset</i> function.</p>
+
+<p>The <i>Sync Master MIDI</i> function will make the currently
+selected track the new MIDI sync master.  This is the most flexible
+way to select a  master track.</p>
+
+<p>If you use the <i>Reset</i> function to reset the current MIDI
+sync master track,  Mobius will automatically select a new master. 
+It will select the first track to the right of the old master track
+that has <i>Sync Source</i> set to <i>Out</i> and  has a non-empty loop.</p>
+
+<p>After selecting a new master track, the length of the master loop
+may have a different cycle length than the previous loop.  In this
+case the <i>Out Sync Resize Adjust</i> parameter is used to determine
+whether the tempo should change.</p>
+
+<p>If after using the <i>Reset</i> function no suitable sync master
+track can be found, a MIDI <i>Stop</i> message will be sent and
+MIDI clocks will no longer be generated.</p>
+
+</section> <!-- Changing the MIDI Sync Master -->
+
+<section><title>Controlling Plugin Host Tempo</title>
+
+<p>When Mobius is running as a plugin you can sometimes use MIDI
+Master Sync to set the tempo used by the plugin host transport.  For
+this to work the host needs to support slaving its transport to MIDI
+beat clocks, not all hosts support this.</p>
+
+<p>You will need to use a MIDI <i>Loopback</i> device.  On Windows the
+one we recommend is <i>MIDI Yoke</i> available
+at <a href='http://www.midiox.com'>www.midiox.com</a>.  On Mac, you can use a
+built-in OS X feature called the <i>MIDI IAC Driver</i>.  A tutorial
+on setting up this driver can be
+found <a href='http://fox-gieg.com/tutorials/2007/inter-application-midi/'>here</a>.</p>
+
+<p>Configure Mobius as usual for MIDI master sync and select the 
+loopback device in the <i>Plugin Output Devices</i> panel of
+the <i>Audio Devices</i> configuration window.</p>
+
+<p>You will then need to configure the plugin host so that it can
+receives MIDI clocks from the same loopback device.  This will be
+different in every host, if it isn't obvious post a message to the
+Mobius forums.</p>
+
+<p>Now record the initial loop in Mobius.  MIDI clocks will be generated
+and if things are connected properly the host should lock onto the
+tempo and display it in its transport.</p>
+
+<p>This technique is known to work in <i>Ableton Live</i>.</p>
+
+</section> <!-- Controlling Plugin Host Tempo -->
+
+<section><title id='MuteSyncMode'>Mute and Pause during MIDI Master Sync</title>
+
+<!-- TODO: This isn't flexible enough, currently slave start/stop
+     is dependent on MuteMode=Start, should allow this for
+     MuteMode=Continue as well
+-->
+
+<p><b>NOTE:</b> The behavior described in this section was developed
+for a problem one Mobius user was having with a slave device.  It is
+unfortunately rather complicated and not as flexible as it should be.
+This is likely to change in a future release.</p>
+
+<p>When you use the <i>Mute</i> or <i>Pause</i> functions in the MIDI
+sync master loop, the external device being synchronized may also be
+made to stop and then resume when the master loop is unmuted.  This
+behavior is controlled by a combination of the <i>Mute Mode</i> preset
+parameter and the <i>Out Sync Mute Action</i> setup parameter.</p>
+
+<p>The <i>Mute Mode</i> parameter may have these values:</p>
+
+<ul>
+<li><b>Continue</b></li>
+<li><b>Start</b></li>
+<li><b>Pause</b></li>
+</ul>
+
+<p>If <i>Mute Mode</i> is set to <i>Pause</i> the <i>Mute</i> function
+will behave exactly the same as the <i>Pause</i> function. The loop
+will freeze when then <i>Mute/Pause</i> function is executed, then
+resume from its previous location when <i>Mute/Pause</i> is executed
+again.</p>
+
+<p>If <i>Mute Mode</i> is set to <i>Start</i> the loop will continue
+playing silently while it is in <i>Mute</i> mode, then when leaving
+<i>Mute</i> mode the loop will be restarted from the beginning.</p>
+
+<p>If <i>Mute Mode</i> is set to <i>Continue</i> the loop will
+continue playing silently while it is in <i>Mute</i> mode, then when
+leaving <i>Mute</i> mode it will simply resume playing from its
+current location.</p>
+
+<p>If <i>Mute Mode</i> is set to <i>Continue</i> in the MIDI Sync Master
+loop we will continue to send MIDI <i>Clock</i> messages to the slave
+device so that it can remain in sync with the silent loop.</p>
+
+<p>If <i>Mute Mode</i> is set to <i>Start</i> or <i>Pause</i> in the
+MIDI sync master loop, we may try to stop the slave device as well as
+silencing the Mobius loop.  How this happens is determined
+by the <i>Out Sync Mute Action</i> parameter which may have these values.</p>
+
+<ul>
+<li><b>Send Stop/Start continue clocks</b></li>
+<li><b>Send Stop/Start stop clocks</b></li>
+<li><b>Stop clocks</b></li>
+<li><b>Continue clocks</b></li>
+</ul>
+
+<p>When set to <i>Send Stop/Start continue clocks</i>, entering
+<i>Mute</i> or <i>Pause</i> mode will cause a MIDI <i>Stop</i> message
+to be sent to the slave device.  MIDI <i>Clock</i> events will
+continue to be sent so the slave device can continue tracking the
+clock tempo.  When exiting <i>Pause</i> mode a MIDI <i>Continue</i>
+message is sent to the slave device.  When exiting <i>Mute</i> mode a
+MIDI <i>Start</i> message is sent to the slave device.  This is the
+<i>Out Sync Mute Action</i> you normally use when the slave device
+recognizes the MIDI <i>Start</i>, <i>Stop</i>, and <i>Continue</i>
+messages.  It allows the slave device to keep receiving MIDI
+<i>Clock</i> messages while it is stopped so it can track changes to
+the clock tempo.  When the slave device is finally resumed it will
+already know the desired tempo.</p>
+
+<p><i>Send Stop/Start stop clocks</i> is the same except that it also
+stops sending <i>Clock</i> messages while in <i>Mute</i> and
+<i>Pause</i> modes.  This may be necessary if you have a device that
+gets confused if it keeps receiving <i>Clock</i> messages after a
+<i>Stop</i>.  This is rare. If you think you have a device that
+requires this option please let us know so we can mention it in the
+documentation.</p>
+
+<p><i>Stop clocks</i> is used when the slave device does not understand
+the MIDI <i>Stop</i> message. Here we simply stop sending <i>Clock</i>
+messages when in <i>Mute</i> or <i>Pause</i> mode.  This is also
+relatively rare.  It may be of use with tempo sensitive effects like a
+panner or tremolo.  Such devices don't have the concepts of start and
+stop, they simply lock onto a clock tempo.</p>
+
+<p>If <i>Continue clocks</i> is used, we 
+do not send a MIDI <i>Stop</i> message when entering <i>Mute</i> or
+<i>Pause</i> modes and we continue sending <i>Clock</i> messages.  The
+Mobius loop will become silent, but the slave device will continue
+playing normally.</p>
+
+<p>When we exit <i>Mute</i> mode we will always send a MIDI <i>Start</i>
+message when <i>Mute Mode</i> is set to <i>Start</i>.   When we exit
+<i>Pause</i> mode we will always send a MIDI <i>Continue</i> message.
+These messages are always sent even if the slave device does not
+recognize them.  If the MIDI <i>Clock</i> events had been turned
+off they will be resumed.</p>.
+
+</section> <!-- Mute Sync Mode -->
+
+</section> <!-- MIDI Master Sync -->
+
+<section><title>Drift, Dealign and Realign</title>
+
+<p>When a synchronized loop is created using <ref>Host Sync</ref>,
+<ref>MIDI Slave Sync</ref>, or <ref>MIDI Master Sync</ref> there is
+the possibility that the Mobius loop may drift out of alignment with
+the host, drum machine, or even the internal timer used
+to generate MIDI master clocks.   Drift is something that is not
+supposed to happen.  In an ideal world there would be no drift
+but unfortunately differences in the speed of clocks
+running in different hardware devices, MIDI lag and jitter, 
+and stress on the CPU can all result in timing errors that cause
+drift.</p>
+
+<p>Drift is usually very small, but over time as a loop plays the drift
+may accumulate until it becomes audible.  Loops may start to sound
+slightly out of phase, and rhythm patterns may start to sound sloppy.
+Mobius is constantly monitoring the amount of drift and when it
+reaches a certain threshold it will make a correction to bring the
+loops back into alignment.  This process is described in more detail in
+the <ref>Drift Correction</ref> section.  Note that drift only happens
+when synchronizing with something outside of Mobius.  Tracks within
+Mobius will never drift relative to each other.</p>
+
+<p><i>Dealign</i> is a deliberate action by the user that causes a
+Mobius loop to go out of alignment with other loops either inside or
+outside Mobius.  There are many ways to cause a dealign, among
+them:</p>
+
+<ul>
+<li>Reversing playback direction (<i>Reverse</i>, <i>Forward</i>, <i>Backward</i>)</li>
+<li>Changing playback speed (<i>Speed Shift</i>)</li>
+<li>Restarting the loop from the beginning (<i>Restart</i>, <i>Loop Switch</i>)</li>
+<li>Executing the <i>Move</i> function in a script</li>
+</ul>
+
+<p>Once a loop has been knocked out of alignment, it will remain that
+way until the user does something to change the alignment.  Alignment
+is never corrected automatically like drift.  To bring the loop back
+into proper alignment you must use the <i>Realign</i> or
+<i>Mute Realign</i> functions.  This is described further
+in the <ref>Realign</ref> section.</p>
+
+<section><title>The External Loop</title>
+
+<p>Since Mobius can synchronize in several ways, it becomes difficult
+to talk about drift and realign without using word salad like "the
+plugin host or the drum machine or the master MIDI clock".  This just
+gets worse as new synchronization types are added.  To make this
+easier to talk about, Mobius uses a concept called the <i>external
+loop</i> that gives us a simple way to think about all synchronization
+types.</p>
+
+<p>The external loop represents anything outside of Mobius that we
+want to synchronize with.  The external loop has a size and it plays
+from beginning to end at a fixed speed.  When it reaches the end it
+wraps back to the beginning and repeats forever.  The external
+loop has a size in frames or samples like a Mobius loop but it does
+not contain any audible content.  In addition, the external loop 
+has a size measured in <i>pulses</i>.</p>
+
+<p>A pulse is a message sent to Mobius at a regular interval from the
+thing we want to synchronize with.  When you use <ref>Host Sync</ref>
+a pulse is a <i>beat</i> event sent by the plugin host to all of the
+plugins when the host transport is running.  When you use <i>MIDI
+Slave Sync</i> a pulse is a MIDI <i>Clock</i> message generated by a
+drum machine or other device.  When you use <ref>MIDI Master Sync</ref> 
+a pulse is a notification from an internal timer that is
+used to send MIDI <i>Clock</i> messages to another device.  Mobius
+doesn't care what the pulse actually is, it simply needs to receive
+them at a consistent tempo.</p>
+
+<p>When you begin recording a synchronized loop using <ref>Host Sync</ref> 
+or <ref>MIDI Slave Sync</ref> we delay the start of the
+recording until the next pulse is received.  Then we start counting
+the number of pulses that are received while the loop is recording.
+When you end the recording, we round the loop up to the next pulse.
+We now have created two things: a Mobius audio loop with a size in
+frames and an external loop with a size in pulses.  The Mobius loop
+size will be close to an exact multiple of the distance between
+pulses.</p>
+
+<p>When you record a synchronized loop using <ref>MIDI Master Sync</ref> 
+we don't wait for pulses since there aren't any until after
+the loop is recorded.  Recording starts and ends immediately. Once the
+recording has finished we then calculate a tempo for the MIDI clocks
+using the algorithm from <ref>Calculating The Tempo</ref>.  We can then
+calculate the number of MIDI clocks that will be sent each time the new
+loop plays, this is the number of pulses in the external loop.</p>
+
+<p>At this point we have an external loop with a size in frames
+and pulses.  We begin "playing" this loop silently, it will advance
+at exactly the same rate as the other Mobius tracks though it is 
+invisible and you won't hear it.  We also continue to receive pulses
+from the sync source.  We keep a counter that is incremented when each
+pulse is received.  When this counter is equal to the number of pulses
+in the external loop, the counter is set back to zero and we begin
+counting up again.  For example, using <ref>MIDI Slave Sync</ref> we
+record a Mobius loop that is 96 MIDI clock pulses long.  When the loop
+has finished recording, we start the external loop pulse counter from
+zero and add one each time a MIDI clock is received.  When this
+counter reaches 96 we are at the end of the external loop and set the
+counter back to zero.</p>
+
+<p>When the external loop pulse counter wraps back to zero, this is 
+called the <i>external loop start point</i>.  This is an important
+moment in time that is used for both drift correction and the 
+<i>Realign</i> function.</p>
+
+</section> <!-- External Loop -->
+
+<section><title>Drift Correction</title>
+
+<p><b>NOTE:</b> It is not necessary to fully understand this section
+in order to make effective use of synchronization.  Drift correction
+normally just works and you don't need to worry about it.  But if you
+are curious about what the mysterious <i>Drift Resync Frames</i> 
+global parameter does, read on.</p>
+
+<p>Once a synchronized loop has been recorded, we create
+the <ref id='The External Loop'>external loop</ref> and it begins
+"playing" and we begin counting sync pulses.  Whenever the
+external loop reaches its start point, we check for drift.</p>
+
+<!-- TODO: Not exposing the DriftCheckPoint parameter the UI yet
+so we always check at the Mobius loop start point -->
+
+<p>The algorithm for calculating drift is complicated but at a high
+level we compare the current playback frame position of the external
+loop with the ideal position calculated from the pulses that have been
+counted.  The result is the number of frames of drift.  If the drift
+frames are positive it means that the Mobius tracks are ahead of the 
+external loop pulses, if the drift frames are negative it means the
+Mobius tracks are behind the external loop pulses.</p>
+
+<p>When the amount of positive or negative drift exceeds a certain
+threshold a drift correction is made.  A drift correction is an
+immediate jump in the Mobius loop playback position to bring it back
+into alignment with the external loop.  This is usually not noticeable
+but with some loops it may be heard as a soft "bump".  This happens
+more often with <ref>MIDI Slave Sync</ref> because jitter in the MIDI
+clock stream can result in greater drift.  It rarely happens with
+<ref>Host Sync</ref>.  Surprisingly it can happen with <ref>MIDI Master Sync</ref> 
+even though Mobius is in control over the clocks.
+This is because sync pulses are generated by timer provided by the
+operating system that is not synchronized with the audio stream being
+processed by the audio interface hardware.  The amount of drift is
+usually very small, but over time it can be audible.</p>
+
+<section><title>Drift Resync Frames</title>
+
+<p>A small amount of drift is normal and tends to balance out over
+time.  For example, on one pass of the loop we may be 100 frames ahead
+of the external loop, on the next 200 behind, then 80 ahead, then 127
+behind.  As long as the drift does not steadily increase in either
+direction the drift is normal and does not need to be corrected.  The
+threshold at which drift correction occurs is defined by the global
+parameter <i>Drift Resync Frames</i>.</p>
+
+<p>The default value for <i>Drift Resync Frames</i> is 2048.  Like a
+lot of strange looking numbers in Mobius the reason this is 2048
+instead of 2000 or 2500 is because 2048 is an exact power of two.  It
+is not necessary that this number be a power of two, 2500 would work
+just fine but programmers have this weird affection for powers of two.
+Just humor them.</p>
+
+<p>There is rarely any need to change the default value of <i>Drift
+Resync Frames</i>, the one exception would be if you were using
+<ref>MIDI Slave Sync</ref> with an extremely jittery MIDI clock.  If
+you feel that drift correction is happening too often, you can try
+increasing this number by 1000 until it stops happening.  What is "too
+often"?  A Mobius loop should be able to play at least a few times
+before drift correction.  If you hear a drift correction bump every
+time the loop reaches the start point, then try raising the <i>Drift
+Resync Frames</i>.  Please contact us if you have to do this, it may
+indicate a problem with Mobius or something unusual about your
+system.</p>
+
+<p>It might be tempting to set <i>Drift Resync Frames</i> to a very
+small value thinking that you will get "tighter" synchronization.
+This is absolutely not recommended.  A small amount of drift is
+perfectly normal, if you set the parameter too low you may end up
+doing a drift correction on every pass of the loop.  The only reason this
+can be set lower than 2048 at all is to simulate extreme conditions
+for testing.</p>
+
+<p>If you set the <i>Drift Resync Frames</i> parameter to a large
+value, greater than 10000, you may begin hearing gradual changes to
+the loop.  If you are syncing with a drum machine or something with an
+strong rhythm, the Mobius loop may start to feel like it "drags" or
+"rushes" compared to the background rhythm.  If you are recording
+non-rhythmic loops then drift not even be noticeable.</p>
+
+</section> <!-- Drift Resync Frames -->
+
+<section><title>Drift Correction and Track Sync</title>
+
+<p>If you are using simple <ref>Track Sync</ref> and the master
+track did not use <ref>Host Sync</ref>, <ref>MIDI Slave Sync</ref>, or
+<ref>MIDI Master Sync</ref> then there will never be any drift correction.
+Tracks will always play in perfect sync forever.</p>
+
+<p>If the master track did use any of the other sync modes, then
+tracks synced with the master track may need drift correction.  The
+rule is: whenever a track has a drift correction applied, all of the
+other tracks that were synced to that track will also have the
+same amount of drift correction applied.</p>
+
+<p>For example, assume that track 1 had <i>Sync Source</i> set to
+<i>MIDI</i> and all the other tracks had <i>Sync Source</i> 
+set to <i>Track</i>.  Track 1 is recorded and synced with the
+MIDI clock pulses coming from a drum machine.  Tracks 2 and 3 are recorded with
+<ref>Track Sync</ref> so they are exactly the same size as track 1.  
+Sometime later we decide that track 1 has drifted too far away from 
+the MIDI clock pulses, and we to correct track 1 by moving the playback
+position 3028 frames backward because it was rushing.</p>
+
+<p>Next we look for all tracks that were recorded using
+<i>Track Sync</i> We find tracks 2 and 3.  Those two tracks will
+also have their playback position
+adjusted 3028 frames backward so that they continue to be in exact
+alignment with the master track.</p>
+
+</section> <!-- Drift Correction and Track Sync -->
+
+</section> <!-- Drift Correction -->
+
+<section><title>Realign</title>
+
+<p>As we mentioned before earlier, <i>Dealign</i> is a deliberate
+action by the user that causes the Mobius loop to go out of alignment
+with the external loop.  Some of the ways to cause a dealign are:</p>
+
+<ul>
+<li>Reversing playback direction (<i>Reverse</i>, <i>Forward</i>, <i>Backward</i>)</li>
+<li>Changing playback speed (<i>Speed Shift</i>)</li>
+<li>Restarting the loop from the beginning (<i>Restart</i>, <i>Loop Switch</i>)</li>
+<li>Executing the <i>Move</i> function in a script</li>
+</ul>
+
+<p>Once a loop has been knocked out of alignment, it will remain that
+way until the user does something to change the alignment.  Alignment
+is never corrected automatically like drift.  To bring the loop back
+into proper alignment you must use the <i>Realign</i> or
+<i>Mute Realign</i> functions.</p>
+
+<p>The only difference between the two realign functions is that
+<i>Mute Realign</i> will first perform an immediate unquantized <i>Mute</i>
+function, then do the realign.  From the listeners perspective the
+loop that is out of alignment will suddenly stop, while the external
+loop (drum machine, host track, etc.) will continue playing.  Then
+when the realignment point arrives the Mobius loop will be brought out
+of <i>Mute</i> mode and start playing aligned with the external loop.</p>
+
+<p>In all but one case described 
+<ref id='Out Sync Realign Action = Send MIDI Start'>below</ref> 
+what happens during a realign is that the
+playback position of the Mobius loop is moved so that it matches the
+current playback position of the external loop.  Typically realign is delayed
+until the external loop reaches its start point.  This gives the listener
+some sense of closure from one of the loops before they are abruptly
+brought back into alignment.  The timing of the realign can however
+be controlled in some cases with the <i>Realign Time</i> synchronization
+parameter which may have these values.</p>
+
+<ul>
+<li>Start Point</li>
+<li>Next Bar</li>
+<li>Next Beat</li>
+<li>Now</li>
+</ul>
+
+<p>For most users it is recommended that you leave this at the
+default value of <i>Start Point</i>.  Setting this to <i>Next Bar</i>
+or <i>Next Beat</i> will cause the realign to happen when the
+external loop reaches the next beat or bar pulse.  Setting this
+to <i>Now</i> will cause the realign to happen as soon as the next
+sync pulse is received.  For <i>Host</i> sync this will be the same
+as <i>Next Beat</i> but for <i>MIDI</i> and <i>Out</i> it will be on the
+next MIDI clock which will make it feel like it happens almost
+immediately.</p>
+
+<section><title>Realign with Track Sync</title>
+
+<p>For loops that were created with <ref>Track Sync</ref> the
+<i>Realign Time</i> parameter specifies the location in the <b>master track</b>
+where the realign will occur.   When <i>Realign Time</i> is set to <i>Now</i>
+the realign will happen immediately.  When <i>Realign Time</i> is set to 
+<i>Start Point</i> the realign happens when the master track reaches
+its start point.</p>
+
+<p>The other two values are a bit confusing since Mobius tracks don't
+have beats and bars.  If <i>Realign Time</i> is set to 
+<i>Next Bar</i> the realign will happen when the master track reaches
+the beginning of the next loop cycle.  When set to <i>Next Beat</i>
+the realign happens when the master track reaches the start
+of the next subcycle.</p>
+
+</section> <!-- Realign with Track Sync -->
+
+<section><title id='OutSyncRealignMode'>Realign with MIDI Master Sync</title>
+
+<p>Loops that are the MIDI sync master can perform a realign in one of
+two ways determined by the <i>Out Sync Realign Action</i> parameter.
+The parameter may have these values.</p>
+
+<ul>
+<li>Restart Loop</li>
+<li>Send MIDI Start</li>
+</ul>
+
+<p><i>Restart Loop</i> is the default.  It will cause the playback
+position of the Mobius loop to be adjusted to bring it into alignment
+with the external loop.  This is how realign works in all other
+sync modes.</p>
+
+<section><title>Out Sync Realign Action = Send MIDI Start</title>
+
+<p>This is a special realign mode that is only available when using
+<i>MIDI Master Sync</i>.  Rather than making adjustments to the Mobius
+loop to bring it into sync with the timer pulses, we will tell the
+external device to restart itself to bring it into alignment with the 
+Mobius loop.</p>
+
+<p>What happens is that a MIDI <i>Start</i> message will be sent
+exactly when the Mobius loop reaches its start point.  This should
+cause the drum machine or sequencer to restart its pattern at the same
+time.  The Mobius loop and the external loop will then be both aligned
+at their start points.</p>
+
+<p>Note that when using this special mode, the realign only happens
+when the Mobius loop reaches its start point.  This means that
+the <i>Realign Time</i> parameter is ignored.</p>
+
+<p>This option is essentially the same as using the <i>MIDI Start</i>
+or <i>Mute MIDI Start</i> functions as described in the 
+<ref id='realignAlternatives'>Realign Alternatives</ref> section.</p>
+
+</section> <!-- Out Sync Realign Action - Restart Loop -->
+
+</section> <!-- Realign with MIDI Master Sync -->
+
+<section><title id='realignAlternatives'>Realign Alternatives - MIDI Start and Mute MIDI Start</title>
+
+<p>For the track that is the <i>MIDI Sync Master</i> there are two
+additional functions that can be used to bring the Mobius loop and the
+external loop back into alignment.  These can be used instead of
+the <i>Realign</i> and <i>Mute Realign</i> functions.</p>
+
+<p>The <i>MIDI Start</i> function will be automatically quantized to
+the Mobius loop start point, then it will send a MIDI <i>Start</i>
+message to the drum machine, sequencer or other device being slaved to
+Mobius.  This should cause the slave device to restart its pattern.
+The Mobius loop and the external loop will now be both aligned at
+their start points and begin playing in alignment.</p>
+
+<p>The <i>Mute MIDI Start</i> function behaves the same way, but first
+it does an unquantized <i>Mute</i> function to silence the Mobius
+loop, then when the start point is reached it unmutes the Mobius loop
+at the same time as it sends the MIDI <i>Start</i> message.</p>
+
+<p>The effect is essentially the same as 
+<ref>Out Sync Realign Action = Send MIDI Start</ref>.  
+You might prefer this though if you are
+using <ref id='outManualStart'>Out Sync Manual Start</ref> because you
+won't need to reserve another footswitch for the <i>Realign</i> function.  
+Since you will already have a footswitch assigned to the <i>MIDI Start</i>
+function to get the slave loop started at the very beginning of the
+performance, you can use the same footswitch to realign the slave loop
+later.</p>
+
+</section> <!-- Realign Alternatives -->
+
+<section><title id='SyncStartPoint'>Realign Alternatives - Sync Start Point</title>
+
+<p>The <i>Sync Start Point</i> will make the Mobius loop start point
+match the external loop start point.  When the function is executed it
+schedules a pending <i>Start Point</i> function and waits for the
+external loop start point.  When the pulse representing the external
+loop start point is received, it executes the <i>Start Point</i>
+function.</p>
+
+<p>This is arguably not a "realign" since we're not changing the
+positions of either the Mobius loop or the external loop.  Rather we
+are saying that we want to make the current dealignment permanent.
+Once <i>Sync Start Point</i> is done, a <i>Realign</i> function will
+restore the Mobius loop and the external loop to the positions they
+had after the <i>Sync Start Point</i>, this may be different than the
+alignment the loops had when they were first recorded.</p>
+
+</section> <!-- Sync Start Point -->
+
+</section> <!-- Realign -->
+
+</section> <!-- Drift, Dealign, and Realign -->
+
+
+</document>
+

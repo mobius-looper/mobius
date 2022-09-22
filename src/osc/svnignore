@@ -1,0 +1,5 @@
+*.exe
+*.obj
+*.lib
+libosc.a
+osctest

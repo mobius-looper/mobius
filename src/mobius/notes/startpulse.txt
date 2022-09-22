@@ -1,0 +1,182 @@
+
+MidiQueue
+  START, and CONTINUE wait for the next clock so by definition it is a pulse.
+  STOP happens immediately and is not a pulse.
+
+MidiTransport
+  uses a MidiQueue internally 
+
+Synchronizer
+
+  interruptStart 
+    - generate Events for each sync pulse
+      - decoarate with BEAT/BAR indiciators
+    - call SyncTracker::event
+    - call SyncTracker::advance
+
+SyncTracker::event
+
+  SYNC_EVENT_START
+    mPulse = 0
+    mAudioFrame = 0, mDrift = 0   -- this looks wrong
+
+  SYNC_EVENT_CONTINUE
+    mPulse = derived from.syncContinuePulse
+    mAudioFrame = derived from mPulse
+    mDrift = 0
+
+
+  SYNC_EVENT_PULSE
+    if (mPendingPulses) decrement and return
+
+    mPulse++
+    set pulse number in event
+
+    calculate effectiveAudioFrame for event
+    calculate advance from effectiveAudioFrame and mLastPulseAudioFrame
+    update mPulseMonitor
+
+    doResize - OutSyncTracker only
+     - don't need to worry about this for START/CONTINUE becuase
+       we won't be resizing on those boundaries, right?
+
+    calculate effectiveAudioFrame for event after resize
+
+    if tracker is locked (mLoopFrames > 0)
+        set syncStartPoint if we reach mLoopPulses
+        
+        dalculate drift from pulseFrame and effectiveAudioFrame
+        
+        set sync.pulseFrame
+        
+        update mDriftMonitor
+    endif
+
+    // don't really need this on START/CONTINUE
+    if tracing pulses
+       some tracing
+    endif
+
+
+    set mLastPulseAudioFrame
+
+SyncTracker::pulse() really only does these things
+
+   - eat mPendingPulses
+   - increment mPulse
+   - monitor pulse width
+   - process resize
+   - detect external start point
+   - calculate drift
+   - monitor drift
+   - trace unlocked pulses
+   - trace dealign
+   - remember mLastPulseAudioFrame
+
+mLastPulseAudioFrame is used only for pulse monitoring, for diagnostics.
+
+So these steps MUST be done for START/CONTINUE.
+
+   - eat mPendingPulses
+       - should not be necessary loop would have to be impossibily small
+   - detect external start point
+
+These might be useful but are not required:
+
+   - monitor pulse width
+   - calculate drift
+   - monitor drift
+   - trace unlocked pulses
+   - trace dealign
+   - remember mLastPulseAudioFrame
+
+These can't be done:
+
+   - increment mPulse
+   - process resize - not necessary
+
+Pulse width monitoring could still be possible, but you would have
+to factor out the loop.  More trouble than it's worth.
+
+If we're not monitoring pulse width, then a drift check isn't mandatory
+either, but since this is also external start point that may look odd
+in the trace.
+
+If mPulse was 1- mLoopPulses and we jump backward, can assume we're
+on a beat but will need a flag in the config? mAudioFrame 
+is left at the beginning of the buffer and can be offset by the event
+frame for host pulses.  If we reset mPulse and therefore mPulseFrames
+why are we resetting mAudioFrame?
+
+For host sync with loops, we can't keep resetting mAudioFrame which
+will therefore reset mDrift, we have to keep drift alive.
+
+SyncTracker::advance
+
+  - sets a new mAudioFrame by advancing to the end of the audio buffer
+  - generates tracker beat/bar pulses
+
+
+*** Key Issue
+
+mAudioFrame should not be de-drifted on START/CONTINUE if we have 
+not received STOP first
+
+If user stops the transport, we'll stop getting pulses drift will freeze
+and we'll keep advancing mAudioFrame and generating tracker pulses.
+
+If user STARTS or CONTINUES after STOP, we're way out of alignment. It
+doesn't accomplish anything to retain drift, just start over.  A common
+user request in this case is to do an immediate restart or realign of the
+Mobius loop (all loops following this tracker).  If we did retain drift, then
+it would likely be WAY off and cause an immediate adjustment.  But the alignment
+would still be wrong so it doesn't really matter what happens.  Reset drift
+and provide an option to do an immediate realign of all following loops.
+
+If START or CONTINUE happens without STOP there are two cases:
+
+   - normal host transport activity when looping a section
+
+   - user is dicking around with the transport
+
+
+In the first case, we need to know what the edges of the host loop
+represent, if they are exactly on beat or bar pulses.  Normally they
+will be bars since that's what is most musically useful to loop but
+it could be anything, even sub-beat.  
+  
+    
+    |...|...|...|
+    BbbbBbbbBbbbC
+
+The C means we've warped somewhere, S is just a special kind of C
+with a new pulse of zero.  For hosts, we're not even sure this
+is a pulse?  I think with the logic in HostSyncState::advance and
+Synchronizer::interruptStart we'll only generate sync events when
+we actually reach the beat/bar boundary.  If they jump to a location 
+between beats we won't get the SYNC_EVENT_START until the next beat.
+If the host is looping this is what we want the beat should come
+in exactly at the right time.  
+
+If the user is dicking around, we might incorrectly treat this as 
+a pulse for recording and drift.  We might be able to detect some of 
+this by watching the change, if it is exactly mAudioFrames or
+mLoopPulses then we know we're in a loop.  
+
+If the host loop edges are not on beat boundaries, sync will get screwed
+up.  But that would have happened before too, the pulse at the loop point
+would either have been too long or too short and screwed up drift.  
+
+
+SyncTracker Changes
+
+   - on START/CONTINUE preserve drift unless we've been stopped
+   - treat as a normal pulse if we went backward by exactly the 
+     loop pulse count?  I guess it doesn't matter.
+   
+
+Synchronizer Changes
+
+   - let START/CONTINUE events be used as BEAT/BAR pulses
+
+

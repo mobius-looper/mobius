@@ -1,0 +1,77 @@
+----------------------------------------------------------------------
+Installation
+----------------------------------------------------------------------
+
+Local Subversion Installation
+
+  Server port: 3690
+  Repo: c:\svn_repository
+
+  Apache config:
+    Host/Server: localhost
+    Port: 80
+
+  mod_dav_svn Config
+    Repo: c:\svn_repository
+    Prefix: /svn
+
+  ViewVC not enabled, requires Active Python
+  Server installed to c:\Program Files\ColabNet\Subversion Server
+
+  Auto-update disabled
+
+The service is launched with c:\svn_repository as the root so all
+projects have to be relative to that direcotry.
+
+----------------------------------------------------------------------
+Setup
+----------------------------------------------------------------------
+
+Creating a new project:
+
+   svnadmin create <path>
+
+   I had trouble with c:\ at least under bash so it's easiest
+   to first cd to c:\svn_repository and then create one without
+   the directory prefix, e.g. "svnadmin create larson"
+
+Organizing the project:
+
+   It is recommended you start with the three top-level directories:
+
+       trunk
+       tags
+       branches
+
+   I'm not sure if this is simply a best practice or if there is
+   built-in awareness of this structure.  It is said not to be mandatory
+   but I don't know what the side effects are of not following this.
+   Just do it.
+
+   Check out the new empty project (or is it a repository?)
+
+       svn checkout svn://localhost/larson larson
+
+   Then add the directories:
+
+       cd larson
+       mkdir trunk
+       svn add trunk
+       svn commit...
+
+   This is supposedly the same as doing an import, import would be easier
+   if you had lots of files.
+
+----------------------------------------------------------------------
+Subversion config file
+----------------------------------------------------------------------
+
+This is hard to get to on Vista because several of the old directories
+are now "junctions".  Use this:
+
+  c:/Users/Jeff/AppData/Roaming/Subversion/config
+
+----------------------------------------------------------------------
+Igoring a File or Directory
+----------------------------------------------------------------------
+

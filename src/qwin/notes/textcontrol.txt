@@ -1,0 +1,147 @@
+Toshiya,
+
+Easy is relative I guess :
+
+First, here's what I do...
+
+- Install a handler on my Unicode edit text control for { kEventClassTextInput, kEventTextInputUnicodeForKeyEvent }
+
+- check to see if it was a Return or Enter key, if so, I call ProcessHICommand with kHICommandOK
+
+- check to see if it was cmd-. or Escape and call ProcessHICommand with kHICommandEscape
+
+- then I call through to the next handler
+
+- then, I check to see if it was the tab key and reverse or advance the keyboard focus (for some reason, I always do this, regardless of whether or not the next handler handled the event, don't remember why I did that, but it works!
+
+- finally, in my base window class I install handlers or HICommands and when I get one, I look to see if the window has a default or cancel button and map it to that control and resend a control hit event so the rest of my code doesn't know any better
+
+
+The source for the text input handler:
+
+case kEventClassTextInput:
+switch (eventKind)
+{
+case kEventTextInputUnicodeForKeyEvent:
+EventRef keyboardEvent;
+
+error = GetEventParameter(event, kEventParamTextInputSendKeyboardEvent, typeEventRef, NULL, sizeof(keyboardEvent), NULL, &keyboardEvent);
+
+check_noerr_string(error, "cant get keyboard event ref for UnicodeEditTextControlEventDispatcher");
+
+if (error == noErr)
+{
+error = GetEventParameter(keyboardEvent, kEventParamKeyModifiers, typeUInt32, NULL, sizeof(modifiers), NULL, &modifiers);
+error = GetEventParameter(keyboardEvent, kEventParamKeyMacCharCodes, typeChar, NULL, sizeof(keypress), NULL, &keypress);
+
+check_noerr_string(error, "cant get char code from keyboard event ref for UnicodeEditTextControlEventDispatcher");
+
+if (error == noErr)
+{
+// --- DEAL WITH RETURN KEY SINCE CONTROL DOESN'T --
+
+HICommand command;
+command.attributes = 0;
+
+switch (keypress)
+{
+case kEnterCharCode:
+case kReturnCharCode:
+command.commandID = kHICommandOK;
+result = ProcessHICommand(&command);
+break;
+
+case '.':
+if ((modifiers & cmdKey) == cmdKey)
+{
+command.commandID = kHICommandCancel;
+result = ProcessHICommand(&command);
+}
+break;
+
+case kEscapeCharCode:
+command.commandID = kHICommandCancel;
+result = ProcessHICommand(&command);
+break;
+
+default:
+break;
+}
+
+// --- CALL THROUGH TO STANDARD HANDLERS ---
+
+if (result != noErr)
+CallNextEventHandler(myHandler, event);
+
+
+// --- HANDLE TAB ---
+
+if (keypress == kTabCharCode)
+{
+if ((modifiers & shiftKey) == shiftKey)
+ReverseKeyboardFocus(window);
+else
+AdvanceKeyboardFocus(window);
+
+result = noErr;
+}
+
+
+result = noErr;
+}
+}
+}
+break;
+
+
+
+The source to handle the HICommands
+
+
+HICommand command;
+
+OSStatus error = GetEventParameter(event, kEventParamDirectObject, typeHICommand, NULL, sizeof(HICommand), NULL, &command);
+
+if (error == noErr)
+{
+switch (command.commandID)
+{
+case kHICommandOK:
+ControlRef defaultControl;
+
+error = GetWindowDefaultButton(object->GetWindow(), &defaultControl);
+
+if ((error == noErr) && (defaultControl != NULL))
+if (IsControlVisible(defaultControl))
+if (IsControlEnabledX(defaultControl))
+{
+FlashControl(defaultControl, kControlButtonPart);
+
+EventRef okEvent = CreateControlHitEvent(defaultControl);
+result = object->DoControlHit(okEvent);
+ReleaseEvent(okEvent);
+}
+break;
+
+// hmm this seems to work ok without needing to do this, so maybe this wasn't broken
+
+// case kHICommandCancel:
+// ControlRef cancelControl;
+//
+// error = GetWindowCancelButton(window, &cancelControl);
+//
+// if ((error == noErr) && (cancelControl != NULL))
+// if (IsControlVisible(cancelControl))
+// if (IsControlEnabledX(cancelControl))
+// {
+// wneEvent.message = kEscapeCharCode;
+//
+// FlashControl(cancelControl, kControlButtonPart);
+//
+// result = object->DoControlHit(simulatedEvent);
+// }
+// break;
+
+
+
+Hope this helps and hope the list server doesn't garble it too much...

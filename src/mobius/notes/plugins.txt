@@ -1,0 +1,413 @@
+
+Plugin Handling
+
+Variables:
+
+  Latency 
+    Does the plugin introduce buffering that results in added latency.
+    Buffering products gaps in the stream if not compensated.
+
+  Edge Fades
+    The plugin will preserve zero crossings of the signal at the leading
+    and trailing edges.  The waveform itself may be altered significantly,
+    but it will still rise from zero and taper to zero at the edges.  
+    
+  Seamless Parameter Changes
+    Changes made to plugin parameters as it is operating may result in
+    a discontinuity of the waveform.  A seamless parameter change results in
+    no discontinuity.  
+
+In the first set of cases, assume there is no attempt at plugin
+latency compensation.  The first two variables present problems during
+the activation and deactivation of the plugin.  The third presents
+problems during the operation of the plugin.  Combinations of the
+first two variables can be addressed seperately from the third.
+
+
+Case 1 : No latency, Edge Fades
+
+This is the ideal.  Content passes directly from the stream through
+the plugin to the audio device with no additional processing.  
+
+An example might be a simple attenuator provided that the plugin did
+its own internal smoothing for jumps in attenuation.
+
+
+Case 2 : Latency, Edge Fades
+
+The more realistic state.  Plugin will do some amount of buffering but
+zero crossings at the edges are maintained and parameter changes can
+be done without cross fades.
+
+The latency requires the following adjustments:
+
+  1) Activating the plugin
+
+     A gap will be inserted into the output stream.  
+
+       - An up fade must be applied to the content being sent into the
+         plugin (or the plugin must do this itself) to deal with the
+         trailing edge of the gap.
+         TERM: Plugin Input Fade
+
+       - A a fade tail from the curent position must be captured and played
+         to deal with the leading edge of the gap.   This is a special fade
+         tail that is *not sent through the plugin*.
+         The tail must be added to the interrupt block in parallel with 
+         the output of the plugin, which will be zero if plugin latency
+         is greater than the fade range.
+         TERM: Outside Fade Tail
+
+  2) Deactivating the plugin
+
+     A forward jump will be made in the output stream, with some loss
+     of content.  
+
+     - An up fade must be applied to the content being played to deal
+       with the trailing edge of the splice.
+       TERM: Normal Fade Up
+
+     - A fade tail from the current position must be captured and
+       sent through the plugin.  The plugin must then be allowed
+       to "drain" up to the end of the tail.
+       TERM: Draining Fade Tail
+
+       - ALT: If plugin latency is greater than the fade range, feed
+         zeros into the plugin until enough content is available, apply
+         a down fade, then set this content as the fade tail.  
+         If plugin latency is less than the fade range, capture a tail
+         (not necessarily faded) and send it through the plugin rather
+         than zeroes.
+         TERM: Buffered Fade Tail
+
+Case 3 : No Latency, No Edge Fades
+
+  1) Activating plugin
+     An instant discontinuity in the wave form.
+
+     - An outside fade tail must be captured to address the leading edge.
+       (same as case 2)
+
+     - An up fade must be applied immediately to the output from the plugin 
+       to address the trailing edge.
+       Fade state may need to be maintained over several interrupts.
+       TERM: Plugin Output Fade
+
+  2) Deactivating plugin
+
+     - A normal fade up must be applied to address the trailing edge.
+       (same as case 2)
+
+     - A buffered fade tail must be taken from the plugin to address
+       the leading edge.
+       (same as case 2)
+
+Case 4 : Latency, No Edge Fades
+
+This appears to be the situation with the SoundTouch pitch shifting algorithm.
+
+  1) Activating plugin
+     A gap will be inserted into the output stream.  
+
+     - An outside fade tail must be captured to address the leading edge.
+       (same as case 2, 3)
+
+     - An up fade must be applied to the output from the plugin, but
+       only after the latency period.  Can be accomplished by triggering
+       the fade on the first non-zero sample after the activation.
+       TERM: Delayed Plugin Output Fade
+
+  2) Deactivating plugin
+
+     - A normal fade up must be applied to address the trailing edge.
+       (same as case 2, 3)
+
+     - A buffered fade tail must be taken from the plugin to address the
+        leading edge.
+       (same as case 2, 3)
+
+
+Since we can use a Buffered Fade Tail in all cases and a Draining Fade Tail
+only in one, use a Buffered Fade Tail always. Note that this will result
+in a redundant fade if we use the normal fade tail capture method to insert
+the tail into the plugin, and the plugin preserves edge fades.
+
+Seamless Parameter Changes
+
+In the event that parameter changes are not seamless, one of two 
+situations may occur:
+
+  - latency is increased resulting in a gap
+  - latency is decreased resulting in a jump
+  - the change in algorithm causes a discontinuity
+
+The result is similar to deactivating and reactivating the plugin on
+exactly the same frame.
+
+  - A buffered fade tail is taken from the plugin to address the leading edge.
+  - the plugin buffers are flushed, if necessary by feeding zeros
+  - A delayed plugin output fade is applied after feeding the new content
+
+----------------------------------------------------------------------
+Key Concepts:
+
+* Outside Fade Tail
+
+  A fade tail that is captured and merged with the other content
+  gathered by the output stream, but without passing through any plugins.
+  The tail will already have been processed by the plugins when it 
+  was captured.
+
+* Plugin Shutdown Fade
+
+The production of an orderly fade to zero from the current state of a
+plugin.  The plugin may or may not be buffering, and if buffering there
+may or may not be enough in the buffer to fill the fade range.  
+
+  - Enough content from the source layer must be fed into the 
+    plugin to produce enough content to fill the fade range.  
+  - The content being fed into the plugin during this period is not faded
+  - Once the plugin contains enough content, it is extrated, then faded, 
+    then buffered for merging with the other output stream content
+    (an outside tail)
+  - The generation of this outside fade tail must happen instantly
+  - The plugin is then flushed so that the next request for content
+    would return zeros
+  - requires another buffer for the tail capture
+
+* Plugin Startup Fade
+  - The plugin must be in a flushed state
+  - New content begins feeding into the plugin
+  - The output of the plugin is monitored until the first non-zero sample
+    is detected
+  - On detction of the first non-zero sample, an up fade is applied
+  - The up fade completes, the plugin proceeds normally
+  - requires another buffer for processing during the fade up period
+
+This one is more complicated than the others.  The effect is similar
+to a layer play fade in that progress through the fade range must
+be maintained in the stream and incremented on each interrupt.
+
+* Overlapping Plugin Fades
+
+Ocurrs when a Plugin Startup Fade is initiated, then a Plugin 
+Shutdown Fade is needed before the startup fade has completed.
+
+  - if we're still waiting for the first non-zero frame, then both
+    fades can be canceled
+
+  - if we're into the startup fade, we must continue to apply this
+    fade as we capture the content for the shutdown fade
+
+  - it would be architecturally cleaner to push the maintenance of
+    the startup fade into the plugin or a plugin wrapper?
+
+----------------------------------------------------------------------
+Plugin Latency Compensation
+
+1) Plugin Activation
+
+There will be a sudden increase in overall latency.  Frames extracted
+from the layers will be piped through the plugins resulting in percieved 
+delay.  
+
+   L = IL + PL + OL
+
+Or to make calculations in Loop easier, OL = PL + AIOL where
+PL = Plugin Latency and AIOL = Audio Interface Output Latency.
+
+Predictave compensation is difficult.  
+
+----------------------------------------------------------------------
+Time Stretch
+
+Expand
+Compress
+
+  - Change the length of the loop in increments of one "beat" without
+    losing any content or altering the pitch.  
+
+  - A beat defined by 8thsPerCycle?
+
+  Q: Is it interesting to have time based rate changes allowing the pitch
+     to change?  Probably not musical.
+
+Applications:
+
+  - 2 cycle loop plays in 4 cycles (half time)
+  - 2 cycle loop plays in 1 cycle  (double time)
+  - 4 beat cycle plays in 3 beats (drop beat)
+  - 4 beat cycle plays in 5 beats (add beat)
+  - add/remove 1/10 second (evolving phase shift)
+
+Synchronization very difficult to maintain which in stretch mode?
+
+----------------------------------------------------------------------
+Feedback Plugin
+
+- Inserted between the CopyCursor and the background Audio
+- On activation
+  - begin redirecting output from the CopyCursor
+  - begin plugin startup fade
+  - defer advancing the copy destination frame until we pass the
+    plugin latency period, copy frame will lag record frame
+  - when the layer is finalized, have to feed zeros to flush
+    the plugin and complete the copy
+    - this will introduce a gap which will require forced edge
+      fades on the layer background
+    - might be able to avoid this, but very complicated, requires that
+      we don't finalize the layer until we've played/recorded far enough
+      into the next layer to flush the plugin contents that belong
+      to the previous layer
+    - since stacking effected layers is likely to produce wild artifacts,
+      the fade bump shouldn't really be that noticeable    
+
+  - the "wait for sound" method of detecting latency won't work if the
+    purpose of the plugin is to delay the background slightly, to support
+    that we will need to assume zero latency, or have the plugin report
+    it to us accurately
+
+- On deactivation
+  - immediately capture a plugin shutdown fade tail, which may truncate
+    some of the buffered content in the plugin
+    OR
+    let the plugin fully drain, applying a fade to the final content
+  - copy fade tail to the background Audio
+  - reorient copy frame  based on where we were after the plugin tail
+  - begin an up fade in the Copy Cursor, copy enough to catch up to 
+    the current record frame
+  - record/copy now proceeds normally
+
+- On shift
+  - proceed as normal and let Segments sort it out?
+
+- On Undo
+  - we won't have completed the copy so the background after
+    the shift point won't have the effect
+
+
+----------------------------------------------------------------------
+Immediate Requirements for Pitch Shifting
+
+When pitch goes non-zero:
+
+  - capture an outside fade tail from the current layer
+  - begin a plugin startup fade
+
+When pitch changes:
+
+  - capture a plugin shutdown outside fade tail
+  - begin a plugin startup fade
+
+When pitch returns to zero:
+
+  - capture a plugin shutdown outside fade tail
+  - begin a layer play fade in
+
+Control flow:
+
+  * if pitch plugin operates outside resampling, 
+    we are not resampling the outside tail, technically not correct
+    but shouldn't matter since it is so short, we just need a zero crossing?
+
+  - process interrupt buffer
+    - break buffer into blocks seperated by events
+      - ask OutputStrem to fill block
+        - add resampling remainder, shorten block
+        - capture outside fade tail or start plugin startup fade
+        - while frames to fill
+          - scale frame request based on rate
+          - ask Loop to fill block
+            - call back to Stream one or more times when source Layer is known
+            - must offset any tail additions after each callback
+          - merge tail into block
+          - resample to expand/contract loop frames into block
+        - apply pitch shift to original block
+        - merge outside tail into original block (before remainder)
+
+  * if pitch plugin operates inside resampling
+
+  - process interrupt buffer
+    - break buffer into blocks seperated by events
+      - ask OutputStrem to fill block
+        - add resampling remainder, shorten block
+        - capture outside fade tail or start plugin startup fade
+        - while frames to fill
+          - scale frame request based on rate
+          - ask Loop to fill block
+            - call back to Stream one or more times when source Layer is known
+            - must offset any tail additions after each callback
+          - merge inner tail into block
+          - pitch shift block
+          - resample to expand/contract loop frames into block
+        - merge outside tail into original block (before remainder)
+          - scale outside tail frames based on rate
+          - resample outside tail before merge
+
+First way seems easier but tail is not resampled.
+
+----------------------------------------------------------------------
+Parallel Scripts
+
+Scripts currently controlled by Track, calls:
+
+  - setScript to start
+  - run at the start of each interrupt
+  - resume after each event (passing Function we just processed)
+  - resume after some Function handlers convert to other functions      
+    (e.g. long presses)
+    - only for function waits which are broken now
+  - stop after Reset and GeneralReset, not in FunctionContextScript
+  - run during processing of a ScriptWait event
+
+Scripts have a "home track" which was the active track when they
+were started.  The home track is the default target for functions
+and Wait events unless changed with the "for" or track selection
+functions.  
+
+  - any need to change the home track?
+  - should home track change as we iterate through a for or after
+    the track select functions?
+
+Formerly canceled script when the target track was reset outside
+of a script.  Still seems reasonable, however the script may be have
+a wait event for a track other than the home track.
+
+  - if the home track is reset and a script is waiting on another track,
+    the home track is changed to the track we're waiting on
+
+  - may want an option to resume the script with a flag?
+
+  - Track will need to inform the global script manager when it is reset
+
+
+Function waits are broken anway, but to do properly, we need to store
+the target track, or an option to mean "this function in any track".
+
+  - just use the home track for this? 
+  - eventually need a syntax e.g. "Wait Record track 1"
+  - change the function notifiers to inform the global script manager
+    rather than the track (or do othis indirectly through the track)
+
+Phases:
+
+  1) in application thread, run script, creates a new ScriptThread
+
+  2) outer interrupt handler (not track specific)
+     - advance each script not in a wait state
+     - remove threads for completed scripts
+     - cancel script threads whose home track was reset
+
+  3) during track event processing
+     - resume scripts whose wait event is reached
+     - resume scripts waiting on Functions
+     - remove threads for completed scripts
+     - cancel script threads whose home track was reset
+
+Scripts calling Scripts
+
+  - "call foo" calls the script within the current thread
+  - "run foo" launches a new thread
+    - may want a "join" statement to wait for all threads we created
+      to finish?
+

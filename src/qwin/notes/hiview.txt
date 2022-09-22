@@ -1,0 +1,72 @@
+
+The HIView drawing model does not support drawing to the screen
+outside of a kEventControlDraw event handler. If you want to redraw a
+view, you should mark areas as being invalid using the
+HIViewSetNeedsDisplay, HIViewSetNeedsDisplayInRegion or, in Mac OS X
+v10.4 and later, HIViewSetNeedsDisplayInRect and
+HIViewSetNeedsDisplayInShape functions. You draw only when the system
+tells you to do so by calling your kEventControlDraw handler.
+
+Note that you can force a redraw immediately by calling the HIViewRender function (available in Mac OS X v10.3 and later). However, you should not use this function indiscriminately, as it can cause performance issues.
+
+----------------------------------------------------------------------
+
+
+Positioning Views
+
+You use the following functions to set or obtain the position of a view within its parent:
+
+To obtain the local bounds of a view, call the HIViewGetBounds function:
+OSStatus HIViewGetBounds (HIViewRef inView, HIRect *outRect);
+To obtain the frame bounds of a view, call the HIViewGetFrame function:
+OSStatus HIViewGetFrame (HIViewRef inView, HIRect *outRect);
+This function is analogous to the older GetControlBounds function except that the coordinates are referenced to the view’s parent, not the window’s content region.
+To set the frame bounds of a view, call the HIViewSetFrame function.
+OSStatus HIViewSetFrame (HIViewRef inView, const HIRect *inRect);
+This function effectively moves the view within its parent. It also marks the view (as well anything that may have been exposed behind it) to be redrawn.
+To move a view a certain amount within its parent, call the HIViewMoveBy function:
+OSStatus HIViewMoveBy (HIViewRef inView, float inDX, float inDY);
+To place a view at a certain point within its parent, call the HIViewPlaceInSuperviewAt function:
+OSStatus HIViewPlaceInSuperviewAt (HIViewRef inView,
+                                    float inX, float inY);
+
+The CGContextTranslateCTM shifts the origin of the y-axis by the height of the view bounds, while the CGContextScaleCTM call invert the y-axis.
+
+
+----------------------------------------------------------------------
+
+Note that unlike in older system software, you should never draw your views outside of a kEventControlDraw handler; do not use the Control Manager functions UpdateControls, DrawControls, or Draw1Control to draw to the screen. Instead, you must let the system know that a view, or a portion thereof, needs to be updated. This process is analogous to the older method of adding dirty areas to an update region.
+
+To mark a view as dirty and needing to be redrawn, call the HIViewSetNeedsDisplay function:
+
+OSStatus HIViewSetNeedsDisplay (HIViewRef inView,
+                                    Boolean inNeedsDisplay);
+Pass true for the inNeedsDisplay parameter if you want the view updated. You should make this call wherever you would have previously called DrawControls.
+
+If you need to update only a portion of a view, you can call the HIViewSetNeedsDisplayInRegion function:
+
+OSStatus HIViewSetNeedsDisplayInRegion (HIViewRef inView, RgnHandle inRgn,
+                                            Boolean inNeedsDisplay);
+In Mac OS X v10.4 and later you can also use the HIViewSetNeedsDisplayInRect and HIViewSetNeedsDisplayInShape functions:
+
+OSStatus HIViewSetNeedsDisplayInRect( HIViewRef inView,
+                const HIRect *  inRect, Boolean inNeedsDisplay);
+ 
+OSStatus HIViewSetNeedsDisplayInShape( HIViewRef inView,
+                HIShapeRef   inArea, Boolean inNeedsDisplay)
+At the appropriate time, the system copies the updated regions to the screen (or calls your drawing routines).
+
+In rare cases where you want to redraw your view immediately, you can call the HIViewRender function in Mac OS X v10.3 and later. Doing so allows you to bypass firing Carbon event timers or any other actions that may occur when cycling through the event loop.
+
+Important: You should never pass false for the inNeedsDisplay parameter. If you do so, you may suppress updates for views or regions that intersect the area you specified.
+
+----------------------------------------------------------------------
+
+Handling Draw Events
+When the draw event (kEventControlDraw) occurs, you must draw your view or portion thereof.
+
+If you are using Quartz, you must obtain the kEventParamCGContextRef parameter, which holds the Core Graphics context you should draw into. You must use the context that is passed to you rather than creating your own in the drawing handler. This context is already transformed, so you simply draw.
+
+If you are using QuickDraw, you can obtain the current graphics port from the kEventParamGrafPort parameter.
+
+In addition, whether you use QuickDraw or Quartz, the kEventControlDraw event also contains a kEventParamRgnHandle parameter. This region defines the visible portion of the view, and in most cases you should restrict your drawing to this area; any part of the view outside this area is presumably covered by another view and will be overwritten. The HIView compositor determines the size of this region.

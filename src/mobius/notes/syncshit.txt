@@ -1,0 +1,860 @@
+Old sync notes, probably during the first rewrite in 2006
+
+
+
+SamplePlay
+
+Retrigger the loop, let it play once, then enter mute.
+Unclear if this sends StartSong when Sync=Out, but that would make sense.
+
+Insert while in Mute mode is converted to SamplePlay.
+
+While in SamplePlay mode, Undo will escape the pending Mute and let
+the loop continue.  
+
+When triggered with MIDI via the LoopTrig parameter, if SamplerStyle=Once,
+it is supposed to behave like SamplePlay.
+
+We do not support LoopTrig to specify a range of loop trigger notes.  
+Can do this with scripts that each call SamplePlay with a particular
+loop number
+
+When run directly, Similar to SamplerStyle=Once except that the
+loop is put into mute at the end rather than returning.
+
+Sync=Out, SamplePlay
+
+Send StartSong on retrigger, let clocks continue during mute?
+No, do not send StartSong.  This is behaving like a sampler, we should
+be able to retrigger at arbitrary points against the background loop.
+
+Could have an option, SamplePlayMIDIStart?
+Will SampleStyle=Once in combination with SamplePlay handle this?
+
+For that matter, might be nice to allow SampleStyle=Start to 
+avoid the SongStart.  Either that, or allow the start frame to 
+be specified in a script:
+
+   LoopTrigger1 0
+   LoopTrigger 1 0
+   LoopTrigger 1 rand(0,loops[1].loopFrames)
+
+
+
+
+
+----------------------------------------------------------------------
+
+Event Timing
+
+ - at frame, in scheduling order
+ - at frame, before all others (only for wait events)
+ - at frame, after all others (only for waits)
+ - immediate, before all others, only for internal sync events
+ - at subcycle
+ - at cycle
+ - at loop
+ - at start
+ - at end
+
+
+Wait <unit> <time> [before | after]
+
+Wait end before
+Wait start after
+Wait frame 23 before
+
+Wait [until] 
+
+Or specific times?
+
+Wait beforeEnd
+Wait afterEnd
+Wait 
+
+----------------------------------------------------------------------
+
+
+Some new rounding errors the first time we run, but not on later tests:
+
+Test 7 - Sync=Out, Switch
+Clock rounding error, timer 27.777779, synchronizer 20.833334
+ERROR: Sync drift 496 exceeds 300
+Sync Tests Complete
+
+
+
+
+
+PROBLEMS
+
+  - 1: isSyncBoundary, check !! on subcycle calculations
+  - 1: adjustMasterTempo, does it reset the pulses? if so make sure
+    callers can deal
+  - 1: when the out sync master, the MS_START message we force into
+    the queue won't be processed by tracks that came before, 
+    need to make *sure* that the track sync master is always processed first
+
+  - 2: RecordCyclePulses when rate != 1.0, roundoff errors
+  - 2: assignSyncMaster, may have the "latency delay" issue before recording
+     starts when checking modes
+  - 2: make sure calcRoudingFrames is right for rate!=1.0
+  - 2: loopTrackCopy, should we recalculate the track sync masters?
+  - 2: midiStart, we may be about ready to generate another clock, need
+       the Timer to reset the tick counters whenever startContinue is sent
+  
+  - 3: isRetriggerable, may need to be smarter about events 
+  - 3: isApplyingFeedback may need to understand the latent feedback
+    contained in the Smoothers
+  - 3: midiContinue, do we need to send a clock like midiStart?
+  - 3: after adjustMasterTempo there is a short inconsistency between
+       pulseFrames and basePulseFrames, may cause errors if we get
+       another event before the next pulse?
+
+DESIGN
+
+  - Try to move Loop.mSyncMode to the track.  We don't need to let different
+    loops have different sync modes?
+    - ? can't most of these be on the track
+
+  - syncEvent: MS_START & MS_CONTINUE
+     need MIDIStartRetrigger parameter to make the loop follow
+     the midi events
+
+  - try to move the isPulseLatencyAdjust logic down into MidiQueue
+    wo we don't have to handle it at the higher levels
+
+  - If someone changes the master track subcycle count while slaves
+    are recording mayhem ensues.  Should be capturing this when slave
+    recording begins.
+
+  - the pulse size should be calculated immediately and all recordings
+    rounded up to a pulse size, similar to what calcRoundingFrames does
+
+  - isSyncBoundary, cycle and subcycle don't make sense for coarse
+    grained sync pulse like VST Bar if there is not more than one pulse
+    in the segment
+
+  - parameter that disables sending StartSong when we retrigger,
+    useful when you want to clock sync effects but they don't care
+    where the start is
+  
+  - Should we have a single external loop pulse count for the track
+    once the first loop is recorded, or should each loop get to have
+    its own external pulse count?  Affects where we realign.
+
+  - initMasterTempo, could try to be more accurate about initial MIDI drift
+
+  - sendStartResetPulse, removing drift but there may actually be a 
+     small amount due to MIDI latency, try to detect?
+
+----------------------------------------------------------------------
+Loop Switch
+
+Empty loop handling is a complex problem.  It would be nice if we
+could record a loop and establish the tempo.  Then switch to an empty
+loop and have the tempo continue.  When the other loops are recorded,
+recording quantizes similar to TrackSync.  The question is whether to
+synchronize with the external pulse counter, or keep a phantom loop
+playing.  Can't do the phantom loop easily because the frame counter
+isn't advancing in a reset loop.
+
+Syncing to the external pulse will be close, but with drift
+we can never be sure it will be exactly the same size as the previous
+loops.  Should try to detect if we're near to the same cycle length
+and round up.  A similar issue exists for multiple tracks with 
+Sync=In/Host, once the first track has been recorded, is it better
+to round up to match that track, or just let each track be relatively
+close and drift retrigger at different times?
+
+Basically, Sync=In+TrackSync could work like Sync=Out+TrackSync.
+Once the first "master" track is recorded, we do all our recording
+relative to it, not the external clock.  
+
+Without any of that, the options when switching to an empty loop are:
+
+  - send StopSong and wait for the new recording
+  - let the clock freewheel until the new recording has finished,
+    then adjust tempo
+
+I like letting it freewheel, especially if you do NextLoop by accident,
+the drum machine can at least keep going.  
+
+When switching to the previous loop after switching to an empty loop,
+we have these possibilities:
+
+  - try to locate the position in the old loop as if it has been
+    playing all along, similar to SamplerStyle=Continuous
+    - requires that we remember the previous frame and external pulse count
+
+  - resume from the previous location, similar to SamplerStyle=Run
+    - requires that we remember the old frame
+    - could result in severe dealign
+  
+  - retrigger the loop from the beginning
+    - like SamplerStyle=Start,Attack
+    - what about Once?
+    
+Could just follow SamplerStyle, but this is an unusual case,
+the first option (SamplerStyle=Continuous) seems most musical.
+
+No, if SamplerStyle=Start,Attack we should obey it since that is
+the expectation for any loop switch.  SamplerStyle=Run should work
+but since the empty loop wasn't advancing, make sure the return frame
+is calculated correctly.  
+
+SamplerStyle=Continuous *is* a musical option, but since the empty 
+loop is not advancing, we have to use the external pulse count
+to guess the amount of advance.  
+
+----------------------------------------------------------------------
+MIDI Clock Control
+
+Changing Tempo
+
+MIDI clocks are generated by first calculating the number of milliseconds
+per clock (as a float).  Then in a millisecond resolution timer interrupt,
+add 1.0 to a counter.  When the counter exceeds millisPerClock, send
+a MIDI clock and decrement the counter by millisPerClock.  This may result
+in a floating "remainder" that gradually accumulates and may cause
+a clock to fire after a fewer number of milliseconds than usual.
+
+When the tempo is suddenly increased, say from 120 to 240 the 
+millisPerClock drops from 20.833 to 10.416.
+
+This can lead to a timing anomoly if the current clock tick counter
+is greater than the new millisPerClock.  
+
+Example: 120 BPM, 20 millisPerClock, tick = 16
+
+When tempo is raised to 240 BPM, millisPerClock drops to 10.  With
+a tick of 16, we're over the threshold for the next clock.  A clock
+is sent on the next interrupt and the remainder left at 6.  Then in 
+4 more interrupts we send another clock and resume a steady 10 interrupts
+per clock.  The milliseconds at which clocks were sent looks like:
+
+  0  20  40  56  60  70  80
+
+Where the tempo change happens near interupt 56.  For a clock smoother
+this results in three aberations, 40-56, 56-60, 60-70 (16, 4, 10).
+
+It would be smoother if the tempo could be changed on a clock boundary:
+
+  0 20 40 60 70 80
+
+There is only one aberation, 60-70.  To do this, Timer needs to 
+defer tempo changes until the next clock.  In theory this is a long
+time and we could be making more incremental changes, especially if the
+tempo jump is large.  But in practice, the devices we're sending clocks
+to will behave differently when the clock rate is changing, so the extra
+work may not have any audible effect?
+
+This is an issue for midi/audio synchronization because we can't 
+defer changing the audio tempo.  If we can be certain that the tempo
+won't change until the next pulse (MIDI clock), then we can simply
+leave pulseFrames where it is, change basePulseFrames to have the
+new tempo.  Then reset pulseFrames on the next pulse.
+
+----------------------------------------------------------------------
+SyncAdjust Parameters
+
+unroundedSyncAdjust
+speedSyncAdjust
+switchSyncAdjust
+undoSyncAdjust
+
+When we counted pulses for the purpose of drift retrigger, we needed
+to adjust the number of pulses (SYNC_ADJUST_RESIZE) so that it reflected
+the new loop length.  For coarse grained pulses, there could be severe
+rounding error, we may not get anywhere near the end of the loop.
+
+Now that we do drift retrigger with pulseFrame, we no longer need any
+special resizing operation, we just continue incrementing pulseFrame
+until it reaches the end of the loop, which may be dealigned from the
+external loop.  The only thing we may have to do is wrap the
+pulseFrame in case it is beyond the end of the new loop or layer.
+
+The SYNC_ADJUST_CONTINUE option is no longer relevant.  It would cause
+a drift retrigger after counting the original number of pulses which
+may no longer correspond to the start of the loop.  We could accomplish
+something similar with an option to set the "SyncLoopFrames" to something
+other than the actual loop frames, but this seems less useful.
+
+We no longer need a 3 state parameter, it is just a boolean
+SyncChangeTempo=true which applies only to the master track.
+But we're keeping it a selector in case we want to add more
+options later and so we don't have to do parameter migration.
+
+----------------------------------------------------------------------
+Pulses in a Loop
+
+When a loop is initially recorded, we remember the number of pulses in
+the "external" loop.  We do not currently remember the external loop
+length in frames, though this can be calculated from the tempo (with
+some rouding error).
+
+When the length of the loop is changed, we do not adjust pulseFrames.
+A pulse still occupies the same amount of time though the loop will
+contain a different number of pulses.  For unrounded operations, the
+number of pulses may be fractional.
+
+We check for drift retrigger whenever the a pulse advances the
+pulseFrame over the loop end point.  The pulseFrame is wrapped, but
+may not end up on zero.  Example if the loop is 4.5 pulses long, the
+integral pulse numbers per loop will be:
+
+   0 1 2 3 4
+   .5 1.5 2.5 3.5
+   0 1 2 3 4
+   .5...
+
+As we mutate the loop we never have to worry about the number of
+pulses in the loop or the length of a pulse, just detect end point
+crossings whenever they happen.  We could also do drift checks on any
+pulse, for example every 10th pulse rather than always the pulse that
+crosses the end point.
+
+The original pulseFrames calculated when a loop was recorded 
+does not necessarily have to match the pulseFrames in the external loop,
+and in fact it won't if the loop was recorded with a rate shift.
+All that is necessary is that the pulseFrames and loopFrames be in 
+the same proportion.  If the external loop has these properties:
+
+   frames = 10,000
+   pulses = 10
+   pulseFrames = 1000
+
+The internal loop may look like this:
+
+   frames = 10,000
+   pulses = 20
+   pulseFrames = 500
+
+This just means that the external loop will play through twice before
+we check for drift.
+
+It may be desireable to make this adjustment after an unrounded multiply
+shortens a loop.  Assuming an internal loop that starts as:
+
+   frames = 10,000
+   pulses = 10
+   pulseFrames = 1000
+  
+Used a SUSUnroundedMultiply to cut it down to 300 frames.  Whenever
+the loop length goes below the pulseFrames, we've got this odd
+situation where we will be doing a drift retrigger on every pulse with
+a large carry over.
+
+  pulse 0: pulseFrame 0, loopFrame 0
+  pulse 1: pulseFrame 1000, loopFrame 100 (1/3 of pulse 900-1200)
+
+Before comparing for drift we must first wrap pulseFrame down to "loop
+time" with successive subtractions of the loop length.
+
+  1000, 700, 400, 100
+
+Then leave this as the remainder.  Though unusual we can reduce the
+number of drift checks by dividing pulseFrames by 2 until it is less
+than the loop length.  In this case it would be cut to 250.  Now we
+only check less often:
+
+  pulse 0: pulseFrame 0, loopFrame 0, check
+  pulse 1: pulseFrame 250, loopFrame 250, no check
+  pulse 2: pulseFrame 200 (wrapped from 500), loopFrame 200, check
+  pulse 3: pulseFrame 150 (wrapped from 450), check
+  pulse 4: pulseFrame 100 (wrapped from 400), check
+  pulse 5: pulseFrame 50 (wrapped from 350), check
+  pulse 6: pulseFrame 0 (wrapped from 300) , check
+  pulse 7: pulseFrame 250, no check
+
+This doesn't seem worth bothering with, and in fact if the loop
+is shorter than the pulse length, the likelyhood that it is drifting
+out of sync is greater, since length errors will multiply more rapidly.
+It is better to check as often as we can, on every pulse.
+
+Pulse Frame Adjustments
+
+
+As we mutate the loop, we may need to make adjustments to the
+current pulseFrame.  This happens under the following conditions:
+
+  - Unrounded multiply and Remultiply, pulse frame always jumps
+    to zero.
+
+  - InstantDivide that removes content before the pulse frame.
+
+  - Any form of "cut" that removes content before the pulse frame,
+    but does not reset the pulse frame to zero.
+    (None right now).
+
+  - Retrigger, StartPoint, Slip, or any function that makes a sudden
+    change to the loop frame.
+
+Whenever we move the loop frame, we cannot simply recalculate pulseFrame
+to match.  This is because pulseFrame is logically moving along with 
+loopFrame, but we only increment it when we receive a pulse.  When
+pulseFrame is recalclated, the next pulse does not necessarily represent
+a full increment of the recalculated puseFrame.
+
+Example:
+   pulseFrames = 10
+   pulseFrame = 100
+   lastLoopFrame = 100
+   eventFrame = 108
+   newLoopFrame = 0
+
+Here, an event happens at frame 108 that retriggers the loop back to zero.
+But notice that in approximately two more frames we will receive the
+next pulse.  If we make no adjustments pulseFrame will go from 0 to 10
+but the loopFrame is only at 2.  We would incorrectly consider this drift.
+
+What we must do is remember the approxomate number of frames "consumed"
+within the pulse whenever the pulseFrame is changed.  Then on the next
+pulse the pulseFrame is incremented by the usual number of pulseFrames
+minus the number we consumed before the event was processed.
+
+So, in addition to the end state above, add:
+
+  pulseFramesConsumed=8
+
+To make this calculation we must remember the loopFrame that was
+current at the previous sync pulse, and compare this with the event
+frame.
+
+Next, we have the small possibility that there may be more than one
+loop frame movement function within a pulse.  To the previous example,
+add another Retrigger at frame 1.  We expect the pulse to come in
+around frame 2.  We have to increment pulseFramesConsumed by one to
+account for the one frame before the second retrigger.  But at this
+point loopFrame is 1, lastLoopFrame is still 100, we've lost our base
+frame.  In addition, we have to modify lastLoopFrame to the new base,
+in this case 0.
+
+The recalculation of lastLoopFrame and the increment of
+pulseFramesConsumed may happen several times if there are several
+frame jumping functions within a pulse.
+
+Whenever we change rates, we have a similar issue.  Since we will
+be adjusting pulseFrames, we have to calculate the number of frames
+consumed at the *old* rate.  Increment pulseFramesConsumed by that
+amount, then save the current loop frame in lastLoopFrame.
+
+However, it isn't that simple.  Keeping track of the number of
+frames we've consumed doesn't tell us how many rate adjusted
+frames should be in the final gap between the last rate shift
+event and the next pulse.  The number of consumed frames may
+include regions from several different rates, but that information
+is now gone.
+
+Rather than maintaining the number of frames consumed, we decrease
+the pulseFrames so that it always reflects the frames remaining
+in the current pulse, at the adjusted rate.  This works for the simple
+retrigger case too:
+
+Example:
+   pulseFrames = 10
+   pulseFrame = 100
+   lastLoopFrame = 100
+   eventFrame = 108
+   newLoopFrame = 0
+
+At event 108:
+   pulseFrames = 10 - 8 = 2
+
+At next pulse:
+   pulseFrame = 0 + 2
+   pulseFrames = 10  
+
+With this method, pulseFrames must be restored on every pulse in case
+it was modified during the pulse.
+
+When rate shifts are involved, the calculatiosn are more complicated
+because the remainder must be calculated in this way:
+
+   adustedFramesConsumed = loopFrame - lastLoopFrame
+   normalizedFramesConsumed = adjustedFramesConsumed / oldRate
+   normalizedFramesRemaining = basePulseFrames - normalizedFramesConsumed
+   adjustedFramesRemaining = normalizedFramesRemaining * newRate
+
+----------------------------------------------------------------------
+Drift and Dealign
+
+Drift is a measure of the number of frames the Mobius loop is
+currently out of sync with the external loop due to timing jitter
+between the external clock pulses.  Drift usually changes over time.
+It may occasionally correct itself, but it usually becomes gradually
+larger.  Drift is typically small unless the user is manuallly
+changing the external device's clock tempo.  When drift exceeds a
+defined threshold we will move the loop frame to bring it back into
+alignment.  This results in a discontinuity in the audio stream which
+requires cross fades at both edges.  After the drift correction, the
+loop again gradually accumulates more drift and is eventually
+retriggered again.
+
+Because the drift retrigger creates a discontinuity in the audio stream,
+it must be disabled whenever there is an active modification to the 
+loop, such as any type of overdub or a reduction in feedback level.
+Failing to do so will result in either gaps of silence inserted into
+a modification, or splices where sections of a modification is removed.
+These artifacts could be allowed if we were careful to perform cross
+fading at the edges, but the results are still audible and usually
+undesireable.
+
+Dealign is caused by a deliberate movement of the internal loop frame
+relative to the external loop frame.  Once a loop has been dealigned,
+it will remain dealigned until it is manually realigned.  This differs
+from drift which is automatically realigned.    A loop may be in a state
+of dealign and drift at the same time.  A dealigned loop may be retriggered
+to correct drift, but the retrigger point is offset from the start point
+by the amount of dealign.  For example, if the loop is dealigned by 1000
+frames it is playing slightly ahread of the external loop.  A drift
+retrigger repositions the loop at frame 1000 rather than at frame 0.
+
+Dealign may be set after the following functions:
+
+   Move
+   Retrigger when not OutSyncMaster
+   Reverse
+   Unrounded Multiply
+   Remultiply
+   MIDI StartSong when Sync=External
+   MIDI StartSong when OutSyncMaster, and not at frame zero
+   MIDI Continue when Sync=External 
+   StartSong event not at frame zero (only because we don't send SongPos)
+
+Retrigger is just a special case of Move where the target frame is zero.
+It may happen as a side effect of several function/parameter combinations.
+
+Dealign is cleared after these functions:
+
+  Reset
+  Record
+  Realign event, TrackSyncMaster, OutRealignMode=StartSong
+   - because the external loop has been moved
+  Realign event, !TrackSyncMaster, !TrackSyncSlave
+   - because  we've recalculated our position
+  Retrigger when OutSyncMaster
+  MIDI StartSong when OutSyncMaster and at frame zero
+  StartPoint (!! this doesn't make sense?)
+    - because the internal loop is declared to be in sync
+      with the external loop??
+  Switch when OutSyncMaster and SamplerStyle=Retrigger
+
+Dealign is transfered from one loop to another in the following situations:
+
+  Realign (slave track to master track)
+  Switch (from previous loop to next loop)
+
+When a track sync slave loop is realigned to the master track,
+the amount of dealign from the master must be transfered to the slave.
+This is because while the slave is now in sync with the master the
+master may be dealigned relative to the MIDI clock being generated.
+
+UPDATE
+
+Previous commentary was assuming an implementation where we maintained
+an "internal pulse frame" that remained in sync with the "external pulse"
+and an additional "dealign frames" that was added to the internal pulse
+frame to obtain the expected loop frame.
+
+But we don't need both an internal pulse frame and a dealign frames.
+Instead dealign can be implemented by simply moving the internal pulse
+frame relative to the external pulse rather than assuming it is
+in sync with the external pulse.  There are these consequences:
+
+  - drift retrigger happens when the loop reaches its start point,
+    not when the external loop reaches its start point
+
+  - drift retrigger is always to frame zero rather than being offset by
+    the amount of dealign
+
+  - we don't easily know where the "internal synchronized start point is"
+    we only know where the original "external start point" is
+    e.g. if the original loop is 96 pulses long and we did a 2x multiply,
+    the loop could maintain a 192 pulse counter representing the "adjusted
+    external loop" and drift retrigger when that reaches zero rather than
+    the original loop reaches zero.  This seems like a lot of work for
+    little gain, and I think we could calculate it if we really wanted to.
+
+New Rules
+
+The "External Loop" is a representation of a period of time measured
+in "pulses" and the number of audio stream frames between each pulse.
+From the pulses and the number of frames we can calculate the tempo,
+or the number of frames can be calculated from the pulses and tempo.
+Both formulas may be used depending on the synchronization mode.
+
+The "Internal Loop" or simply "Loop" is an audio loop managed
+within Mobius.  It starts with a number of frames equal to the
+external loop, but this may be changed as the loop is muted with
+multiply, insert, divide, etc.   The internal loop maintains its
+own position, and this position may be out of sync with the
+external loop.
+
+There are two forms of synchronization error between the internal
+loop and external loop:
+
+  - drift
+  - dealign
+
+Drift is a small but temporary difference between the internal and external
+loops calculated from the pulses.  When drift exceeds a threshold, the internal
+loop is retriggered to bring it back into alignment with the external loop.
+
+Dealign is a large and permanent difference between the internal and 
+external loops.  Drift and dealign may occur at the same time, drift
+retrigger will eliminate the drift, but retain the same amount of dealign.
+
+Drift and Dealign are both represented with a special loop cursor
+called the "pulse cursor".  It initially starts at the same frame as the
+loop record cursor, but may be slightly different due to clock drift.  
+When the pulse cursor reaches (or crosses) zero, we compare it with the 
+record cursor, the difference is the amount of drift.  When the
+drift exceeds a threshold, the loop is retriggered from zero to correct
+the drift.  (Other retrigger points are possible, they don't have to 
+be at the start point, but that is usually the most musical?).
+
+Dealign is the difference between the pulse cursor and the current
+location in the external loop.  The external and internal loops may be 
+brought back into alignment with various forms of Realign function.
+When the external loop reaches its start point, the internal loop 
+is retriggered from zero.  (Other realign points are possible).
+
+----------------------------------------------------------------------
+Pulses and Latency
+
+For MIDI external sync modes (In, MIDIBeat, MIDIBar) the clock pulses
+are received in "realtime" and most loop operations triggered by them
+must logically be delayed by the amount of InputLatency.  In practice
+due to quantization of events on interrupt block boundaries, this
+adjustment may make little difference.
+
+When beginning a new recording, the record start is delayed from the
+trigger pulse by InputLatency.  When ending a new recording, the end
+event is also delayed by InputLatency.  
+
+For host sync modes (HostBeat, HostBar) it is unclear whether we should
+be doing latency compensation or if the host already has.  Assuming
+that host sync pulses should be treated like track sync pulses and
+processed immediately.  This might need to be a parameter passed
+through the AudioInterface?
+
+For the track sync pulses, there is no latency compensation.
+
+For output sync modes, the track will receive MIDI clock pulses
+generated by the internal clock.  The out sync master track will only
+receive pulses once it has finished recording, the slave tracks will
+receive them during recording but ignore them.  Slave track recording
+is based on track sync pulses and are never latency adjusted.
+
+After recording, the alignment of the internal clock pulses and the
+loop depend on when we start the clock.  Ideally we start the clock
+in advance as soon as the loop length is known, before the input
+latency delay.  This would make internal clock pulses consistent
+with external clock pulses, they represent "realtime" and we need
+to add latency to any operations they trigger.
+
+Unfortunately, we have historically not maintained a consistent
+latency dealignment between the loop and the internal clock.  The
+clock is controlled during "loop event time" which means it is started
+and stopped *after* the InputLatency delay rather than before it.
+This means that internal clock pulse events are also in "event time"
+rather than "real time" so we should not add latency delays to 
+any operations they trigger.
+
+It would be possible to do this correctly, but complicated and given
+the small amount of ASIO latency probably not worth the trouble.  No
+one has complained about it, and the max sync drift is usually several
+times larger than latency so we're rarely in perfect sync anyway.
+
+It would simplify several sync calculations if we could assume
+that all sync pulses are comming in already adjusted for InputLatency.
+Then every operation triggered by a sync pulse could be done immediately.
+This would require that we delay the posting of a sync event by 
+the amount of InputLatency, if InputLatency is greater than
+one interrupt buffer size, we will need to maintain a frame counter and
+decrement it on each interrupt.  Once the counter reaches zero the event
+can be processed.
+
+The disadvantage is that any pulse that causes a change in the playback
+could have reduced the amount of OutputLatency loss if we had processed
+it as soon as it came in.  This would apply to these situations:
+
+  - ending a record and preplaying the new loop
+  - comming out of mute at the global start point
+  - realigning at the global start point
+  - drift retigger
+
+But in practice is the complexity necessary to handle these worth 
+the extremely small amount of output stream accuracy?  
+
+----------------------------------------------------------------------
+Rate/Pulse Rounding
+
+Adjusting the expected pulse count or the pulsesPerFrame count
+after a rate shift is innacurate unless the shift happens
+near a pulse boundary.  For coarse grained pulses (VST Bars), we
+could be almost finished with a pulse, but when rate shifting
+happens we treat it as if the pulse never happened. 
+
+Example: Sync=HostBar,loop is 4 bars long (1,2,3,4), a pulse happens
+at the beginning of each bar, pulses are numbered from zero (0,1,2,3).
+
+Exactly at bar 3 (pulse 2) we enter half speed.  The pulse count is
+increased to 8 and the current pulse increased to 4.  We expect 4 more
+pulses till the start point.
+
+Now enter half speed a few frames before pulse 2.  The pulse count is
+increased to 8, but the current pulse doubles from 1 to 2.  We expect
+6 more pulses to reach the start point.  We will receive the next pulse
+almost immediately, then wait for 5 more pulses.  We've effectively lost
+a pulse.  We won't reach the pulse start point until we're near
+the middle of the first bar (because now we have 2 pulses per bar).
+
+To handle this, we need to factor in the partial pulse that has
+already elapsed before the rate shift.  When internal pulses are
+implemented as a pulseFrame real number, this estimate can be made
+by advanding pulseFrame by number of real frames the loop advanced
+since the last pulse.  But note that we can't simply subtract
+the current loop frame from the current pulseFrame since they are
+not necessarily in alignment.  We also have to remember the loop
+frame that was current on the last pulse.  Because of clock drift,
+this may not be an exact measure of the time till the next clock, but
+it should be close enough.
+
+----------------------------------------------------------------------
+Pulses In Multiple Loops
+----------------------------------------------------------------------
+
+When we start switching loops, we have the potential for the
+external pulse count to change unlike layer switching.  
+The first loop may be recorded with 96 external pulses, and
+the second loop with 48.  Non multiple sizes are possible but
+unlikely as they tend to be less musical.
+
+If we switch from a larger loop to a smaller, the external pulse
+may need to be wrapped.  When switching back to the larger loop
+the pulse may not be in the same position it would have been in
+had we let the original loop run for the same amount of time.
+
+Example, loop 1 has 96 pulses, loop 2 has 48.  At pulse 24 switch
+to loop 2 and let it run for 60 pulses.  The wrapped loop 2 pulse
+will be 36.  Had we stayed in loop 1 the pulse would be 84.  
+The external realign point will have effectively changed.  
+
+This isn't so bad if the longer loop is an even multiple of the smaller.
+They will still realgin on the "bar", it just may be a different bar.
+For a drum pattern or drone, this will still sound musical, for
+a sequence with a chord progression, this may be bad.  But this is
+under the control of the performer.  If you want the loops to realign
+with the master loop as you switch among them, you need to make them
+multiples of the "audible external loop".  
+
+When switching between loops with content, the internal pulse frame 
+is recalculated and drift carries over as it does for layer switching.
+Several complications happen though when have a combination of full
+and empty loops and you switch among them.
+
+Case 1: Full to Empty
+
+So that we can properly reposition the internal and external pulses
+when we return to a full loop we need to keep track of how long we've
+been in the empty loop.  Keep the extenal pulses going using
+the same state as the previous loop.  
+
+Internal pulses could also be maintained but since we're not actually
+advancing the loop frame we can't detect any changes to the drift.
+
+Case 2: Empty to Empty
+
+Simply copy the pulse state from the source to the destination loop.
+
+Case 3: Empty to Full
+
+Restore the external pulse state from the state we've been carrying
+through the empty loops.
+
+The internal pulse state is harder because we've got the partial pulse
+problem.  We may not have left either loop exactly on a pulse boundary
+so when the next pulse comes in we don't know how far to advance the
+pulseFrame.  If we were to maintain a pulseFrame that just incremented
+without bound in the empty loops, we could scale that back into the
+new loop.  But since we weren't accurately monitoring drift, knowing
+exactly how many pulse frames has elapsed isn't that helpful.  All we
+need to do wait for the next pulse, *then* recalculate pulseFrame
+based on our current location, factoring in the amount of drift we had
+when the loop was last playing.  A similar technique can be used
+when we go in and out of pause.
+
+Where maintaining an unbounded pulseFrames *does* help is to implement
+SamplerStyle=Continuous.  After spending time in the reset loop
+we can return to the original loop near the position we would have
+been in had we stayed in that loop.  This though is arguably something
+that Loop could be doing irrespective of synchronization.  Hmm, it would
+behave similar to Mute with with ModeMode=Continuous.  Without synchronization
+though there would be no audible frame of reference unless other
+tracks were playing, so behaving like pause isn't so bad.
+
+Maintaining pulse state in reset loops is complicated by these conditions:
+
+- Reset in a loop that is already reset must not trash the pulse state.
+
+- Record in a reset loop must wait for a pulse boundary.  After recording
+  the relative advance of external pulses will still be accurate, 
+  but internal pulse state and drift will be lost.  Losing drift is
+  ok for all SamplerStyles except Run where we're supposed to restore
+  the old position, and the old "current" drift.
+
+- If the record of a reset loop is canceled, we've lost pulse state,
+  and it would be difficult to recalculate.
+
+- If a playing loop is reset, we should keep the pulse state
+  if there is any other non-empty loop in this track.  External pulse
+  state stays as is.  Internal pulse state would reset and start
+  accumulating without bound.  When we return to a full loop, it
+  will look similar to having dropped temporarily into an empty loop.
+  However, we will have lost any drift that accumulated while
+  the loop that was reset was playing and revert to the drift
+  left in the old lop.  Could try to capture the last known sync drift
+  and leave it in the Reset loop?  This is not terrible, but may cause
+  a dealign if were were close to the drift retrigger point and lost it.
+
+Could simplify external pulse management by moving it to the Track?
+
+Decisions:
+
+Maintaining external pulse count is important for realign, do it.
+
+When entering an empty loop, copy over the external pulse state and the
+drift from the previous loop.
+
+When a loop is reset, do not reset the external pulse counters,
+and capture the final amount of drift.
+
+When moving from an empty loop to a full one, use the drift that
+was left behind on the empty loop.
+
+We will not try to implement SamplerStyle=Continuous when entering
+and returning from a reset loop, it will behave like Pause.
+
+* On Moving External Pulses To the Track
+
+
+
+----------------------------------------------------------------------
+
+
+
+
+
+   
+
+
+
+
+
+
+
+
+
+

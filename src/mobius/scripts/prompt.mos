@@ -1,0 +1,5 @@
+!name Prompt Bor Something
+!autoload
+
+Prompt How's it Going?
+Message Prompt finished

@@ -1,0 +1,189 @@
+A trace of Mobius running in Cubase, taken probably mid 2010.  
+Cubase rewound to zero, see the odd negative ppqPos
+
+7736: VstMobius::setParameter 5 0.000000
+7736: VstMobius: PLAY
+7736: VstMobius: ppqPos -0.159093 barStartPos -4.000000 frames 2048
+7736: VstMobius: awaiting host rewind
+7736: VstMobius: ppqPos -0.066213 barStartPos -4.000000 frames 2048
+7736: VstMobius: host rewind detected
+7736: VstMobius: Resuming playback at bar beat 0
+7736: VstMobius: BEAT: ppqPos: -0.066213 range: 0.026621 barStartPos -4.000000 offset 1460
+7736: VstMobius: ppqPos 0.026667 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.119546 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.212426 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.305306 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.398186 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.491066 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.583946 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.676825 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.769705 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.862585 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.955465 barStartPos 0.000000 frames 2048
+7736: VstMobius: BEAT: ppqPos: 0.955465 range: 1.048299 barStartPos 0.000000 offset 982
+7736: VstMobius: ppqPos 1.048345 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 1.141224 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 1.234104 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 1.326984 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 1.419864 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 1.512744 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 1.605624 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 1.698503 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 1.791383 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 1.884263 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 1.977143 barStartPos 0.000000 frames 2048
+7736: VstMobius: BEAT: ppqPos: 1.977143 range: 2.069977 barStartPos 0.000000 offset 504
+7736: VstMobius: ppqPos 2.070023 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 2.162902 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 2.255782 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 2.348662 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 2.441542 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 2.534422 barStartPos 0.000000 frames 2048
+7736: VstMobius::DllMain DLL_THREAD_ATTACH
+7736: VstMobius: ppqPos 2.627302 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 2.720181 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 2.813061 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 2.905941 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 2.998821 barStartPos 0.000000 frames 2048
+7736: VstMobius: BAR: ppqPos: 2.998821 range: 3.091655 barStartPos 0.000000 offset 26
+7736: VstMobius: ppqPos 3.091701 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 3.184580 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 3.277460 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 3.370340 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 3.463220 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 3.556100 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 3.648980 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 3.741859 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 3.834739 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 3.927619 barStartPos 0.000000 frames 2048
+7736: VstMobius: BEAT: ppqPos: 3.927619 range: 4.020454 barStartPos 0.000000 offset 1596
+7736: VstMobius: ppqPos 4.020499 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 4.113379 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 4.206259 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 4.299138 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 4.392018 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 4.484898 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 4.577778 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 4.670658 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 4.763537 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 4.856417 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 4.949297 barStartPos 4.000000 frames 2048
+7736: VstMobius: BEAT: ppqPos: 4.949297 range: 5.042132 barStartPos 4.000000 offset 1118
+7736: VstMobius: ppqPos 5.042177 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.135057 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.227937 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.320816 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.413696 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.506576 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.599456 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.692336 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.785215 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.878095 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.970975 barStartPos 4.000000 frames 2048
+7736: VstMobius: BEAT: ppqPos: 5.970975 range: 6.063810 barStartPos 4.000000 offset 640
+7736: VstMobius: ppqPos 6.063855 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 6.156735 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 6.249615 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 6.342494 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 6.435374 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 6.528254 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 6.621134 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 6.714014 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 6.806893 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 6.899773 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 6.992653 barStartPos 4.000000 frames 2048
+7736: VstMobius: BAR: ppqPos: 6.992653 range: 7.085488 barStartPos 4.000000 offset 162
+7736: VstMobius: ppqPos 7.085533 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 7.178413 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 7.271293 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 7.364172 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 7.457052 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 7.549932 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 7.642812 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 7.735692 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 7.828571 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 7.921451 barStartPos 4.000000 frames 2048
+7736: VstMobius: BEAT: ppqPos: 7.921451 range: 8.014286 barStartPos 4.000000 offset 1732
+7736: VstMobius: ppqPos 8.014331 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 8.107211 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 8.200091 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 8.292971 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 8.385850 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 8.478730 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 8.571610 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 8.664490 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 8.757370 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 8.850249 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 8.943129 barStartPos 8.000000 frames 2048
+7736: VstMobius: BEAT: ppqPos: 8.943129 range: 9.035964 barStartPos 8.000000 offset 1254
+7736: VstMobius: ppqPos 9.036009 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 9.128889 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 9.221769 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 9.314649 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 9.407528 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 9.500408 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 9.593288 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 9.686168 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 9.779048 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 9.871927 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 9.964807 barStartPos 8.000000 frames 2048
+7736: VstMobius: BEAT: ppqPos: 9.964807 range: 10.057642 barStartPos 8.000000 offset 776
+7736: VstMobius: ppqPos 10.057687 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 10.150567 barStartPos 8.000000 frames 2048
+7736: VstMobius: ppqPos 10.243447 barStartPos 8.000000 frames 2048
+7736: VstMobius: STOP
+
+Stopped, rewound and played
+Note that the starting ppq is slightly different and we start with a BAR
+
+7736: VstMobius: PLAY
+7736: VstMobius: ppqPos -0.091111 barStartPos -4.000000 frames 2048
+7736: VstMobius: awaiting host rewind
+7736: VstMobius: ppqPos 0.001769 barStartPos 0.000000 frames 2048
+7736: VstMobius: host rewind detected
+7736: VstMobius: Resuming playback at bar beat 0
+7736: VstMobius: BAR: ppqPos: 0.001769 range: 0.094603 barStartPos 0.000000 offset 0
+7736: VstMobius: ppqPos 0.094649 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.187528 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.280408 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.373288 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.466168 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.559048 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.651927 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.744807 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.837687 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.930567 barStartPos 0.000000 frames 2048
+7736: VstMobius: BEAT: ppqPos: 0.930567 range: 1.023401 barStartPos 0.000000 offset 1531
+7736: VstMobius: ppqPos 1.023447 barStartPos 0.000000 frames 2048
+
+
+Another
+
+7736: VstMobius: PLAY
+7736: VstMobius: ppqPos -0.119093 barStartPos -4.000000 frames 2048
+7736: VstMobius: awaiting host rewind
+7736: VstMobius: ppqPos -0.026213 barStartPos -4.000000 frames 2048
+7736: VstMobius: host rewind detected
+7736: VstMobius: Resuming playback at bar beat 0
+7736: VstMobius: BEAT: ppqPos: -0.026213 range: 0.066621 barStartPos -4.000000 offset 578
+7736: VstMobius: ppqPos 0.066667 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.159546 barStartPos 0.000000 frames 2048
+7736: VstMobius: ppqPos 0.252426 barStartPos 0.000000 frames 2048
+
+Resume after stopping...
+
+7736: VstMobius: PLAY
+7736: VstMobius: ppqPos 5.292653 barStartPos 4.000000 frames 2048
+7736: VstMobius: awaiting host rewind
+7736: VstMobius: ppqPos 5.385533 barStartPos 4.000000 frames 2048
+7736: VstMobius: host rewind detected
+7736: VstMobius: Resuming playback at bar beat 1
+7736: VstMobius: ppqPos 5.478413 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.571293 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.664172 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.757052 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.849932 barStartPos 4.000000 frames 2048
+7736: VstMobius: ppqPos 5.942812 barStartPos 4.000000 frames 2048
+7736: VstMobius: BEAT: ppqPos: 5.942812 range: 6.035646 barStartPos 4.000000 offset 1261
+7736: VstMobius: ppqPos 6.035692 barStartPos 4.000000 frames 204
+

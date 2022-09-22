@@ -1,0 +1,12 @@
+*.rsrc
+.DS_Store
+libui.a
+libmobius.a
+expr
+mobiusvst
+mobius
+AUMobius
+save
+temp
+mobius-install
+mobius-install*.dmg

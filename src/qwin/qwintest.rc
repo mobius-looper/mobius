@@ -1,0 +1,20 @@
+/*
+ * Copyright (c) 2010 Jeffrey S. Larson  <jeff@circularlabs.com>
+ * All rights reserved.
+ * See the LICENSE file for the full copyright and license declaration.
+ * 
+ * ---------------------------------------------------------------------
+ * 
+ * Windows resource file for qwintest.
+ * qwintest is supposed to be as common as possible so we only use
+ * this to get icons.
+ *
+ * !! Need to work on generic icon support.
+ *
+ */
+
+#include <windows.h>
+
+Chef ICON Chef.ico
+Earth BITMAP Earth.bmp
+

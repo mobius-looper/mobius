@@ -1,0 +1,214 @@
+<MobiusConfig quickSave='mobiusloop' noiseFloor='13' suggestedLatencyMsec='0' inputLatency='0' outputLatency='0' maxSyncDrift='2048' tracks='8' trackGroups='2' maxLoops='4' longPress='500' pluginPins='16' spreadRange='48' tracePrintLevel='1' traceDebugLevel='2' driftCheckPoint='loop' midiRecordMode='average' dualPluginWindow='true' oscInputPort='7000' oscOutputPort='9000' oscOutputHost='192.168.1.110' sampleRate='44100' setup='Default'>
+  <ScriptConfig>
+  </ScriptConfig>
+  <Preset name='Default'
+    altFeedbackEnable='false'
+    autoRecordBars='1'
+    autoRecordTempo='120'
+    bounceQuantize='loop'
+    emptyLoopAction='none'
+    emptyTrackAction='none'
+    loopCount='4'
+    maxRedo='1'
+    maxUndo='0'
+    multiplyMode='normal'
+    muteCancel='edit'
+    muteMode='continue'
+    noFeedbackUndo='false'
+    noLayerFlattening='false'
+    overdubQuantized='false'
+    overdubTransfer='follow'
+    pitchBendRange='12'
+    pitchSequence='5 12 0'
+    pitchShiftRestart='false'
+    pitchStepRange='24'
+    pitchTransfer='follow'
+    quantize='off'
+    speedBendRange='12'
+    speedRecord='false'
+    speedSequence='5 12 0'
+    speedShiftRestart='false'
+    speedStepRange='24'
+    speedTransfer='follow'
+    timeStretchRange='12'
+    recordResetsFeedback='false'
+    recordThreshold='0'
+    recordTransfer='follow'
+    returnLocation='restore'
+    reverseTransfer='follow'
+    roundingOverdub='true'
+    shuffleMode='reverse'
+    slipMode='subCycle'
+    slipTime='0'
+    soundCopyMode='multiply'
+    subcycles='4'
+    switchDuration='permanent'
+    switchLocation='restore'
+    switchQuantize='off'
+    switchVelocity='false'
+    timeCopyMode='insert'
+    trackLeaveAction='cancel'
+    windowEdgeAmount='1'
+    windowEdgeUnit='subcycle'
+    windowSlideAmount='1'
+    windowSlideUnit='loop'/>
+  <Setup name='Default' active='0' beatsPerBar='4' defaultSyncSource='track' defaultTrackSyncUnit='loop' manualStart='false' maxTempo='300' minTempo='20' muteSyncMode='transport' outRealign='restart' realignTime='start' resizeSyncAdjust='none' slaveSyncUnit='beat' speedSyncAdjust='none'>
+    <SetupTrack altFeedback='127' audioInputPort='0' audioOutputPort='0' feedback='127' focus='false' group='0' input='127' mono='false' output='127' pan='64' pluginInputPort='0' pluginOutputPort='0' trackSyncUnit='default' syncSource='default'/>
+    <SetupTrack altFeedback='127' audioInputPort='0' audioOutputPort='0' feedback='127' focus='false' group='0' input='127' mono='false' output='127' pan='64' pluginInputPort='0' pluginOutputPort='0' trackSyncUnit='default' syncSource='default'/>
+    <SetupTrack altFeedback='127' audioInputPort='0' audioOutputPort='0' feedback='127' focus='false' group='0' input='127' mono='false' output='127' pan='64' pluginInputPort='0' pluginOutputPort='0' trackSyncUnit='default' syncSource='default'/>
+    <SetupTrack altFeedback='127' audioInputPort='0' audioOutputPort='0' feedback='127' focus='false' group='0' input='127' mono='false' output='127' pan='64' pluginInputPort='0' pluginOutputPort='0' trackSyncUnit='default' syncSource='default'/>
+    <SetupTrack altFeedback='127' audioInputPort='0' audioOutputPort='0' feedback='127' focus='false' group='0' input='127' mono='false' output='127' pan='64' pluginInputPort='0' pluginOutputPort='0' trackSyncUnit='default' syncSource='default'/>
+    <SetupTrack altFeedback='127' audioInputPort='0' audioOutputPort='0' feedback='127' focus='false' group='0' input='127' mono='false' output='127' pan='64' pluginInputPort='0' pluginOutputPort='0' trackSyncUnit='default' syncSource='default'/>
+    <SetupTrack altFeedback='127' audioInputPort='0' audioOutputPort='0' feedback='127' focus='false' group='0' input='127' mono='false' output='127' pan='64' pluginInputPort='0' pluginOutputPort='0' trackSyncUnit='default' syncSource='default'/>
+    <SetupTrack altFeedback='127' audioInputPort='0' audioOutputPort='0' feedback='127' focus='false' group='0' input='127' mono='false' output='127' pan='64' pluginInputPort='0' pluginOutputPort='0' trackSyncUnit='default' syncSource='default'/>
+  </Setup>
+  <BindingConfig number='0'>
+    <Binding target='function' name='NextTrack' trigger='key' value='39'/>
+    <Binding target='function' name='PrevTrack' trigger='key' value='37'/>
+    <Binding target='function' name='Reset' trigger='key' value='112'/>
+    <Binding target='function' name='TrackReset' trigger='key' value='123'/>
+    <Binding target='function' name='Record' trigger='key' value='82'/>
+    <Binding target='function' name='Overdub' trigger='key' value='79'/>
+    <Binding target='function' name='Multiply' trigger='key' value='77'/>
+    <Binding target='function' name='Insert' trigger='key' value='73'/>
+    <Binding target='function' name='Replace' trigger='key' value='80'/>
+    <Binding target='function' name='Substitute' trigger='key' value='83'/>
+    <Binding target='function' name='Mute' trigger='key' value='85'/>
+    <Binding target='function' name='Undo' trigger='key' value='8'/>
+    <Binding target='function' name='NextLoop' trigger='key' value='40'/>
+    <Binding target='function' name='PrevLoop' trigger='key' value='38'/>
+    <Binding target='function' name='Speed' trigger='key' value='72'/>
+    <Binding target='function' name='Reverse' trigger='key' value='86'/>
+    <Binding target='function' name='StartPoint' trigger='key' value='1107'/>
+    <Binding target='function' name='LoopTrigger1' trigger='key' value='49'/>
+    <Binding target='function' name='LoopTrigger2' trigger='key' value='50'/>
+    <Binding target='function' name='LoopTrigger3' trigger='key' value='51'/>
+    <Binding target='function' name='LoopTrigger4' trigger='key' value='52'/>
+    <Binding target='function' name='LoopTrigger5' trigger='key' value='53'/>
+    <Binding target='function' name='LoopTrigger6' trigger='key' value='54'/>
+    <Binding target='function' name='LoopTrigger7' trigger='key' value='55'/>
+    <Binding target='function' name='LoopTrigger8' trigger='key' value='56'/>
+    <Binding target='uiControl' name='nextParameter' trigger='key' value='98'/>
+    <Binding target='uiControl' name='prevParameter' trigger='key' value='104'/>
+    <Binding target='uiControl' name='incParameter' trigger='key' value='102'/>
+    <Binding target='uiControl' name='decParameter' trigger='key' value='100'/>
+    <Binding target='uiControl' name='spaceDrag' trigger='key' value='90'/>
+    <Binding target='parameter' name='input' trigger='host' value='0'/>
+    <Binding target='parameter' name='output' trigger='host' value='1'/>
+    <Binding target='parameter' name='feedback' trigger='host' value='2'/>
+    <Binding target='parameter' name='altFeedback' trigger='host' value='3'/>
+    <Binding target='parameter' name='pan' trigger='host' value='4'/>
+    <Binding target='parameter' name='selectedTrack' trigger='host' value='5'/>
+    <Binding target='parameter' name='quantize' trigger='host' value='6'/>
+    <Binding target='parameter' name='switchQuant' trigger='host' value='7'/>
+    <Binding target='function' name='Reset' trigger='ui' value='0'/>
+    <Binding target='function' name='GlobalReset' trigger='ui' value='0'/>
+    <Binding target='function' name='Record' trigger='ui' value='0'/>
+    <Binding target='function' name='Overdub' trigger='ui' value='0'/>
+    <Binding target='function' name='Undo' trigger='ui' value='0'/>
+    <Binding target='function' name='Redo' trigger='ui' value='0'/>
+    <Binding target='function' name='Mute' trigger='ui' value='0'/>
+    <Binding target='function' name='Multiply' trigger='ui' value='0'/>
+    <Binding target='function' name='InstantMultiply2' trigger='ui' value='0'/>
+    <Binding target='function' name='Replace' trigger='ui' value='0'/>
+    <Binding target='function' name='Speed' trigger='ui' value='0'/>
+    <Binding target='function' name='Reverse' trigger='ui' value='0'/>
+    <Binding target='function' name='SUSReverse' trigger='ui' value='0'/>
+    <Binding target='function' name='NextLoop' trigger='ui' value='0'/>
+  </BindingConfig>
+  <FocusLockFunctions>
+    <String>Reset</String>
+    <String>TrackReset</String>
+    <String>Clear</String>
+    <String>Record</String>
+    <String>AutoRecord</String>
+    <String>Rehearse</String>
+    <String>Play</String>
+    <String>Overdub</String>
+    <String>OverdubOn</String>
+    <String>OverdubOff</String>
+    <String>Multiply</String>
+    <String>InstantMultiply</String>
+    <String>InstantMultiply2</String>
+    <String>InstantMultiply3</String>
+    <String>InstantMultiply4</String>
+    <String>Divide</String>
+    <String>Divide2</String>
+    <String>Divide3</String>
+    <String>Divide4</String>
+    <String>Insert</String>
+    <String>Stutter</String>
+    <String>Replace</String>
+    <String>Substitute</String>
+    <String>Shuffle</String>
+    <String>Mute</String>
+    <String>MuteOn</String>
+    <String>MuteOff</String>
+    <String>Pause</String>
+    <String>Solo</String>
+    <String>Undo</String>
+    <String>ShortUndo</String>
+    <String>LongUndo</String>
+    <String>UndoOnly</String>
+    <String>Redo</String>
+    <String>Speed</String>
+    <String>FullSpeed</String>
+    <String>HalfSpeed</String>
+    <String>RateDown</String>
+    <String>RateUp</String>
+    <String>RateNext</String>
+    <String>RatePrev</String>
+    <String>RateShift</String>
+    <String>RateNormal</String>
+    <String>PitchDown</String>
+    <String>PitchUp</String>
+    <String>PitchNext</String>
+    <String>PitchPrev</String>
+    <String>PitchShift</String>
+    <String>PitchNormal</String>
+    <String>Reverse</String>
+    <String>Forward</String>
+    <String>Backward</String>
+    <String>Slip</String>
+    <String>SlipForward</String>
+    <String>SlipBackward</String>
+    <String>Move</String>
+    <String>Drift</String>
+    <String>StartPoint</String>
+    <String>TrimStart</String>
+    <String>TrimEnd</String>
+    <String>SamplePlay</String>
+    <String>Restart</String>
+    <String>NextLoop</String>
+    <String>PrevLoop</String>
+    <String>Loop</String>
+    <String>LoopTrigger1</String>
+    <String>LoopTrigger2</String>
+    <String>LoopTrigger3</String>
+    <String>LoopTrigger4</String>
+    <String>LoopTrigger5</String>
+    <String>LoopTrigger6</String>
+    <String>LoopTrigger7</String>
+    <String>LoopTrigger8</String>
+    <String>Checkpoint</String>
+    <String>SUSRecord</String>
+    <String>SUSRehearse</String>
+    <String>SUSOverdub</String>
+    <String>SUSMultiply</String>
+    <String>SUSUnroundedMultiply</String>
+    <String>SUSInsert</String>
+    <String>SUSUnroundedInsert</String>
+    <String>SUSStutter</String>
+    <String>SUSReplace</String>
+    <String>SUSSubstitute</String>
+    <String>SUSMute</String>
+    <String>SUSNextLoop</String>
+    <String>SUSPrevLoop</String>
+    <String>SUSReverse</String>
+    <String>SUSSpeed</String>
+    <String>SUSMuteRestart</String>
+    <String>Realign</String>
+    <String>MuteRealign</String>
+    <String>QuantMidiStartPoint</String>
+  </FocusLockFunctions>
+</MobiusConfig>

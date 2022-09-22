@@ -1,0 +1,800 @@
+#
+# Copyright (c) 2010 Jeffrey S. Larson  <jeff@circularlabs.com>
+# All rights reserved.
+# See the LICENSE file for the full copyright and license declaration.
+# 
+# ---------------------------------------------------------------------
+#
+# Mobius message catalog - English
+#
+
+# Titles
+
+0 Möbius
+
+#
+# Menus
+#
+
+1 File
+2 &Open Project...
+3 Open &Loop...
+4 &Save Project...
+5 Save Project &Template...
+6 Save &Default Project...
+7 Save Loo&p...
+8 &Quick Save
+9 E&xit
+
+20 Presets
+21 Track Setups
+
+30 Configuration
+31 P&orts...
+32 &Presets...
+33 MIDI &Control...
+34 &Keyboard Control...
+35 B&uttons...
+36 Sc&ripts...
+37 &Samples...
+38 &MIDI Devices...
+39 &Audio Devices...
+40 &Global Parameters...
+41 &Display Components...
+42 Pa&lette...
+43 &External EDP...
+44 &Track Setups...
+45 &Plugin Parameters...
+
+50 Help
+51 &Key Bindings
+52 &MIDI Bindings
+53 &About
+
+# Generic Dialogs
+
+100 Name
+101 New
+102 Delete
+103 None
+104 Ok
+105 Cancel
+106 Error
+107 Channel
+108 Configuration
+109 Program Change (1-128)
+110 Function
+111 Type
+112 Value
+113 Add
+114 Move Up
+115 Move Down
+116 All
+117 (none)
+118 Help
+119 Control
+
+# File Dialogs
+
+120 Open Mobius Project
+121 Mobius Project
+122 Open Loop
+123 Wave
+124 Save Project
+125 Save Project Template
+126 Mobius
+127 Are You Sure
+128 Are you sure you want to replace the initial Mobius project template
+129 Save Loop
+
+140 Alert!
+141 Configuration File Error
+142 Empty Mobius UI Configuration File
+143 Mobius Configuration Error
+144 Unable to open MIDI input device: %s
+145 Unable to open MIDI output devices: %s
+146 Unable to open audio input device: %s
+147 Unable to open audio output device: %s
+148 Mobius Message
+
+# Track Setup Dialog
+
+150 Track Setup
+151 Selected Setup
+152 Preset
+153 Plugin Input Port
+154 Plugin Output Port
+155 Group
+156 Focus Lock
+157 Unable to delete setup, you must have at least one.
+158 Initialize
+159 Capture
+160 Initialize All
+161 Capture All
+162 Mono Mode
+163 Audio Input Port
+164 Audio Output Port
+
+# Preset Dialog
+
+180 Presets
+181 Selected Preset
+182 Unable to delete preset, you must have at least one.
+183 Rename
+
+# MIDI Control Dialog
+
+190 MIDI Control
+191 Selected Configuration
+192 MIDI Capture
+193 Controller
+194 Note
+195 Program
+196 Unable to delete configuration, you must have at least one.
+197 Unused
+198 Scope
+199 Bindings
+200 Arguments
+
+# Global Dialog
+
+220 Global Parameters
+
+# Misc Dialogs
+
+240 Key Bindings
+241 MIDI Bindings
+242 Palette
+242 Palette Color
+
+# Keyboard Control
+
+250 Keyboard Configuration
+251 Function
+252 Key
+253 Key Capture
+
+# Button Control
+
+260 Button Configuration
+
+# Samples
+
+270 Sample Configuration
+
+# Script Registration
+
+280 Script Registration
+281 Open Script
+282 Mobius Script
+283 Add Script
+284 Add Directory
+
+# MIDI Devices
+
+300 MIDI Device Selection
+301 Input Devices
+302 Output Devices
+303 Through Device
+304 Plugin Input Devices
+305 Plugin Output Devices
+306 Plugin Through Device
+
+# Audio Devices
+
+320 Audio Device Selection
+321 Driver Type
+322 MME/DirectSound
+323 ASIO
+324 Input Device
+325 Output Device
+326 ASIO Devices
+327 Suggested Latency Milliseconds
+328   Current device reports %d frames
+329 Override Input Latency Frames
+330 Override Output Latency Frames
+331 Calibrate Latency
+332 Calibration Error
+333 Timeout waiting for calibration input, check the connection and try again.
+
+# Display Components
+
+360 UI Configuration
+361 Components
+362 Visible Parameters
+363 Unused 363
+364 Fixed Track Strip
+365 Floating Track Strip
+366 Floating Track Strip 2
+
+# External EDP
+
+380 External EDP Configuration
+381 MIDI Output Device
+382 MIDI Control
+383 Channel
+384 Base Note
+385 Controllers
+
+# UI Controls
+
+500 UI Next Parameter
+501 UI Previous Parameter
+502 UI Increment Parameter
+503 UI Decrement Parameter
+504 UI Move Display Components
+505 UI Redraw
+
+# UI Parameters
+
+510 Message Duration
+
+# UI Display Elements
+
+520 Preset Alert
+521 Track Strip
+522 Counter
+523 Mode
+524 Audio Meter
+525 Loop Meter
+526 Beaters
+527 Loop Bars
+528 Layer Bars
+529 Parameters
+530 Minor Modes
+531 Sync Status
+532 Messages
+533 Track Strip 2
+534 Loop Window
+
+# UI Track Controls
+
+550 Focus Lock
+551 Loop Meter
+552 Output Level Meter
+553 Group Name
+554 Loop Radar
+565 Track Number
+566 Loop Status
+
+# Palette Colors
+
+600 Background
+601 Button
+602 Button Text
+603 Bar
+604 Active Bar
+605 Meter
+606 Halfspeed Meter
+607 Recording Meter
+608 Event Markers
+609 Alert Background
+610 Alert Text
+611 Blink
+612 Parameter Name
+613 Parameter Value
+614 Mute Meter
+615 Track Group A
+616 Track Group B
+617 Track Group C
+618 Track Group D
+619 Checkpoint Bar
+620 Cycle Tick Mark
+621 Subcycle Tick Mark
+622 Cue Tick Mark
+623 Loop Window
+
+#
+# Words
+#
+
+800 MIDI
+801 Preset
+802 Function
+803 Control
+804 Setup
+
+#
+# Modes
+#
+
+1000 Reset
+1001 Run
+1002 Play
+1003 Record
+1004 Threshold
+1005 Overdub
+1006 Multiply
+1007 Insert
+1008 Stutter
+1009 Rehearse
+1010 Rehearse Record
+1011 Replace
+1012 Substitute
+1013 Mute
+1014 Confirm
+1015 Switch
+1016 Synchronize
+1017 Delay
+1018 Hold
+1019 Pause
+1020 Reverse
+1021 *unused*
+1022 Solo
+1023 Global Mute
+1024 Global Pause
+1025 Window
+
+#
+# Misc State
+#
+
+1100 Tempo %d
+1101 Tempo %d Beat %d
+1102 Tempo %d Beat %d Bar %d
+
+#
+# Units of measure
+#
+
+1200 Loop
+1201 Cycle
+1202 Subcycle
+1203 Cue
+1204 Millisecond
+1205 Frame
+
+#
+# Parameters
+#
+
+2000 Subcycles
+2001 Sustain Functions
+2002 Multiply Mode
+2003 Empty Loop Action
+2004 Setup Number
+2005 Confirmation Functions
+2006 Empty Track Action
+2007 Loops Per Track
+2008 Mute Mode
+2009 Overdub Quantized
+2010 Quantize Mode
+2011 Record Resets Feedback
+2012 Overdub While Rounding
+2013 Record Transfer
+2014 Switch Quantize
+2015 Time Copy Mode
+2016 Sound Copy Mode
+2017 MIDI/Host Sync Unit
+2018 Track Leave Action
+2019 Out Sync Resize Adjust
+2020 Out Sync Speed Adjust
+2021 Sample Rate
+2022 Speed/Pitch Note Range
+2023 Record Threshold
+2024 Switch Velocity Sensitive
+2025 MIDI Record Pulsed
+2026 Maximum Undo
+2027 Maximum Redo
+2028 Out Sync Min Tempo
+2029 Out Sync Max Tempo
+2030 No Feedback Undo
+2031 Mode
+2032 Feedback
+2033 Secondary Feedback
+2034 Input Level
+2035 Output Level
+2036 Pan
+2037 Record Speed Changes
+2038 Focus
+2039 Preset
+2040 Preset Number
+2041 Enable Secondary Feedback
+2042 Selected Track
+2043 Bindings
+2044 Out Sync Manual Start
+2045 Fade Frames
+2046 Drift Resync Frames
+2047 Noise Floor
+2048 Input Latency Adjust
+2049 Output Latency Adjust
+2050 MIDI Input
+2051 MIDI Outputs
+2052 Audio Input
+2053 Audio Output
+2054 Trace Print Level
+2055 Trace Debug Level
+2056 Custom Mode
+2057 Pedal Mode
+2058 MIDI Status Export
+2059 Host MIDI Status Export
+2060 Switch Location
+2061 Return Location
+2062 Switch Duration
+2063 No Layer Flattening
+2064 No External Audio
+2065 Isolate Project Overdubs
+2066 Monitor Audio Input
+2067 Save Project Layers
+2068 Quick Save File 
+2069 Plugin Opens MIDI In
+2070 Plugin Opens MIDI Out
+2071 16 Bit Wave Files
+2072 Reduce Feedback During Overdub
+2073 Project
+# don't really need the next three, they are read-only for scripts
+2074 Out Sync Mute Action
+2075 Plugin Ports
+2076 Unit Test Directory
+2077 Speed Sequence
+2078 Track Number
+2079 Group
+2080 Track Groups
+2081 Speed Shift Restart
+2082 Pitch Sequence
+2083 Pitch Shift Restart
+2084 Bounce Quantize
+2085 MIDI Through
+2086 Plugin MIDI Input
+2087 Plugin MIDI Outputs
+2088 Plugin MIDI Through
+2089 Modes Ignoring Secondary Feedabck
+2090 Overdub Transfer
+2091 Reverse Transfer
+2092 Speed Transfer
+2093 Pitch Transfer
+2094 Setup
+2095 Mute Cancel
+2096 Focus Lock Functions
+2097 Mute Cancel Functions
+2098 Slip Mode
+2099 Slip Time
+2100 Long Press Milliseconds
+2101 Shuffle Mode
+2102 Auto Record Tempo
+2103 Auto Reord Beats
+2104 Auto Record Bars
+2105 Realign Time
+2106 Out Sync Realign Action
+2107 Dual Plugin Edit Window
+2108 Custom Message File
+2109 Tracks
+2110 Max Loops Per Track
+2111 Groups Have Focus Lock
+2112 OSC Input Port
+2113 OSC Output Port
+2114 OSC Output Host
+2115 Beats Per Bar
+2116 Default Sync Source
+2117 Default Track Sync Unit
+2118 Sync Source
+2119 Track Sync Unit
+2120 Audio Input Port
+2121 Audio Output Port
+2122 Plugin Input Port
+2123 Plugin Output Port
+2124 Mono Mode
+2125 Track Name
+2126 Speed Octave
+2127 Speed Step
+2128 Speed Bend
+2129 Pitch Octave
+2130 Pitch Step
+2131 Pitch Bend
+2132 Time Stretch
+2133 Speed Step Range
+2134 Speed Bend Range
+2135 Pitch Step Range
+2136 Pitch Bend Range
+2137 Time Stretch Range
+2138 OSC Trace
+2139 OSC Enable
+2140 Input Port
+2141 Output Port
+2142 Periodic Status Log
+2143 Window Slide Unit
+2144 Window Slide Amount
+2145 Window Edge Unit
+2146 Window Edge Amount
+
+#
+# Parameter Values
+#
+
+# MultiplyMode
+3000 Normal
+3001 Simple
+
+# EmptyLoopAction
+3002 None
+3003 Record
+3004 Copy Sound
+3005 Copy Timing
+
+# TrackLeaveAction
+3010 None
+3011 Cancel Current Mode
+3012 Cancel and Wait
+
+# MuteMode
+3023 Continue
+3024 Start
+3025 Pause
+
+# Quantize
+3029 Off
+3030 Cycle
+3031 Subcycle
+3032 Loop
+
+# RecordMode
+3033 Toggle
+3034 Sustain
+3035 Safe
+
+# SwitchLocation
+3036 Run
+3037 Start
+3038 Once
+3039 Attack
+3040 Continuous
+
+# SwitchQuantize
+3041 Off
+3042 Confirm
+3043 Cycle
+3044 Confirm Cycle
+3045 Loop
+3046 Confirm Loop
+3047 Subcycle
+3048 Confirm Subcycle
+
+# Time/SoundCopyMode
+3049 Play
+3050 Overdub
+3051 Multiply
+3052 Insert
+
+# SyncUnit
+3053 Beat
+3054 Bar
+
+# Formerly SyncMode
+3055 *Unused*
+3056 *Unused*
+3057 *Unused*
+3058 *Unused*
+3059 *Unused*
+3060 *Unused*
+
+# Formerly TrackSyncMode
+3061 *Unused*
+3062 *Unused*
+3063 *Unused*
+3064 *Unused*
+
+# SyncAdjust
+3065 None
+3066 Change Tempo
+
+# Formerly MIDIMode, 3068-3071
+# Formerly PedalMode, 3072-3073
+
+# OverdubTransfer
+3074 Off
+3075 Follow
+3076 Restore
+
+# MuteCancel
+3077 Never
+3078 Edits
+3079 Triggers
+3080 Effects
+3081 Custom
+3082 Always
+
+# SlipMode
+3083 Next Subcycle
+3084 Next Cycle
+3085 Start
+3086 Relative Subcycle
+3087 Relative Cycle
+3088 Milliseconds
+
+# ShuffleMode
+3090 Reverse
+3091 Shift
+3092 Swap
+3093 Random
+
+# RealignTime
+3100 Start Point
+3101 Next Bar
+3102 Next Beat
+3103 Now
+
+#OutRealignMode
+3105 Send MIDI Start
+3106 Restart Loop
+
+# Random new parameter values we can't fit anywhere else
+
+# MuteSyncMode
+3110 Send Stop/Start continue clocks
+3111 Send Stop/Start stop clocks
+3112 Stop clocks
+3113 Continue clocks
+
+# SwitchLocation
+3115 Follow
+3116 Restore
+3117 Start
+3118 Random
+
+# SwitchDuration
+3120 Permanent
+3121 Once
+3122 Once Return
+3123 Sustain
+3124 Sustain Return
+
+# SyncSource
+3130 Default
+3131 None
+3132 Track
+3133 Out
+3134 Host
+3135 MIDI
+
+# TrackSyncUnit
+3140 Default
+3141 Subcycle
+3142 Cyle
+3143 Loop
+
+# Booleans
+
+3998 Off
+3999 On
+
+#
+# Functions
+#
+
+4000 Reset
+4001 Track Reset
+4002 Global Reset
+4003 Record
+4004 Sustain Record
+4005 Rehearse
+4006 Sustain Rehearse
+4007 Play
+4008 Overdub
+4009 Sustain Overdub
+4010 Multiply
+4011 Sustain Multiply
+4012 Sustain Unrounded Multiply
+4013 Insert
+4014 Confirm
+4015 Sustain Insert
+4016 Sustain Unrounded Insert
+4017 Stutter
+4018 Sustain Stutter
+4019 Replace
+4020 Sustain Replace
+4021 Substitute
+4022 Sustain Substitute
+4023 Mute
+4024 Sustain Mute
+4025 Sustain Mute Restart
+4026 Global Mute
+4027 Undo
+4028 Short Undo
+4029 Long Undo
+4030 Redo
+4031 Checkpoint
+4032 Reverse
+4033 Sustain Reverse
+4034 Forward
+4035 Backward
+4036 Reload Scripts
+4037 *Unused 4037*
+4038 *Unused 4038*
+4039 *Unused 4039*
+4040 Realign
+4041 Mute Realign
+4042 MIDI Start
+4043 Mute MIDI Start
+4044 MIDI Stop
+4045 Focus Lock
+4046 *Unused*
+4047 *Unused*
+4048 Next Loop
+4049 Sustain Next Loop
+4050 Previous Loop
+4051 Sustain Previous Loop
+4052 Loop %d
+4053 Restart Once
+4054 Restart
+4055 Next Track
+4056 Previous Track
+4057 Track %d
+4058 Track Copy
+4059 Track Copy Timing
+4060 Sample %d
+4061 Resume Script
+4062 Start Script Recording
+4063 Stop Script Recording
+4064 Save Script Recording
+4065 Start Audio Recording
+4066 Stop Audio Recording
+4067 Save Audio Recording
+4068 Save Loop
+4069 MIDI Out
+4070 Start Point
+4071 Sync Start Point
+4072 Trim Start
+4073 Trim End
+4074 Track Group
+4075 *unused*
+4076 *unused*
+4077 *unused*
+4078 *unused*
+4079 *unused*
+4080 Pause
+4081 Global Pause
+4082 *Unused*
+4083 Pitch Up
+4084 Pitch Down
+4085 Pitch Cancel
+4086 Pitch Next
+4087 Pitch Previous
+4088 Pitch Step
+4089 Bounce
+4090 Solo
+4091 Select Track
+4092 Instant Multiply
+4093 Instant Multiply 2
+4094 Instant Multiply 3
+4095 Instant Multiply 4
+4096 Sustain Pause
+4097 Slip Forward
+4098 Slip Backward
+4099 Clear
+4100 Overdub Off
+4101 Overdub On
+4102 Mute Off
+4103 Mute On
+4104 Undo Only
+4105 Shuffle
+4106 Instant Divide
+4107 Instant Divide 2
+4108 Instant Divide 3
+4109 Instant Divide 4
+4110 Auto Record
+4111 Move
+4112 Drift
+4113 Sync Master Track
+4114 Sync Master MIDI
+4115 Sync Master Track+MIDI
+4116 *Unused*
+4117 *Unused*
+
+4118 *Unused*
+4119 *Unused*
+4120 Speed Cancel
+4121 Speed Next
+4122 Speed Previous
+4123 Speed Up
+4124 Speed Down
+4125 Speed Toggle
+4126 Sustain Speed Toggle
+4127 Halfspeed
+
+4128 Window Forward
+4129 Window Backward
+4130 Window Start Forward
+4131 Window Start Backward
+4132 Window End Forward
+4133 Window End Backward
+ 

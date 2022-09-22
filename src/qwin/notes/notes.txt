@@ -1,0 +1,114 @@
+
+NativeCompoment
+  - try to get rid of the stupid proxy class, find the multiple
+    inheritence issue
+  - call the native components "peers"
+
+getPreferredSize
+  - need to move this to the UI class
+
+UIManager::getVertScrollBarWidth
+  - windows specific factor this out with getPreferredSize
+
+Window::getTextMetrics
+  - used for standard components, system specific move to UI
+  - also component specific, get this out of Graphics
+
+
+Common pattern:  w->getTextSize("M", NULL, &em);
+  - need a mac char width/height methods on Graphics or Window
+  - on Mac this is controlled by theme
+
+
+
+Opening Windows
+  - Windows
+    - get HINSTANCE, initial bounds and showMode
+    - register classes, set application icon, only for Windows
+    - set various style options
+    - captureNativeBounds - why?? we're going to change them after layout
+    - get default device context and text metrics
+    - call up to finishOpening
+    - setup tool tips (not used)
+    - show the window
+    - invalidate region
+
+Window::finishOpening
+  - open child controls (all at 0,0 initially)
+  - call getContentSize
+    - native dimensions which defaulted to to what was set in the
+      Window when open() was called
+  - call getPreferredSize
+    - calls the layout managers which call the Component::getPreferredSize methods
+
+  - decide whether to pay attention to requested size vs preferred size
+  - run the layout managers
+  - assign tab order
+  - set focused component
+
+
+
+
+    
+
+
+----------------------------------------------------------------------
+
+
+Mac Port
+
+- hide window classes
+- hide WindowProcedure
+- handles in Context, does this make sense as an interface?
+  - why is getBrush here
+- Color has handles, getPen, getBrush
+  - should only be needed by the ComponentUI
+  - either need a UI specific attachment, or an parallel internal       
+    model we map between
+- Font has handles, getHandle
+  - similar to Color
+  - Java has a FontPeer interface produced by the JVM via Toolkit
+    which is the factory for most (all?) AWT peers
+- make Graphics an interface, factor out WindowsGraphics and MacGraphics
+
+- Component
+  - getHandle, getParentHandle, WNDPROC handle
+
+- Container
+  - createHandle
+
+- Menu
+  - build(), HMENU
+
+- MenuBar, PopupMenu
+  - getMenuHandle, 
+
+- Window
+  - getInstance, getDeviceContext, getTextMetric, getMenu(HMENU)
+  - mAccel, mTooltip, mTextMetric
+
+- Dialog
+  - dialogHandler()
+
+- Text, TextArea, GroupBox, Static, Panel, Label, ScrollBar, Button,
+  WeirdButton, RadioButton, Checkbox, ListBox, ComboBox, ToolBar, 
+  StatusBar, TabbedPane, Tree, 
+  - createHandle
+
+- OpenDialog, ColorDialog, MessageDialog
+  - interface looks clean, need to factor out implementation
+
+- SimpleTimer
+  - interface looks clean, need to factor out implementation
+
+- qkeys.y
+  - includes <winuser.h> will need to duplicate
+
+- wintest.h
+  - resource definitions
+
+- Window::open, where it all starts
+  - need the Context at this point, Component tree has been built,
+    walk it creating ComponentUI's and calling createHandle methods on the ComponentUI's
+
+  

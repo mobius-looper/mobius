@@ -1,0 +1,38 @@
+!name Global Fade Out
+!autoload
+# 
+# Fade the output levels of all tracks slowly to zero
+# This one is tricky because this pattern:
+#
+#   for *
+#     while output > 0
+#     ...
+#     next
+#   next
+#
+# will fade each track in sequence, not at the same time.
+#
+
+Variable done false
+
+Message Starting Global Fade
+
+while !done
+
+  set done true  
+  for *
+    if output > 0
+       set output output - 1
+       set done false
+    endif
+  next
+
+  if !done
+    Wait msec 50
+  endif
+
+next
+
+Message Global Fade Complete
+
+end

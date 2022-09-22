@@ -1,0 +1,5 @@
+<Palette>
+  <PaletteColor name='background' key='0' displayName='background' rgb='10617087'/>
+  <PaletteColor name='button' key='0' displayName='button' rgb='65280'/>
+  <PaletteColor name='thermometer' key='0' displayName='thermometer' rgb='10879010'/>
+</Palette>

@@ -1,0 +1,181 @@
+
+Record is a complex function because it is one of the few (Realign
+being another) that has to deal with synchronization.  Recording
+can be be broken down into these phases:
+
+
+1) Synchronization wait
+  
+The track waits for a suitable sync pulse to arrive.  The pulse may
+come from any of the sources: MIDI clock, VST beat, Master Track.
+During this waiting state, the loop is said to be in "Synchronize"
+mode.
+
+If the loop is in an editing mode, the mode will be ended before
+entering Synchronize mode.  The effect modes (speed, reverse, overdub,
+etc) will be carried into the new loop.
+
+Synchronization mode may be canceled with Undo.
+
+If the record function being used is AutoRecord, a pending StopRecordEvent 
+is scheduled and the number of pulses to record is saved in it.
+
+
+2) Latency wait
+
+After the sync pulse has arrived, we may then wait an additional
+period before recording begins to adjust for input latency.  This
+is optional and depends on the source of the pulse.
+
+
+3) Record Start
+
+The loop is placed into Record mode and recording begins.  
+Previous layers are kept for Undo.  
+
+For AutoRecord, if we bypassed the Synchronization wait phase, a pending
+RecordStopEvent event is scheduled.
+
+
+4) Recording
+
+There are two variant behaviors depending on whether AutoRecord
+is being used.  
+
+  !! This is wrong, need to merge these
+
+AutoRecord:
+
+Subsequent triggers of AutoRecord will increase the length 
+of the RecordStopEvent.
+ 
+  !! Should be using Undo to decrease the amount?
+
+A trigger of simple Record should end the AutoRecord immediately.
+
+
+Synchronized Record:
+
+Schedule a pending RecordEndEvent.  This will be activated
+later by Synchronizer when the pulse arrives.
+
+
+5) RecordStop/RecordEnd Wait
+
+RecordStop:
+
+The period after a pending RecordStopEvent has been scheduled
+and we're waiting for a sync pulse to end the recording.
+
+Any other function should behave as a Record alternate ending, 
+but be delayed until the end of the recording.
+
+  !! These are probably canceling the auto record.
+
+RecordEnd:
+
+The period after synchronized record ending has been scheduled,
+and we're waiting for a sync pulse.  Complex logic in 
+Synchronizer.checkEndREcording.
+
+!! Need to stop waiting for pulses and instead calculate *frames* 
+
+
+6) RecordEnd activation
+
+Only for synchronized recording.  
+
+TrackSync:
+
+Convert master track pulses into MIDI clock pulses.
+Carry over the sync drift.
+Activate RecordEnd.
+
+ExtSync:
+
+Store pulse counts.
+If no rounding
+  Activate RecordEnd
+else
+  Schedule RecordStopEvent
+
+Factor in input latency for MIDI sync.
+
+
+----------------------------------------------------------------------
+New Way
+----------------------------------------------------------------------
+
+1) Synchronization wait
+  
+Track enters Synchronize mode waiting for a pulse.
+
+AutoRecord schedules a RecordStopEvent with a frame calculated
+based on the tempo of the sync source, or for track sync the size
+of the master loop.  
+
+2) Latency wait
+
+After the sync pulse has arrived, we may then wait an additional
+period before recording begins to adjust for input latency.  This
+is optional and depends on the source of the pulse.
+
+
+3) Record Start
+
+Record mode begins.
+
+For AutoRecord, the RecordStopEvent remains active and we begin
+advancing toward it.
+
+
+4) Recording
+
+Recording advances until we reach the frame of the RecordStopEvent if
+we have one.
+
+Sync pulses receieved during Record mode are used to increment the
+loop cycle count.  Sync pulses received during AutoRecord mode are
+ignored.
+
+When Record (or any other alternate ending) is used, a RecordStopEvent
+is scheduled with a frame calculated from the tempo of the sync
+source.  If there is no sync source, a RecordStopEvent on the current
+frame is scheduled just so we funnel through the same machinery.
+
+
+5) Record Stop Wait
+
+Here in two contexts: an auto record that has not reached the
+previously calculated end, a synchronized record that has not
+reached the length calculated to match the sync tempo.
+
+Sync pulses are ignored, though we need to advance the external 
+pulse counters.
+
+Record:
+
+Undo can be used to cancel the RecordStopEvent.
+Record can be used to extend the recording by one "unit"?
+
+Any other functions should behave as Record alternate endings.
+  !! Probably canceling the auto record
+
+AutoRecord:
+
+AutoRecord will increase the length of the RecordStopEvent by one "bar".
+Undo decreases the length until itreaches zero and the AutoRecord is canceled.
+
+A trigger of simple Record should end the AutoRecord immediately.
+
+Any other functions should behave as Record alternate endings.
+  !! Probably canceling the auto record
+
+
+6) Record Stop Event
+
+Call the machinery currently wrapped up under RecordEndEvent.
+
+
+----------------------------------------------------------------------
+

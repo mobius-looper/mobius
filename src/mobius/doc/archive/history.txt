@@ -1,0 +1,1243 @@
+----------------------------------------------------------------------
+Older Releases
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+Version 1.42
+
+  Bugs fixed:
+
+    - Crash in Reaper when closing the VST edit window.
+
+    - Occasional crash in Global Reset.
+
+    - Ending a Multiply with Sync=Out sometimes jumps to the start of the 
+      second cycle rather than beginning of the loop.
+
+----------------------------------------------------------------------
+Version 1.41
+
+Bugs fixed:
+
+  - With SyncMode=Out, ending a Multiply sometimes starts	
+    playing at the beginning of the last cycle rather than
+    starting over from the beginning.
+
+  - Unable to select track 4 out of 6 when running as a plugin
+    with parameter Selected Track published as a plugin parameter
+
+  - Add type corection functions int(), float(), and string().
+    float() was necessary for the "scrub" script.
+
+  - On Mac, when moving more than one MIDI slider, knob or pedal 
+    at the same time, messages are lost and some controls won't move.
+
+New features:
+
+  - Shuffle supports shorter or longer patterns than the 
+    source layer
+
+  - Bi-directional feedback of MIDI controls
+
+To create a shuffle pattern shorter than the original loop, use
+"e" (stands for "end") in the pattern.  For example this will divide
+the loop into 4 granules and create a new loop using only the second
+of the four source granules:
+
+    Shuffle 4,2,e
+
+To create a shuffle pattern longer than the original loop just use
+a pattern than has more than the number of source granules.
+
+    Shuffle 4,1,1,2,2,3,3,4,4
+
+The previous example would result in a new loop twice as long as the
+original loop.
+
+Bi-directional feedback is enabled by going to the Global Parameters
+dialog and checking either "Midi Feedback" or "Host Midi Feedback" options.
+
+Midi Feedback will send control change messages to the configured
+MIDI output device.  Host Midi Feedback can be used only with the VST
+plugin, it will send messages to the VST MIDI pin which can be routed
+to the actual MIDI device in the host.  
+
+----------------------------------------------------------------------
+Version 1.40
+
+This release fixes the following bugs:
+
+   - Threshold recording broken, could never stop recording
+   - loopCount variable always returns zero
+   - script lines ignored if they didn't end with a newline
+   - VST edit window not remembering the last location
+
+The following features were added:
+
+   - Loop radar "packmans" are back!
+   - Shuffle now supports complex patterns in scripts
+
+More information on Shuffle will be posted to the Yahoo group.
+
+----------------------------------------------------------------------
+Version 1.39
+
+This release adds a UI to configure which parameters to expose
+to the VST host.  The dialog is described in more detail below.
+
+The following bugs were also fixed:
+
+    - Reset not resetting Global Mute state (Matthias L)
+    - Audio Unit not passing "auval" validation
+    - Audio Unit UI not working correctly under Rax
+
+To configure plugin parameters select "Plugin Parameters" from
+the Configuration menu.
+
+On the left are the currently published parameters.  To add a new
+parameter first select the target using the tab panel on the right.
+You may select any of the functions, scripts, controls, parameters, or
+configurations displayed.  Next select the scope, either Global or one
+of the track or group scopes.  The Arguments box is reserved for
+future use, do not enter anything here.
+
+When you have selected a target and a scope click the "New" button and
+the parameter will be added to the list.
+
+To delete a parameter select it and click the Delete button under the list.
+
+----------------------------------------------------------------------
+Version 1.38
+
+This release brings the PC version back in sync with the Mac version.
+The main new feature is the ability to conigure which functions,
+scripts, and parameters are accessable as VST automatable parameters.
+
+There is no UI for this yet so if you are interested please
+contact me or post a message to the Yahoo group.
+
+----------------------------------------------------------------------
+Version 1.33
+
+The purpose of this release is to add support for changing the sizes
+of fonts used in the main Mobius UI.  This is considered experimental
+and must be done by editing the ui.xml file.  If you are interested
+in this please contact me either directly or through the Yahoo group.
+
+After installing the new release run Mobius standalone and shut it down.
+Then open up the ui.xml file, normally found under:
+
+   c:\Program Files\Mobius\ui.xml
+
+In this file locate the <FontConfig> section that should look
+similar to this:
+
+  <FontConfig>
+    <FontBinding name='mode' size='20'/>
+    <FontBinding name='button' size='14'/>
+    <FontBinding name='loopMeter' size='12'/>
+    <FontBinding name='loopCounterSmall' size='30'/>
+    <FontBinding name='loopCounterBig' size='40'/>
+    <FontBinding name='layerList' size='8'/>
+    <FontBinding name='message' size='18'/>
+    <FontBinding name='minorModes' size='12'/>
+    <FontBinding name='sync' size='12'/>
+    <FontBinding name='parameter' size='14'/>
+    <FontBinding name='knob' size='12'/>
+    <FontBinding name='trackNumber' size='30'/>
+    <FontBinding name='trackName' size='20'/>
+    <FontBinding name='trackGroup' style='1' size='12'/>
+    <FontBinding name='loopStack' size='12'/>
+  </FontConfig>
+
+The FontBinding elements specify the font sizes used in the
+different UI components.  The "parameter" font for example is
+used for the visible parameter list.
+
+----------------------------------------------------------------------
+Version 1.32
+
+  - get the PC and Mac versions back in sync
+
+  - MidiOut script function for sending MIDI from scripts
+
+  - muteSyncMode parameter to control how MIDI start, stop, 
+    and clocks are sent during mute or pause mode
+
+  - ability to select a script directory with all scripts within
+    the directory loaded automatically
+
+  - tracks may now have names rather than numbers, this is set
+    in the Track Setup
+
+  - the duration of messages may be set in the Global Parameters dialog,
+    setting this to zero or negative means that messages will persist
+    until they are changed or a Global Reset happens
+
+----------------------------------------------------------------------
+Version 1.30h
+
+  - allow Auto Record function to be stacked for execution
+    after a loop switch
+
+  - various minor bugs
+
+  - checkfeedback.mos script to debug secondary feedback problem
+
+----------------------------------------------------------------------
+Version 1.30g
+
+  - trackCount, trackNumber, redoCount variables
+
+  - fix problems loading plugin into Reaper
+
+  - fix problems loading saved host "patches" containing Mobius
+
+  - fix a few mysterious crashes
+
+  - added !controller script option
+
+  - added !multiclick script option
+
+  
+----------------------------------------------------------------------
+Version 1.30f
+
+  - Track sync not working when Sync=Off
+
+  - !focuslock scripts don't work with long presses
+
+  - Bounce recording doesn't preserve cycle length
+
+  - Loop list numbers displaying even if loop not available
+
+  - support # comments in the middle of a script line
+
+  - rate and pitch shift range may be specified in a global parameter,
+    the default is 48 (two octaves up and down)
+
+  - fixed binding of pitch and rate shift ranges on different channels
+    for different tracks
+
+----------------------------------------------------------------------
+Version 1.30e
+
+New features:
+
+  - Improved VST host and MIDI slave sync
+
+  - Auto Record in all sync modes
+  
+Bugs fixed:
+
+  - crash loading script with !sustain line with no arguments
+
+  - global variables not working as of 1.30d
+
+  - Substitite in InterfaceMode=Expert obeys Secondary Feedback
+
+----------------------------------------------------------------------
+Version 1.30d
+
+New features:
+
+  - Long press duration may be set in Global dialog
+
+  - Shuffle function and ShuffleMode parameter
+
+  - Checkpoints
+
+  - Auto Record
+  
+  - better sync accuracy with Sync=In, Sync=MIDIBeat, Sync=MIDIBar
+
+  - Loop Status track strip component
+
+  - RealignTime parameter
+  - OutRealignMode parameter
+
+  - Move function
+
+  - InstantDivide
+  
+  - SyncAdjust=Off is gone, there is only None and Tempo
+
+  - DriftCheckPoint=loop|external (hidden)
+
+  - Scripts can be stacked for execution after a loop switch.
+    To enable add "!switchQuantize" to the script.
+
+Bugs fixed:
+
+  - Retrigger of initial recording when Sync=Out causes "flam"
+
+  - Combination of Sync=Out and Minimum Tempo can cause the loop	
+    to retrigger in the middle every time.
+
+  - Input Level control always snaps back to zero
+
+  - Track returns to the preset defined in the Setup on a reset 
+    performed with a long press of Record.
+
+  - Palette colors not dispalyed with nicely formatted names
+
+  - Crash in certain SUS scripts
+
+  - TrackSelect and TrackCopy work unreliably from scripts
+
+  - Built-in script variable "scaleRate" and "scalePitch should be
+    just "rate" and "pitch"
+
+----------------------------------------------------------------------
+Version 1.29
+
+Bugs fixed:
+
+  - Changing track mono mode doesn't take effect until Mobius is restarted
+
+  - Preset alert popup window can't be disabled
+
+  - Audio blip when doing a Retrigger with an immediate Mute
+
+  - Selecting a Track Setup doesn't immediately change the presets.
+    (Per's problem with SoundCopy)
+
+  - Occasional crash running scripts that don't end with a Wait statement
+
+New Features:
+
+  - ability to access all ports of a multi-port audio interface
+    (but only when using ASIO drivers)
+
+  - MuteCancel modes: Never, Edit, Trigger, Effect, Custom
+
+  - MuteCancelFunctions global parameter
+
+  - SlipForward, SlipBackward, Slip Mode, Slip Time
+
+----------------------------------------------------------------------
+Version 1.28 - June 19, 2006
+
+Bugs fixed:
+
+  - Crash opening the main window when running under Usine.
+
+  - Keyboard freeze and occasional crash when selecting tracks with
+    the keyboard.
+
+  - When using Setups, a Reset after recording a loop without
+    changing any controls resets to the default state rather than
+    the state in the Setup.  
+
+  - More than one script may now be running at the same time.
+
+New features:
+
+  - Each track in a Setup may now select "mono" mode.  In mono mode,
+    the left and right input channels are combined and then panned within
+    the stereo output field.
+
+  - MIDI bindings for Presets, Setups, and MIDI Configurations are now
+    set in the MIDI Control dialog like bindings for functions and controls.
+    This also means that you may use a MIDI note or continuous controller
+    to select one of these configuration objects.    
+
+  - Restore on Reset selector in the Setup dialog.  Used to decide which
+    of the track parameters should be restored to the settings in the Setup
+    and which should be left as they are.
+
+  - Preset change message is now displayed as a movable UI component
+    rather than a popup window.  Select the "Messages" component in
+    the Display Components dialog.
+
+  - When the Shift key is held down, the main UI area draws the borders
+    of all components (even if not currently visible) to assist in
+    positioning.
+
+  - Most of the clicking artifacts during pitch shifting have been fixed.
+
+----------------------------------------------------------------------
+Version 1.27 - June 4, 2006
+
+Bugs fixed:
+
+  - Crash when binding keys to the UI functions related to parameter
+    control (NextParameter, PrevParameter, IncParameter, DecParameter)
+
+  - main track controls snapping back to original values after changing
+    tracks using the keyboard
+
+  - GlobalPause not working
+
+New features:
+
+  - MuteCancel parameter
+    When set to "Major Modes" mute will only be cancled by a function that
+
+    changes the mode, it will not be cancled by the Reverse, HalfSpeed,
+    Rate, and Pitch functions.   When set to "Always" mute will always
+    be canceled after any function that modifies the loop.
+
+  - Track Setups
+
+    A replacement for the "default project template", track setups 
+    contain initial values for all of the track controls, preset 
+    assignments, group assignments, and focus lock.  Unlike projects,
+    track setups are not stored in a seperate file and may be selected
+    directly from a menu or with MIDI.
+
+    The "Initial Feedback" preset parameter has also been removed since
+    this is now defined in the Setup.
+
+----------------------------------------------------------------------
+Version 1.26 - May 22, 2006
+
+Bugs fixed:
+
+  - Mobius fails to start when the "Number" component was selected in
+    the main track controls
+   
+  - Occasional inconsistencies in the display when using keyboard
+    commands rapidly (selected track doesn't match or two tracks 
+    selected)
+
+  - SpeedSyncAdjust not working if the track isn't the master track
+
+  - Premature retrigger when going into half-speed
+    (SpeedSyncAdjust not working properly)
+
+  - Incorrect track modes after bounce recording
+    (Track shows Mute or Play when it is actually Reset)
+
+  - Unable to change selected loop after loading a loop, 
+    more generally, unable to change selected loop after entering
+    a "pause mute"
+
+  - Crash binding a CC pedal to RateShift and PitchShift
+
+  - Scripts: immediately ending an Insert with another Insert 
+    wasn't inserting a cycle, e.g.
+      Insert
+      Insert
+
+  - Clicks in stuttered cycles with Stutter function or InsertMode=Stutter
+
+New Features:
+
+  - General Reset and Global Reset also return the track control 
+    levels to 100%
+
+  - Clear function erases the contents of the loop but leaves it
+    the same length.
+
+  - Instant Multiply 2, Instant Multiply 3, Instant Multiply 4 perform
+    an immediate 3x, 3x, or 4x multiply of the loop without having to	
+    wait through a multiply mode.
+
+  - Pitch, Rate, Reverse now have transfer modes.  When set to "Remember" 
+    the previous state will be restored whenever a loop is triggered.
+
+  - Minor mode functions Speed, Reverse, Rate, Pitch, and Overdub
+    will be stacked on the same quantization point rather than
+    rather than being scheduled at the next point, allows you to 
+    perform Reverse and Speed at the same time.
+
+  - Pitch and rate functions performed during the quantization period
+    will modify the previously scheduled pitch/rate event rather than 
+    scheduling a new one. 
+
+  - Reverse, Half Speed, Rate Shift, and Pitch Shift will not take you 
+    out of Mute mode, allowing you to setup the desired playback mode 
+    before unmuting.
+
+  - Pause is now a function that doesn't depend on MuteMode
+
+----------------------------------------------------------------------
+Version 1.25 - March 30, 2006
+
+This release has a mixture of relatively small enhancements 
+to the user interface, and new control parameters.
+
+Bugs fixed:
+
+  - crash deleting VST plugin when MIDI input devices selected
+
+  - Loop swtich functions (NextLoop, PrevLoop, etc) may now be used
+    as a mode ending function for Multiply and Insert modes
+
+New Parameters:
+
+  - Overdub Transfer
+
+    A preset parameter that controls how overdub mode is carried forward
+    when switching loops.  If set to "Off" overdub mode is always off
+    after switchign loops.  If set to "Follow" the overdub mode in the
+    current loop is carried forward to the next.  If set to "Remember"
+    the overdub mode of a loop is remembered when leaving the loop, and
+    restored when returning to it.
+
+  - Modes Ignoring Secondary Feedback
+
+    A global parameter that lets you select loop modes during which
+    the Secondary Feedback control will not be active.  This is an advanced
+    parameter that is used when the Interface Mode parameter is
+    set to Expert or Stutter.  Normally all recording modes
+    are subject to Secondary Feedback when using these interface modes.
+
+New Display Components:
+
+  - Loop Number
+
+    A large number that may be displayed in the track strip to make it
+    easier to identify loops from a distance.  The number also functions
+    as the <i>focus lock</i> indiciator, you can click on it to activate or
+    deactivate focus lock, and it will change color when focus lock is active.
+    This is easier to see than the small focus lock button.</dd>
+
+  - Loop Radar
+
+    An alternative to the horizontal "thermometer" that displays the
+    current playback position in the loop using a graphic that resembles
+    a pie chart or radar screen.  This makes it easier to determine
+    the position in the loop from a distance.</dd>
+
+New Script Variables:
+
+  - globalMute
+    Set to "true" if we are in global mute mode, and the current track
+    will be restored to play mode when the global mute is canceled.</dd>
+
+  - solo
+    Set to "true" if this track is currently being soloed.
+
+  - nextLoop
+    Set to the number of the next loop if we are currently in
+    a quantized loop switch.
+
+----------------------------------------------------------------------
+Version 1.24 - March 18, 2006
+
+Manual Updates
+
+  Please review the following sections for detailed information:
+
+  - Upgrading to 1.24
+  - MIDI Control
+  - MIDI Devices
+  - Rate Shifting
+  - Pitch Shifting
+  - Bouce Recording
+
+New features:
+
+  - Multiple MIDI inputs and outputs for both standalone and VST
+
+  - MIDI "through" passes messages from the inputs immediately 
+    to a selected device
+
+  - Solo function mutes all tracks except the current track when 
+    turned on, then restores previous mute state when turned off
+
+  - Global Mute now hopefully behaves like Matthis L wants. 
+    All tracks currently playing are muted, but we remember which
+    tracks were playing.  The second time you use Global Mute, just
+    those tracks that were playing previously are unmuted.  If you start
+    manually muting/unmnuting tracks, Global Mute mode is canceled.
+
+  - MIDI function and controller bindings now include the MIDI channel.
+    No long a global channel, Mobius responds on all channels, and channels
+    must be selected in the bindings.
+
+  - MIDI "binding scopes" for individual tracks and groups allow
+    you to use any function or control on individual tracks or
+    track groups.
+
+Bugs Fixed:
+
+  - Bug causing large group numbers to be displayed
+
+  - Bug with MIDI capture box too narrow to display entire message.
+
+
+Technology Preview: Pitch Shifting
+
+An early release of pitch shifting without tempo changes is available
+for experimentation.  Now before you get too excited, there are still
+several major problems with this so I don't feel it is ready for
+prime-time use, but all the code was in there and I dind't feel like
+hiding it for this release.
+
+The algorithm I am currently using was designed for offline file
+processing, not real-time processing.  It sounds quite good if you use
+its "high quality" settings, but this requires way too much processing
+power.  Currently I have the quality settings set very low so that it
+can be run in real-time without consuming all of the available CPU.
+It is still *very* expensive, on my 2.4 Ghz Pentium IV, CPU spikes
+upto around 66% when pitch shifting is engaged.  If you have a more
+powerful machine, it may work better.
+
+I will be replacing this with a less stressful algorithm eventually,
+but all of the ones I could find have quirks that make them difficult
+to use for real-time processing.
+
+----------------------------------------------------------------------
+Version 1.23 - March 1, 2006
+
+This release adds full support for Rate Shifting which had been
+released as an experimental feature a few months ago.  The new rate
+shifting algorithm sounds much smoother than the previous one, and you
+can now use a MIDI keyboard to do rate shifting in chromatic intervals
+with a single Mobius function binding.
+
+Note that rate shifting alters both the pitch and speed of the loop.
+A later version will add support for Pitch Shifting without changing
+the speed.
+
+This isn't very well documented yet, but if you have questions post
+a message to the Yahoo group.  The functions involved with rate shifting are:
+
+   Rate Down     - Shift the rate down one semitone
+   Rate Up       - Shift the rate up one semitone
+   Rate Normal   - Return to the normal rate
+   Rate Next     - Move to the next rate in the rate sequence
+   Rate Previous - Move to the previous rate in the rate sequence
+   Rate Shift    - Assign the center note for a chromatic rate shift range
+
+For those with a MIDI keyboard controller, the most interesting
+function is Rate Shift, which should be bound to a MIDI note event.
+This MIDI note defines the center of the shifting range, pressing it
+will return the rate to normal.  Notes below will cause the rate to 
+shift downward, notes above case the rate to shift upward.  This
+gives you a two octave range, 1 down and 1 up.
+
+Note that binding a MIDI note to Rate Shift will automatically
+bind rate shift functions to the 12 notes above and below this note,
+which may conflict with a note binding for another function.  The rule
+is that a rate shift will only be bound to a note if there is no other
+function bound to that note.  If you use notes to control Mobius
+functions (as is usually the case with the FCB1010), be sure that you
+pick a Rate Shift note that is sufficiently higher or lower than the
+other notes you are using.
+
+The Rate Sequence feature allows you use rate changes to define a simple
+chord progression, then step through the rates in the sequence with a 
+single footswitch press.  To define a rate sequence, go to the Presets
+dialog and locate the text field labeled "Rate Sequence".  This field
+may contain a list of numbers seperated by spaces, the numbers represent
+notes on the chromatic scale relative to the center note.  Positive numbers
+will shift the rate up, negative numbers shift the rate down.  For example:
+
+     -5 0 7 0
+
+Assuming a loop with an overall tonic of C, this will drop it to G,
+back to C, up to G, then back to C.
+
+----------------------------------------------------------------------
+
+Version 1.22 - February 9, 2006
+
+New features:
+
+  - Track groups, providing a way to send commands and continuous
+    controller changes to more than one track.  Similar to the 
+    current focus lock feature, but tracks may be assigned to one
+    of 4 groups, with each group sensitive to a different set
+    of functions and controllers.
+
+    See the "What's New" and "Controlling Tracks" section of the
+    manual for more information.
+
+----------------------------------------------------------------------
+
+Version 1.21 - February 2, 2006
+
+Bugs fixed:
+
+  - Suddenly resetting loop when starting Multiply in some cases
+
+  - removed generation of debugging files in a few case that could
+    have caused audible clicks
+
+New features:
+
+  - The "Save Audio Recording" function  now saves files with names
+    of the form "recordingx.wav" where "x" is a number to qualify
+    the file name.  This allows you to save several recordings to 
+    unique file names.
+
+----------------------------------------------------------------------
+
+Version 1.20 - January 21, 2006
+
+New features:
+
+  - When the global recording feature is enabled (Start Audio Recording), 
+    the word "Recording" will appear in the list of minor modes.
+
+Bugs fixed:
+
+  - Crash comming out of mute in a script.  Actually a more general
+    problem comming out of mute when MuteMode=Start.
+
+  - Crash deleting the plugin in Live 5.0.3.
+
+  - Keyboard bindings ignored for functions with multi-word display names
+    (e.g. Start Audio Recording)
+
+The last bug related to multi-word function bindings may require a
+manual modification to ui.xml.  With Mobius not running, edit ui.xml
+in a text editor and locate the element "KeyConfig".  Delete any
+"KeyBinding" elements that have a value for the "function" attribute
+that contains spaces.  You should now be able to return to the Keyboard 
+Configuration dialog and assign keys to multi-word functions.
+
+----------------------------------------------------------------------
+
+Version 1.19 - January 15, 2006
+
+This is a major release if measured by the number of internal code
+changes, though the changes in behavior are relatively small.  If you
+are a current user and use Mobius live, I recommend that you not
+upgrade until you are ready to spend a few days practicing with this
+release to make sure it behaves as you expect.
+
+New Features
+
+  - Continuous Feedback
+
+    Changes to the feedback level are now recorded into the next
+    layer allowing you to "sculpt" the material copied into the
+    next layer.
+
+  - Interface Modes
+
+    The interface modes Expert, Stutter, Output, Input, Replace, 
+    and Flip are now fully supported.  Delay mode is still not supported.
+
+  - 16-bit audio files
+
+    A new global option enables the storing of audio content as
+    16-bit integer wave files for compatibility with applications
+    that do not support 32-bit floating point files.
+
+  - Script Language Improvements
+
+    Several improvements to the scripting language including simplification
+    of the "Wait" statement, and the ability to reference many more
+    variables containing Mobius state.
+
+Bugs Fixed
+
+  - Clicks in some cases after creating an overdub that crosses the 
+    loop boundary.  
+
+  - Smoothing of continuous controller changes to eliminate
+    "zipper noise" when adjusting the track levels for Input, Output, 
+    Feedback, Secondary Feedback, and Pan.
+
+
+A side effect of continuous feedback is that we no longer merge the
+contents of every layer while the loop is playing, instead the backing
+layer is completely copied into the next layer.  This may result in
+increased memory consumption but should eliminate the large CPU
+overhead that occurred after creating many layers.
+
+When continuous feedback is enabled, you can no longer use the "Save
+Project Layers" option to save just the new material overdubbed in
+each layer to a file, the layer files will contain all of the material
+copied from the previous layers as well.  If you prefer the old behavior,
+you can disable layer flattening by checking the new "Independent Layers"
+global parameter.
+
+While testing continuous feedback, I found many bugs related to the
+handling of audio that was recorded seamlessly over the loop boundary, 
+such as when you end a record with overdub, or you leave overdub on 
+and record over the loop boundary.  These bugs could result in clicks
+after doing certain operations like Undo, Redo, and Replace where
+one end of the loop was replaced but not the other.  
+
+----------------------------------------------------------------------
+
+Version 1.18 - January 14, 2005
+
+  - Strange noise when doing Undo or Redo with loop recorded in 
+    half speed
+
+Version 1.17 - January 6, 2005
+
+A few more bug fixes before the next major release.
+
+  - Functions scheduled after Retrigger not being performed immediately
+    after the retrigger.
+
+  - Unable to move way from a track after loading a loop.
+
+  - Change the loop meter color when in Mute mode
+
+
+Version 1.16 - January 5, 2005
+
+A few more bug fixes before the next major release.
+
+  - Crash using Speed alternate ending for Record when Sync=Out
+    and another track is the sync master.
+
+  - Parameters changed in scripts not being displayed reliably.
+
+  - Channel displayed in the MIDI monitor area of the Tracks dialog
+    doesn't match the pulldown channel selector (both should be 1 based).
+
+  - the Track Strip component may now be removed from the display
+
+
+Version 1.15 - January 1, 2005
+
+I'm dropping the beta annotation, releases will simply be numbered
+"dot" releases from now on.
+
+This release has a bug fixes that I wanted to distribute before the next
+major release which may be initially less stable due to the large
+number of changes.
+
+  - Crash when you retrigger a loop that has scheduled events
+
+  - Do not allow Undo to reset the loop
+
+  - Increase the maximum supporte ASIO block size to 2048.  If you
+    set the block size above this you may cause a crash if you use
+    certain functions such as Unrounded Multiply.  But if the block 
+    size is that high, you're really gaining nothing from ASIO.  Your
+    block size should never be above 1024.
+
+  - Be more careful during the VST shutdown process to avoid problems
+    when being "scanned" by  some hosts.
+
+  - Reduce (eliminate?) crashes when deleting the VSt plugin in
+    Live 5.0.2 and 5.0.3
+
+Beta 15
+  
+  - suppress several incorrect fades at the loop boundary when a 
+    seamless record had been performed
+
+  - fixed lots of click conditions after performing seamless records 
+    over the loop boundary
+
+  - localization
+
+  - StartAudioRecorder changed to StartAudioRecording
+  - StopAudioRecorder changed to StopAudioRecording
+  - SaveAudio changed to SaveAudioRecording
+
+  - Scripts: subcycle and cycle numbers are 0 based rather than 1 based
+
+Beta 14
+
+This release contains only bug fixes, there is no major new functionality.
+
+To support VST hosts that have trouble routing MIDI events to Mobius
+because it is an "effect" rather than an "instrument", we will allow
+Mobius to open the configured MIDI input and output devices even when
+running as a VST plugin.  This must be enabled with options
+on the "Global Parameters..." dialog.
+
+Host synchronizations problems when running Mobius under energyXT
+and Cubase have been fixed, though the demo version of Cubase SX
+is still unable to host Mobius properly.  The demo is over 2 years
+old, so more recent versions may be better.
+
+Bugs fixed:
+
+  - Mike, Dmitry: crash after sus unrounded insert
+  - Dmitry: boolean (on/off) parameters not being displayed correctly
+  - Dmitry: attempting rehearse causes a reset, sometimes crash
+  - Dmitry: TrackSyncMode=Loop doesn't work
+  - Dmitry: TrackSyncMode=Cycle not incrementing cycle counter
+  - Dmitry: TrackSyncMode=SubCycle always ending up with one cycle
+  - Dmitry: SpeedSyncMode=ChangeClocks not working, retriggers in the middle
+  - Dmitry: click when leaving mute with Quantize=Loop
+  - Dmitry: click at start of Insert
+  - Dmitry: replace/substitute in reverse not positioned correctly
+
+  - Changing tracks doesn't update the instant parameter values
+  - Editing preset doesn't update all tracks that use it
+  - TrackSyncMode not working when Sync=Off
+  - Host sync under energyXT and Cubase
+  - Loop cycle counter not advancing properly when Sync=HostBar and
+    loop is longer than one bar.
+
+  - Add Rehearse and SUSRehearse functions for completeness, behaves like
+    Record except it enters Rehearse mode when ending the recording even
+    if InsertMode!=Rehearse
+
+  - Added "Plugin Opens MIDI In" and "Plugin Opens MIDI Out" global parameters
+    (Plugin Opens MIDI Out replaces Host Sync Master)
+
+  - Support for reducing VST pin counts for host that don't like
+    effects plugins with more than two (Cubase SX Demo)
+
+
+Beta 13
+
+The major new feature for this release is external synchronization!
+See the new section in the user's manual titled "Synchronization"
+for complete details.  
+
+We also now have partial support for the Interface Mode parameter.
+This required a reorganization of some UI components.  If you are
+upgrading from a previous release, see the section in the manual
+titled "Upgrading".
+
+The most interesting Interface Mode is Stutter, which provides a new
+behavior for the Insert function.  You may also directly access the
+new Stutter and SUSStutter functions without having to change
+Interface Modes.
+
+New Functions:
+
+   Trim Start
+     Remove the portion of the loop between the current position and the 
+     beginning.  A form of unrounded multiply but easier.
+
+   Trim End
+     Remove the portion of the loop between the current position and the end.
+
+   Stop Song
+     Send a MIDI StopSong message.  Available in all sync modes.
+
+   Stutter
+   SUSStutter
+     Insert repetitions of a cycle.  My take on stutter may be different 
+     than the EDP.  I stutter the cycle you are currently in, the EDP
+     seems to wait for the NEXT cycle.  Let me know if you feel strongly
+     about this.
+
+Bugs fixed:
+
+  - You can no longer bind function to Start, Stop, 
+    and Continue MIDI messages.  This wasn't really a bug, but it was
+    functionality I had to remove in order to support synchronization.
+
+  - Preset and MIDI configuration program change numbers
+    are now specified from 1-128 rather than 0-127.  If you give
+    a preset or MIDI configuration program 0, it means that it cannot
+    be selected with program changes.
+
+  - Record used in a script was being handled as a long-press,
+    which caused the loop to reset after 1/2 second
+
+  - Crash when closing the Mobius VST plugin when there were
+    MIDI devices selected.
+
+  - Unable to type a key binding for keys with more than one letter, 
+    for example "F1" was being converted to "F".
+
+  - StartPoint fixed, TrimStart and TrimEnd added
+
+  - Mobius no longer in Omni mode, obeys selected channel
+
+  - SamplerStyle=Attack partially works, but won't go into mute on NoteOff
+
+  - Loop cycle count was being lost when saved in a project
+
+----------------------------------------------------------------------
+
+Beta 12 - April 27
+
+This release fixes several problems that should improve stability
+when running as a VST plugin.  Previously, closing the Mobius plugin
+could sometimes cause crashes.  This could happen when deleting
+the plugin after inserting it into the host, or in Bidule when
+selecting a new patch.  
+
+The Mobius UI also now behaves more like other VSTs.  The UI window
+will not be displayed immediately after the plugin is inserted.
+Intead, you have to select the plugin in the host to bring up 
+the window.  
+
+Where Mobius differs from most VSTs is that it will open two editing
+windows.  One small window is controlled by the host application, it
+will contain either a blue oval, or a black rectangle.  The second
+window is the Mobius main window.  If you close the Mobius main
+window, you can open it again by clicking on the smaller window.  If
+you close both windows, you will have to open them from the VST host.
+The blue oval does not appear in all hosts (Bidule, AudioMulch), I'm
+trying to determine why.  The UI changes appear to fix problems when
+Mobius is loaded into Chainer.
+
+Input monitoring has been restored.  Beta 11 also was not properly
+passing through a stereo signal.
+
+Bugs fixed:
+
+  - crashes when closing the Mobius plugin
+
+  - crashes when Mobius is loaded into Chainer along with 
+    several other plugins
+
+  - SUSRecord turns into a Reset when held
+
+  - Input monitoring was not working
+
+  - VST not properly passing through a stereo signal
+
+Beta 11 - April 15
+
+This release adds more track control options, including multiple input
+and output ports for the VST plugin.  You can now route each track to
+a different VST port when running Mobius as a VST plugin.  This is
+controlled by the new Tracks dialog selected from the Configuration
+menu.  See the new sections in the manual titled "Track Control" 
+and "Mobius VST Plugin" for more information.
+
+Among other things, assigning ports to tracks allows you to send input
+to a track from a virtual synth, or assign a different effects plugin
+before each track to make them sound different even though they are
+fed from the same input signal.
+
+An important bug was fixed related to unrounded multiply.  Previously,
+if you ended a Multiply with a Record the loop would be shortened but
+any audio that you had overdubbed during the Multiply would be lost.
+We not include the overdubbed material in the new shortened loop.
+
+I've also given the manual a much needed revision so that it includes
+everything that has been mentioned in the release notes.  But there
+is still not much on scripts.  I think I'm going to write a seperate
+manual for that since it will rather large and complicated.
+
+
+Beta 10 - March 28
+
+There is nothing major in this release, just cleaning up a few
+loose ends.
+
+  - fixed bug where MIDI bindings to scripts wouldn't be used
+    until you opened the MIDI Control dialog once
+
+  - fix pan behavior when controlled by MIDI CC messages
+
+  - script trace messages are only displayed if trace level is 3
+    to eliminate clicks when running scripts
+
+  - including Matthias's scripts in the scripts directory
+
+Beta 9 - March 26
+
+The primary features of this release is fixing the crash on Windows
+2000 when loading scripts.  Basic support for Redo is also available.
+To use redo, edit the preset and set "Max Redo Layers" to a positive
+number.
+
+Note that the default script file extension has been changed from .scr
+to .mos since .scr is normally used for screen saver files.  You
+can still use scripts with the .scr extension, but the Open Script
+dialog won't show them by default.
+
+Changes:
+
+  - fixed crashes on Windows 2000 loading scripts
+  - changed script file extension from .scr to .mos
+  - changed pan parameter range from -128-128 to 0-127 with
+    center at 64
+  - fixed track number parsing in FOR statements to not require
+    a trailing comma, and to number tracks from 1 rather than 0
+  - added Redo function support, new preset parameter maxRedo
+    controls the number of redo layers we will keep
+
+Beta 8 - March 22
+
+Another quick fix for the failure to save and restore bindings between
+MIDI events and scripts.  I also added a few more small things:
+
+  - fixed setting feedback and output levels in scripts
+
+  - Play function
+    This is sort of a universal mode cancel function.  It will
+    get you out of modes like Insert, Multiply, Rehearse, Replace, 
+    Substitute, Overdub, and Mute and return you to Play.  It does not
+    cancel Reverse or HalfSpeed.  It can also be used to cancel a loop
+    switch when confirmation is on, since normally Undo is used as
+    a confirming action.  
+
+  - track output level meter
+    A second rectangle at the bottom of each track column will fill
+    with color according to the the amplitude of the audio being
+    played in this track.  
+
+  - loopFrames parameter
+    A parameter that may be referenced in a script that contains
+    the number of frames in the loop.  May be used in Wait statements.
+    This cannot be set, only read.
+
+  - loopCycles parameter
+    A parameter that may be referenced in a script that contains
+    the number of cycles in the loop.  May be used in Wait statements.
+    This cannot be set, only read.
+
+Don't get too excited by the loopFrames and loopCycles parameters 
+yet though.  Before they can be used for waiting in scripts, we have
+to fix a few other problems I noticed during testing.  
+
+You will also notice a Redo function appearing in the function lists, 
+but it doesn't do anything.   Stay tuned...
+
+
+Beta 7 - March 21
+
+A quick fix to some scripting problems where temporary preset
+parameter values were not being used when functions were run.  I also
+added the "scripts" subdirectory with some example scripts.
+
+
+Beta 6 - March 21
+
+The focus of this release was scripting enhancements to make it easier
+to control multiple tracks.  There is still no comprehensive
+document on the scripting language, but you can see a complex
+example in the file "GlobalMuteToggle.scr".  Contact me privately
+if you would like more information.
+
+Bugs fixed:
+
+  - Can use MIDI program changes to trigger functions without
+    being converted into long-press functions.
+
+  - Parameters set in scripts will have effect when the function 
+    is performed without requiring a Wait statement.
+
+  - Rearranged the Preset dialog so it fits on a 1024x768 screen.
+
+  - Quick Save File global parameter not saved permanently
+
+  - Insert quantized to the end of the loop inserts cycles at the
+    end rather than at the beginning.
+
+  - Removed absolute path in demo sample binding.
+
+
+Beta 5 - March 11
+
+Fix race conditions that can cause crashes when closing the Mobius
+window almost immediately after it has been opened.  This is something
+that can happen during VST "probing" where an application will open
+and then immediately close a VST to verify that it is operating
+properly.  This fix should allow Mobius to be opened within Sonar.
+
+Fixed a display bug where the track controls would not be drawn when
+the window was restored after being minimized.
+
+Fixed bug with pulldown menus in dialogs where not all the
+possible values were being displayed.
+
+Fixed Undo after a quantized switch, that was causing you to
+get stuck in "Switch Quantize" mode.
+
+
+Beta 4 - March 10
+
+Reduce the chance that the special "hang detection" thread will
+think that the audio engine is in an infinite loop and terminate
+the process.  This can happen when running as a VST when the host does
+not call the process() method regularly.    This should reduce what
+look like Mobius crashes in some hosts.
+
+
+Beta 3 - March 5
+
+VST support has been improved.  I am now able to run Mobius within
+Chainer and Ableton Live with no apparent problems.  I have been
+unable to load it in Sonar through it's Dxi/VST bridge, but I can load
+Chainer into Sonar, then load Mobius into Chainer.
+
+Mobius does not yet synchronize with MIDI clocks sent by the VST host,
+so in practice VST is useful only for soft synths, effects, and signal
+routing.
+
+The name of the VST DLL is "Mobius.dll".  If your host supports more
+than one VST directory, add the Mobius installation directory (usually
+c:\Program Files\Mobius) to your list of VST directories.  If your
+host supports only one VST directory (usually c:\Program Files\VstPlugins), 
+copy Mobius.dll from the mobius installation directory to the common plugin
+directory.
+
+The audio devices configured in Mobius will be ignored when running as
+a VST.
+
+Mobius will respond to MIDI events sent through VST so it is not
+necessary to configure a MIDI input device if all you use is VST.  If
+you use VST and configure a MIDI input that is different from what the
+VST host uses, Mobius will respond to both devices.
+
+The Mobius screen cannot be closed when running as a VST.  I may fix
+this, allowing the engine to keep running without having a window open
+but the Window is generally so valuable that it is hard to know what
+you're doing without it.
+
+A new global option "Monitor Audio Input" is now available in the
+"Global Parameters..." dialog.  When checked, audio input received by
+Mobius will be immediately passed through to to the ouput device.
+This is what you want if you are using Mobius in a VST rack like
+Chainer and want to hear the audio being sent to Mobius after any VST
+effects.  Because of driver latency, this option is only useful if you
+are using an ASIO audio driver.
+
+The following bugs have been fixed:
+
+  - loading a loop from a file resets the feedback and output levels to zero
+
+  - scripts called on trigger up transitions, causing "events too fast" errors
+
+  - crash after switching to loop with LoopCopy=Timing and LoopCopyMode=Overdub
+
+  - when TrackCopy=Timing, new track starts playing even when source loop
+    had no content
+  
+
+Beta 2 - Feb 21
+
+The track strip now contains a Pan knob.  The useful range of motion
+seems to be a little too compressed toward the edges, I'll try to 
+improve that.
+
+To assist in changing knobs at the bottom of the screen, the know will
+also track left and right motion as well as up and down.  Moving the
+mouse to the left decrements.  I'm planning to convert these to 
+vertical sliders which will be easier to control.
+
+You may now select more than one track to receive "focus".  This means
+that more than one track can be receiving audio input and function
+triggers at the same time.  To enable this feature, you must select
+the "input lock" button for each track.  In typical Mobius minimalism,
+this is displayed as a small round circle at the top of each track
+strip.  When you click on this circle it will turn red.  When the
+circle is red it means that the track is responding to audio and
+function triggers, even it is not the currently selected track.
+There is a also a new function "Input Lock" which you can bind to
+toggle input lock without using the mouse.
+
+There is preliminary support for the Sync=Out parameter.  Mobius will
+send start/stop messages and MIDI clocks as soon as the loop length is
+set and whenever it changes.  I'm pretty sure there will eventually be
+drift between the Mobius and the external device, but I'm curious if
+this basically works.  I've had a hard time testing this because I
+don't have a drum machine, and FL Studio amazingly does not appear to
+recognize an external master clock.
+
+The following bugs have been fixed:
+
+  - crash using the Overdub function in a Reset loop
+
+  - MuteMode=Start not performing a retrigger when leaving mute
+
+  - parameter names in scripts not case insensitive
+
+  - Undo not working as a switch confirmation action
+
+  - Global Mute not implemented
+
+  - Deleting a sample or script crashes
+ 
+  - After using Mute, then Retrigger, loop starts playing but the
+    display still says "Mute"
+
+----------------------------------------------------------------------

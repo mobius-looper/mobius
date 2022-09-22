@@ -1,0 +1,64 @@
+Script Library Notes
+
+- single file with multiple scripts
+
+- current directives
+   !autoload
+   !focuslock
+   !sustain
+   !name <name>
+
+----------------------------------------------------------------------
+!library
+
+proc GMuteToggle
+  For all
+    Jump PLayinSync mode = Mute
+    Variable SaveSwitchQuant = $switchQuant
+    set switchQuant off
+    Retrigger
+    set switchQuant $SaveSwitchQuant
+    Label PlayinSync
+    Mute
+  Next
+endproc
+
+-- interior scoping
+proc "Global Mute Toggle"
+  !sustain
+  ...
+endproc
+
+-- lexical association, more like annotations
+
+!sustain
+proc "Global Mute Toggle"
+  ...
+endproc
+
+[sustain,focuslock]
+proc "Global Mute Toggle"
+  ...
+endproc
+
+If we use "proc" will need a declaration to make some hidden.
+Easier to use script instead?
+
+script "Global Mute Toggle" sustain focuslock
+
+   xxx
+
+endscript
+
+script Global Mute Toggle
+  !sustain
+  !focuslock
+
+   xxx
+
+endscript
+
+Or maybe "func" vs "proc".  
+
+
+

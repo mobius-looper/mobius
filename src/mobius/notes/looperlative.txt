@@ -1,0 +1,42 @@
+Looperlative Forum Notes
+
+----------------------------------------------------------------------
+
+ Well here's a couple of suggestions (as you asked ), which I hope fit
+with what's there already.  I'm not too familiar with what's already
+in place, so this could be nonsense.
+
+1) when "Mult Amount" = 1, then it's possible to tap in the no. of
+times to mult the loop.  eg. Tap 3 times quickly, and loop is mult by
+3. Or would 1 tap = 2x, 2 tap=3x ?  By quick, I mean less than 300ms
+between taps
+
+2) Just as hitting "Play" on an empty loop creates a synced loop,
+hitting Mult should give you an instant record onto a Multiplied Loop.
+So instead of Play>Mult>OD you only need "Mult"
+
+3) If you really want EDP type functionality, then hitting mult on an
+empty loop will start a record. The recording continues while
+Looperlative waits for another button press.  After that press then
+recording continues until the new loop is a multiple of the master
+loop. It would probably suit the user to see a display of the mult
+amount as it increments.
+
+hope that's comprehensible
+
+Personally, i'd be happy to manage without 3).  With my edps I get the
+wrong no. of mults more often than I'd like anyway
+
+Suggestion 2) seems like it would be easy to implement.  Instead of
+having 2 footcontroller buttons, one with "Play>Mult>OD" and one with
+"Mult" there'd only need to be "mult" for the same functionality.
+
+
+1)&2) could work together for a very neat interface.
+
+
+Maybe there are a number of possibilities for button presses on empty
+loops.
+
+----------------------------------------------------------------------
+

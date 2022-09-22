@@ -1,0 +1,845 @@
+
+Statements
+
+	STMT_ECHO,
+	STMT_FUNCTION,
+	STMT_WAIT,
+	STMT_SET,	
+	STMT_END,
+	STMT_VARIABLE,
+	STMT_JUMP,
+	STMT_LABEL,
+	STMT_FOR,
+	STMT_NEXT,
+	STMT_TRACK,
+	STMT_PRESET,
+	STMT_INIT_PRESET,
+	STMT_BREAK,
+	STMT_AUDIO,
+	STMT_LOAD,
+	STMT_SAVE,
+	STMT_CALL,
+	STMT_DIRECTORY,
+        STMT_INIT_TEST,
+	STMT_DIFF
+
+----------------------------------------------------------------------
+
+Introduction
+
+Scripts are...
+
+  - a simple program language that provides powerful control
+    over the operation of the Mobius engine
+
+Mobius scripts provide...
+
+  - "macros" to automate a sequence of functions
+  - "overrides" to perform functions with specific parameters without
+     changing the preset
+  - custom functions and modes
+
+Writing Scripts
+
+Scripts are simply text files that you may create in any text editor.
+Once you have created a collection of script files, the scripts
+may be added to the Mobius script list, which allows them to be called
+in respose to an keyboard press, button click, or MIDI command.
+
+  - Scripts... dialog
+  - 
+
+Syntax
+  Command Overview
+  Declarations
+  Invocation
+
+Reference
+  Commands
+  Functions
+  Parameters
+
+Examples
+
+----------------------------------------------------------------------
+Invocation
+----------------------------------------------------------------------
+
+Top-level scripts called by binding them to key presses, 
+button clicks, or MIDI events.  Scripts may call other
+scripts in several ways:
+
+  - Synchronous
+     Just like invoking a function, use the unqalified name
+     of the script.
+
+  - Asynchronous
+     Launches a thread to run this script in parallel with
+     the calling script.
+
+
+Assume a script "ToggleMute" that iterates over each track
+muting the tracks that are currently playing, and unmuting those
+that are currently muted.  You would normally want such a script
+to run synchronously.  To call a synchronous script, simply write
+a line containing the script name:
+
+    ToggleMute
+
+Assume for example a script named "FadeOut" that performs a gradual
+decrease in output level for tracks 4 through 8.  Since this script
+may run for several seconds, you want to run it asynchronously so
+control returns immediately to the performer.  To run an asynchronus
+script use the "Start" command followed by the name of the script.
+
+    Start FadeOut
+
+You may also call asynchronous scripts that are stored on the file
+system and not loaded in to the Mobius script list.  To do so,
+add the keyword "file" before the script name:
+
+    Start file myscript
+
+Concepts:
+
+  - sync/async
+  - isntalled/file
+
+  [Run|Start] [file] <scriptname> [args]
+
+Need a configuable "script root" directory so we can use relative
+paths in file names.
+
+I like "Start", but could use "Call" instead of "Run"
+
+  Run Foo
+  Call Foo
+  Load c:/temp/script.txt as Foo                -- overkill
+  Run Foo
+
+SUMMARY:
+
+  Foo                   sync/installed
+  Run Foo               sync/installed
+  Start Foo             async/installed
+  Run file foo          sync/file
+  Start file foo        async/file
+
+----------------------------------------------------------------------
+Execution Modes
+----------------------------------------------------------------------
+
+OPAQUE
+
+Functions called in the script do not satisfy a Wait condition.
+Shouldn't this always be the case?  If you want scripts to coordinate
+they can use semaphore variables.  Useful if you were using
+simpler parameter override scripts that you otherwise wanted
+to be treated as a simple function.  
+
+  - Declaration to force functions in a script to satify wait conditions
+      !transparent
+
+  - Function to explicity satisfy a specific wait condition, regardless
+    of whether this actually happened.  This seems more flexible and useful.
+      Raise Record
+      Signal Record
+        
+  - Function argument to specify that the function should be visible
+    This looks confusing to me, and conflicts with function arguments.
+      Record visible
+
+Leaning toward Signal, though it does require two lines:
+
+   Signal Record
+   Record
+
+SUMMARY
+
+  - functions called within a script to not satisfy Wait conditions
+  - Signal <function> used to explicity satisfy Wait conditiosn
+
+----------------------------------------------------------------------
+SUSTAIN
+----------------------------------------------------------------------
+
+The ability for a script to retain control while the function trigger
+is held down.
+
+Method 1: Wait
+
+   !name SUSRecord
+   Record
+   Wait up
+   Record
+
+This is nice and simple, will have to reserve "up" to mean the
+up transition of whatever trigger event was bound to the script.
+This does however make it hard to call this from another
+script, and impossible to run async?
+
+Interpreter will have to detect if "Wait up" is being called
+from within a secondary script and return immediately.  Same
+with async.
+
+Method 1: Wait, Long
+
+   !name SUSRecord
+   Record
+   Wait long,up
+   Jump LongPress $last = long   
+   Record
+   end
+   Label LongPress
+   Reset
+   end
+
+Need to be able to wait for several things in a single Wait statement.
+Need a mechanism to test for the event that satisfied the wait.
+Need a namespace of "events"
+
+   - long, up
+   - Function/Script name
+     - When waiting for scripts, wait for the end?
+
+Interpreter will have to ignore a "Wait long" when called from another
+script or run async.
+
+Method 2: Multiple Entry 
+
+   !name SUSRecord
+   !sustain
+
+   Jump Recording $mode = record
+
+   # if we're not recording and we get an up transition, ignore
+   Jump Ignore $direction = up
+
+   # Start the recording
+   Record
+   end
+
+   Label Recording
+   
+   # if we're already recording, and we get a down transition before
+   # the up, just handle it normally, may get a redundant up later
+   Record
+   end
+
+   Label Ignore
+   end
+
+Relatively simple, requires that the script be called twice
+passing a value for the "direction" Argument.  This behavior
+requested with the "!sustain" directive.  Can also be called
+from other scripts:
+
+  SUSRecord down
+  Wait...
+  SUSRecord up
+
+The first argument is automatically bound to the variable "direction".
+
+This is consistent with how direction is conveyed for normal functions,
+but also consider keyword arguments:
+
+  SUSRecord direction = down
+  Wait...
+  SUSRecord direction = up
+
+Method 2: Multiple Entry, Long
+
+Script called three times:
+
+   direction=down
+   long=true
+   direction=up
+
+Generalize this to:
+  
+   action=down
+   action=long
+   action=up
+
+   !name SMultiply
+   !sustain
+
+   Jump LongPress $action = long
+   Jump Up $action = up
+
+   # down transition, start a Multiply
+   Multiply
+   end
+
+   Label LongPress
+   # behave like the EDP
+   GeneralReset
+   end
+
+   Label Up
+   Jump Ignore $mode != multiply
+ 
+   # has this been down long?
+   Jump Ignore $long != true
+   Jump Ignore $sustain != long
+   Jump Ignore $sustain < 200
+
+   Multiply
+   end
+
+   Label Ignore
+   end
+
+Need testable action=long if we want to change behavior immediately
+after we become "long".   
+
+Need testable sustaion=long if we want to change behavior on the up
+transition, but not immediately after becomming long.
+
+May be nice to have a "really long" which can be become
+track functions.  Hmm, not that much use for this besides Reset?
+
+Counting sustain milliseconds interesting but overkill.  Would be more
+useful if sustaining triggered an immediate action, possibly calling
+every 100 msec.
+
+Possibilities
+   
+    Long! Reset = Global Reset
+    Long! Record = General Reset
+
+Nah.
+
+Method 3: Multiple Entry, automatic jump
+
+   !name SUSRecord
+   !sustain
+
+   # here on the down transition
+   Record
+   end
+
+   Label Long
+   # here on the long press
+   end
+
+   Label Up
+   # here on the up transition
+   end
+
+This is simpler and what everyone will want.  Not really any
+advantage to passing "action", though we could do that too
+just in case.
+
+Need a way to indicate that the up transition got lost and the
+previous invocation should be canceled?  Can check $mode most
+of the time, or set a custom variable.
+
+  Label Cancel
+    Called when we detect a sustain script reentry.
+  $depth
+    Number of times this script is on the "stack".
+  $active
+    Set to "true" if the script is already active on this track.
+  $status
+    Set to "active" if the script is already active.
+
+Hmm, $status seems the most general:
+
+  null - script is not active
+  running - script is currently running
+  waiting - script is currently waiting
+  
+Running would be set if the script is actually running, though since
+these are almost instantaneous that isn't very useful?
+
+Running would be set if the script was !sustain and we're waiting for
+the long and up actions.  
+
+Waiting is set if the script is blocked on a Wait.
+
+Is there really a difference between Running and Waiting.  
+
+
+Need a way to specify a message to be displayed while a !sustain
+script is waiting for the up transition.
+
+This automatically installs a track message until the up transition.
+
+  !sustain
+  !message Sustained Tension
+
+This explicitly installs a track message:
+
+   Message Sustained Tension
+
+but how do you take one away?
+
+   Message msg Sustained Tension
+   Message msg Sustained Tension $state
+   ...
+   Message remove msg
+
+
+SUMMARY
+
+   Wait up
+    Wait for the up transition of the trigger that invoked the script.
+    Returns immediately if secondary or async script.
+
+   Wait long
+    Waits for the up transition or for the trigger to be held for
+    more than 200ms.  Returns immediately if secondary or async script.
+    
+   $sustain
+     Set to "long" if the trigger was held for more than 200ms
+     Used with Wait up and Wait long.
+
+   !sustain
+     Declares that the script supports multiple entry points.
+
+   Label Long, Label Up
+     Control transitions automatically to these labels in !sustain scripts.
+
+   $action
+     Set to "up", and "long" in !sustain scripts.
+     Note that this will NOT be explicity set to "down".
+
+   <script>
+   <script> down
+     Binds the "action" variable to null and calls script.
+
+   <script> up
+     Binds the "action" variable to "up"  and calls script.
+     Automatically jumps to Label Up if !sustain.
+
+   <script> long
+     Binds the "action" variable to "long"  and calls script.
+     Automatically jumps to Label Long if !sustain.
+   
+   $trigger
+     Set to "key", "button", or "midi" (interesting?)
+
+   $status
+     Set to "running" or "waiting" if this script has already been
+     invoked in this track.
+
+   Message <name> <message>
+     Add a message to the current track's message list.
+     If a message with the given name already exists, it is replaced.
+     Need a message are in the main UI display, also allow the top
+     message to be displayed in the track strip.
+
+   Remove <name>
+     Remove a message with the given name from the current track's 
+     message list.
+
+   !sustain <message>
+     Automatically installs <message> in the track's message list and
+     removes it when the script completes.
+
+----------------------------------------------------------------------
+FUNCTION WAITS
+----------------------------------------------------------------------
+
+  Wait function <name>
+  Wait <name>
+    - Wait for an invocation of <function> in this track
+
+  Wait <function> message <msg>
+    - Wait for a function, automatically add <msg> to the track's
+      message list 
+      - Wait function Record message Waiting for recording to begin
+
+  Wait <function> track <number>[,<number>...]
+    - Wait for a function in a particular track
+      - Wait Record track 2
+      - Wait Record track 2,3,4
+      - Wait Record track *
+      - Wait Record track * message Waiting for any recording to begin
+
+  Wait <function>[,<function>...]
+    - Wait for one of several functions
+      - Wait Record,Reset
+
+  Wait function <function>
+    - the cannonical form
+      Wait function Record
+
+----------------------------------------------------------------------
+TIME WAITS
+----------------------------------------------------------------------
+
+Original Syntax
+
+1  msec <n>              wait for specific msec
+2  msecs <n>             wait msecs from now
+3  msecs subcycle        wait subcycleFrames from now
+4  msecs cycle           wait cycleFrames from now
+5  msecs loop            wait loopFrames from now
+6  frame <n>             wait for a specific frame
+7  frames <n>            wait <n> frames from now        
+8  frames subcycle       wait subcycleFrames from now
+9  frames cycle          wait cycleFrames from now
+10 frames loop           wait loopFrames from now
+11 audio                 wait for test Audio to drain
+12 subcycle <n>          wait for specific subcycle (not cycle relative)
+13 subcycles <n>         wait for nth subcycle boundary from now
+14 cycle <n>             wait for specific cycle
+15 cycles <n>            wait for nth cycle boundary from now
+16 loop <n>              wait for a specific loop iteration
+17 loops <n>             wait for nth loop boundary from now
+
+New Syntax Relative Waits
+
+Cases 3, 4, 5 are not represented since they can be done with frame waits.
+Case 11 is discussed elsewhere.
+
+  msec <n>              wait msecs from now (2)
+  frame <n>             wait frames from now (7)
+  frame subcycleFrames  wait subcycle frames from now (8)
+  frame cycleFrames     wait cycle frames from now (9)
+  frame loopFrames      wait loop frames from now (10)
+  subcycle <n>          wait for nth subcycle boundary from now (13)
+  cycle <n>             wait for nth cycle boundary from now (15)
+  loop <n>              wait for nth loop boundary from now (17)
+
+New Syntax Absolute Waits
+
+  until msec = <n>     wait for specific msec (1)
+  until frame = <n>    wait for specific frame (6)
+  until subcycle = <n> wait for specific subcycle (12)
+  until cycle = <n>    wait for specific cycle (14)
+  until loop = <n>     wait for specific loop (16)
+
+Subcycle numbers are relative to the current cycle.
+Cycle numbers are relative to the current loop.
+Waiting for a specific loop number is dangerous since these don't reset.
+
+New Global Variables
+
+  frame                current frame
+  msec                 current msec
+  subcycle             current subcycle (relative to cycle)
+  cycle                current cycle (relative to loop)
+  loop                 current loop iteration
+  beat                 current host beat
+  bar                  current host bar
+  subcycleFrames       frames per subcycle
+  cycleFrames          frames per cycle
+  loopFrames           frames per loop
+  cycleframe           base frame of current cycle
+  subcycleframe        base frame of current subcycle
+  loopFrame            base frame of current loop iteration
+
+----------------------------------------------------------------------
+OTHER WAITS
+----------------------------------------------------------------------
+
+  Wait up               wait for up transition of script trigger
+  Wait long             wait for long press of script trigger
+  Wait audio            wait for test audio to drain
+
+----------------------------------------------------------------------
+CONDITION WAITS
+----------------------------------------------------------------------
+
+Wait for an expression involving a variable reference to become true.
+
+  Wait until <reference> <operator> <value>
+  Wait until mode = Reset
+  Wait until MyVariable != busy
+  Wait until cycle = 2
+
+----------------------------------------------------------------------
+COMBINATION WAITS
+----------------------------------------------------------------------
+
+Adjacent Wait statemnts are combined with logical OR.
+
+  Wait Record
+  Wait msec 1000
+                          
+Here we wait until the Record function has been pressed, OR 1 second elapses.
+The global variable $event is set to the name of the wait function,
+or the wait unit, e.g. "Record" or "msec" which you can use to see
+which wait condition was satisfied.
+
+  # Let recording continue for a maximum of 4 seconds and end
+  # automatically.  
+  Record
+  Wait Record
+  Wait msec 4000
+  Jump Timeout waitEvent != Record
+  end
+  Label Timeout
+  Record
+  End
+  
+To wait for ANY function do:
+
+  Wait *
+  Wait Any
+  Wait function *
+
+If you need two adjacent waits that are to be done serially
+rather than logically or'd, use the Continue statement.
+
+  Wait Record
+  Continue
+  Wait msec 4000
+
+When a wait condition involves a track specifier, we need to know
+the track number:
+
+  $waitTrack
+    Track on which the last function was peformed.
+
+Hmm, allow Waits to have ids?
+
+  Wait id 1 ...
+
+Or perhaps identify them by message:
+
+  Wait ... message Do Something
+
+  Jump Something waitMessage = "Do Something"
+
+----------------------------------------------------------------------
+WAIT SYNTAX
+----------------------------------------------------------------------
+
+
+  Wait <unit> <name>|<count>|<expression> [track <n>] [message <msg>] 
+
+  unit:
+    function
+    up
+    long
+    audio
+    until
+    msec
+    frame
+    subcycle
+    cycle
+    loop
+
+OR
+  
+  Wait <type> 
+   type:
+      function
+      up
+      long
+      audio
+      until
+      time
+
+Wait for msec 2			reads too much like until
+Wait relative msec 2		vague
+Wait time msec 2		not bad
+
+
+----------------------------------------------------------------------
+Parameter Override
+----------------------------------------------------------------------
+
+Parameter assignment is currently permanent, have to save current
+value in a variable and restore it after the function.
+
+  set Quantize off
+  Insert
+
+Since this is the usual case, we need to automaticaly save/restore
+parameters.  To set permanently must qualify:
+
+  set Quantize off permanent
+  set Quantize permanent off
+  setperm Quantize off
+  tempset Quantize off
+  override Quantize off
+  with Quantize off
+  temp Quantize off
+
+Leaning toward tempset.  Could also declare:
+
+  !temporary Quantize
+  set Quantize off
+  Insert
+
+That's not bad, makes you think.  More like variable scoping, or
+rather dynamic binding.
+
+----------------------------------------------------------------------
+Synchronous Function Execution
+----------------------------------------------------------------------
+
+Several functions must be allowed to *complete*, not merely
+be scheduled before the script continues.
+
+   Undo
+   Redo
+   Next/Prev
+   Trigger<n>
+   Track<n>
+
+It might be better to do this always, though some test scripts
+would need to simulate stacking functions.  If the function were
+quantized, we would in effect wait for the event.
+
+  Foo async   - return immediately after scheduling
+  Foo wait    - wait for the function to execute
+  Foo sync    - wait for the function to execute
+
+  Foo 
+  Wait last   - wait for the last function to be processed
+  !asyncfunctions - declare that control should return immediately
+
+Some functions should just always wait, but that would mean the default
+behavior isn't consistent.
+
+Will need something like this, perhaps internal only:
+
+  Wait event undoEvent
+
+
+  
+
+   
+
+
+
+
+----------------------------------------------------------------------
+Auto Cancel
+----------------------------------------------------------------------
+
+Scripts that put you into a special mode (like GlobalMute) that
+is normally turned off by running the same script again should
+have a way to declare that they be "canceled" if any other function
+or script is used while you're in that mode.
+
+!cancel DoCancel
+....
+end
+Label DoCancel
+# cleanup operations to be performed if any other function
+# or script is run after running this script
+set GlobalMuteState off
+end
+
+When Mobius runs a script with a !cancel declaration it will
+automatically re-run the script and jump to the DoCancel
+label if any other function or script is run.  
+
+Matthias responds:
+
+But in this case only mute-changing scripts and functions are
+concerned. I could eg. want to GlobalMute all playing channels then
+run a script to change all outputs to 64 and then Unmute all
+previously playing tracks again?!
+
+I have put the two lines to turn GlobalMuteStatus off in 4 scripts
+which mute or unmute tracks and also in the 2 Reset scripts (track and
+global), because after a reset during GlobalMuteStatus = on the mute
+button didn't work like I wanted.
+
+----------------------------------------------------------------------
+Matthias problems:
+
+I like the idea to trigger samples with the footpedal, but I'd prefer
+this with recorded sounds in different tracks (to be able to play
+polyphonic). Like a bass note, a chord, another chord a sound
+sphere...
+
+So I'd like to have a function triggering the loop in track 1 and mute
+it at the end of the loop, one for track 2 and so on.
+
+(Mutemode=Start, Quantize Mode=Off)
+I tried this one:
+
+>> For 1
+>> Variable SaveSwitchQuant = $switchQuant
+>> set switchQuant off
+>> Retrigger
+>> set quantize loop
+>> set switchQuant Loop
+>> Mute
+>> set switchQuant SaveSwitchQuant
+>> set quantize off
+
+
+the "set quantize" does not work, ???
+Is "For 1" Ok? does it need a "next" somewhere?
+
+
+or this one
+
+>> For 1
+>> Variable SaveSwitchQuant = $switchQuant
+>> set switchQuant off
+>> Retrigger
+>> set switchQuant Loop
+>> Wait msecs 24
+>> Wait loop
+>> Mute
+>> set switchQuant SaveSwitchQuant
+
+
+(need the Wait msecs 24 for the "mute" not to be executed before the
+"Wait loop")
+
+when I run this, while havi another track selected, some functions are
+executed in track 1 some in the selected track (which goes to
+NextLoop, what I don't understand).
+
+Does anybody have other ideas?
+
+----------------------------------------------------------------------
+
+Temporary Parameter Binding
+
+When setting a parameter with:
+ 
+   set quantize cycle
+
+the setting is almost always intended for use only within the
+script, with the original value restored when the script ends.
+
+This is certainly true for preset parameters, less clear for
+track and global parameters.
+
+Track parameters: focusLock, inputLevel, outputLevel...
+  - these all seem to want set permanently
+
+Global parameters: noAudioInput, saveLayers
+  - not sure about these
+
+For preset parameters (let's start callign these "loop parameters?")
+need to save/restore current value if we are going to directly
+modify the Track's preset copy.  Alternately we could maintain
+a private Preset in each ScriptInterpreter (or ScriptStack?)
+and have that used when the function is invoked rather than the
+one from the track.
+
+The effect preset can be placed in the FunctionContext!  Have to
+be very careful about mPreset and getPreset() refs though.  
+
+Normal set statements go to the script preset, will need to check
+scope first!!  To set permanently:
+
+  set quantize cycle permanent
+  set perm quantize cycle
+  setp quantize cycle
+  pset quantize cycle
+  store quantize cycle
+  perm quantize cycle
+  !setpermanent
+  Preserve quantize
+  !noautopreserve
+  Pass quantize
+  Change quantize cycle
+
+
+
+    

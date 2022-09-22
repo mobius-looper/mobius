@@ -1,0 +1,58 @@
+
+UI/Protocols
+  UI, MIDI, Osc, Keyboard, Buttons
+  doesn't much matter what is out here
+
+MobiusInterface
+  called by UI
+  MobiusInterface, Function, Parameter, Controller, Binding
+  !! avoid exposing Track and Loop
+
+Mobius
+  implements Mobius, manages MobiusCore and MobiusThread
+  pases events to MobiusCore from the outside world
+
+MobiusCore
+  all code "in the interrupt"
+  Synchronizer, Track, Loop, Layer, Segment
+
+
+Utility
+  code with no Mobius dependencies, could be used elsewhere
+  Audio
+
+----------------------------------------------------------------
+
+Function
+  Needs to be accessible from the UI so it can present binding windows, 
+  UI builds FunctionContext and calls doFunction.
+
+  Static objects that mostly don't change.  
+
+     - display name set after reading the catalog
+     - focusLockDisabled set from global parameter
+     - cancelMute set from global parameter
+
+     the two booleans can be phased in by MobiusCore, 
+     !the displayName has concurrent access issues, both UI and core logging
+     might be using it
+   
+----------------------------------------------------------------
+Changing Presets
+
+UI preset menu
+    currently calling Mobius::setPreset(Preset)
+      should be doing this by number or name from the menu?
+
+    currently calling Track::setPreset which does a copy
+      ! need mPendingPreset number that gets converted to a Preset
+        from mInterruptConfig
+
+
+ 
+
+
+UI configuration editor
+
+
+MIDI event bound to preset, 

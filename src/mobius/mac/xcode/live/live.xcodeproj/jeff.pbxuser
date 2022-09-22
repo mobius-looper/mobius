@@ -1,0 +1,262 @@
+// !$*UTF8*$!
+{
+	08FB7793FE84155DC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 1F6A21D90EE7A16D00F8359F /* Live */;
+		activeTarget = 1F6A21D10EE7A07A00F8359F /* Live */;
+		breakpoints = (
+			1FD9C2B00EFED05700AF479D /* UI.cpp:675 */,
+			1FF77A6A0F01D84C00680215 /* VstMobius.cpp:502 */,
+		);
+		breakpointsGroup = 1FCF333B0EF761D300F9C2BB /* XCBreakpointsBucket */;
+		codeSenseManager = 1F6A21CF0EE7A00900F8359F /* Code sense */;
+		executables = (
+			1F6A21D90EE7A16D00F8359F /* Live */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					130.5835,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					243,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					200,
+					63,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 270097934;
+			PBXWorkspaceStateSaveDate = 270097934;
+		};
+		perUserProjectItems = {
+			1FBC45D010195EB60036FF92 /* PBXTextBookmark */ = 1FBC45D010195EB60036FF92 /* PBXTextBookmark */;
+			1FBC45E9101963810036FF92 /* PBXTextBookmark */ = 1FBC45E9101963810036FF92 /* PBXTextBookmark */;
+			1FBC46231019808A0036FF92 /* PBXTextBookmark */ = 1FBC46231019808A0036FF92 /* PBXTextBookmark */;
+			1FBC46251019808A0036FF92 /* PBXTextBookmark */ = 1FBC46251019808A0036FF92 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 1F6A21CE0EE7A00900F8359F /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	1F6A21CE0EE7A00900F8359F /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+		scmType = "";
+	};
+	1F6A21CF0EE7A00900F8359F /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	1F6A21D10EE7A07A00F8359F /* Live */ = {
+		activeExec = 0;
+	};
+	1F6A21D90EE7A16D00F8359F /* Live */ = {
+		isa = PBXExecutable;
+		activeArgIndex = 2147483647;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		configStateDict = {
+			"PBXLSLaunchAction-0" = {
+				PBXLSLaunchAction = 0;
+				PBXLSLaunchStartAction = 1;
+				PBXLSLaunchStdioStyle = 2;
+				PBXLSLaunchStyle = 0;
+				class = PBXLSRunLaunchConfig;
+				displayName = "Executable Runner";
+				identifier = com.apple.Xcode.launch.runConfig;
+				remoteHostInfo = "";
+				startActionInfo = "";
+			};
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		launchableReference = 1F6A21DA0EE7A16D00F8359F /* Live */;
+		libgmallocEnabled = 0;
+		name = Live;
+		savedGlobals = {
+		};
+		sourceDirectories = (
+		);
+		startupPath = "/Applications/Live 7.0.12 OS X/Live.app/Contents/Resources";
+		variableFormatDictionary = {
+		};
+	};
+	1F6A21DA0EE7A16D00F8359F /* Live */ = {
+		isa = PBXFileReference;
+		explicitFileType = "compiled.mach-o.executable";
+		name = Live;
+		path = "/Applications/Live 7.0.12 OS X/Live.app/Contents/MacOS/Live";
+		sourceTree = "<absolute>";
+	};
+	1FBC45D010195EB60036FF92 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FBC45D110195EB60036FF92 /* MobiusPlugin.cpp */;
+		rLen = 0;
+		rLoc = 2147483647;
+		rType = 0;
+	};
+	1FBC45D110195EB60036FF92 /* MobiusPlugin.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MobiusPlugin.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/MobiusPlugin.cpp;
+		sourceTree = "<absolute>";
+	};
+	1FBC45E9101963810036FF92 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FBC45EA101963810036FF92 /* AUMobius.cpp */;
+		rLen = 0;
+		rLoc = 2147483647;
+		rType = 0;
+	};
+	1FBC45EA101963810036FF92 /* AUMobius.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = AUMobius.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/AUMobius.cpp;
+		sourceTree = "<absolute>";
+	};
+	1FBC46231019808A0036FF92 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FBC46241019808A0036FF92 /* AUMobius.cpp */;
+		name = "(null): 1336";
+		rLen = 0;
+		rLoc = 36170;
+		rType = 0;
+		vrLen = 1472;
+		vrLoc = 29633;
+	};
+	1FBC46241019808A0036FF92 /* AUMobius.cpp */ = {
+		isa = PBXFileReference;
+		name = AUMobius.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/AUMobius.cpp;
+		sourceTree = "<absolute>";
+	};
+	1FBC46251019808A0036FF92 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FBC46261019808A0036FF92 /* MobiusPlugin.cpp */;
+		name = "(null): 845";
+		rLen = 0;
+		rLoc = 22817;
+		rType = 0;
+		vrLen = 1576;
+		vrLoc = 6453;
+	};
+	1FBC46261019808A0036FF92 /* MobiusPlugin.cpp */ = {
+		isa = PBXFileReference;
+		name = MobiusPlugin.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/MobiusPlugin.cpp;
+		sourceTree = "<absolute>";
+	};
+	1FCF333B0EF761D300F9C2BB /* XCBreakpointsBucket */ = {
+		isa = XCBreakpointsBucket;
+		name = live;
+		objects = (
+			1FD9C2B00EFED05700AF479D /* UI.cpp:675 */,
+			1FF77A6A0F01D84C00680215 /* VstMobius.cpp:502 */,
+		);
+	};
+	1FD9C2AE0EFED05700AF479D /* UI.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = UI.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/UI.cpp;
+		sourceTree = "<absolute>";
+	};
+	1FD9C2B00EFED05700AF479D /* UI.cpp:675 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FD9C2AE0EFED05700AF479D /* UI.cpp */;
+		functionName = "UI::actionPerformed()";
+		hitCount = 1;
+		lineNumber = 675;
+		location = Mobius;
+		modificationTime = 270106618.684503;
+		state = 1;
+	};
+	1FF77A680F01D84C00680215 /* VstMobius.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = VstMobius.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/VstMobius.cpp;
+		sourceTree = "<absolute>";
+	};
+	1FF77A6A0F01D84C00680215 /* VstMobius.cpp:502 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FF77A680F01D84C00680215 /* VstMobius.cpp */;
+		functionName = "VstMobiusEditor::close()";
+		hitCount = 1;
+		lineNumber = 502;
+		modificationTime = 270106585.217159;
+		state = 1;
+	};
+}

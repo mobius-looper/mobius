@@ -1,0 +1,93 @@
+----------------------------------------------------------------------
+AudioInterface.h
+  This must be managed by the application and passed IN to Mobius via MobiusContext
+
+  AudioInterface
+  AudioApi
+  AudioDevice
+  AudioHandler
+  AudioTime
+  AudioStream
+  AudioPort
+
+----------------------------------------------------------------------
+MidiInterface.h
+
+  MidiPort
+  MidiEventListener
+  MidiClockListener
+  MidiMap
+  MidiEvent
+
+MidiEvent.h (MidiEvent)
+  MidiEventManager
+
+MidiMap.h
+  MidiMapEvent
+  MidiMapDefintion
+
+MidiPort.h
+  MidiPort
+
+----------------------------------------------------------------------
+MobiusInterface.h
+
+  MobiusContext
+    AudioInterface
+    MidiInterface
+    HostMidiInterface (stub mostly)
+    - command line, directories
+
+  Prompt
+   
+  MobiusListener
+    Prompt
+    Action
+    
+  CalibrationResult
+
+  MobiusAlerts   
+    - validation errors
+
+  MobiusInterface
+    UIControl, UIParameters
+      - set by UI
+
+    HostConfig
+    MobiusConfig
+
+    Function
+    Controller
+    Parameter
+    MobiusMode
+      - has array and individual lookup
+      - these should only be used for a binding UI
+      - hide any get/set/invoke interfaces
+
+    Binding
+    ResolvedTarget
+    Action
+
+    MidiEvent
+    MessageCatalog
+    MobiusState
+
+    AudioPool
+    Audio
+    
+    Project
+
+----------------------------------------------------------------------
+Binding.h
+
+  SystemConstant
+  Trigger
+  TriggerMode
+  Target
+  UIControl
+  UIParameter
+  Bindable
+  Binding
+
+----------------------------------------------------------------------
+Action.h

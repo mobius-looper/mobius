@@ -1,0 +1,61 @@
+<!-- Various bits and pieces cut from the old docs that we don't necessarily want
+in the official docs.  Keep around for awhile...  -->
+
+<section><title>External EDP Control</title>
+
+<p>It is possible to use Mobius to send MIDI messages to an EDP
+hardware device.  Any function performed with a key, button, or MIDI
+message can be redirected to the EDP instead of Mobius, or sent to
+both Mobius and the EDP at the same time.  This is something I use
+during testing to compare how Mobius and the EDP respond to functions.
+This probably has limited practical use, but I would be curious to
+know if you find one.</p>
+
+<p>To use this feature you must first select a <i>MIDI Through</i>
+device.  This must be a MIDI device to which the EDP is connected.
+See the <ref>MIDI Control</ref> section for more on seleting a through 
+device.</p>
+
+<p>Next, pull down the <i>Configuration</i> menu and select the
+<i>External EDP</i> item.  A dialog appears with the following
+parameters.</p>
+
+<glossary>
+<gi>
+<dt>MIDI Control</dt>
+<dd>Controls which device will be responsive to functions initiated
+by buttons, keys, or MIDI events.  A value of <i>Mobius</i>
+means that only the Mobius program will receive functions, <i>EDP</i>
+means that only the external EDP will receive functions, and 
+a value of <i>Both</i> means, astonishingly, that both devices will
+receive functions.</dd>
+</gi>
+<gi>
+<dt>Channel</dt>
+<dd>The channel on which the EDP receives MIDI messages.</dd>
+</gi>
+<gi>
+<dt>Base Note</dt>
+<dd>The first note or controller to which the EDP will respond.
+This is what the EDP calls the <i>Source#</i> parameter.
+</dd>
+</gi>
+<gi>
+<dt>Controllers</dt>
+<dd>When checked, the EDP responds to MIDI continuous controller
+events, otherwise the EDP responds to MIDI key events.  This
+is what the EDP calls the <i>ControlSource</i> parameter.</dd>
+</gi>
+</glossary>
+
+<p>When triggering functions with MIDI messages, Mobius will
+automatically translate the trigger message into the
+message the EDP needs according to the <i>Base Note</i> and 
+<i>Controllers</i> parameters.  That means you don't have to 
+program a foot controller or control surface to send
+contiguous note or controller messages that the EDP requires.
+Mobius will convert random messages into contiguous note
+or controller messages for you.</p>
+
+</section> <!-- External EDP Control -->
+

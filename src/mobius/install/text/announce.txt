@@ -1,0 +1,55 @@
+
+Release 2.5 of Mobius is now available.
+
+There were a few minor bugs fixed, but the big new feature is Loop
+Windowing.  If you don't know what this means then you probably won't
+be very impressed, but if you're an old EDP user you might find this
+exciting.
+
+Basically, loop windowing lets you create loops by sliding a "window"
+back and forth over the entire history of the loop.  Imagine that all
+of the loop layers are connected together in one seamless piece of
+recording tape.  Then being able to instantly jump to any location
+within that tape and play a section of any size.  The results can be
+completely unpredictable as fragments of different layers are glued
+together.  Or with careful use of quantization and the windowing
+parameters you can create windows that play varying rhythms at a
+consistent tempo.
+
+There are are six functions to control the window, and two more
+for use in scripts.
+
+    Window Backward
+    Window Forward
+    Window Start Backward
+    Window Start Forward
+    Window End Backward
+    Window End Forward
+
+In addition to sliding the window backward and forward you can also
+adjust the edges of the window independently to make the window smaller
+or larger.  For complete documentation on this new feature, read
+the Loop Windowing section in the Mobius Techniques manual.
+
+    http://www.circularlabs.com/doc/v2/techniques.htm#LoopWindowing
+
+The following bugs were fixed:
+
+  Script action buttons always behaving like !momentary scripts
+
+  GlobalReset called from within a script was not canceling other scripts
+
+  Take out the common bindings used for development since they often
+  conflict with new user bindings.
+  
+  Remove some EDPisms that most people don't expect.
+
+    Mute+Multiply = Realign
+    Mute+Insert = RestartOnce (aka SamplePlay)
+    Reset+Mute = previous preset
+    Reset+Insert = next preset
+
+If you're a big fan of the EDPisms they can be reenabled using a special
+hidden option, but I would encourage you to explore using scripts instead.
+
+Jeff

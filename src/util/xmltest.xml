@@ -1,0 +1,11 @@
+<!DOCTYPE foo public "something of interest" [
+<!-- XML test document -->
+]>
+<body>
+<title>Title of the document</title>
+<?Processing Instruction?>
+<el att='foo'>Element with an attribute</el>
+<empty/>
+<empty att='bar'/>
+<![CDATA[A cdata <section> with markup]]>
+</body>

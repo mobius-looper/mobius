@@ -1,0 +1,186 @@
+truct VstEvents 
+{ 
+long numEvents; 
+long reserved; 
+VstEvent* events[2]; // two?? 
+} 
+
+So my question(s): am I misunderstanding this, am I uspposed to be using somethign else to send more than two events, or alternatively will Tracktion be happy if I make multiple SendVSTEventsToHost calls instead?
+jules	
+Posted: 22nd September 2003 00:38
+I sorted this out back when the issue first came up, so it's ok to call it multiple times. It's more efficient not to, of course, so if you can batch them up, that's better. 
+
+And the structure only has 2 elements in the array but you should allocate your own memory for it like this: 
+
+VstEvents* lotsOfEvents = (VstEvents*)malloc (sizeof (VstEvents) + numExtraElementsNeeded * sizeof (VstEvent*));
+
+
+
+
+example:
+
+        VstMidiEvent me;
+        memset(&me, 0, sizeof(VstMidiEvent));
+        me.type = kVstMidiType;
+        me.byteSize = sizeof(VstMidiEvent);
+        me.deltaFrames = frame;
+
+        me.midiData[0] = raw & 0xFF;
+        me.midiData[1] = (raw >> 8) & 0xFF;
+        me.midiData[2] = (raw >> 16) & 0xFF;
+
+        VstEvents ve;
+        ve.numEvents = 1;
+        ve.events[0] = (VstEvent *)&me;
+        ve.reserved = 0;
+
+        bool rc = sendVstEventsToHost(&ve);
+
+ps: I recommend to read the sdk manual ;-)
+
+
+	ailing List vst-plugins@lists.steinberg.net Message #11771	
+From:	"Holger [SONICBYTES]" <dev@sonicbytes.com>
+Subject:	Re: [vst-plugins] Re: Outputting MIDI drum sounds
+Date:	Mon, 19 Apr 2004 14:12:43 +0200
+To:	"VST PlugIns" <vst-plugins@lists.steinberg.net>
+
+
+hi,
+
+>> I don' really understand about delta
+> frames so I think that might be where I'm going wrong.
+
+frame means the frame-offset (in samples) off the audio-process loop
+(process/processReplacing). frame tells the host when (excactly) to generate
+the midi-out-event.
+the 3 bytes are status(0), data1(1) and data2(2).
+example:
+raw = ((velo&0x7F)<<16) | ((note&0x7F)<<8) | 0x90 | (channel&0xF);
+
+holger
+
+
+
+// sending one midievent (raw: status, data1, data2) at time (frame)
+
+       VstMidiEvent me;
+       memset(&me, 0, sizeof(VstMidiEvent));
+       me.type = kVstMidiType;
+       me.byteSize = sizeof(VstMidiEvent);
+       me.deltaFrames = frame;
+
+       me.midiData[0] = raw & 0xFF;
+       me.midiData[1] = (raw >> 8) & 0xFF;
+       me.midiData[2] = (raw >> 16) & 0xFF;
+
+       VstEvents ve;
+       ve.numEvents = 1;
+       ve.events[0] = (VstEvent *)&me;
+       ve.reserved = 0;
+
+       bool rc = sendVstEventsToHost(&ve);
+
+
+
+
+
+void KTVSTDrumTrigger::ProcessModel(float inSample,float& outSample,unsigned long inDelta)
+{
+// Process the sample
+if (m_DrumTrigger.Process(inSample,&outSample))
+{
+// Get messages
+unsigned long N = 0;
+const KTDrumTrigger::KTDrumEvent* theMessages = m_DrumTrigger.GetEventMessages(&N);
+
+// Handle them
+unsigned long i;
+for (i = 0; i < N; i++)
+{
+unsigned char theMIDIBytes[3];
+unsigned long j = m_VSTEvents.numEvents;
+m_VSTMIDIEvents[j].type = kVstMidiType;
+m_VSTMIDIEvents[j].byteSize = 24;
+m_VSTMIDIEvents[j].deltaFrames = inDelta;
+m_VSTMIDIEvents[j].flags = 0;
+m_VSTMIDIEvents[j].noteLength = 0;	// (in sample frames) of entire note, if available, else 0
+m_VSTMIDIEvents[j].noteOffset = 0;	// offset into note from note start if available, else 0
+theMessages[i].ConvertToMIDIMessage(theMIDIBytes);
+m_VSTMIDIEvents[j].midiData[0] = theMIDIBytes[0];
+m_VSTMIDIEvents[j].midiData[1] = theMIDIBytes[1];
+m_VSTMIDIEvents[j].midiData[2] = theMIDIBytes[2];
+m_VSTMIDIEvents[j].midiData[3] = (char)0;
+m_VSTMIDIEvents[j].detune = 0;
+m_VSTMIDIEvents[j].noteOffVelocity = 0;
+m_VSTMIDIEvents[j].reserved1 = 0;
+m_VSTMIDIEvents[j].reserved2 = 0;
+m_VSTEvents.numEvents++;
+}
+}
+}
+
+
+
+
+inline void KTDrumTrigger::KTDrumEvent::ConvertToMIDIMessage(unsigned char outMIDIBytes[3]) const
+{
+if (State)
+{
+outMIDIBytes[0] = (unsigned char)(0x90 + Channel - 1);
+outMIDIBytes[1] = NoteNumber;
+outMIDIBytes[2] = Velocity;
+}
+else
+{
+outMIDIBytes[0] = (unsigned char)(0x80 + Channel - 1);
+outMIDIBytes[1] = NoteNumber;
+outMIDIBytes[2] = Velocity;
+}
+}
+
+
+
+with these class member declarations:
+
+
+
+struct VstEventsKT
+{
+long numEvents;
+long reserved;
+VstEvent* events[kMaxNumOfEventMessagesPerBlock];
+} m_VSTEvents;
+
+VstMidiEvent	m_VSTMIDIEvents[kMaxNumOfEventMessagesPerBlock];
+
+
+
+and corresponding initialization:
+
+
+
+// Init events
+m_VSTEvents.reserved = 0;
+m_VSTEvents.numEvents = 0;
+for (i = 0; i < kMaxNumOfEventMessagesPerBlock; i++)
+m_VSTEvents.events[i] = (VstEvent*)(&(m_VSTMIDIEvents[i]));
+
+
+
+and then this in process/processReplacing:
+
+...
+ProcessModel(...);
+...
+if (m_VSTEvents.numEvents)
+sendVstEventsToHost((VstEvents*)(&m_VSTEvents));
+
+
+
+Maybe it learns you something by looking for differences with your code... Good luck!
+
+Koen
+
+PS
+Purely out of curiosity: can you say what type of audio analysis thing you're working on?

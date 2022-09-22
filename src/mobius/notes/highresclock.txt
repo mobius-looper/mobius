@@ -1,0 +1,46 @@
+
+
+http://www.decompile.com/cpp/faq/windows_timer_api.htm
+
+http://www.grahamwideman.com/gw/tech/dataacq/wintiming.htm
+
+http://www.grahamwideman.com/gw/tech/dataacq/multitasking.htm
+
+http://www.grahamwideman.com/gw/tech/dataacq/multitasking.htm#Scheduler Granularity
+
+----------------------------------------------------------------------
+
+http://blogs.msdn.com/b/mediasdkstuff/archive/2009/07/02/why-are-the-multimedia-timer-apis-timesetevent-not-as-accurate-as-i-would-expect.aspx
+
+
+Remember that the PIC is used to wake up the OS so that it can decide
+what thread should be run next. The OS uses some very complex rules to
+determine what thread gets to occupy the processor next. Two of the
+things that the OS looks at to determine if it should run a thread or
+not are thread priority and thread quantum. Thread priority is
+easy. The higher the thread’s priority the more likely the OS will be
+to schedule it next. The thread quantum is a bit more complex. The
+thread’s quantum is the maximum amount of time the thread can run
+before another thread has a chance to occupy the processor. By default
+the thread quantum on Windows NT based systems is about 100
+milliseconds. This means that a thread can “hog” the CPU for up to 100
+milliseconds before another thread has a chance to be scheduled and
+actually execute.
+
+Here is an example. Let’s say that we reprogrammed the PIC to fire
+every 1 millisecond (timeBeginPeriod). We also setup a periodic timer
+to fire every 1 millisecond (timeSetEvent). We expect that exactly
+every one millisecond the OS will alert our application and allow us
+to do some processing. If all of the virtual stars are aligned just
+right then we get our callback once every millisecond as we expect. In
+reality we get called after 100 milliseconds and receive 10 timer
+messages in rapid succession. Why is this? This is what probably
+happened. The OS decided that there was a thread that had a higher
+priority than the MM Timer thread and the high priority thread got
+priority over us. This thread must have been really busy. The OS
+decided to continue to schedule it until its entire quantum was used
+up. Once the thread’s quantum was used up the OS was forced to
+schedule a different thread. We were lucky enough that the next thread
+that got scheduled was our timer thread.
+
+

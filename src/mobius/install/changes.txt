@@ -1,0 +1,106 @@
+2.6
+
+  - use statement for temporary parameter overrides
+  - set cycleCount
+  - calculate accurate cycle count after an exact unrounded multiply or
+    1 if it isn't even, no longer keep the original cycle count 
+
+----------------------------------------------------------------------
+
+2.5
+
+- Loop Windowing!
+
+- Script action buttons always behaving like !momentary scripts
+
+- GlobalReset called from within a script was not canceling other scripts
+
+- Remove EDPism Reset+Insert = next preset
+
+- Take out my common bindings, few people are likely to want them and they
+  then conflict with custom bindings.
+  
+- Remove EDPisms
+   Mute+Multiply = Realign
+   Mute+Insert = RestartOnce (aka SamplePlay)
+   Reset+Mute = previous preset
+   Reset+Insert = next preset
+
+
+----------------------------------------------------------------------
+
+2.4
+
+Display of "Beats per Bar" weird with mouse.
+
+Fixed dispalay of InputPort and several other parameters.  Anything
+that you can see in the binding window you can display in the UI.
+
+When the Ableton transport is playing a loop, the rewind to the start
+is now being propertly recognized as a beat or bar boundary for Mobius
+synchronization.
+
+New memory diagnostic utility "Periodic Status Log".
+
+Distribute osc.xml file, fix a crash if the file is missing.
+
+Slow memory leak on Mac when drawing text in the UI.  
+
+Large Memory leak if Max Redo Count is more than 1.
+
+Binding dialogs will now show the configured number of tracks and
+groups in the scope selector rather than always showing 8 tracks
+and 4 groups.
+
+----------------------------------------------------------------------
+2.3
+
+* speedBend can now be set as a control
+
+    set speedBend 0
+
+* Setup, Preset, and Bindings are now parameters that may be bound
+   to a MIDI CC to sweep through the values
+
+* CC bindings to Auto Record Bars and other integer parameters should work
+
+* Empty Loop Action and a few other parameter can now be bound
+
+* Midi Binding to Setup should now work
+
+* Custom bend ranges were not active until a preset was edited
+
+* Custom bend range could not reach the maximum value with a MIDI CC
+
+* Custom Speed Bend Range is wonky when bound to a MIDI pitch wheel
+
+* UIRedraw function can be used in scripts or bound to a switch
+  to force a redisplay of the UI.
+
+* Interrupt statement can be used to cancel a script wait
+
+* Instant Multiply 2 is now just "Instant Multiply" and can take a 
+  binding argument
+
+* Instant Divide 2 is now just "Instant Divide" and can take a 
+  binding argument
+
+* Binding arguments can be enumerated parameter names, "subcycle" "off" etc.
+
+* Redesigned OSC support
+  - OscWatcher, Osc reload, osc.xml
+
+* Reload Scripts function
+
+* Spread function ranges on different channels won't cancel each other
+
+* MuteOff will always force mute off instead of toggle
+
+----------------------------------------------------------------------
+
+2.2.1
+
+  - Speed, Pitch, Stretch knobs in the UI kept snapping back to zero
+
+  - MIDI Pitch Wheel bindings were being lost after restarting 
+

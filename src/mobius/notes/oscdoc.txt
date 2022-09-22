@@ -1,0 +1,79 @@
+
+Sorry I don't have a lot of information on OSC but if you have
+some familiarity with OSC this should give you what you need.
+
+First it is important that you use an OSC device that can be
+programmed to send out any OSC address.  Older versions of
+TouchOSC couldn't do that, they could only send fixed
+addresses like "/1/toggle1" or "/2/push12".  I believe
+newer versions of TouchOSC can send any address but I 
+have not used them.
+
+All Mobius target addresses begin with:
+
+   /mobius
+
+The first container under /mobius is the scope which may be "global",
+a track number, or a group letter.  Examples:
+
+   /mobius/global
+ 
+   /mobius/1
+
+   /mobius/A
+
+Tracks are identified by number from 1 to 8.  Groups are identified
+by latter from A to D (or however many groups you have configured).
+
+Next we have a target type which is one of these: function, control,
+parameter, setup, preset, bindings, uicontrol, uiconfig.
+
+   /mobius/global/function
+   /mobius/global/control
+
+After the target type is a target name which would be the name
+of a function, control, or configuration object.
+
+So an OSC binding for the Record function on the selected track
+(global scope) would look like:
+
+   /mobius/global/function/Record
+
+The "global" keyword is optional so this is the same:
+
+   /mobius/function/Record
+
+If you want an OSC binding for a specifc track use a track
+number in the path.  This will do the record only in track 1.
+
+   /mobius/1/function/Record
+
+The controls look like this:
+
+   /mobius/control/inputLevel
+   /mobius/control/outputlevel
+   /mobius/control/feedbck
+   /mobius/control/pan
+
+Parameters look like this:
+
+   /mobius/parameter/subcycles
+
+The argument that you include with the OSC path will be a float from 0
+to 1.  We will automatically scale this to 0-127 for use with controls.
+
+So this will set the output level to 127 (highest)
+
+   /mobius/control/outputLevel 1.0
+
+and this will set it to 64 (center)
+ 
+   /mobius/control/outputLevel 0.5
+
+
+If you have a device that must send out a fixed set
+of OSC addresses, it is possible to map these into Mobius
+addresses inside Mobius, but it's complicated and requires
+a lot of XML writing.  If anyone needs it I'll publish it.
+
+Jeff

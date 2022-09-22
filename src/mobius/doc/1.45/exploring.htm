@@ -1,0 +1,1822 @@
+<html>
+<head>
+<title>Exploring Mobius</title><style type='text/css'>
+<!-- 
+div.constraint,div.issue,div.note,div.notice     { margin-left: 2em; }dt.label       { display: run-in; }li           { margin-top: 0.3em; margin-bottom: 0.3em; }p           { margin-top: 0.6em; margin-bottom: 0.6em; }.diff-chg	{ background-color: orange; }.diff-del	{ background-color: red; text-decoration: line-through;}.diff-add	{ background-color: lime; }table          { empty-cells: show; }div.exampleInner { margin-left: 1em;                       margin-top: 0em; margin-bottom: 0em}div.exampleOuter {border: 4px double gray;                  margin: 0em; padding: 0em}div.exampleInner { background-color: #d5dee3;                   border-top-width: 4px;                   border-top-style: double;                   border-top-color: #d3d3d3;                   border-bottom-width: 4px;                   border-bottom-style: double;                   border-bottom-color: #d3d3d3;                   padding: 4px; margin: 0em }div.exampleWrapper { margin: 4px }div.exampleHeader { font-weight: bold; margin: 4px}body {  padding: 2em 1em 2em 70px;  margin: 0;  font-family: sans-serif;  color: black;  background: white;  background-position: top left;  background-attachment: fixed;  background-repeat: no-repeat;}:link { color: #00C; background: transparent }:visited { color: #609; background: transparent }a:active { color: #C00; background: transparent }a:link img, a:visited img { border-style: none } /* no border on img links */a img { color: white; }        /* trick to hide the border in Netscape 4 */@media all {                   /* hide the next rule from Netscape 4 */  a img { color: inherit; }    /* undo the color change above */}th, td { /* ns 4 */  font-family: sans-serif;}h1, h2, h3, h4, h5, h6 { text-align: left }/* background should be transparent, but WebTV has a bug */h1, h2, h3 { color: #005A9C; background: white }h1 { font: 170% sans-serif }h2 { font: 140% sans-serif }h3 { font: 120% sans-serif }h4 { font: bold 100% sans-serif }h5 { font: italic 100% sans-serif }h6 { font: small-caps 100% sans-serif }.hide { display: none }div.head { margin-bottom: 1em }div.head h1 { margin-top: 2em; clear: both }div.head table { margin-left: 2em; margin-top: 2em }p.copyright { font-size: small }p.copyright small { font-size: small }@media screen {  /* hide from IE3 */a[href]:hover { background: #ffa }}dd { margin-top: 0.3em; margin-bottom: 0.6em }dt { margin-top: 0; margin-bottom: 0 } /* opera 3.50 */dt { font-weight: bold }pre, code { font-family:monospace; font-size: medium }ul.toc {  list-style: disc;		/* Mac NS has problem with 'none' */  list-style: none;}-->
+</style>
+</head>
+<body>
+<h1 class=title1>Exploring Mobius</h1>
+<h2 class=title2>January 2011</h2>
+<br>
+<h1 class=sec1>Contents</h1>
+<table>
+<tr align=left><th>1</th><td></td><td><a href='#Introduction'>Introduction</a></td>
+<tr align=left><th>2</th><td></td><td><a href='#trackSetup'>Track Setups</a></td>
+<tr align=left><th>2.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Track Parameters'>Track Parameters</a></td>
+<tr align=left><th>2.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Setup Parameters'>Setup Parameters</a></td>
+<tr align=left><th>2.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Command Buttons'>Command Buttons</a></td>
+<tr align=left><th>2.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Managing Multiple Setups'>Managing Multiple Setups</a></td>
+<tr align=left><th>2.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Selecting Setups with Menus'>Selecting Setups with Menus</a></td>
+<tr align=left><th>3</th><td></td><td><a href='#Projects'>Projects</a></td>
+<tr align=left><th>3.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Save Project'>Save Project</a></td>
+<tr align=left><th>3.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Open Project'>Open Project</a></td>
+<tr align=left><th>4</th><td></td><td><a href='#Saving and Loading Loops'>Saving and Loading Loops</a></td>
+<tr align=left><th>4.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Loop File Formats'>Loop File Formats</a></td>
+<tr align=left><th>4.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Open Loop'>Open Loop</a></td>
+<tr align=left><th>4.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Save Loop'>Save Loop</a></td>
+<tr align=left><th>4.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Quick Save'>Quick Save</a></td>
+<tr align=left><th>5</th><td></td><td><a href='#Samples'>Samples</a></td>
+<tr align=left><th>6</th><td></td><td><a href='#Advanced Control'>Advanced Control</a></td>
+<tr align=left><th>6.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Binding Review'>Binding Review</a></td>
+<tr align=left><th>6.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#bindingScope'>Binding Scopes</a></td>
+<tr align=left><th>6.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Focus Lock'>Focus Lock</a></td>
+<tr align=left><th>6.3.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Setting Focus Lock'>Setting Focus Lock</a></td>
+<tr align=left><th>6.3.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Limiting Focus Lock'>Limiting Focus Lock</a></td>
+<tr align=left><th>6.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#trackGroup'>Track Groups</a></td>
+<tr align=left><th>6.4.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Displaying Track Groups'>Displaying Track Groups</a></td>
+<tr align=left><th>6.4.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Setting Track Groups'>Setting Track Groups</a></td>
+<tr align=left><th>6.4.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Limiting Track Groups'>Limiting Track Groups</a></td>
+<tr align=left><th>6.4.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Group Output Level'>Group Output Level</a></td>
+<tr align=left><th>6.4.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Track Groups and Focus Lock'>Track Groups and Focus Lock</a></td>
+<tr align=left><th>6.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Plugin Parameter Bindings'>Plugin Parameter Bindings</a></td>
+<tr align=left><th>6.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#OSC Bindings'>OSC Bindings</a></td>
+<tr align=left><th>7</th><td></td><td><a href='#MIDI Status Export'>MIDI Status Export</a></td>
+<tr align=left><th>8</th><td></td><td><a href='#Customizing the User Interface'>Customizing the User Interface</a></td>
+<tr align=left><th>8.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Item Selectors'>Item Selectors</a></td>
+<tr align=left><th>8.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Customizing Buttons'>Customizing Buttons</a></td>
+<tr align=left><th>8.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Customizing the Status Area'>Customizing the Status Area</a></td>
+<tr align=left><th>8.3.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Components'>Components</a></td>
+<tr align=left><th>8.3.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Visible Parameters'>Visible Parameters</a></td>
+<tr align=left><th>8.3.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Track Controls'>Track Controls</a></td>
+<tr align=left><th>8.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Customizing the Track Strips'>Customizing the Track Strips</a></td>
+<tr align=left><th>8.4.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#focusLockStrip'>Focus Lock</a></td>
+<tr align=left><th>8.4.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#trackNumberStrip'>Track Number</a></td>
+<tr align=left><th>8.4.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#groupNameStrip'>Group Name</a></td>
+<tr align=left><th>8.4.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#trackControlsStrip'>Track Controls</a></td>
+<tr align=left><th>8.4.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#loopMeterStrip'>Loop Meter</a></td>
+<tr align=left><th>8.4.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Loop Radar'>Loop Radar</a></td>
+<tr align=left><th>8.4.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#outputLevelStrip'>Output Level Meter</a></td>
+<tr align=left><th>8.4.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#loopStatusStrip'>Loop Status</a></td>
+<tr align=left><th>8.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Changing Colors'>Changing Colors</a></td>
+<tr align=left><th>8.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Changing Fonts'>Changing Fonts</a></td>
+<tr align=left><th>9</th><td></td><td><a href='#Esoterica'>Esoterica</a></td>
+<tr align=left><th>9.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Trace'>Trace</a></td>
+<tr align=left><th>9.1.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Trace Levels'>Trace Levels</a></td>
+<tr align=left><th>9.1.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Mac Trace Logging'>Mac Trace Logging</a></td>
+<tr align=left><th>9.1.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Windows Trace Logging'>Windows Trace Logging</a></td>
+<tr align=left><th>9.1.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Using Trace'>Using Trace</a></td>
+<tr align=left><th>9.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#XML Files'>XML Files</a></td>
+<tr align=left><th>9.2.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#mobius.xml'>mobius.xml</a></td>
+<tr align=left><th>9.2.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#ui.xml'>ui.xml</a></td>
+<tr align=left><th>9.2.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Project .mob Files'>Project .mob Files</a></td>
+<tr align=left><th>9.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Layer Flattening'>Layer Flattening</a></td>
+</table>
+<a name='Introduction'>
+<h1 class=sec1>1 Introduction</h1>
+</a>
+<p>This manual contains information about various Mobius features that
+were not covered in the <a href='starting.htm'>Getting Started With
+Mobius</a>
+ manual.  Among the topics will be customizing the user
+interface, advanced control options, projects, and track setups.  It
+is required that you have at least skimmed
+<a href='starting.htm'>Getting Started With Mobius</a>
+.</p>
+<p>The sections in this manual do not have to be read in any
+particular order, you can skim it and read only the sections that
+interest you.  The <a href='#trackSetup'>Track Setups</a> 
+section is however highly recommended.</p>
+<p>If you are interested in synchronizing Mobius with other hardware
+devices or applications, see the 
+<a href='synchronization.htm'>Mobius Synchronization</a>
+ manual.</p>
+<p>For more information on how to use some common Mobius functions
+see the 
+<a href='techniques.htm'>Mobius Techniques</a>
+ manual.</p>
+<a name='trackSetup'>
+<h1 class=sec1>2 Track Setups</h1>
+</a>
+<p>A <i>Track Setup</i> is a named collection of parameters, presets,
+and controls settings for all tracks.  They define the initial state
+for all tracks before recording, and also define the state each track
+will return to when it is reset.  A setup stores the following
+things for each track:</p>
+<ul>
+<li>Name</li>
+<li>Preset</li>
+<li>Focus Lock</li>
+<li>Track Group</li>
+<li>Mono Mode</li>
+<li>Input Level</li>
+<li>Output Level</li>
+<li>Feedback</li>
+<li>Secondary Feedback</li>
+<li>Pan</li>
+<li>Audio Input Port</li>
+<li>Audio Output Port</li>
+<li>Plugin Input Port</li>
+<li>Plugin Output Port</li>
+<li>User Defined Variables</li>
+</ul>
+<p>In addition a setup contains the following parameters that apply
+to all tracks:</p>
+<ul>
+<li>Active Track</li>
+<li>Resettable Parameters</li>
+<li>Overlay Binding Configuration</li>
+</ul>
+<p>There is no requirement to define your own setups, Mobius comes
+with one default setup that you may be able to use without any
+changes.  Setups are however very useful if you always want to change
+certain characteristics of a track before recording.  For example, 
+if you usually record with loud instruments you may want to reduce the
+input level from the default of 127 to avoid overloading the track.
+Rather than remembering to do this every time you start Mobius, you
+can set it in the setup and it will be automatically set to the
+desired level every time.</p>
+<p>Another common use for track setups is to specify which physical
+inputs and outputs of a multi-channel audio interface to use for each
+track.  By default Mobius always uses the first two channels as a
+stereo pair called a "port".  But if your audio interface supports
+more than 2 input and output channels you may not want to use the
+first pair.  For example with some audio interfaces the first pair of
+output channels may go to the headphone jack while the second pair of
+channels is connected to the monitor speakers.  Mobius can't know
+which port is the correct one to use, you must select it in the track
+setup.</p>
+<p>Setups are also useful if you need different track configurations
+for different compositions.  If you play different instruments you may
+want different setups designed for each instrument.  Or you may want
+to design a setup for a particular performance style like solo ambient
+looping and another for rhythmic "dj" looping.</p>
+<p>To create and manage setups, open the <i>Configuration</i> menu and
+select the <i>Track Setups</i> item.</p>
+<img alt='Graphic' src='images/exploring-setup.gif'/>
+<p>At the top of the setup window there is a collection of fields
+called the <i>Setup Selector</i>.  These are use to select the setup
+you wish to edit, create new setups, and delete old setups.</p>
+<p>The <i>Track Parameters</i> area contains the parameters you
+can set differently for each track.  Each track is represented
+by a numbered tab, all tabs contain the same fields.</p>
+<p>The <i>Setup Parameters</i> area contains a few parameters
+that apply to all tracks.</p>
+<p>The <i>Command Buttons</i> initialize the track parameters to their
+default values or to capture the track parameters from the
+current Mobius track.</p>
+<p>Remember that after making changes in this window you must click
+the <i>Ok</i> button to save the changes.</p>
+<a name='Track Parameters'>
+<h2 class=sec2>2.1 Track Parameters</h2>
+</a>
+<p>The track parameters area shows the initial state of each track.
+The values you enter here can be changed once you begin recording and
+working with tracks, but they will be restored to the values defined
+in the setup when you use the <i>Global Reset</i> function.</p>
+<p>There are 8 sets of identical track parameters accessed with
+numbered tabs.</p>
+<img alt='Graphic' src='images/exploring-setup-tracks1.gif'/>
+<p>The <i>Name</i> field allows you to give each track an optional
+short name.  When this is set the name will be displayed in the track
+strip instead of the track number.  This can be used to help identify
+the purpose of the track, for example "drone", "rhythm", or
+"solo".</p>
+<p>The <i>Preset</i> field lets you set the starting preset for 
+the track.  You may for example want a preset that has quantization
+turned off for drone tracks, but turns quantization on for
+rhythm tracks.</p>
+<p>The <i>Group</i> field allows you to set the initial
+<a href='#trackGroup'>track group</a> for the track.
+The default is <i>(none)</i> which means the track is not a member
+of a group.   Groups are identified by a letter, the number of available
+groups is set by the <i>Max Track Groups</i> parameter
+in the <i>Global Parameters</i> configuration window.</p>
+<p>The <i>Focus Lock</i> checkbox determines if the track will start
+out having <a href='#Focus Lock'>Focus Lock</a>.  This is an unusual thing to 
+enable, but it may be useful if you want to begin by recording several
+tracks at the same time.</p>
+<p>In the center of the track parameters area, there is a group of sliders to
+set the initial values of all the track controls.  These sliders
+correspond to the round knobs you see in the user interface.</p>
+<img alt='Graphic' src='images/exploring-setup-tracks2.gif'/>
+<p>At the bottom of the track parameters are a set of selectors
+for input and output ports.  Each track must have both an input and an
+output port, the default for all is port number 1.</p>
+<img alt='Graphic' src='images/exploring-setup-tracks3.gif'/>
+<p>The <i>Audio Input Port</i> and <i>Audio Output Port</i> fields
+select the ports of the audio interface hardware to be used when
+Mobius is running standalone.  The number of ports is determined by
+your audio interface.  Ports correspond to a stereo pair of channels
+on the audio interface.  If for example your audio interface has 8
+input jacks, there will be 4 input ports.   Jacks 1 and 2 will be
+port 1, jacks 3 and 4 will be port 2 and so on.  You will need to 
+experiment with the port settings to determine which ports match
+the jacks on your audio interface.</p>
+<p>The <i>Plugin Input Port</i> and <i>Plugin Output Port</i> fields
+select ports to be used when Mobius is running as a VST or Audio Units
+plugin.  Each port corresponds to a stereo pair of "pins" on the
+plugin.  By default the Mobius plugin has 16 input and output pins, or
+8 input and output ports.  Most plugin hosts will default to using the
+first input and output port.  If the host supports plugins with more
+than one input and output port you will need to understand how to
+route signals into and out of the plugin pins in the host.  Some hosts
+will display pins visually and allow you to draw lines to connect
+them.  Other hosts may display pins as numbers in a menu.</p>
+<p>The <i>Mono Mode</i> checkbox changes the track from stereo to
+mono.  The track will still receive from a stereo input port and will
+send to a stereo output port.  The difference is that the two input
+left and right input channels will be summed and recorded into both
+the left and right track channels.  This may be useful if you are
+using an instrument that does produce a stereo signal.  Connect the
+instrument to either the left or right input channel of the audio
+device.  The instrument will be recorded into both the left and right
+channels of the track and then sent to both the left and right output
+channels of the audio device.  The <i>Pan</i> control can be used
+to balance the levels of the left and right output channels.</p>
+<a name='Setup Parameters'>
+<h2 class=sec2>2.2 Setup Parameters</h2>
+</a>
+<p>On the right side of the window is a set of fields for
+things that apply to all tracks in the setup.</p>
+<img alt='Graphic' src='images/exploring-setup-params.gif'/>
+<p>The <i>Active Track</i> field selects the track you
+want to be active when the setup is selected or
+after a global reset.  Usually this is 1.</p>
+<p>The <i>Restore After Reset</i> field is a multi-selection panel
+containing the names of some of the track parameters that are stored
+in the setup.  Click on the names to highlight or unhighlight them.
+When one of these parameters is highlighted, its value will
+be restored to the value from the setup after the <i>Reset</i>
+or <i>Track Reset</i> functions are used.</p>
+<p>All parameters in the setup are always restored whenever you use
+the <i>Global Reset</i> function to reset all tracks.  But by default
+if you do a simple <i>Reset</i> to reset just one loop in a track, the
+parameters are not restored.  This is because you may want to change
+input level, output level, or preset parameters while you are
+recording a loop.  Then if you make a mistake and want to rerecord the
+loop you can use <i>Reset</i> to start over and none of your parameter
+changes will be lost.  Some users however might always want the
+parameters from the setup restored whenever a <i>Reset</i> is
+performed.  To accomplish that select some or all of the items in
+the <i>Restore After Reset</i> panel.</p>
+<a name='Command Buttons'>
+<h2 class=sec2>2.3 Command Buttons</h2>
+</a>
+<p>Below the track parameters is a row of command buttons.</p>
+<img alt='Graphic' src='images/exploring-setup-buttons.gif'/>
+<p>The <i>Initialize</i> button will set all of the parameters in the
+currently selected track tab to their initial values.  Controls all go
+to 127, pan goes to 64, the ports go to 1, the name, preset, group,
+and focus lock fields are cleared.  The <i>Initialize All</i> button
+will set all parameters in all tracks to their initial values.</p>
+<p>The <i>Capture</i> button will copy the current values of all
+parameters from a Mobius track into the setup.  The selected track tab
+in the setup defines which track is being captured.  For example if
+track tab 2 is selected, the parameters from Mobius track 2 are copied
+to setup tab 2.  Capture is useful if you want to experiment
+with track settings in real time until you find the ones you like, 
+then you can capture them all at once into the setup.</p>
+<p>The <i>Capture All</i> button will copy the current
+track parameters for all Mobius tracks into the setup.</p>
+<p>Obviously you need to be careful using the <i>Initialize All</i>
+and <i>Capture All</i> buttons, you need to be sure you want 
+to replace everything in the setup.  If you click one of these
+by accident, click the <i>Cancel</i> button to close the setup
+without saving the changes.</p>
+<a name='Managing Multiple Setups'>
+<h2 class=sec2>2.4 Managing Multiple Setups</h2>
+</a>
+<p>If you tend to loop with the same instruments in the same style you
+may only need one default setup.  But people frequently want more than
+one setup for different compositions or different performance
+environments.  You may need several setups with the levels tweaked for
+different instruments.  Or you may want different setups for home
+practice and live performance.  You can create as many setups as you
+need and switch between them at any time.</p>
+<p>At the top of the setup window is a set of fields and buttons
+that let you create, delete, select, and rename setups.</p>
+<img alt='Graphic' src='images/exploring-setup-manage.gif'/>
+<p>Mobius installs with one setup named "Default".  To create a new
+setup click the <i>New</i> button.  A new setup is created and
+selected.  The new setup will have a copy of all the parameters from
+the setup that was selected when you clicked <i>New</i>.  So if you
+want to create a setup that is similar to an existing setup, be sure
+to select the setup you want to copy before you click <i>New</i>.</p>
+<p>When a new setup is created it will be given a generated unique name
+starting with "Setup" followed by a number.  To change this name, click
+on the <i>Name</i> text field and type in the desired name.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-setup-rename.gif'/></td></tr><tr><td><b><i>Renaming a new setup</i></b></td></tr></table>
+<p>Once you have created several setups you can switch between them by
+using the <i>Selected Setup</i> menu at the top.  Click on the down
+arrow to open a menu containing all the setup names.  The setup that
+is selected in this menu will become the active setup when you
+click <i>Ok</i> to close this window.  If you are making changes to
+several setups, be sure to remember to select the one you want to be
+active before closing the window.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-setup-selector.gif'/></td></tr><tr><td><b><i>Selecting a setup</i></b></td></tr></table>
+<p>To delete a setup, simply select it and click the <i>Delete</i> button.
+The setup is deleted and removed from the selection menu.  Be careful
+with the delete button, there is no "are you sure" prompt.  If you delete
+a setup by accident, click <i>Cancel</i> at the bottom of the window
+to throw away the changes and open the window again.</p>
+<p>After making changes that you are happy with, you
+must click the <i>Ok</i> button.  If you click <i>Cancel</i> or the
+window close button all changes you have made will be lost.</p>
+<p>When a setup is selected, all tracks that are currently empty will
+be modified to have the parameters defined in the setup.  Tracks that
+are not empty will not be modified.</p>
+<a name='Selecting Setups with Menus'>
+<h2 class=sec2>2.5 Selecting Setups with Menus</h2>
+</a>
+<p>Another way to select setups is by using the <i>Track Setups</i> menu
+in the menu bar.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-setup-topmenu.gif'/></td></tr><tr><td><b><i>Selecting a setup</i></b></td></tr></table>
+<p>This menu will contain the names of all defined setups with a check
+next to the one that is active.  To change setups simply select
+another one from the menu.  If you just need to change setups without
+editing any parameter values using this menu is easier than opening
+the setup dialog.</p>
+<a name='Projects'>
+<h1 class=sec1>3 Projects</h1>
+</a>
+<p>A <i>project</i> is a collection of files that contain the complete
+state of Mobius at a moment in time, including the audio content of
+all loops in all tracks.  You can use projects to capture a complex
+collection of loops that have just been improvised, or to define a set
+of background loops for a new performance.</p>
+<a name='Save Project'>
+<h2 class=sec2>3.1 Save Project</h2>
+</a>
+<p>To save a project, open the <i>File</i> menu and select the
+<i>Save Project</i> item.  A standard file save dialog appears 
+requesting you to select a Mobius project file.  Navigate to
+the directory you want to use and enter a file name.  Note
+that it may take several seconds to save the project.  During that 
+time do not use any Mobius functions, or change track controls or else
+these may be accidentally saved in the project.</p>
+<p>A project actually consists of several files, a
+single <i>project</i> file with the <b>.mob</b> extension that you
+specify in the save file dialog window, and one or more <b>.wav</b>
+files containing audio content.  If you have a complex collection of
+loops and tracks, there may be many files in a project.  If so you may
+find it convenient to keep each project in a separate directory.</p>
+<p>For example, assume we've saved a project named "myproject" that
+has two tracks, each with two loops.  The project files that would
+be saved are:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  myproject.mob
+  myproject-1-1-1.wav
+  myproject-1-2-1.wav
+  myproject-2-1-1.wav
+  myproject-2-2-1.wav
+</pre>
+</div></div>
+<p>The files containing audio are suffixed with three numbers.  The
+first is the number of the track, the second is the number of the loop
+within the track, and the third is the number of the layer within the
+loop.  Depending on how the loop was constructed, the layer number 
+will usually be different than 1.</p>
+<p>The project's <b>.mob</b> file contains the information necessary
+to reconstruct the Mobius state from all of the audio files.  See the
+<a href='#XML Files'>XML Files</a> section for more information on the contents
+of this file.  In addition to the files containing the audio content, 
+the project's <b>.mob</b> file  will contain the current state of all
+tracks including the track setup, the current presets being used, 
+the current controller values (input, output, feedback, pan), 
+the selected track number, and the loop number that is selected in
+each track.</p>
+<p>By default only the most recent layer in each loop is saved.  If
+the global parameter <i>Save Project Layers</i> is set, then a loop's
+entire layer history is also saved in the project.  More than one
+<b>.wav</b> file will be saved for each loop.  For example:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  myproject-1-1-3.wav
+  myproject-1-1-2.wav
+  myproject-1-1-1.wav
+</pre>
+</div></div>
+<p>The third number in the file name is the layer number.  These will
+be random numbers, though the most recent layer will usually have a
+higher number.  Saving layers may be interesting if you use undo as a
+performance technique, and you want to start with a complex loop, then
+undo back to something simpler.</p>
+<p>To enable saving the layer history, open the <i>Configuration</i>
+menu and select the <i>Global Parameters</i> item.  Locate the
+parameter named <i>Save Project Layers</i> and check the box.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-projects-layers.gif'/></td></tr></table>
+<p><b>NOTE:</b> When you save a project with the same name as an
+existing project, all of the wave files in the existing project will
+be deleted first.  This is necessary to avoid "garbage files" if you
+remove tracks or loops from the project.  This will only occur however
+if the file is contained in the same directory as the
+project's <b>.mob</b> file.  If you have manually edited
+the <b>.mob</b> file and added files a sample
+library, the sample library files will not be deleted as long as they
+are in a different directory than the <b>.mob</b> file.</p>
+<a name='Open Project'>
+<h2 class=sec2>3.2 Open Project</h2>
+</a>
+<p>To load a project, open the <i>File</i> menu and select the
+<i>Open Project</i> item.  A standard open file dialog appears 
+requesting you to  select an existing Mobius project file.  Navigate
+to the directory containing the <b>.mob</b> file, select it and 
+click <i>Open</i> or <i>Ok</i>.</p>
+<p>When you load a project, a <i>Global Reset</i> is performed, meaning 
+that all of the current tracks and loops will be lost.  After loading
+the audio content from the project all tracks will be placed in 
+<i>Pause</i> mode, tracks will not begin playing automatically.  You
+must now use the <i>Pause</i> or <i>Play</i> functions in each track
+to start them.</p>
+<a name='Saving and Loading Loops'>
+<h1 class=sec1>4 Saving and Loading Loops</h1>
+</a>
+<p>Mobius provides several options for saving and loading audio
+content to and from files.  In this section we will discuss
+ways to save and load individual loops.  You can
+also save and load <i>projects</i> which contain the audio
+content from all layers in all loops in all tracks.  See the
+<a href='#Projects'>Projects</a> section for more information on projects.</p>
+<p>Load loading and saving is accomplished from the <i>File</i> 
+menu:</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-saveload-menu.gif'/></td></tr></table>
+<a name='Loop File Formats'>
+<h2 class=sec2>4.1 Loop File Formats</h2>
+</a>
+<p>Mobius can only save and load audio content as <i>wave</i> files.
+The files may use either 16-bit integer samples or 32-bit floating
+point samples.  Floating point is preferred because it has the best
+sound quality.  When Mobius writes audio files it will by default
+use 32-bit floating point samples.  If you have and audio application
+that cannot read floating point audio files, you can change the way
+audio files are saved with a global parameter.</p>
+<p>Open the <i>Configuration</i> menu and select <i>Global
+Parameters</i>.  In the popup window locate the <i>16 Bit Wave
+Files</i> parameter.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-saveload-16bit.gif'/></td></tr><tr><td><b><i>16 Bit Wave File Option</i></b></td></tr></table>
+<p>Check the box next to the parameter name and click <i>Ok</i>
+to close the window.  Now all Mobius audio files will be saved
+using 16-bit integer samples.</p>
+<p>Note that this parameter does not effect how files are read.
+Mobius will continue to read both integer and floating point
+wave files.</p>
+<p><b>NOTE:</b> Mobius always runs assuming a 44100 sample rate (CD quality).
+It is recommended that you only load loop files that were created with that
+sample rate.  You can load files with other sample rates but they 
+will play back at 44100 which will change the pitch and length.</p>
+<a name='Open Loop'>
+<h2 class=sec2>4.2 Open Loop</h2>
+</a>
+<p>The <i>Open Loop</i> menu item is used to load a loop from a file
+into Mobius.  Before loading a loop file you must first select the
+track and the loop in the Mobius main window that you want to replace
+with the contents of a file.  Click on the track in the track strip,
+then use <i>Next Loop</i> or <i>Previous Loop</i> or the up and down
+arrow keys to select a loop.  If you have the <i>Empty Loop Action</i>
+parameter set to <i>Record</i> in the preset, recording may begin
+automatically but it will be canceled during the load.  Once the track
+and loop are selected, open the <i>File</i> menu and select
+the <i>Open Loop</i> item.  A standard open file dialog will be
+displayed, navigate to the directory containing the file you want to
+load and select it.  Mobius can only load <i>wave</i> files having
+the <b>.wav</b> extension.  The file may be encoded using 16-bit
+integer or 32-bit floating point samples</p>
+<p>The destination loop will be reset before the loop is loaded.
+After the loop is loaded, the track will be in <i>Pause</i> mode.  The
+loop will begin playing from the beginning as soon as you use
+the <i>Mute</i>,
+<i>Pause</i>, or <i>Play</i> functions to cancel pause mode.  In the default
+keyboard bindings the spacebar can be used to unpause the loop.</p>
+<p>If you don't have any wave files handy, Mobius includes a few that
+you can experiment with.  From the <i>Open Loop</i> dialog, navigate to the
+<i>loops</i> subdirectory of the Mobius installation directory.  On 
+windows this will normally be <b>c:\Program Files\Mobius\loops</b>, on 
+Mac this will normally be <b>/Applications/Mobius/loops</b>.  Select
+the file <i>gcgroove.wav</i>.  Hit the spacebar and let the funk begin.</p>
+<a name='Save Loop'>
+<h2 class=sec2>4.3 Save Loop</h2>
+</a>
+<p>To save an individual loop, select the track and the loop you want
+to save, open down the <i>File</i> menu, and select the <i>Save
+Loop</i> item.  A standard file save dialog will appear, navigate to
+the directory where you want to save the loop, and select or enter a
+file name.</p>
+<a name='Quick Save'>
+<h2 class=sec2>4.4 Quick Save</h2>
+</a>
+<p>The quick save feature allows you to save the current loop to a
+file without having to interact with a file save window.  This is
+convenient if you create a loop you would like to remember, but don't
+want to put down your instrument and interact with the computer.</p>
+<p>A quick save may be performed by opening down the <i>File</i> menu
+and selecting the <i>Quick Save</i> item.  While you don't have to
+interact with a dialog window, you still have to select the menu item.
+A more interesting way to perform a quick save is by binding a button,
+key, or especially a MIDI event to the <i>Save Loop</i> function.  You
+could for example bind <i>Save Loop</i> function to a button on a MIDI
+foot controller, then whenever you create something interesting just
+pounce on the button and the loop will be saved.</p>
+<p>On Windows, the loop files are stored in the Mobius installation
+directory which is normally <i>c:\Program Files\Mobius</i>.  On the
+Mac the loop files are stored in <i>/Library/Application
+Support/Mobius</i>.  The files will have the name <b>mobiusloop</b>
+plus a number to make the name unique, for
+example <b>mobiusloop1.wav</b>,
+<b>mobiusloop2.wav</b> etc.  Every time you perform the <i>Save Loop</i>
+function, a new unique file name is generated by adding one to the
+highest numbered <i>mobiusloop</i> file in the directory.</p>
+<p>If you perform a quick save into a directory that already contains
+quick save files, Mobius will scan the directory to find the highest
+file number it must use in order to generate a unique file name.  This
+ensures that a quick save will not overwrite an existing file made
+during an earlier Mobius session.</p>
+<p>You may change the directory and base file name for quick save
+files by setting a global parameter.  Open the <i>Configuration</i> menu
+and select the <i>Global Parameters</i> item.  Locate the
+parameter named <i>Quick Save File</i>.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-quicksave1.gif'/></td></tr></table>
+<p>If you want to change the base file name but keep the default
+directory, just enter a new name in this field.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-quicksave2.gif'/></td></tr></table>
+<p>If you want to change the directory in which the files are stored
+you will need to enter the absolute path name of the directory 
+and the base file name.  On Windows this must begin with a drive letter, 
+on Mac it must begin with a <b>/</b> character.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-quicksave3.gif'/></td></tr></table>
+<p>If you are not familiar with absolute path names it is recommended
+that you let the files be saved in the default directory.</p>
+<p><b>NOTE:</b> Do not include the <b>.wav</b> extension to the
+file name, this will be added automatically.</p>
+<a name='Samples'>
+<h1 class=sec1>5 Samples</h1>
+</a>
+<p>The <i>samples</i> feature was designed primarily for testing
+Mobius, though anyone can use it.  Samples are short audio
+recordings that can be loaded into Mobius and triggered with buttons,
+keys, or MIDI events.  When triggered, a sample plays from beginning
+to end without interruption and then stops.  If you trigger it again
+before the last sample playback finishes, another overlapping playback
+of the sample will start.  Samples are not part of a loop or track, it
+is like having a very primitive built-in sample player.</p>
+<p>So far this is pretty boring, but what makes samples interesting
+for testing is that while the sample is playing, the output is routed
+into the audio <b>input</b> of the tracks.  So if the tracks are
+recording, they will record the samples you are playing, as well as
+whatever is coming in from the audio interface.  This is convenient
+for testing because audio can be injected into the tracks just by
+pressing keys on the keyboard, without having to stop and play an
+instrument.</p>
+<p>A sample is just an audio <b>.wav</b> file.  To configure samples,
+open the <i>Configuration</i> menu and select the <i>Samples</i> item.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-samples.gif'/></td></tr></table>
+<p>At the top of the samples window are buttons to add, delete, and
+reorder samples.  The large panel in the center has the file names of
+the samples that are currently registered.  To add a new sample, click
+the <i>Add</i> button.  A standard open file dialog is displayed where
+you can select the <i>.wav</i> file to load.  Added samples are placed
+at the end of the list.  To delete a sample, click on the file name in the
+list so that it is highlighted then click the <i>Delete</i> button.
+To change the order of samples, click on a file so that it is highlighted
+then click the <i>Move Up</i> or <i>Move Down</i> buttons.</p>
+<p>The order the sample files appear in the list is important because
+this determines which Mobius functions will trigger the samples.
+There are eight Mobius functions that will trigger samples.  They all
+begin with the word "Sample" and are then followed by a number from 1
+to 8, for example <i>Sample1</i>and <i>ample2</i>.  The <i>Sample1</i>
+function triggers the first sample in the list, the <i>Sample2</i>
+function triggers the second sample in the list and so on.  Because
+there are only eight sample trigger functions you should only register
+8 sample files.  You can add more but they will not be accessible.</p>
+<p>To get a feel for how this works, Mobius comes with a small set of
+sample files you can try.  On windows these are in the <i>samples</i>
+sub directory of the Mobius installation directory which is
+usually <i>c:\Program Files\Mobius\samples</i>.  On the Mac these will
+be in <i>/Applications/Mobius/samples</i>.</p>
+<p>Samples can be of any length though they are more useful if they
+are short.  Because samples will "stack" if you trigger them several
+times rapidly you have to be careful about overloading the output bus
+and causing digital clipping.  There is no way to adjust the level of
+the sample.</p>
+<a name='Advanced Control'>
+<h1 class=sec1>6 Advanced Control</h1>
+</a>
+<p>The <a href='starting.htm#Controlling Mobius'>Controlling Mobius</a>
+ 
+section of <a href='starting.htm'>Getting Started With Mobius</a>
+ 
+described the process for creating <b>bindings</b> that let you control Mobius using
+devices such as a MIDI footswitch.  In this section we will describe
+some advanced options that give you more precise control over
+individual tracks.</p>
+<a name='Binding Review'>
+<h2 class=sec2>6.1 Binding Review</h2>
+</a>
+<p>First a quick review of the concepts involved bindings.  
+A <b>trigger</b> is an external stimulus that Mobius can
+receive and take action on.  The most common example is a
+message sent from a MIDI footswitch.  A <b>target</b> is something
+in Mobius that can respond to a trigger, examples include
+looping functions, track controls, and scripts.  A <b>binding</b>
+is an association between a <i>trigger</i> and a <i>target</i>, 
+for example binding <i>MIDI Note 36</i> to the <i>Record</i> 
+function means that the <i>Record</i> function will be executed
+whenever <i>MIDI Note 36</i> is received.</p>
+<p>Bindings are created using several popup dialog windows for each
+type of trigger.  These binding windows are accessed from
+the <i>Configuration</i> menu items <i>MIDI Control</i>,
+<i>Keyboard Control</i> and <i>Plugin Parameters</i>.   In addition
+you can create bindings for OSC messages but this is still
+an experimental feature that does not yet have a user interface.</p>
+<p>One property of a binding that was not discussed in the
+<i>Getting Started</i> guide was the <b>scope</b>.  Most
+users will use the default <b>Global</b> scope for their
+bindings which will target the currently selected track. 
+But it is also possible to use scopes so that tracks are
+targeted even if they are not selected.</p>
+<a name='bindingScope'>
+<h2 class=sec2>6.2 Binding Scopes</h2>
+</a>
+<p>A binding may be given a <i>scope</i> to more precisely
+specify which targets are to be controlled by the trigger.  There
+are many targets in Mobius because each track has its own independent 
+set of targets.  For example there isn't just one <i>Output Level</i>
+control target, there are eight, one for each track.</p>
+<p>Functions may also have a binding scope.  A trigger may for example
+do a Record in whatever the currently selected track is, or it may
+Record in track 4 all the time.</p>
+<p>A binding scope menu is found in all of the popup windows that
+create bindings.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-bindings-scope.gif'/></td></tr><tr><td><b><i>Scope Selector</i></b></td></tr></table>
+<p>When the scope is <i>Global</i> the binding is performed in
+currently selected track and all tracks that have focus lock.  
+This is the most common binding scope.</p>
+<p>The scopes <i>Track 1</i> through <i>Track 8</i> force the binding
+to be performed in a specific track no matter which is currently
+selected.  This scope is particularly useful if you have a MIDI
+control surface with sliders and knobs that resemble a mixing console.
+A typical configuration is to bind a row of sliders to the <i>output level</i>
+controls in each track, and a row of knobs to the <i>pan</i> controls.
+Then you can mix and pan the tracks any time without worrying about which
+one is selected.</p>
+<p>The scopes <i>Group A</i> through <i>Group D</i> force the binding
+to be performed on all tracks that are in one of the track groups.
+For this binding scope to be useful you must also assign tracks to
+groups, see the <a href='#trackGroup'>Track Groups</a> section for
+more on how to use track groups.</p>
+<a name='Focus Lock'>
+<h2 class=sec2>6.3 Focus Lock</h2>
+</a>
+<p>When you create a binding using the default <i>Global</i> binding
+scope, triggers are sent to the currently selected track.  This is the
+most common way to create bindings, rather than having 8 bindings for
+the <i>Record</i> function for each track, you just have one binding
+for the current track.  Then you select the track you want to record
+by clicking on it in the Mobius window.  This is similar to what
+computer operating systems call "input focus".</p>
+<p>Occasionally though you might want to control more than one track at
+the same time without stopping to set up new bindings.  For example
+you might want to mute or fade all tracks at the same time, send
+several tracks into reverse at the same time, or to begin a new loop
+recording simultaneously in several tracks.  There are several ways to
+do this including scripts and <a href='#trackGroup'>Track Groups</a> 
+but the simplest way is to use <i>focus lock</i>.</p>
+<p>Focus lock is a boolean track parameter that can turned on and off.
+When focus lock is on for a track, that track will receive all
+triggers that are bound to something in the <i>global</i> binding
+scope.  For example assume focus lock is enabled in tracks 2 and 3
+and track 1 is selected.  If you trigger the <i>Reverse</i> function,
+tracks 1, 2, and 3 will all toggle their playback direction.  Track 1
+because it is selected, and tracks 2 and 3 because they have focus
+lock enabled.  Similarly if you had a MIDI continuous control pedal
+with a global binding to the <i>Output Level</i> control, then
+moving this pedal will cause the output level in tracks 1, 2, and 3
+to change at the same time.</p>
+<p>Focus lock is rarely something that you leave on all the time,
+instead it is enabled temporarily only when you need control over
+multiple tracks.  Because focus lock requires the performer to manually
+turn it on and off, it can be difficult to use during performance.
+Scripts are usually the preferred method for controlling multiple
+tracks, but focus lock is still available for simple things that don't
+require the complexity of a script.</p>
+<a name='Setting Focus Lock'>
+<h3 class=sec3>6.3.1 Setting Focus Lock</h3>
+</a>
+<p>If you are using the default user interface configuration, you can
+tell if a track has focus lock when the 
+<a href='#trackNumberStrip'>Track Number</a>
+displays in a different color (usually red).  In the next screenshot,
+you can see that track 2 is selected and track 1 has focus lock.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-focus-lock-number.gif'/></td></tr><tr><td><b><i>Focus lock with the track number</i></b></td></tr></table>
+<p>You can turn focus lock on and off by clicking on the track number.
+There is another component you can add to the track strip to control
+focus lock called appropriately <a href='#focusLockStrip'>Focus
+Lock</a>.  It is displayed as a small round button that is filled
+red when a track has focus lock.  In the next screenshot, you can see
+again that track 2 is selected and track 1 has focus lock.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-focus-lock-button.gif'/></td></tr><tr><td><b><i>Focus lock button</i></b></td></tr></table>
+<p>You might choose to use the focus lock button if you
+want to save space in the track strip, though most people use the track
+number because it is easier to see and also helps you identify tracks.
+Like the track number, you can turn focus lock on and off by clicking
+inside the focus lock button.</p>
+<p>During live performance it can be awkward for the performer to stop
+playing, grab the mouse, and click on focus lock buttons.  Most people
+that use focus lock therefore use MIDI or the computer keyboard to set
+focus lock.  The function named <i>Focus Lock</i> can be bound to any
+trigger.  When executed it will toggle focus lock in the target
+track.</p>
+<p>One approach is to bind the computer keys 1 through 8 to
+the <i>Focus Lock</i> function with the binding scope set to tracks 1
+through 8.  Then pressing the 1 key will toggle focus lock in track 1,
+pressing 2 will toggle focus lock in track 2, etc.  Something similar
+could be done with a row of MIDI buttons on a footswitch or control
+surface.</p>
+<a name='Limiting Focus Lock'>
+<h3 class=sec3>6.3.2 Limiting Focus Lock</h3>
+</a>
+<p>Most functions can use focus locks, but a few special functions
+like <i>Next Track</i> or <i>Track Copy</i> do not.  Generally any
+function that operates on a loop inside a track can use focus lock,
+but functions that operate on the tracks themselves do not.  You may
+not want focus lock applied to all functions.  For example you may
+want NextLoop, Retrigger, and Mute to obey focus lock but not Record
+and Overdub so you can control the recording of tracks individually
+but still mute them at the same time.  You can control exactly which
+functions will obey focus lock by setting a global parameter.  From
+the <i>Configuration</i> menu select the <i>Global Parameters</i>
+item.  When the window opens select the <i>Functions</i> tab.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-focus-lock-config.gif'/></td></tr><tr><td><b><i>Focus Lock Configuration Window</i></b></td></tr></table>
+<p>This tab has two item selectors, the first one labeled
+<i>Focus Lock Functions</i> controls which functions
+will obey focus lock.  By default most functions obey focus
+lock but the loop selection functions do not.  If you do
+not want a particular function such as <i>Record</i> to 
+obey focus lock, select it and remove it from the right panel.
+It does not matter what order the functions are in.  When you
+have finished adding or removing functions remember to click "Ok" to 
+close the window and save the changes.</p>
+<a name='trackGroup'>
+<h2 class=sec2>6.4 Track Groups</h2>
+</a>
+<p>A <i>Track Group</i> is used to organize several related tracks.
+By default there are four track groups defined in Mobius, and a track
+may be made a member of any one of those groups.  Groups are
+identified by letters A,B,C,D but they may also be given user defined
+names in the <a href='#trackSetup'>Track Setup</a>.</p>
+<p>Assigning a track to a group does not by itself do anything very
+interesting.  If you have the <a href='#groupNameStrip'>Group
+Name</a> component enabled in the <a href='#Customizing the Track Strips'>track strip</a> you can see the group name which might help
+you remember how the tracks are supposed to be used.  For example
+group <i>A</i> for percussion, group <i>B</i> for bass, and
+group <i>C</i> for solo.</p>
+<p>Track groups become more useful when they are used as
+a <a href='#bindingScope'>binding scope</a>.  Recall that when you
+create a binding for a trigger such as a MIDI note, you can select
+a <i>binding scope</i>.  The default binding scope is <i>global</i>
+which mean the trigger is sent to the currently selected track.  If
+the binding scope is set to a group name, the trigger will be sent to
+all tracks in that group whether or not they are selected.</p>
+<p>One example use for track group bindings is to bind a MIDI
+expression pedal to the <i>output level</i> control to the group whose
+tracks contain the percussion loops.  Then with one expression pedal
+you can adjust the mix of all of the tracks at the same time.  Using
+track groups in this way is similar to using <a href='#Focus Lock'>Focus Lock</a> but
+it is more flexible.</p>
+<a name='Displaying Track Groups'>
+<h3 class=sec3>6.4.1 Displaying Track Groups</h3>
+</a>
+<p>If you want to use track groups you will need to be able to see
+them in the user interface.  In the default configuration, track group
+names are not visible.  You will need to customize the
+<a href='#Customizing the Track Strips'>track strip</a> and add 
+the item named <i>Group Name</i>.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-config-group-display.gif'/></td></tr><tr><td><b><i>Track Strip Item Selector</i></b></td></tr></table>
+<p>You won't see much change initially because none of the tracks
+have been assigned to a group.  The track strip will grow a little
+taller to make room for the group name but that space will be blank
+until the track is assigned to a group.  Here is what the track strip
+will look like if you assign the first two tracks to group <i>A</i>
+and the second two to group <i>B</i>.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-group-display.gif'/></td></tr><tr><td><b><i>Visible track group name</i></b></td></tr></table>
+<p>Note that each group name is displayed in a different color to help
+identify them.  You can change the colors by editing the
+<a href='#Changing Colors'>color palette</a>.</p>
+<a name='Setting Track Groups'>
+<h3 class=sec3>6.4.2 Setting Track Groups</h3>
+</a>
+<p>The primary way to assign tracks to a group is with a
+<i>track setup</i>.  See the <a href='#trackSetup'>Track Setups</a> section
+for complete information on how to define setups.  In the
+setup parameters for each track is a group selector.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-group-setup.gif'/></td></tr><tr><td><b><i>Group selector in the setup window</i></b></td></tr></table>
+<p>In the previous example the first track has been added to the first
+group which by default is named "A".  Whenever you change setups the
+displayed track groups will change to match what is defined in the
+setup.  If you execute the <i>Global Reset</i> function, the current
+track groups will also be reset to match what is in the setup.</p>
+<p>You may also change track groups in real-time by executing
+the <i>Track Group</i> function.  Each time you execute the
+<i>Track Group</i> function the track is assigned to the next higher
+group.  If the track is not currently assigned to a group it is
+assigned to group <i>A</i>.  If the track is currently assigned to 
+the highest group, the group membership is removed.  The pattern is:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  none, A, B, C, D, none, A, B, C, D, none...
+</pre>
+</div></div>
+<p>If you have the <i>Track Group</i> function bound to
+a <i>Sustainable Trigger</i> and you do a <i>long press</i> of the
+trigger, the group assignment is removed.</p>
+<p>You can also set track groups using scripts, this is described
+in detail in the <a href='scripts.htm'>Mobius Scripting</a>
+ manual.</p>
+<a name='Limiting Track Groups'>
+<h3 class=sec3>6.4.3 Limiting Track Groups</h3>
+</a>
+<p>If you find that 4 track group is more than you need, you can reduce
+the number using a global parameter.  From the <i>Configuration</i> menu
+select <i>Global Parameters</i>, when the window opens select the <i>Limits</i>
+tab.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-group-max.gif'/></td></tr><tr><td><b><i>Changing the number of track groups</i></b></td></tr></table>
+<p>Locate the parameter named <i>Track Groups</i> and enter the desired number.
+In this example the number has been changed from 4 to 2.  Changing the number
+of track groups is primarily of interest if you want to use the <i>Track Group</i>
+function to cycle over the groups.  If you only need two groups then this
+changes the <i>Track Group</i> pattern to:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  none, A, B, none, A, B, none...
+</pre>
+</div></div>
+<a name='Group Output Level'>
+<h3 class=sec3>6.4.4 Group Output Level</h3>
+</a>
+<p>The <i>Output Level</i> control will behave in a special way if it
+is bound using a track group scope.  The output level of the tracks in
+the group will be changed relative to their current output level,
+rather than all set to the same value.  This allows you to set up a
+mix of several tracks with different output levels, then adjust the
+overall output level of the group "bus" without changing the mix of
+track levels.</p>
+<p>For example, assume track 1 and 2 are in the same group and track 1
+has an output level of 127 (the maximum) and track 2 has an output
+level of 100.  Decreasing the output level by 10 using a group binding
+will lower the level of the first track to 117 and the second track to
+90.</p>
+<p>This special behavior is available only for the <i>Output Level</i>
+control and is canceled if you use any other level control such as a UI
+knob or a trigger that does not use the group binding scope.</p>
+<a name='Track Groups and Focus Lock'>
+<h3 class=sec3>6.4.5 Track Groups and Focus Lock</h3>
+</a>
+<p>Before release 1.43, track groups behaved like a more powerful
+version of <a href='#Focus Lock'>Focus Lock</a>.  This is no longer the default behavior
+because it was confusing and made it harder to use bindings with
+group scope.   If you would like to restore this old behavior
+open the <i>Global Parameters</i> window and check the 
+checkbox labeled <i>Groups have focus lock</i>.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-group-focuslock.gif'/></td></tr><tr><td><b><i>Activating group focus lock</i></b></td></tr></table>
+<p>When this option is enabled any triggers that have bindings
+using <i>global</i> scope are sent to the currently selected track and
+all tracks that are in the same group as the selected track.  For
+example assume that tracks 1, 2, and 3 are in the same group and track
+3 is selected.  The <i>Reverse</i> function has a global binding
+to a MIDI note.  When this MIDI note is received, tracks 1 2 and 2 all
+change direction, 3 because it is selected and 1 and 2 because they
+are in the same group as 3.</p>
+<p>Like simple focus lock, track group focus lock is only available
+for function bindings that use the <i>Global</i> binding scope.  If
+you create a binding scoped to a specific track or track group, 
+group focus will have no effect on that binding.</p>
+<p>Also like simple focus lock, you may not want all functions to
+be sent to all tracks in the group.  You can use the same global
+parameter described in <a href='#Limiting Focus Lock'>Limiting Focus Lock</a> to decide which
+functions should obey group focus lock.</p>
+<p>The reason this is no longer the default behavior is because we
+have found that the ability to assign things like the
+<i>Output Level</i> control to a group is useful for mixing.  
+But once you did that, all tracks in the group would respond
+to functions like <i>Record</i> at the same time which is not
+usually what you want.    You can edit the <i>Focus Lock Functions</i>
+global parameter to remove all the functions you don't want to obey
+focus lock, but it's easy to forget.  Most people never want
+a combination of both group bindings and group focus lock.  So rather than 
+making the combination the default we made the default to disable
+group focus lock and only support group bindings.</p>
+<p>If this is confusing don't worry, it has always been hard to explain
+and few if any people have ever made good use of it.  Just leave
+the <i>Groups have focus lock</i> checkbox off.</p>
+<a name='Plugin Parameter Bindings'>
+<h2 class=sec2>6.5 Plugin Parameter Bindings</h2>
+</a>
+<p>If you are using the Mobius VST or AU plugin, another way to
+control it is through plugin parameters.  The term "plugin parameter"
+must not be confused with Mobius calls a <i>Parameter</i>.  Plugin
+parameters are used for communication between a VST or Audio Units
+plugin and the host application.  Plugins typically declare a small
+number of parameters that the host can then display using a simple
+user interface with sliders and menus.  Further the host may support
+"parameter automation" that allows you to draw value curves in a
+timeline and have the parameters change in real time.  Finally hosts
+can often store the last known values for all of a plugin's parameters
+in a "session file" that may be restored later.</p>
+<p>Plugin parameters are an advanced topic because what you can do
+with them depends greatly on the host application you are using.  Here
+we will simply discuss how you cause targets in Mobius to be exposed
+as plugin parameters.  For information on how to use these parameters
+with the various hosts you will have to check forum.</p>
+<p>Mobius has literally hundreds of targets that could be exposed as
+plugin parameters.  Because there are so many they are not all exposed
+by default, you must explicitly ask for the targets you want exposed.
+To define plugin parameters open the <i>Configuration</i> menu and
+select the <i>Plugin Parameters</i> item.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-bindings-plugin.gif'/></td></tr><tr><td><b><i>Plugin Parameter Window with Default Parameters</i></b></td></tr></table>
+<p>This looks like the other binding windows for MIDI and keyboard
+control.  The unusual thing about parameter binding is that there are
+no fields for defining a trigger.  This is because the association
+between a trigger and the plugin parameter is done in the host
+application rather than in Mobius.  Mobius simply advertises a set of
+parameters that the host can use, the association of those parameters
+with things like MIDI events is done in the host.</p>
+<p>The typical steps for defining plugin parameters are:</p>
+<ol>
+<li>Select a target (function, control, parameter, or configuration)</li>
+<li>Select a scope</li>
+<li>Click the <i>New</i> command button to add the parameter</li>
+</ol>
+<p>Plugin parameters can sometimes be used as sustainable triggers but
+it depends on the host application.  The host needs to support the
+concept of a "momentary button" and set the parameter to non-zero when
+the button is pressed and zero when released.  Not all hosts support
+this concept, some treat all parameters as continuous floating point
+values and display them as sliders rather than buttons.</p>
+<a name='OSC Bindings'>
+<h2 class=sec2>6.6 OSC Bindings</h2>
+</a>
+<p>It is possible to control every Mobius target using OSC messages.
+This is an advanced feature that is still under development.  If you
+have interest in this contact me.</p>
+<a name='MIDI Status Export'>
+<h1 class=sec1>7 MIDI Status Export</h1>
+</a>
+<p><i>MIDI Status Export</i> is an option that will cause Mobius to
+send MIDI events whenever certain parameters or controls change.  It
+is intended for use with bi-directional control surfaces that can both
+send MIDI to Mobius to change something and also receive MIDI to track
+changes made within Mobius.  For example a control surface may have a
+rotary knob used to set the Mobius <i>Output Level</i> control.  When
+you turn the knob the hardware sends MIDI messages to Mobius to change
+the output level.  But if you then change the output level in the
+Mobius UI or from a script, the position of the hardware knob may no
+longer match the output level that is actually being used in Mobius.
+Some newer control surfaces support bi-directional communication which
+means that the application may send MIDI back to the hardware to make
+it change the position of knobs, sliders, or buttons.</p>
+<p>When MIDI feedback is enabled in Mobius, it will send MIDI events
+whenever a parameter or control changes <b>and</b> those parameters or
+controls have a MIDI trigger binding.  For example if the <i>Output
+Level</i> control has a binding to MIDI continuous controller 42, then
+whenever the output level is changed in the Mobius UI, continuous
+controller 42 events will be sent to the selected MIDI output devices.
+If a parameter or control does not have a MIDI binding then no MIDI
+messages will be sent.</p>
+<p>There are two global parameters that control MIDI status export.
+The <i>MIDI Status Export</i> parameter will cause MIDI status events
+to be sent to the MIDI output devices selected in the <i>MIDI
+Devices</i> window.  This is normally used only when running Mobius in
+standalone mode, but it can be used in the Mobius plugin if you are
+opening private MIDI devices.</p>
+<p>The <i>Host MIDI Status Export</i> parameter will cause MIDI status
+events to be sent to the VST or Audio Units plugin host.  This can
+only be used when Mobius is running as a plugin.  If you use this
+option you must then route MIDI coming from the Mobius plugin to the
+hardware control surface in the host.  Every host does this
+differently and some don't even recognize MIDI generated by a plugin.
+If your host does support routing MIDI from a plugin, that is the
+recommended approach.  If it doesn't then you can configure Mobius to
+open a private MIDI output device when in plugin mode and set
+the <i>MIDI Status Export</i> parameter instead.  But be careful
+because having Mobius open MIDI devices can cause conflicts with some
+hosts.</p>
+<a name='Customizing the User Interface'>
+<h1 class=sec1>8 Customizing the User Interface</h1>
+</a>
+<p>The user interface can be changed in many ways: buttons can be
+added to the button area, components can be added and rearranged in
+the status area, and components can be added and rearranged in the
+track strips.  Most customizations are performed using a set of popup
+dialog windows accessed from the <i>Configuration</i> menu.</p>
+<p>Note that it is often necessary to resize the Mobius window after
+adding or removing things from the UI.  If you are running Mobius as
+an Audio Unit plugin, or as a VST plugin in "single window mode" you
+will not be able to resize the window.  You will need to first run
+Mobius standalone to resize the window, then the new window size will
+be used by the plugin window the next time it is opened.</p>
+<a name='Item Selectors'>
+<h2 class=sec2>8.1 Item Selectors</h2>
+</a>
+<p>Many of the configuration windows use a set of buttons and panels
+collectively called an <i>item selector</i>.  These will have
+different labels and contain different items but they all work the
+same way.  Here is an example item selector from the <i>Display
+Components</i> window.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-config-selector.gif'/></td></tr><tr><td><b><i>Example Item Selector</i></b></td></tr></table>
+<p>The panel on the right contains the items that are currently
+selected.  The panel on the left contains the items that are available
+for selection.  In the center is a column of buttons that move items
+between the two panels.  To select an item, click on the name in the
+left panel to highlight it, then click on the button labeled "<b>&gt;</b>".
+To deselect an item, click on the name in the right panel, then click
+on the button labeled "<b>&lt;</b>".  The button labeled "<b>&gt;&gt;</b>" will
+move all items to the right panel and the button
+labeled "<b>&lt;&lt;</b>" will move all items to the left panel.</p>
+<p>Note that if the list of items is long there may be a scroll bar
+on the right edge of either panel.  If that is the case you will need
+to use the scroll bar to see all of the available or selected items.</p>
+<p>For many item selectors, the order of the items in the right panel
+will determine the order the items are displayed in the user
+interface.  If you want things to display in a certain order you will
+have to carefully select them in the desired order.  You will quickly
+find out that drag-and-drop is not supported in the right panel so
+ordering the buttons can be tedious.  It is best to plan your ordering
+ahead of time, use the "<b>&lt;&lt;</b>" button to clear the right
+panel, then add your items one at a time in the desired order.</p>
+<a name='Customizing Buttons'>
+<h2 class=sec2>8.2 Customizing Buttons</h2>
+</a>
+<p>The <i>button area</i> is a strip across the top of the 
+Mobius main window containing clickable buttons to trigger 
+functions and scripts.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-config-buttons-ui.gif'/></td></tr><tr><td><b><i>Default Buttons</i></b></td></tr></table>
+<p>To add or remove buttons in the button area, open the <i>Button
+Configuration</i> window by selecting the <i>Buttons</i> item from
+the <i>Configuration</i> menu.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-config-buttons.gif'/></td></tr><tr><td><b><i>Button Configuration Window</i></b></td></tr></table>
+<p>The button configuration window contains a single item selector
+with items that are the names of all
+built-in functions and scripts.  The panel on the right has the items
+that will have buttons in the interface.  The buttons will be
+displayed in the order in which they appear in the right panel.</p>
+<p>The panel on the left contains the names of items
+that do not currently have buttons.  These will be displayed in
+alphabetical order in two sections.  The first section has the names of
+all the registered scripts and the second section has the names
+of all the built-in functions.   This makes it easier to find scripts
+since they will always be at the top of the list.</p>
+<p>Use the buttons in the center to move items from the left panel to
+the right in the desired order.  Finally click <i>Ok</i> to close the
+window.  The button area will be immediately redrawn to contain the
+new set of buttons.</p>
+<p>Note that if you add buttons the button area may grow.  If one row
+of buttons becomes full, another row will be added and the status area
+will be shifted down to make room.  Shifting the status area down may
+sometimes cause it to overlap the top of the track strip which can
+cause the components to draw incorrectly.  If this happens you will
+need to resize the window and either make it taller to make room for
+the extra button row, or make it wider so that an extra button row is
+not required.</p>
+<p>If you are using Mobius as a plugin you may not be able to resize
+the window.  You will need to run Mobius standalone to resize the
+window, the new window size will then be used for the plugin
+windows.</p>
+<a name='Customizing the Status Area'>
+<h2 class=sec2>8.3 Customizing the Status Area</h2>
+</a>
+<p>The <i>status area</i> is the large area in the center of the window
+between the buttons at the top and the track strips along the bottom.
+This area contains many components that display the state of the
+selected track.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-config-display-status.gif'/></td></tr><tr><td><b><i>Default status area at rest</i></b></td></tr></table>
+<p>You can add or remove components and move them to new locations.
+Some components are initially invisible and will appear only when
+certain things happen in the track.  To see the names and outlines of
+all active components, press and hold the <b>Z</b> key on the computer
+keyboard.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-outlines.gif'/></td></tr><tr><td><b><i>Default status area component outlines</i></b></td></tr></table>
+<p>Note that as you add or move components in the status area you may
+notice that some of the components are partially erased with a black
+rectangular area.  This indicates that one or more components overlap.
+When this happens you need to use <b>Z</b> to switch to outline mode,
+and drag the components so that they no longer overlap.  To drag a
+component in outline mode, click over it with the left mouse button,
+hold the button down, and move the mouse to a new location.</p>
+<p>To configure components in the status area, open the
+<i>Configuration</i> menu and select the <i>Display Components</i>
+item.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-config-display-main.gif'/></td></tr><tr><td><b><i>Display Components Window - Main Tab</i></b></td></tr></table>
+<p>The window has two tabs, one to select the components in the status
+area and another to select the components in the track strips.  For
+now we will be using only the first tab labeled <i>Main</i>.  This tab
+contains three <a href='#Item Selectors'>item selectors</a>.</p>
+<a name='Components'>
+<h3 class=sec3>8.3.1 Components</h3>
+</a>
+<p>The first item selector is labeled <i>Components</i> and determines
+which components are displayed in the status area.  See
+the <a href='starting.htm#Status Area'>Status Area</a>
+ section of
+<a href='starting.htm'>Getting Started With Mobius</a>
+ for details on the purpose of each
+component and how it looks.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-config-display-components.gif'/></td></tr><tr><td><b><i>Status Area Components Selector</i></b></td></tr></table>
+<p>By default, all status area components are
+selected except for <i>Loop Bars</i>.  It is recommended that you do
+not remove display components until you have used Mobius for awhile
+and have a better understanding for the things you don't need.</p>
+<a name='Visible Parameters'>
+<h3 class=sec3>8.3.2 Visible Parameters</h3>
+</a>
+<p>The second item selector labeled <i>Visible Parameters</i>
+determines which preset parameters will be displayed in the
+<a href='starting.htm#Instant Parameters'>Instant Parameters</a>
+
+component.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-config-display-parameters.gif'/></td></tr><tr><td><b><i>Instant Parameters Selector</i></b></td></tr></table>
+<p>Note that you will see this component
+in the status area only if you have <i>Parameters</i> selected
+in the <a href='#Components'>Components</a> item selector at the top of this window.
+The default instant parameter component looks like this.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-instant-parameters.gif'/></td></tr><tr><td><b><i>Default Instant Parameters Component</i></b></td></tr></table>
+<p>The parameters will be displayed in the order they appear in the
+right item selector panel.  If you add parameters to this list
+the <i>Instant Parameters</i> component will become taller and may
+start overlapping with other components or with the track strip.  You
+may need to resize the window to make it taller, or move the
+components so they do not overlap.</p>
+<a name='Track Controls'>
+<h3 class=sec3>8.3.3 Track Controls</h3>
+</a>
+<p>The third selector labeled <i>Track Controls</i>
+determines what will be displayed in the <i>Track Controls</i>
+component in the status area.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-config-display-track.gif'/></td></tr><tr><td><b><i>Track Controls Selector</i></b></td></tr></table>
+<p>Note that this will be visible only if <i>Track Controls</i> 
+is selected in the <a href='#Components'>Components</a> item selector at the top of this 
+window.  The default track controls are shown here.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-track-controls.gif'/></td></tr><tr><td><b><i>Default Track Controls</i></b></td></tr></table>
+<p>There are many more items that can be added to this component.
+They will always be displayed in a column just like the components in
+the track strips.  In fact the <i>Track Controls</i> component is
+really just a "floating" track strip showing the state of the
+currently selected track. See
+<a href='#Customizing the Track Strips'>Customizing the Track Strips</a> for more information on
+what items can be added here and what they look like.</p>
+<p>Note that if you add items to this component it will become taller
+and may start overlapping other components or the track strips at the
+bottom.  If so you will need to make the Mobius window taller.</p>
+<p>Deciding what should go in the <i>Selected Track Controls</i> component and
+what should go in the track strips is a matter of taste.  Some options
+are:</p>
+<ul>
+<li>Use the <i>Track Controls</i> component for all the continuous
+controller knobs, use the <i>Track Strip</i> for non-editable track
+status like the <i>Loop Radar</i>.  This keeps the track strip
+relatively short.  This is the default.</li>
+<li>Disable the <i>Track Controls</i> component and put all track
+controls in the <i>Track Strip</i>.  This is closer to how many audio
+applications display tracks, similar to a mixing console.  The
+track strip will be tall and take up much of the display but you can
+quickly see everything happening in all the tracks.</li>
+<li>Put everything in the <i>Track Controls</i> component and remove
+everything from the <i>Track Strip</i>.  This might be useful if you
+only use one track and don't need to waste space with a full
+row of track strips.</li>
+</ul>
+<a name='Customizing the Track Strips'>
+<h2 class=sec2>8.4 Customizing the Track Strips</h2>
+</a>
+<p>The <i>Track Strips</i> area displays summary status for all of the
+tracks.  Each track has one track strip arranged in a row
+along the bottom of the window.  The components in each track strip
+can be changed, but each strip will have the same components.</p>
+<table><tr><td><img alt='Graphic' src='images/starting-track-strip.gif'/></td></tr><tr><td><b><i>Default track strip</i></b></td></tr></table>
+<p>The example above shows the default track strip components.  The
+currently selected track will have a white rectangle drawn around it.
+To change the components in the track strips open
+the <i>Configuration</i> menu, select the
+<i>Display Components</i> item, then select the <i>Track Strip</i>
+tab.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-config-display-trackstrip.gif'/></td></tr><tr><td><b><i>Display Components Window - Track Strips Tab</i></b></td></tr></table>
+<p>Like other <a href='#Item Selectors'>item selectors</a> the 
+panel on the right shows which track strip components are selected and
+the order in which they will be displayed.  The next screenshot shows what
+a track strip would look like if all of the possible items were selected.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-config-display-trackstrip-full.gif'/></td></tr><tr><td><b><i>Fully loaded track strip</i></b></td></tr></table>
+<a name='focusLockStrip'>
+<h3 class=sec3>8.4.1 Focus Lock</h3>
+</a>
+<p>The <i>Focus Lock</i> component is similar to a small LED that will
+be lit when the track has <a href='#Focus Lock'>Focus Lock</a>.  If you click on this
+component it will toggle the state of focus lock.  It is not used
+often since the <a href='#trackNumberStrip'>Track Number</a> 
+can also indicate which tracks have focus lock.</p>
+<a name='trackNumberStrip'>
+<h3 class=sec3>8.4.2 Track Number</h3>
+</a>
+<p>The <i>Track Number</i> component is a useful and popular choice for the
+track strip.  It will display either the track number or a user
+defined track name from the <a href='#trackSetup'>setup</a>.  When the track
+has focus lock the number or name will be displayed in a different
+color.  Clicking on the number or name will toggle focus lock,
+just like the <i>Focus Lock</i> component.</p>
+<a name='groupNameStrip'>
+<h3 class=sec3>8.4.3 Group Name</h3>
+</a>
+<p>The <i>Group Name</i> component displays the name of the group
+assigned to this track.  This component is only selected if you choose
+to make use of <a href='#trackGroup'>Track Groups</a>.</p>
+<a name='trackControlsStrip'>
+<h3 class=sec3>8.4.4 Track Controls</h3>
+</a>
+<p>The <i>Track Controls</i> are knobs that display and modify various
+track operating levels.  See the <a href='starting.htm#Using Controls'>Using Controls</a>
+
+section in <a href='starting.htm'>Getting Started With Mobius</a>
+ for 
+information on the purpose of each of these controls.  Each knob can be added
+or removed individually.</p>
+<a name='loopMeterStrip'>
+<h3 class=sec3>8.4.5 Loop Meter</h3>
+</a>
+<p>The <i>Loop Meter</i> is a smaller version of the 
+<a href='starting.htm#Loop Meter'>Loop Meter</a>
+
+shown in the status area.  It fills with color as the loop plays
+but it does not have subcycle markers or show scheduled events.</p>
+<a name='Loop Radar'>
+<h3 class=sec3>8.4.6 Loop Radar</h3>
+</a>
+<p>The <i>Loop Radar</i> is an alternative to the <a href='#loopMeterStrip'>Loop Meter</a>
+that is popular with many users.  It displays progress through the
+loop as a pie-chart which is often lovingly referred to as the
+"loop pacman".  When the loop is at its start point the radar will be
+empty, as the loop plays it will draw a clockwise filled arc.  When
+the loop is at the end point it will display as a complete filled
+circle, then clear and start over.  While this is larger than
+the <i>Loop Meter</i> it is easier to see from a distance.</p>
+<a name='outputLevelStrip'>
+<h3 class=sec3>8.4.7 Output Level Meter</h3>
+</a>
+<p>The <i>Output Level Meter</i> is similar to the 
+<a href='starting.htm#Audio Meter'>Audio Meter</a>
+
+except that it shows the level of the audio signal being played in the loop.
+It is another "thermometer" that will bounce around according to the average
+loop level.</p>
+<a name='loopStatusStrip'>
+<h3 class=sec3>8.4.8 Loop Status</h3>
+</a>
+<p>The <i>Loop Status</i> component is another useful and popular
+track strip component although it does consume a lot of space.  Each
+row represents one loop in the current track.  If the loop has content
+a green rectangle is drawn.  The active loop will be drawn with a
+white border.  If you are performing a 
+<a href='techniques.htm#switching'>Loop Switch</a>
+, the
+next loop will be drawn with a red border.</p>
+<a name='Changing Colors'>
+<h2 class=sec2>8.5 Changing Colors</h2>
+</a>
+<p>To change the colors used in the main Mobius window open
+the <i>Configuration</i> menu and select the <i>Palette</i> item.</p>
+<table><tr><td><img alt='Graphic' src='images/exploring-config-palette.gif'/></td></tr><tr><td><b><i>Palette Window</i></b></td></tr></table>
+<p>Some of the colors such as <i>Cycle Tick Mark</i> are used for very
+specific parts of the display.  Others such as <i>Button</i> are used
+in many components.  We won't document the exact meaning of all the
+colors but most of them should be self-explanatory. Experiment to see
+the effects of each color.</p>
+<p>To change a color, click on the color box with the left mouse
+button, a standard system color dialog will pop up.  Select a color
+and click <i>Ok</i> in the standard color dialog.  When you are
+finished changing colors click <i>Ok</i> on the palette dialog and the
+color selections will be applied.</p>
+<a name='Changing Fonts'>
+<h2 class=sec2>8.6 Changing Fonts</h2>
+</a>
+<p>It is possible to change the fonts used in the main Mobius window
+but this is still considered to be an experimental feature that should
+only be attempted by advanced users.  There is no user interface to change
+fonts, you must edit the UI configuration file in a text editor.  If you
+are not comfortable editing XML files do not attempt this.</p>
+<p>The UI configuration file is named <i>ui.xml</i>.  On Windows this
+will be found in the installation directory which is usually
+<i>C:\Program Files\Mobius</i>.  On OS X this will be in the directory
+<i>/Library/Application Support/Mobius</i>.  Edit this file 
+in a text editor, <b>do not use a word processor</b> to edit Mobius
+XML files.  It is important that these files be saved as simple ASCII
+text.   See the <a href='starting.htm#Using Scripts'>Using Scripts</a>
+
+section of <a href='starting.htm'>Getting Started With Mobius</a>
+ for details about how
+to properly edit text files for Mobius.  Always make a backup copy of the 
+file before editing so you can restore it if the editor corrupts the file.</p>
+<p>With the <i>ui.xml</i> file in your editor, locate the <i>FontConfig</i>
+element, it should look something like this.</p>
+<pre class=computer>
+  &lt;FontConfig&gt;
+    &lt;FontBinding name='mode' size='20'/&gt;
+    &lt;FontBinding name='button' size='14'/&gt;
+    &lt;FontBinding name='loopMeter' size='12'/&gt;
+    &lt;FontBinding name='loopCounterSmall' size='30'/&gt;
+    &lt;FontBinding name='loopCounterBig' size='40'/&gt;
+    &lt;FontBinding name='layerList' size='8'/&gt;
+    &lt;FontBinding name='message' size='18'/&gt;
+    &lt;FontBinding name='minorModes' size='12'/&gt;
+    &lt;FontBinding name='sync' size='12'/&gt;
+    &lt;FontBinding name='parameter' size='14'/&gt;
+    &lt;FontBinding name='knob' size='12'/&gt;
+    &lt;FontBinding name='trackNumber' size='30'/&gt;
+    &lt;FontBinding name='trackName' size='20'/&gt;
+    &lt;FontBinding name='trackGroup' style='1' size='12'/&gt;
+    &lt;FontBinding name='loopStack' size='12'/&gt;
+  &lt;/FontConfig&gt;
+</pre>
+<p>The <i>FontBinding</i> elements specify the font sizes used by the
+major UI components.  The <i>parameter</i> font for example is used
+for the <i>Instant Parameters</i> component.</p>
+<p>To change a font size, edit the <i>size</i> element and change
+the number.  You can get an idea for how large these fonts are by
+browsing them in a word processor.</p>
+<p>You cannot currently change the font name or style, Mobius will
+always use a sans-serif font such as <i>Helvetica</i>.</p>
+<a name='Esoterica'>
+<h1 class=sec1>9 Esoterica</h1>
+</a>
+<p>In this section we will describe a few concepts and features that
+are intended for advanced users.  Nothing in here is essential for
+using or understanding Mobius, but we do talk about these things from
+time to time in the forums.  You may skip this section unless we recommended
+that you read one of these.</p>
+<a name='Trace'>
+<h2 class=sec2>9.1 Trace</h2>
+</a>
+<p>In order to diagnose some problems, you may be asked to capture a
+Mobius "trace log" and send it to the labs for evaluation.  As Mobius
+runs it generates a constant stream of messages that show what it is
+doing inside.  Normally these messages are discarded but you can
+configure Mobius to send them to a "log" instead where they can be seen.
+How you access this log will be different for Windows and Mac.</p>
+<a name='Trace Levels'>
+<h3 class=sec3>9.1.1 Trace Levels</h3>
+</a>
+<p>There are three levels of tracing that may be enabled:</p>
+<ol>
+<li>Level 1: Errors</li>
+<li>Level 2: Major operations</li>
+<li>Level 3: Minor operations</li>
+</ol>
+<p>Level 1 messages are the most interesting because they are only
+sent when something unexpected happens.  A level 1 message
+will be displayed with the prefix "ERROR:".  If you see any of these
+please try to capture them and send them to us, they are almost always
+interesting.</p>
+<p>Level 2 messages are displayed during normal operation and provide
+insight on what is happening in the looping engine. These aren't
+errors, so you don't need to send them unless we are attempting to 
+diagnose a problem.</p>
+<p>Level 3 messages are also not errors, but they are printed during
+every audio interrupt.  This means that there will be <b>thousands</b>
+of them and they will slow down operations, causing audible glitches.
+There is rarely any need to enable this level of trace.</p>
+<p>To configure trace levels open the <i>Configuration</i> menu and
+select <i>Global Parameters</i>.  Locate the parameters named <i>Trace
+Print Level</i> and <i>Trace Debug Level</i>.  The default value for
+these parameters is 1, which means only severe errors are logged.
+Usually you will be asked to temporarily change the trace level to 2.
+After you have finished capturing a trace log it is important that you
+return to the global parameters window and set the level back to 1.
+Generating trace messages does reduce Mobius performance slightly so
+you want to turn them off when you don't need them.</p>
+<p><i>Trace Print Level</i> controls the messages that are sent to the
+"console".  On the Mac, the messages are sent to the "system console"
+that you can view with the /Applications/Utilities/Console
+application.   On Windows console messages are only visible if you
+launched Mobius from the command line instead of the start menu or an
+icon. Since it is unusual to start Mobius from the command line you
+usually set <i>Trace Debug Level</i> instead.</p>
+<p><i>Trace Debug Level</i> is used only when running on Windows, it
+controls the messages that are sent to what Windows calls the "debug
+output stream".  Since OS X doesn't have the concept of a debug output
+stream this parameter is treated the same as <i>Trace Print
+Level</i>. To view the debug output stream you need to download an
+application. This is described in more detail below.</p>
+<a name='Mac Trace Logging'>
+<h3 class=sec3>9.1.2 Mac Trace Logging</h3>
+</a>
+<p>Bring up the <i>Global Parameters</i> dialog and set
+<i>Trace Print Level</i> to 2.   Restart Mobius.   Run the Mac 
+application named "Console" which is in the "Utilities" folder
+under the "Applications" folder.</p>
+<a name='Windows Trace Logging'>
+<h3 class=sec3>9.1.3 Windows Trace Logging</h3>
+</a>
+<p>Bring up the <i>Global Parameters</i> dialog and set 
+<i>Trace Debug Level</i> to 2.   Restart Mobius.   Run any debug output
+stream viewer application.  The one we use most often is <i>DBWIN32</i>
+which used to be available here:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    http://grantschenck.tripod.com/dbwinv2.htm
+</pre>
+</div></div>
+<p>Another viewer is available from Microsoft:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    http://technet.microsoft.com/en-us/sysinternals/bb896647.aspx
+</pre>
+</div></div>
+<p>An alternative to using a debug output stream viewer is launching
+Mobius from the Windows "command" window, also sometimes referred to
+as a "shell" window.  Trace messages will be sent directly to the
+command window that was used to launch Mobius.  It is assumed you know
+how to open an command window and enter DOS commands.  Use
+the <i>cd</i> command to change to the Mobius installation directory,
+usually <i>c:\Program Files\Mobius</i>.  Then enter "mobius" and hit
+enter.  The Mobius window will be displayed and the shell window will
+remain suspended until the Mobius window is closed.  Trace messages
+will be printed to the shell window as Mobius runs.</p>
+<a name='Using Trace'>
+<h3 class=sec3>9.1.4 Using Trace</h3>
+</a>
+<p>Once you have set the trace level and started the console application,
+Record a quick loop to verify that you see messages in the console.</p>
+<p><b>NOTE:</b> There is a bug in 1.40 that will cause many messages of this
+form to be logged.</p>
+<pre class=computer>
+    0 0: 0 millis between interrupts
+</pre>
+<p>You can ignore these though it makes it difficult to see the
+interesting messages. You should see messages like this:</p>
+<pre class=computer>
+    101 -5120: Function Record down
+    101 -5120: Loop: Add event Record(Record) 0
+    101 -5120: Loop: Set mode play
+</pre>
+<p>If you see trace messages, start using Mobius in the way you were
+using it when the problem happened. As soon as the problem happens,
+go to the console window, copy the contents and send them to us 
+in an email message. If the log is very long, it is better to save it
+to a text file, then send the file as an email attachment.</p>
+<a name='XML Files'>
+<h2 class=sec2>9.2 XML Files</h2>
+</a>
+<p>All Mobius configuration settings are stored in two XML files.  If
+you understand the structure of these files you can edit them in a text
+editor to configure Mobius rather than using the configuration popup
+windows.  This is <b>not recommended</b> unless you are comfortable
+with XML syntax, it is very easy to screw things up to the point where
+Mobius won't even start.  But if you are careful you might find it
+easier for example to enter a large number of MIDI bindings by typing
+in the XML rather than using "MIDI learn" in the <i>MIDI Control</i>
+window.</p>
+<p>The most useful thing to be aware of is that the XML files can be
+copied to make backups of the configuration or to email your
+configuration to someone else.  Quite often to help diagnose problems
+we will ask you to send us your configuration files.  
+The configuration files are:</p>
+<ul>
+<li><b>mobius.xml</b> - configuration related to the looping engine</li>
+<li><b>ui.xml</b> - configuration related to the user interface</li>
+</ul>
+<p>On Windows these are found in the installation directory which
+is usually <i>c:\Program Files\Mobius</i>.  On Mac these are
+found in <i>/Library/Application Support/Mobius</i>.</p>
+<p>If you are brave enough to edit these files it is important
+that you use a simple text editor <b>do not use a word processor</b>
+to edit Mobius XML files.  It is mandatory that these files be saved 
+as simple ASCII text.   See the <a href='starting.htm#Using Scripts'>Using Scripts</a>
+
+section of <a href='starting.htm'>Getting Started With Mobius</a>
+ for details about how
+to properly edit text files for Mobius.  Always make a backup copy of the 
+file before editing so you can restore it if the editor corrupts the file.</p>
+<a name='mobius.xml'>
+<h3 class=sec3>9.2.1 mobius.xml</h3>
+</a>
+<p>The <i>mobius.xml</i> file contains a single large <b>MobiusConfig</b>
+element.  The element has a large number of attributes that correspond
+to most of the global parameters.  A typical <i>MobiusConfig</i> start
+tag is shown below.  We're not going to document what all of the attributes
+mean because it is fairly obvious how to match these to global parameters
+in the reference manual.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    &lt;MobiusConfig audioInput='ASIO:M-Audio USB ASIO' audioOutput='ASIO:M-Audio USB ASIO' quickSave='c:\larson' noiseFloor='13' suggestedLatencyMsec='0' inputLatency='0' outputLatency='0' fadeFrames='0' maxSyncDrift='2048' tracks='8' trackGroups='2' maxLoops='4' longPress='500' midiMode='normal' pluginPins='16' shiftRange='48' tracePrintLevel='1' traceDebugLevel='2' driftCheckPoint='loop' dualPluginWindow='true' preset='Default'&gt;
+</pre>
+</div></div>
+<p>Within the <i>MobiusConfig</i> element are the following child
+elements that hold the more complex configuration objects.</p>
+<ul>
+<li><b>ScriptConfig</b> - contains the file names of registered scripts</li>
+<li><b>Preset</b> - there will be one <i>Preset</i> element for each defined preset</li>
+<li><b>Setup</b> - there will be one <i>Setup</i> element for each defined track setup</li>
+<li><b>BindingConfig</b> - there will be at least one <i>BindingConfig</i> containing the default bindings</li>
+<li><b>Samples</b> - contains the file names of the registered samples</li>
+<li><b>HostConfigs</b> - configuration options for VST hosts, this is for emergency use only and is not exposed in the user interface</li>
+<li><b>FocusLockFunctions</b> - the list of functions that obey focus lock</li>
+</ul>
+<p>It should be relatively obvious what the attributes in each of the
+elements mean. <i>Preset</i> attributes correspond to the preset
+parameters you see in the UI. <i>Setup</i> attributes correspond to
+the track setup parameters you see in the UI. <i>Script</i>
+and <i>Sample</i> elements contain file paths.
+<i>FocusLockFunctions</i> is just a long list of function
+names (the internal names without spaces).</p>
+<p>The <i>BindingConfig</i> element we'll explore more deeply because
+this is the most useful element to edit in XML. A <i>BindingConfig</i>
+contains a list of <i>Binding</i> elements that define the association
+of a trigger with a target.  This will include bindings for MIDI
+events, keyboard keys, and host parameters.  Even though those are
+edited using different popup windows in the user interface, they are all
+stored in one <i>BindingConfig</i>.  An example <i>Binding</i> is:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    &lt;Binding target='function' name='Reset' trigger='key' value='112'/&gt;
+</pre>
+</div></div>
+<p>The <b>Binding</b> element may have the following attributes:</p>
+<ul>
+<li><b>scope</b> - the scope of the binding: global, track number, or track group letter (default global)</li>
+<li><b>target</b> - the target type: function, parameter, control, uiControl</li>
+<li><b>name</b> - the internal name of the target</li>
+<li><b>trigger</b> - the trigger type: note, control, program, key, host, osc</li>
+<li><b>value</b> - numeric trigger value for all trigger types except osc</li>
+<li><b>channel</b> - MIDI channel number from 0 to 15, only for triggers note, control, and program</li>
+</ul>
+<p>If you're careful and you know your MIDI note numbers it can be faster to 
+enter a large number of bindings by hand writing <i>Binding</i> elements 
+rather than using "MIDI learn" in the <i>MIDI Control</i> window.  Writing
+computer keyboard bindings is more difficult because you need to know the
+raw key codes and combine them with bits representing the state of the shift keys,
+most people will never do this.  Writing host parameter bindings is easy, just
+give each one a unique <i>value</i> integer from one on up without any gaps.  The
+order of the numbers will determine the order they are displayed in most hosts.</p>
+<p>OSC bindings are possible but still experimental.  If you are interested in 
+OSC control contact us for more information.</p>
+<p>For the <i>target</i> attribute it is important that you use the "internal name"
+for functions, parameters, and controls.  These are usually the same as
+the names you would use in scripts and are documented in the reference manual.
+Usually names will be the same as what you see in the user interface, but
+with spaces between words removed.</p>
+<a name='ui.xml'>
+<h3 class=sec3>9.2.2 ui.xml</h3>
+</a>
+<p>The <i>ui.xml</i> file contains a single large <i>UIConfig</i> element.
+With the exception of the <i>FontConfig</i> element there is rarely
+any need to hand edit this file.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    &lt;UIConfig x='273' y='180' width='1026' height='665' refreshInterval='100' messageDuration='2'&gt;
+</pre>
+</div></div>
+<p>The attributes of the <i>UIConfig</i> element are:</p>
+<ul>
+<li><b>x</b> - the X coordinate of the main window</li>
+<li><b>x</b> - the Y coordinate of the main window</li>
+<li><b>width</b> - the width of the main window</li>
+<li><b>height</b> - the height of the main window</li>
+<li><b>refreshInterval</b> - number of milliseconds between window refreshes</li>
+<li><b>maximized</b> - true if the window is maximized</li>
+<li><b>messageDuration</b> - number of seconds to display messages in the message area</li>
+</ul>
+<p>The window bounds you normally set just by moving an resizing the
+window. <i>messageDuration</i> can be set in the UI with the global
+parameter <i>Message Duration</i>. <i>refreshInterval</i> is not
+exposed in the UI and there should never be a need to change it.  In
+theory you can make the UI "crisper" by lowering the refresh interval
+but this also adds more CPU stress so it is not recommended.</p>
+<p>The <i>UIConfig</i> element contains a number of child elements
+for the more complex UI parameters.</p>
+<ul>
+<li><b>Locations</b> - names and coordinates of components in the status area</li>
+<li><b>InstantParameters</b> - names of parameters displayed in the status area</li>
+<li><b>TrackControls</b> - track control components displayed in the status area</li>
+<li><b>TrackStripControls</b> - track control components displayed in the track strips</li>
+<li><b>Buttons</b> - functions shown as buttons at the top of the window</li>
+<li><b>Palette</b> - names and rgb values for the various component colors</li>
+<li><b>FontConfig</b> - names and sizes of component fonts</li>
+</ul>
+<p>The first four are what you are editing when you use the <i>Display
+Components</i> window.  The <i>Buttons</i> element is edited from
+the <i>Buttons</i> window, and the <i>Palette</i> element is edited
+from the <i>Palette</i> window.</p>
+<p>An editing window for <i>FontConfig</i> is not currently available,
+the <a href='#Changing Fonts'>Changing Fonts</a> section has more information on editing
+this element.</p>
+<a name='Project .mob Files'>
+<h3 class=sec3>9.2.3 Project .mob Files</h3>
+</a>
+<p>A Mobius project file with a <b>.mob</b> extension is also an XML
+file.  Editing these or even creating them from scratch can be a
+faster way to define the contents of a project than loading loops one
+at a time from the Mobius menu, setting all the track controls, and then
+saving the project.  This example shows the basic structure of a
+project file:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+&lt;Project number='0' setup='Default'&gt;
+  &lt;Track active='true' output='100' feedback='127' altFeedback='127' pan='64' preset='Basic Looping'&gt;
+    &lt;Loop&gt;
+      &lt;Layer cycles='1' audio='test.wav'/&gt;
+    &lt;/Loop&gt;
+    &lt;Loop active='true'&gt;
+      &lt;Layer cycles='2' audio='samples/gcloop.wav' protected='true'/&gt;
+    &lt;/Loop&gt;
+  &lt;/Track&gt;
+&lt;/Project&gt;    
+</pre>
+</div></div>
+<p>There is a single root element named <b>Project</b> that contains
+one or more <b>Track</b> elements.  Tracks are loaded into Mobius in
+the order they appear as XML elements, so the first track element will
+be track number 1, the second track number 2, and so on.  Each Track
+element may contain one or more <b>Loop</b> elements.  You can have
+any number of Loop elements, but if you have more than the value of
+the <i>Loop Count</i> parameter in the active preset, the extra loop
+elements will be ignored.</p>
+<p>A Loop element may have zero or more <b>Layer</b> elements.  The
+layers are listed in reverse chronological order, meaning the first
+one is the newest and the last one is the oldest.</p>
+<p>Each element may have a number of XML attributes that define
+characteristics of the associated object, for example <i>output</i>
+defines the value of the <i>Output Level</i> track control.  If
+you omit an attribute the default value is usually zero.</p>
+<p>The <b>Project</b> element may have the following attributes:</p>
+<ul>
+<li><b>number</b> - not currently used, always zero</li>
+<li><b>setup</b> - the name of the active track setup</li>
+<li><b>bindings</b> - the name of the active binding set overlay (optional)</li>
+</ul>
+<p>The <b>Track</b> element may have the following attributes:</p>
+<ul>
+<li><b>preset</b> - the name of the active preset if different than the setup</li>
+<li><b>active</b> - <b>true</b> if this is the active track</li>
+<li><b>focusLock</b> - <b>true</b> if focus lock is enabled</li>
+<li><b>group</b> - track group number, if not present the track is not in a group</li>
+<li><b>input</b> - the value of the <i>Input Level</i> control</li>
+<li><b>output</b> - the value of the <i>Output Level</i> control</li>
+<li><b>feedback</b> - the value of the <i>Feedback</i> control</li>
+<li><b>altFeedback</b> - the value of the <i>Secondary Feedback</i> control</li>
+<li><b>pan</b> - the value of the <i>Pan</i> control</li>
+</ul>
+<p>The <b>Loop</b> element may have the following attributes:</p>
+<ul>
+<li><b>active</b> - <b>true</b> if this is the active loop</li>
+<li><b>frame</b> - the playback position</li>
+<li><b>reverse</b> - <b>true</b> if the loop is in reverse</li>
+<li><b>halfSpeed</b> - <b>true</b> if the loop is in half speed</li>
+</ul>
+<p>The <b>Layer</b> element may have the following attributes:</p>
+<ul>
+<li><b>id</b> - an optional unique number used to reference this layer from segments</li>
+<li><b>cycles</b> - the number of logical cycles in the layer</li>
+<li><b>audio</b> - file system path to a wave file with layer contents</li>
+<li><b>protected</b> - marks the wave file as being protected</li>
+<li><b>deferredFadeLeft</b> - internal flag</li>
+<li><b>deferrerdFadeRight</b> - internal flag</li>
+<li><b>containsDeferredFadeLeft</b> - internal flag</li>
+<li><b>containsDeferredFadeRight</b> - internal flag</li>
+<li><b>reverseRecord</b> - internal flag</li>
+</ul>
+<p>The <b>id</b> attribute is omitted unless segments are
+being saved (see below).  If set, it must be a number that is unique
+among all <i>Layer</i> elements in the file.</p>
+<p>Note the <b>protected</b> attribute.  This will not be set in
+projects saved by Mobius but you may want to use it in hand written
+projects.  When this is true it means that the wave file must not be
+overwritten or deleted when the project is saved.  You should set this
+when you are initializing layers contents from a library of
+pre-recorded loops that you want to preserve.</p>
+<p>The five "internal flag" attributes capture some special
+information about how the layers were recorded.  They indicate
+whether the edges of the layer have been faded to zero.  You will not
+set these if you are creating a project manually using pre-recorded
+loops.  If you see them in project files generated by Mobius be
+careful not to change them.</p>
+<p>If the global parameter <i>No Layer Flattening</i> is true, you may
+also see <b>Segment</b> elements inside the <i>Layer</i> elements.
+Segments are used to reference a portion of the audio in a layer
+without actually copying the audio samples.  When you use multiply for
+example, the layer will contain one segment for each multiplied cycle,
+that references the same backing layer.  This then is combined with
+any new content overdubbed during the multiply in real time.  You
+don't really need to understand any of this, though it does provide
+some insight into how Mobius manages memory.  Basically, we always try
+to avoid copying previously recorded audio because audio buffers are
+large and take time to copy.  Instead, audio buffers are referenced
+through a hierarchy of segments that are "flattened" in real time to
+produce the audio you actually hear.</p>
+<p>The <b>Segment</b> element may have the following attributes:</p>
+<ul>
+<li><b>layer</b> - the unique id number of a layer in this file</li>
+<li><b>startFrame</b> - the frame location within the containing layer where this segment will be played</li>
+<li><b>offset</b> - the frame offset within the referenced layer where the segment begins</li>
+<li><b>frames</b> - the number of frames in the referenced layer beginning with <i>offset</i> that are played</li>
+<li><b>feedback</b> - optional feedback level to apply to the segment</li>
+<li><b>copyLeft</b> - <b>true</b> if the containing layer's audio file has content adjacent to the left edge of the layer</li>
+<li><b>copyRight</b> - <b>true</b> if the containing layer's audio file has content adjacent to the right edge of the layer</li>
+</ul>
+<p>We are not going to explain what all the<i>Segment</i> attributes
+mean, though if you've come this far you can probably figure them out.
+No one has ever wanted to hand write project files using segments, if
+you want to be the first then contact us and we'll do our best to talk
+you out of it.</p>
+<a name='Layer Flattening'>
+<h2 class=sec2>9.3 Layer Flattening</h2>
+</a>
+<p>Feedback controls the level of the audio content copied from
+one layer into the next.  Feedback can operate in two styles
+which have different uses:</p>
+<ol>
+<li>Continuous</li>
+<li>Deferred</li>
+</ol>
+<p>With <i>Continuous</i> feedback, the feedback level is constantly
+being used to adjust the level of the audio from the current layer
+being copied into the next layer.  This can be used to create 
+volume swells or to "sculpt" the layer.  This is how feedback
+on the EDP behaves and is the default in Mobius.</p>
+<p>With <i>Deferred</i> feedback, the feedback level is only used
+when the loop reaches the end point and a new layer is created.  The
+current feedback level at the end point is applied to the entire layer.
+The only advantage to this mode is that if you bump the feedback
+pedal by accident, you have until the end of the loop is reached
+to move it to the correct position.  If you always leave feedback
+set to one value for a gradual decay you won't hear any difference
+between the two modes.</p>
+<p>The implementation of these feedback modes is dependent
+on another important mode called <i>Layer Flattening</i>.</p>
+<p>Mobius provides two ways to combine the audio content of the past 
+layers into the loop that you hear being played.</p>
+<ol>
+<li>Flattening</li>
+<li>Continuous Merging</li>
+</ol>
+<p>When <i>Flattening</i> mode is used, the full content of the current layer
+is copied into the next layer as it is being recorded.  When the
+recording of a layer completes, everything necessary to play the layer
+is contained in one large block of audio memory owned by the layer.
+This is necessary for <i>Continuous Feedback</i> and is the default.</p>
+<p>When <i>Continuous Merging</i> mode is used, the content of a layer
+is not copied into the next layer.  Instead the next layer contains
+only the new audio that was overdubbed.  When a layer plays Mobius 
+continually merges the contents of all the layers as the loop plays.
+In this mode layers are similar to tracks, they are completely independent
+recordings that are summed in realtime to create the loop.</p>
+<p>The advantage of <i>Continuous Merging</i> is that Mobius may
+require less memory if you tend not to overdub over the entire layer.
+For example, if you have a loop 10 seconds long, but only overdub 2
+seconds worth of new material, the new layer will only require memory
+for 2 seconds.  With <i>Flattening</i> mode, each new layer requires memory
+for the full 10 seconds whether or not there was any new material 
+recorded during those seconds.</p>
+<p>Another interesting consequence of <i>Continuous Merging</i> is
+that when you save a project, you will create audio files containing
+only the new content overdubbed in each layer.  These files can then
+be remixed to create variants of the loop.</p>
+<p>There are two big disadvantages of <i>Continuous Merging</i>.
+First, if you create many layers, the overhead of constantly merging
+the content from all the layers can require too much computer power
+which can cause audio glitches that sound like clicks or pops.  Second,
+continuous feedback is not available in this mode because we are not
+gradually copying the content from one layer into the next.  Only one
+level of feedback can be applied to all of the content from the
+previous layer.</p>
+<p>Choosing between layer flattening and continuous merging is done with
+the global parameter <i>No Layer Flattening</i>.  When this parameter
+is checked, we will perform continuous merging.</p>
+<p>Most people will prefer to use layer flattening.  There is however
+one interesting performance technique that is provided by continuous
+merging.  If you set the <i>Max Undo</i> preset parameter to a
+non-zero value, Mobius will operate similar to a digital delay with a
+fixed number of repeats.  For example, set <i>Max Undo</i> to 4, drop
+feedback slightly and record a loop.  With feedback reduced, we will
+create a new layer on each repeat.  But the <i>Max Undo</i> parameter
+restricts us to keeping only the most recent 4 layers.  Once the first
+layer plays 4 times, the loop will become silent.  The original
+recorded loop has "fallen off the edge" of the layer list.  This
+technique can also be used to reduce the "wall of sound" effect when
+doing continuous overdubs.  Material in older layers will be removed
+each time a new layer is created, letting the loop evolve without
+waiting for a gradual feedback decay.</p>
+<p>If you decide to use <i>No Layer Flattening</i> it is strongly
+recommended that you also set <i>Max Undo</i> to 20 or less to 
+prevent a large number of layers from being created.  This number
+may need to be lower if you create loops like this in multiple tracks.
+You will have to experiment to see how many tracks and layers you
+can create before you start having audio glitches.</p>
+</body>
+</html>

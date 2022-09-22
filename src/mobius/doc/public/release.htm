@@ -1,0 +1,261 @@
+<html>
+<head>
+<title>Mobius 2.2 Release Notes</title><style type='text/css'>
+<!-- 
+div.constraint,div.issue,div.note,div.notice     { margin-left: 2em; }dt.label       { display: run-in; }li           { margin-top: 0.3em; margin-bottom: 0.3em; }p           { margin-top: 0.6em; margin-bottom: 0.6em; }.diff-chg	{ background-color: orange; }.diff-del	{ background-color: red; text-decoration: line-through;}.diff-add	{ background-color: lime; }table          { empty-cells: show; }div.exampleInner { margin-left: 1em;                       margin-top: 0em; margin-bottom: 0em}div.exampleOuter {border: 4px double gray;                  margin: 0em; padding: 0em}div.exampleInner { background-color: #d5dee3;                   border-top-width: 4px;                   border-top-style: double;                   border-top-color: #d3d3d3;                   border-bottom-width: 4px;                   border-bottom-style: double;                   border-bottom-color: #d3d3d3;                   padding: 4px; margin: 0em }div.exampleWrapper { margin: 4px }div.exampleHeader { font-weight: bold; margin: 4px}body {  padding: 2em 1em 2em 70px;  margin: 0;  font-family: sans-serif;  color: black;  background: white;  background-position: top left;  background-attachment: fixed;  background-repeat: no-repeat;}:link { color: #00C; background: transparent }:visited { color: #609; background: transparent }a:active { color: #C00; background: transparent }a:link img, a:visited img { border-style: none } /* no border on img links */a img { color: white; }        /* trick to hide the border in Netscape 4 */@media all {                   /* hide the next rule from Netscape 4 */  a img { color: inherit; }    /* undo the color change above */}th, td { /* ns 4 */  font-family: sans-serif;}h1, h2, h3, h4, h5, h6 { text-align: left }/* background should be transparent, but WebTV has a bug */h1, h2, h3 { color: #005A9C; background: white }h1 { font: 170% sans-serif }h2 { font: 140% sans-serif }h3 { font: 120% sans-serif }h4 { font: bold 100% sans-serif }h5 { font: italic 100% sans-serif }h6 { font: small-caps 100% sans-serif }.hide { display: none }div.head { margin-bottom: 1em }div.head h1 { margin-top: 2em; clear: both }div.head table { margin-left: 2em; margin-top: 2em }p.copyright { font-size: small }p.copyright small { font-size: small }@media screen {  /* hide from IE3 */a[href]:hover { background: #ffa }}dd { margin-top: 0.3em; margin-bottom: 0.6em }dt { margin-top: 0; margin-bottom: 0 } /* opera 3.50 */dt { font-weight: bold }pre, code { font-family:monospace; font-size: medium }ul.toc {  list-style: disc;		/* Mac NS has problem with 'none' */  list-style: none;}-->
+</style>
+</head>
+<body>
+<h1 class=title1>Mobius 2.2 Release Notes</h1>
+<h2 class=title2>August 2012</h2>
+<br>
+<h1 class=sec1>Contents</h1>
+<table>
+<tr align=left><th>1</th><td></td><td><a href='#Introduction'>Introduction</a></td>
+<tr align=left><th>1.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Upgrading from 2.1 to 2.2'>Upgrading from 2.1 to 2.2</a></td>
+<tr align=left><th>1.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Upgrading from 1.x to 2.x'>Upgrading from 1.x to 2.x</a></td>
+<tr align=left><th>2</th><td></td><td><a href='#Release Notes for version 2.2'>Release Notes for version 2.2</a></td>
+<tr align=left><th>2.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Speed Shift, Pitch Shift, and Time Stretch'>Speed Shift, Pitch Shift, and Time Stretch</a></td>
+<tr align=left><th>3</th><td></td><td><a href='#Release Notes for version 2.1'>Release Notes for version 2.1</a></td>
+<tr align=left><th>3.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Sample Rates'>Sample Rates</a></td>
+<tr align=left><th>3.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#New Synchronization Engine'>New Synchronization Engine</a></td>
+</table>
+<a name='Introduction'>
+<h1 class=sec1>1 Introduction</h1>
+</a>
+<p>This document is intended for users of older Mobius releases
+wishing to upgrade to Mobius 2.2. If you are not upgrading from an older
+release you may skip to the 
+<a href='installation.htm'>Installation Guide</a>
+.</p>
+<a name='Upgrading from 2.1 to 2.2'>
+<h2 class=sec2>1.1 Upgrading from 2.1 to 2.2</h2>
+</a>
+<p>To upgrade an existing 2.x release to 2.2, simply run the installer
+and allow it to overwite the previous files.  As always, your
+configuration files will be preserved, only the binary application
+files will be replaced.  Review the <a href='#Release Notes for version 2.2'>Release Notes for version 2.2</a>
+section for the changes.</p>
+<a name='Upgrading from 1.x to 2.x'>
+<h2 class=sec2>1.2 Upgrading from 1.x to 2.x</h2>
+</a>
+<p>There were a large number of changes made in 2.0, but few of
+them will be visible.  Many of these were architectural changes that
+will make future enhancements easier.  Lots of small bugs were fixed
+and a few host crashes were fixed.  Because of the size of the changes
+we have decided to make our first change to the major release number
+and call this version 2.0.  Future releases will be built on 2.0 and 
+increment the minor version number, 2.1, 2.2, etc.   I do not plan any
+further development of the 1.45 branch unless it is necessary to 
+fix a serious bug for someone that is unable to upgrade to 2.0.</p>
+<p>Unlike the 1.x releases, when you install 2.0 it will not
+automatically copy and upgrade the old 1.x configuration files.  Mobius
+will install into a new directory, <i>c:\Program Files\Mobius 2</i>
+on Windows and <i>/Applications/Mobius 2</i> on OS X.  On OS X, the
+configuration files will be stored in 
+<i>/Library/Application Support/Mobius 2</i>.  Because the installation
+and support directories are different, if you want to continue using your
+old configuration files you will have to manually copy them from the
+version 1 directory to the version 2 directory.  This will work fine for
+bindings but not all of the 1.x parameters, particularly those involving
+synchronization will be recognized in 2.0.  Post to the forums or send mail
+to jeff@circularlabs.com if you need assistance doing the upgrade.</p>
+<p>The plugins will also have different names, on Windows the VST plugin
+will be shown as either "Mobius 2" or "MobiusVst2".  On OS X both the
+VST and AU plugins will be shown as "Mobius 2".  Unlike past releases it
+is permissible to have the old 1.45 version a and the new 2.0 version 
+installed and in use at the same time.  You could for example add
+a 1.45 Mobius and 2.0 Mobius to the same Bidule layout.  This is so you
+can test the new version to make sure it will work properly for you without
+losing the ability to go back to 1.45 if you find problems.</p>
+<p>The new features that will be visible are:</p>
+<ul>
+<li>Redesigned synchronization engine for improved sync</li>
+<li>Support for Audio Units host sync (Logic, Garageband)</li>
+<li>Support for other sample rates besides 44100</li>
+<li>Redesigned UI button window that works like other binding windows</li>
+<li>Improved Speed, Pitch, and Time Stretch controls</li>
+<li>Improved OSC support</li>
+</ul>
+<p>While this release has many improvements over 1.45, due to number
+of changes it is quite possible that new bugs have been introduced.  We
+expect to find bugs over the next few months and we will do our best
+to fix them promptly.  If you are an active performing musician and do not
+have time to test the new release to make sure all of your current scripts
+and techniques will work the same, then I recommend that you consider this 
+like a beta release and wait for one or two point release.</p>
+<a name='Release Notes for version 2.2'>
+<h1 class=sec1>2 Release Notes for version 2.2</h1>
+</a>
+<a name='Speed Shift, Pitch Shift, and Time Stretch'>
+<h2 class=sec2>2.1 Speed Shift, Pitch Shift, and Time Stretch</h2>
+</a>
+<p>The major new feature of this release is a redesign of the speed and pitch
+functions and controls.  Of particular interest is the new <b>Speed Bend</b>
+control that can be used to change the playback rate smoothly using a 
+MIDI CC or pitch wheel rather than making semitone jumps.</p>
+<p>Also of interest
+is the <b>Time Stretch</b> control that can smoothly change the loop duration
+and tempo <b>without</b> changing the pitch.  Note however that since
+<i>Time Stretch</i> relies on the old pitch shifting algorithm, there
+are still some remaining issues with added latency that may make it unsuitable
+when synchronizing multiple loops.  We consider this a "beta" feature, but
+can be be fun in some situations.</p>
+<p>Many of the function and control names were changed during the
+redesign.  In previous releases, changing both the playback speed and pitch
+of the loop was referred to as <b>rate shift</b>.  We now consistnetly use the 
+word <b>speed</b> instead of <b>rate</b>.  So parameters such as 
+<i>Rate Sequence</i> are now <i>Speed Sequence</i>.  Some of the names were
+not simple substitutions of "rate" and "speed".  For example the
+<i>Rate Shift</i> function is now known as <i>Speed Step</i> to better indicate
+that it changes speed in semitone steps.  The following tables show
+how old speed and pitch function names have changed.</p>
+<ul>
+<li><b>Rate Shift</b> - is now <i>Speed Step</i></li>
+<li><b>Rate Up</b> - is now <i>Speed Up</i></li>
+<li><b>Rate Down</b> - is now <i>Speed Down</i></li>
+<li><b>Rate Next</b> - is now <i>Speed Next</i></li>
+<li><b>Rate Previous</b> - is now <i>Speed Previous</i></li>
+<li><b>Rate Normal</b> - is now <i>Speed Cancel</i></li>
+<li><b>Speed</b> - is now <i>Speed Toggle</i></li>
+<li><b>Sustain Speed</b> - is now <i>Sustain Speed Toggle</i></li>
+<li><b>Fullspeed</b> - is now <i>Speed Cancel</i></li>
+<li><b>Halfspeed</b> - is still <i>Halfspeed</i></li>
+<li><b>Pitch Shift</b> - is now <i>Pitch Step</i></li>
+<li><b>Pitch Normal</b> - is now <i>Pitch Cancel</i></li>
+</ul>
+<p>The following track controls have been added.</p>
+<ul>
+<li><b>Speed Octave</b></li>
+<li><b>Speed Step</b></li>
+<li><b>Speed Bend</b></li>
+<li><b>Pitch Octave</b></li>
+<li><b>Pitch Step</b></li>
+<li><b>Pitch Bend</b></li>
+<li><b>Time Stretch</b></li>
+</ul>
+<p>The behavior of some of the functions has changed slightly, be
+sure to review the 
+<a href='techniques.htm#speedShift'>Speed Shift</a>
+, 
+<a href='techniques.htm#pitchShift'>Pitch Shift</a>
+, 
+<a href='techniques.htm#timeStretch'>Time Stretch</a>
+, 
+sections of the <i>Mobius Techniques</i> manual for full detals.</p>
+<p>If you want to try out the new speed, pitch, and stretch controls,
+a new display component has been added that allows you to organize
+two sets of track controls rather than having single very tall stack
+of controls.  The track controls stacks in the status area are now
+called <i>Floating Track Strips</i>, see the
+<a href='exploring.htm#trackStrips'>Customizing the Track Strips</a>
+
+section of the <i>Exploring Mobius</i> manual for information on adding
+two independent track strips to the status area.</p>
+<a name='Release Notes for version 2.1'>
+<h1 class=sec1>3 Release Notes for version 2.1</h1>
+</a>
+<a name='Sample Rates'>
+<h2 class=sec2>3.1 Sample Rates</h2>
+</a>
+<p>When Mobius runs as a plugin, it will use whatever sample rate
+that the host is using.  When Mobius runs standalone, you select the
+sample rate in the <i>Audio Devices</i> configuration window.  The new
+field labeled <i>Sample Rate</i> is the first item below the device
+selection panels.  You can select one of two rates: 44100 and 48000.
+Let us know if you feel you need other rates.</p>
+<a name='New Synchronization Engine'>
+<h2 class=sec2>3.2 New Synchronization Engine</h2>
+</a>
+<p>All of the synchronization features that exist in 1.45 still exist in 
+2.0, but the way they are configured is different.  In 1.45 
+synchronization was defined in the <i>preset</i>.  In 2.0 synchronization is
+defined in the <i>track setup</i>.</p>
+<p>The parameters you formerly saw in the <i>Synchronization</i> tab
+of the <i>Preset</i> window you will now see in the <i>Synchronization</i>
+tab of the <i>Track Setup</i> window.  One consequence of this is that most
+synchronization parameters will be shared consistently by all tracks.</p>
+<p>The majority of the synchronization options such as <i>Out Sync
+Realign Action</i>, <i>Out Sync Min Tempo</i>, <i>MIDI/Host Sync
+Unit</i>, and <i>Beats Per Bar</i> do not need to be different in each
+track.  Having these as preset parameters raised the possibility that
+each track would have a different value which complicated
+synchronization decisions (and caused bugs).  Now it is easy to define
+synchronization parameters consistently for all tracks.</p>
+<p>There are however two sync parameters that do occasionally need to
+be different in each track: <i>Sync Source</i> and <i>Track Sync Unit</i>.</p>
+<p><i>Sync Source</i> is what we used to call <i>Sync Mode</i>.  It defines
+the style of synchronization that will be performed by the track.  The possible
+values are:</p>
+<ul>
+<li><b>None</b> - No synchronization</li>
+<li><b>Track</b> - Synchronize with another Mobius track</li>
+<li><b>Out</b> - Send MIDI clocks to other devices</li>
+<li><b>MIDI</b> - Synchronize with a MIDI clock sent by another device</li>
+<li><b>Host</b> - Synchronize with the beat or bar of the plugin host</li>
+</ul>
+<p>The default sync source for all tracks is defined with the 
+<i>Default Sync Source</i> parameter under the <i>Synchronization</i>
+tab of the <i>Track Setups</i> window.  If you want to change this
+for selected tracks, select the <i>Tracks</i> tab of the 
+<i>Track Setups</i> window and find the parameter labeled
+<i>Sync Source</i>.  By default the value of this parameter is <i>Default</i>
+which means the track will use the sync source defined
+by the <i>Default Sync Source</i> parameter.  If you change this, the track
+will follow the selected sync source and ignore the default sync source.</p>
+<p>A similar parameter override exists for the <i>Track Sync Unit</i> 
+parameter.  This parameter determines where the synchronization point
+is when the sync source is <i>Track</i>.  The possible values are 
+<i>Subcycle</i>, <i>Cycle</i>, and <i>Loop</i>.  The default sync
+unit is defined with the <i>Default Track Sync Unit</i> parameter
+under the <i>Synchronization</i> tab.  If you want to override this
+change the <i>Track Sync Unit</i> parameter under the <i>Tracks</i> tab.</p>
+<p>This is described in more detail in the 
+<a href='synchronization.htm#Synchronization Parameters'>Synchronization Parameters</a>
+ section of the <i>Mobius Synchronization</i> manual.</p>
+<p>In the following table we will provide a translation between the 1.45
+synchronization parameters on the left and the equivalent 2.0 parameters
+on the right.</p>
+<table border=1>
+<tr align=left valign=top><th>Sync Mode = Off</th><td></td><td>Set the <i>Sync Source</i> parameter to <i>None</i></td></tr>
+<tr align=left valign=top><th>Sync Mode = Out</th><td></td><td>Set the <i>Sync Source</i> parameter to <i>Out</i></td></tr>
+<tr align=left valign=top><th>Sync Mode = Out Manual Start</th><td></td><td>Set the <i>Sync Source</i> parameter to <i>Out</i> and
+check the <i>Out Sync Manual Start</i> box.</td></tr>
+<tr align=left valign=top><th>Sync Mode = MIDI Beat</th><td></td><td>Set the <i>Sync Source</i> parameter to <i>MIDI</i> and
+set <i>MIDI/Host Sync Unit</i> to <i>Beat</i>.</td></tr>
+<tr align=left valign=top><th>Sync Mode = MIDI Bar</th><td></td><td>Set the <i>Sync Source</i> parameter to <i>MIDI</i> and
+set <i>MIDI/Host Sync Unit</i> to <i>Bar</i>.</td></tr>
+<tr align=left valign=top><th>Sync Mode = Host Beat</th><td></td><td>Set the <i>Sync Source</i> parameter to <i>Host</i> and
+set <i>MIDI/Host Sync Unit</i> to <i>Beat</i>.</td></tr>
+<tr align=left valign=top><th>Sync Mode = Host Bar</th><td></td><td>Set the <i>Sync Source</i> parameter to <i>Host</i> and
+set <i>MIDI/Host Sync Unit</i> to <i>Bar</i>.</td></tr>
+<tr align=left valign=top><th>Track Sync Mode = Off</th><td></td><td>Set the <i>Sync Source</i> parameter to anything other than <i>Track</i>.</td></tr>
+<tr align=left valign=top><th>Track Sync Mode = Subcycle</th><td></td><td>Set the <i>Sync Source</i> parameter to <i>Track</i> and
+the <i>Track Sync Unit</i> parameter to <i>Subcycle</i>.</td></tr>
+<tr align=left valign=top><th>Track Sync Mode = Cycle</th><td></td><td>Set the <i>Sync Source</i> parameter to <i>Track</i> and
+the <i>Track Sync Unit</i> parameter to <i>Cycle</i>.</td></tr>
+<tr align=left valign=top><th>Track Sync Mode = Loop</th><td></td><td>Set the <i>Sync Source</i> parameter to <i>Track</i> and
+the <i>Track Sync Unit</i> parameter to <i>Loop</i>.</td></tr>
+<tr align=left valign=top><th>Empty Track Action</th><td></td><td>Now under the <i>Switch</i> tab of the <i>Preset</i> window.</td></tr>
+<tr align=left valign=top><th>Resize Sync Adjust</th><td></td><td>Now under the <i>Synchronization</i> tab of the <i>Track Setups</i>
+window as <i>Out Sync Resize Adjust</i>.</td></tr>
+<tr align=left valign=top><th>Speed Sync Adjust</th><td></td><td>Now under the <i>Synchronization</i> tab of the <i>Track Setups</i>
+window as <i>Out Sync Speed Adjust</i>.</td></tr>
+<tr align=left valign=top><th>Switch Sync Adjust</th><td></td><td>No parameter in 2.0, use <i>Out Sync Resize Adjust</i>.</td></tr>
+<tr align=left valign=top><th>Mute Sync Mode</th><td></td><td>Changed to <i>Out Sync Mute Action</i>.</td></tr>
+<tr align=left valign=top><th>Out Sync Realign Mode</th><td></td><td>Changed to <i>Out Sync Realign Action</i></td></tr>
+<tr align=left valign=top><th>Record Beats/Bar</th><td></td><td>Changed to <i>Beats Per Bar</i></td></tr>
+<tr align=left valign=top><th>Minimum Tempo</th><td></td><td>Changed to <i>Out Sync Min Tempo</i></td></tr>
+<tr align=left valign=top><th>Maximum Tempo</th><td></td><td>Changed to <i>Out Sync Max Tempo</i></td></tr>
+<tr align=left valign=top><th>Auto Record Bars</th><td></td><td>Now under the <i>General</i> tab of the <i>Preset</i> window.</td></tr>
+<tr align=left valign=top><th>Auto Record Tempo</th><td></td><td>Now under the <i>General</i> tab of the <i>Preset</i> window.</td></tr>
+</table>
+<p><b>NOTE:</b> It is important to understand that the 1.45 
+synchronization parameters will not be automatically upgraded
+when you run the 2.0 release.  You will need to manually change
+synchronization parameters in 2.0.</p>
+<p>Besides the synchronization parameters, many other parameters have
+changed location.  Preset parameters will usually still be under the
+<i>Presets</i> window, but you may need to explore the new tabs.</p>
+</body>
+</html>

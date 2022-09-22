@@ -1,0 +1,2402 @@
+Legend:
+
+OK  - test passed
+EDP - intended behavior difference
+Q   - works reasonably, but unsure of EDP behavior
+BUG - serious bug
+bug - minor bug
+NI  - not implemented
+FW  - forwarded to another test section
+TEST - formerly NI or OK, need to retest
+
+----------------------------------------------------------------------
+0 Basic
+----------------------------------------------------------------------
+
+0.1 feedback: setup loop, lower feedback to create a few layers, undo
+    BUG: hearing blip on initial transition and then on every loop thereafter!
+
+----------------------------------------------------------------------
+1 Record
+----------------------------------------------------------------------
+
+1.1 Record, Play, Undo
+    Basic record, loop, undo back to Reset.
+    OK
+    bug: when we preplay the record layer, the same AudioCursor
+    will be used for both recording and playing causing it to 
+    lose continuity and reset itself on every interrupt.  Doesn't
+    seem to have an audible effect, but having seperate play/record
+    cursors would prevent this.
+
+1.2 Record, Record/Undo
+    Remove record pressed by accident, restore previous loop.
+    OK
+
+1.3 Record, Record, Undo
+    Q: Does a successful record cancel previous layers?
+       Currently we keep old Record layers and can undo to them.
+    OK
+
+1.4 Record/Reverse
+    See reverse functional section.
+    OK    
+
+1.5 Record/HalfSpeed
+    See speed fucntional section.
+    OK
+
+1.6 Record/Rehearse
+    See rehearse functional section.
+    OK
+  
+1.7 Record/Mute
+    End recording, enter Mute
+    OK
+ 
+1.8 Record/Overdub
+    End recording, toggle overdub mode.
+    Q: can overdub be toggled in Reset?
+    OK
+
+1.9 Record/Overdub/Undo
+    With the implementation of deferred fades, make sure that
+    when undoing back to the original layer that we perform the fade.
+    OK
+
+1.10 Record/Multiply
+     Not documented.  End recording begin Multiply.
+     OK
+
+1.11 Record/Switch (loop with content)
+     End recording, immediately enter the next loop.
+     OK
+
+1.12 AutoRecord=On, Record/Switch (empty loop)
+     Record all available loops in one continuous recording.
+     OK
+
+1.13 AutoRecord=On, Record/Switch (full loop)
+     Finish recording, begin record of next loop.  Always overwrites.
+     BUG: This is supposed to unconditionally re-record the next loop.
+
+1.14 LoopCopy=Sound, Record/Switch
+     Create variants of the original loop.
+     bug: getting persistent fade bump about midcycle in the
+     copied loop
+     
+1.15 LoopCopy=Timing, Record/Switch
+     Create loops of the same length.
+
+1.16 MoreLoops=1, Record/Switch
+     Stop recording as usual.    Further presses of Switch cause ReTrigger.
+     OK
+
+1.17 RecordMode=Sustain (or SUSRecordCommand)
+     Record as normal with SUS action.  
+     OK
+
+1.18 RecordMode=Safe, Record
+     Feedback returns to 100% after recording.
+     OK
+  
+1.19 Threshold!=0, Record
+     Enter threshold wait period, begin recording.  Undo to return.
+     bug: using audio insertion, with thresold=1, we're still not getting
+     the very first part of the audio, relax the minimum threshold
+     BUG: If RecordMode=Sustain, then down transition arms the recording 
+     and the up transition is ignored.  After the threshold is reached
+     another down transition stops the recording, but the up transition 
+     immediately starts a new recording.  Need to either ignore up transition
+     if the down transition of a SUS record ends a recording OR
+     ignore the down transition if we're in a SUS record.
+     BUG: pop entering threshold record if we've been playing
+     (this is probably the same bug as 1.16)
+
+1.20 Record/Insert
+      Finish record, enter new mode.
+      Q:Record/Insert with InsertMode=Sustain, unrounded insert?
+      OK
+
+1.21 Record/Replace
+    Finish record, enter new mode.
+    bug: preplay blip before entering Replace mode, need to be handling
+    at the invoke rather than scheduleEvent?
+
+1.22 Record/Substitute
+     Finish record, enter new mode.
+     OK
+
+----------------------------------------------------------------------
+2 Rehearse
+----------------------------------------------------------------------
+
+I don't think I understand Rehearse fully, see docs on 5-53.
+
+2.1 InsertMode=Rehearse, Record/Insert, Insert (in record phase)
+    Exit rehearse mode and keep recording.
+    Q: retain the original cycle length or is this like unrounded multiply?
+    bug: reverting to previously played loop, but I actually like this
+
+2.2 InsertMode=Rehearse, Record/Insert, Insert (in play phase)
+    Q: Docs unclear, seems reasonable to keep the last loop, though.
+    OK
+
+2.3 Rehearse, Undo during play phase
+    Q: What should this do, I think it should keep the loop and play.
+    Currently reverts to the previous layer, which usually puts us in reset.
+    OK
+
+2.4 Rehearse, Undo during record phase
+    Exit rehearse mode, plays last loop.
+    Alt: if enabled, returns to prior rehearse layer.
+    OK
+
+2.5 Rehearse, Overdub
+    End Rehearse, enter new mode
+    BUG: pop with overdub, resumes play of previous layer ok, but
+    pop when we loop back to the beginning the first time.  Some kind
+    of gap.
+
+2.6 Rehearse, Multiply
+    OK in play phase
+    BUG: if in record phase, inserts empty cycle at the beginning
+
+2.7 Rehearse, Mute
+    In both phases, Cancel rehearse, enter mute.
+    OK
+
+2.8 Rehearse, Replace|Substitute
+    End Rehearse, enter new mode
+
+2.9 Record/Insert, Switch
+    End Rehearse, switch loops
+
+----------------------------------------------------------------------
+3 Overdub
+----------------------------------------------------------------------
+
+Overdub is a "sticky" mode that toggles in response to an Overdub
+command.  If overdub is on, you automatically enter overdub whenever
+you would return to play mode.
+
+3.1 Record, Overdub
+    Basic overdub
+    OK
+
+3.2 Record, Overdub, Undo
+    Basic overdub, several cycles, undo one at a time.
+    OK
+
+3.3 Record, Overdub, AutoUndo 
+    If Overdub left on but no audio or feedback changes the loop.
+    OK (but not flashing a beater when this happens)
+
+3.4 OverdubMode=Sustain, Overdub
+    Basic overdub with SUS action.
+    OK
+
+3.5 OverdubMode=Sustain, Overdub, Reverse
+    Basic overdub with SUS action.  Other functions can be performed
+    while the overdub is sustained.
+
+3.6 OverdubMode=Quantize, Overdub
+    Exension, quantized overdub.
+    OK
+
+3.7 MIDI SUSOverdub
+    OK
+
+3.8 Reset/Overdub
+    Ignore overdub when in reset
+    Q: is this ignored or toggled?
+
+3.9 Overdub/Switch
+    Remember overdub when returning to the loop.
+    bug: overdub being lost
+
+----------------------------------------------------------------------
+4 Multiply
+----------------------------------------------------------------------
+
+4.1 Quantize=Off, RoundMode=Off, Multiply
+    Loop is extended while overdubbing.  Overdub stops exactly on the
+    second Multiply, but mode continues to a cycle boundary relative
+    to the start of the mode.
+    OK
+
+4.2 Quantize=Off, RoundMode=On, Multiply
+    Loop is extended while overdubbing.  Overdub and mode stops on an exact
+    cycle boundary relative to the start of the Multiply.
+    OK
+
+4.3 Multiply Fade
+    OK
+
+4.4 Multiply, Round down
+    Press second Multiply within 150ms after the cycle boundary,
+    round down to avoid adding an extra cycle.
+    NI: no time sensitivity 
+
+4.5 Quantize=Cycle, RoundMode=Off/On, Multiply
+    RoundMode has no effect when Quantize=Cycle, 
+    overdub stops on cycle boundary.
+    OK
+
+4.6 Quantize=SubCycle, RoundMode=Off, Multiply
+    Overdub stops on SubCycle boundary.
+    OK
+
+4.7 Multiply/Undo  
+    Return to state before Multiply.
+    OK
+
+4.8 Quantize=Off, Multiply/Record
+    Unrounded multiply.  Create new single cycle loop.
+    OK
+
+4.9 Quantize=On, Multiply/Record
+    Unrounded multiply.  Create new single cycle loop.
+    EDP: The Record is normally quantized but it feels like a useful
+    option to escape quantization without having to double press?
+    OK
+
+4.10 Multiply/Overdub
+     End Multiply as usual, toggle Overdub mode.
+     OK
+
+4.11 Multiply/Insert
+     End Multiply as usual, immediately Insert. 
+     Q: which "side" of the loop does the insert go on, I'm putting
+     it at the beginning.
+     OK
+
+4.12 Multiply/Mute
+     End Multiply as usual, immediately Mute.
+     OK
+
+4.13 Multiply/Reverse
+     End Multiply as usual, immediately Reverse.
+     OK
+
+4.14 Quantize=On, Record, Multiply, ReMultiply (remove cycles)
+     With 4 cycle loop, start multiply on cycle 2, end on 3.
+     Loop changed to contain 2 cycles.
+     Q: this is behaving just like Multiply/Record, maybe
+     the Record ending shouldn't be quantized?
+     OK
+
+4.15 Quantize=On, Record, Multiply, ReMultiply (add cycles)
+     With 2 cycle loop, start multiply on cycle 2, end on 4.
+     Loop changed to have 3 cycles.
+     Q: The multiply includes cycles that preceed the mode start point.
+     It seemed logical to me to only mutiply cycles from the mode start,
+     but this then makes the Insert/Multiply alternate ending meaningless.
+     Might want a special mode
+     EDP: strange behavior when quantize is less than cycle, not sure
+     where the cycle boundary is.
+     OK
+
+4.16 Quantize=Off, Record, Multiply, ReMultiply (remove cycles)
+     Same idea, just without quantized start/end times.
+     OK
+
+4.17 Multiply/Multiply/Record
+     While rounding after the second Multiply, a Record can force
+     it into an immediate unrounded multiply.
+     Q: Is the Record subject to quantization, nice to have
+     OK
+
+4.18 Quantize=Cycle|Loop, Record, Multiply
+     Make sure you begin overdubbing in the first cycle, not immediately
+     add a new cycle.
+     OK
+
+4.19 Multiply/Insert/Record
+     While rounding after the Insert alternate ending, the Record forces an 
+     immediate unrounded multiply, then enter Insert mode.  The same
+     is true for all Multiply alternate endings except Record.
+     Q: Does the insert start at the beginning or end of the new loop?
+     OK
+
+4.20 NextLoop/Multiply/Reverse/Record
+     Example of combining unrounded multiply with LoopCopy=Sound.
+     See page 5-36.  Record pressed after entering next loop.
+     TODO
+
+4.21 InsertMode=Sustain, Multiply
+     Unrounded multiply.  Important that we not receive auto-repeat keys.
+     OK
+
+4.22 Quantize=Off, Record, Multiply
+     OK
+
+4.23 Multiply/MultiIncrease
+     Multiply during the round off period adds another cycle.
+     OK
+
+4.24 Quantize=Loop, Multiply/MultiIncrease
+     Adds entire loops every time Multiply is pressed.
+     OK
+
+4.25 MIDISUSRoundMultiply
+     OK
+
+4.26 MIDISUSUnroundedMultiply
+     OK
+
+4.27 Undo Quantized Multiply End
+     OK
+   
+4.28 RoundMode=Off, Multiply, Undo, Cancel RecordEnd
+     Undo before the end of the round off period, should undo the
+     end event and stay in Multiply.  If recording was turned off,
+     it should be turned back on.
+     bug: technically we should have recorded content between 
+     the time recording was turned off and the undo
+     OK
+
+4.29 Multiply, Undo, Cancel JumpPlay
+     Undo close to the end of the round off period, after we've
+     begun preplay of the record layer.  Return to the play layer
+     and stay in Multiply.
+     OK
+
+4.30 Multiply/Mute, Undo, Cancel MutePlay
+     Undo close to the end of the round off period, after we've
+     begun the mute for the alternate ending.  Return to play.
+     OK
+
+4.31 Multiply/Switch
+     End the multiply and switch to the next loop.
+     bug: not ending multiply, this isn't something EDP supports,
+     but we should be able to
+
+----------------------------------------------------------------------
+5 Insert
+----------------------------------------------------------------------
+
+All InsertMode values other than Insert and Sustain are tested under
+their repsective function headings.  InsertMode=Rehearse behaves the
+same as InsertMode=Insert except when used as a Record alternate
+ending.
+
+5.1 Quantize=Off, RoundMode=Off, Insert
+    Insert full cycle padded with silence after Insert end.
+    OK
+
+5.2 Quantize=Off, RoundMode=On, Insert
+    Insert full cycle, record end quantized to cycle boundary.
+    Ok
+
+5.3 Quantize=Cycle, Insert
+    Insert start/end quantize to cycle boundary, RoundMode ignored
+    OK
+
+5.4 Quantize=SubCycle, Insert
+    Insert start/end quantized, cycle boundaries shift
+    OK
+
+5.5 Insert/Undo
+    Loop returns to state before Insert
+    OK
+
+5.6 Insert/Record
+    Unrounded insert.  Splice in new section, new single cycle loop
+    OK
+    
+5.7 Quantize=On, Insert/Record
+    Unrounded insert with quanitzed start/end times.
+    Q: I think EDP would treat this as a zero length unrounded insert?
+    bug: If you do the Record before the quantized Insert starts, we
+    throw everything away and enter record mode.  Could schedule this
+    as a pending event?
+    OK
+
+5.8 Insert/Overdub
+    Like ending with Insert, but immediately toggle Overdub.
+    Test both transitions (off->on, on->off)
+    OK
+
+5.9 Insert/Multiply
+    Like ending with Insert, but immediately enter Multiply.
+    OK
+
+5.10 Insert/Mute
+     Like ending with Insert, but immediately enter Mute.
+     OK
+
+5.11 InsertMode=Sustain, Insert
+     Unrounded Insert like a Record alternate ending.  
+     OK
+
+5.12 InsertMode=Sustain, Quantize=On, Insert
+     Unrounded Insert like a Record alternate ending, quantized start/end.
+     bug: display is a little confusing because we adjust the scale to 
+     assume a full cycle insert, then adjust it back down after the
+     unrounded insert, not sure if we can fix that.
+     OK
+
+5.13 Insert/MultiIncrease
+     Insert during the round off period adds another cycle
+     Q: Should undo cancel the entire insert, or just start 
+     decrementing cycle counts?
+     Q: If RoundMode=off, and we've turned off recording, does it 
+     come back on?
+     bug: If RoundMode=off, we're turning it back on, but we will
+     have lost content.
+     OK
+
+5.14 Quantize=Loop, Multiply/MultiIncrease
+     Inserts entire loops every time Insert is pressed.
+     OK
+
+5.15 MIDI SUSRoundInsert
+     OK
+
+5.16 MIDI SUSUnroundedInsert
+     OK
+     
+5.17 RoundMode=Off, Insert, Undo, Cancel RecordEnd
+     Undo before the end of the round off period, should undo the
+     end event and stay in Insert.  If recording was turned off,
+     it should be turned back on.
+     bug: technically we should have recorded content between 
+     the time recording was turned off and the undo
+     OK
+
+5.18 RoundMode=Off, Insert, Undo, Cancel JumpPlay
+     Undo close to the end of the round off period, after we've
+     begun preplay of the content after the insert end.  Return to mute.
+     OK
+
+5.19 Insert, SUSInsert
+     Enter insert with Record/Insert, TimeCopy, or Insert 
+     then perform SUSInsert.
+     Q: Unsure what should happen, currently ignoring the down transition,
+     and when the up transition comes  in treating it as an unrounded insert.
+     OK?
+
+5.20 Insert/Switch
+     End the insert and switch to the next loop.
+     bug: not ending multiply, this isn't something EDP supports,
+     but we should be able to
+
+----------------------------------------------------------------------
+6 Replace
+----------------------------------------------------------------------
+
+Activated by InsertMode=Replace, ReplaceCommand, and
+SUSReplaceCommand.  Replace differs from Substitute only in that
+during Replace the original loop is inaudible.  Assume
+InsertMode=Replace unless specified.
+
+I originally assumed that Replace was an implied SUS function, but I
+don't think that's true.  DirectMIDI has both Replace and SUSReplace.
+If InsertMode=Replace implies SUS, then expand the test plan.
+
+6.1 Quantize=Off, InsertMode=Replace, Insert
+    Replace section, implied SUS.
+    OK
+
+6.2 Quantize=On, InsertMode=Replace, Insert
+    Replace, quantized SUS.
+    BUG: Need to schedule a JumpPlayEvent like we do when comming out
+    of Insert.
+
+6.3 Quantize=On/Off, MIDI ReplaceCommand
+    Replace, no SUS.
+    OK
+
+6.4 Quantize=On/Off, MIDI SUSReplaceCommand
+    Replace, SUS.
+    OK
+
+6.5 Quantize=On/Off, Replace crossing loop boundary
+    Q: Creates another layer?  We'll end up stacking undo layers.
+    OK
+
+6.6 Quantize=On, SUSReplace, end after start
+    OK
+
+6.7 Quantize=On, SUSReplace, end before start
+    Replace exactly one quantization unit.
+    OK
+
+6.8 Replace/Switch
+    End replace, start switch.
+    bug: if LoopCopy is on, not getting the replace into the copy,
+    copying from the play layer rather than record layer?
+
+----------------------------------------------------------------------
+7 Substitute
+----------------------------------------------------------------------
+
+Activated by InsertMode=Substitute, SubstituteCommand,
+SUSSubsituteCommand, Long-Multiply, Record+Insert when
+InsertMode=Substitute.  Substitute differs from Replace only in that
+during Substitute the original loop is audible.  Assume
+InsertMode=Substitute.
+
+7.1 Quantize=Off, InsertMode=Substitute, Insert
+    Substitute section, implied SUS.
+    OK
+
+7.2 Quantize=On, InsertMode=Substitute, Insert
+    Substitute, quantized SUS.
+    OK
+
+7.3 Quantize=On/Off, MIDI SubstituteCommand
+    Substitute, no SUS.
+    OK
+
+7.4 Quantize=On/Off, MIDI SUSSubstituteCommand
+    Substitute, SUS.
+    OK
+
+7.5 Quantize=On/Off, Substitute crossing loop boundary
+    Q: Creates another layer?  Like Replace
+    OK
+
+7.6 Quantize=On, SUSSubstitute, end after start
+    OK
+
+7.7 Quantize=On, SUSSubstitute, end before start
+    Substitute exactly one quantization unit.
+    OK
+
+7.8 Substitute/Switch
+    End substitute, start switch.
+    bug: like Replace, if LoopCopy is on, not getting the replace
+    into the copy, copying from the play layer rather than record layer?
+
+----------------------------------------------------------------------
+8 Reverse
+----------------------------------------------------------------------
+
+Reverse is similar to Overdub in that it is a "sticky" mode that
+toggles and remains on through other commands.  It is accessed with
+InsertMode=Reverse, and several MIDI commands.  When I say "Reverse"
+here we mean InsertMode=Reverse command. The DirectMIDI "Reverse"
+command does not toggle, it will be called "Backward".
+ 
+8.1 Play, Reverse
+    Basic forward and backward, check display accuracy.
+    OK
+
+8.2 Record with Segments, Reverse
+    Perform an operation such as Insert that creates a layer composed
+    of segments.  Segment fades in reverse should work.
+    OK
+
+8.3 Quantize=On, Play, Reverse
+    Check reverse start/end quantization.
+    OK
+
+8.4 Record, Reverse
+    End record and immediately reverse.
+    OK
+
+8.5 MIDI ToggleReverse
+    Toggles reverse mode.  Currently no SUS action on long pressses.
+    OK
+
+8.6 MIDI SUSToggleReverse
+    Toggles reverse while note is on.
+    OK
+
+8.7 Backward
+    Always starts Reverse mode, does nothing if already in Reverse.
+    OK
+
+8.8 Forward
+    Always cancels Reverse mode, does nothing if not in Reverse.
+    OK
+    
+8.9 Reverse, Overdub, Reverse
+    Overdub plays back reversed when Reverse is canceled.
+    OK
+
+8.10 Record, Backward
+     Supposed to have no effect on recording.
+     Q: not sure where this came from, it doesn't make sense to me.
+     Should switch modes if we're not already going that way. 
+     OK
+
+8.11 Record, Forward
+     Q: manual unclear, just end normally
+     OK
+
+8.12 Reverse, Multiply
+     Can multiply in reverse.
+     OK
+
+8.13 Reverse, Insert
+     Can insert in reverse.
+     OK
+  
+8.14 Reverse, Unrounded Multiply
+     OK
+
+8.15 Reverse, Multiply
+     Multiply in reverse
+     bug: getting a fade bump ending multiply, should have figured
+     out that one wasn't necessary?
+     OK
+
+8.16 Reverse, Multiply/Reverse
+     Rounds off multiply as usual and returns to forward.
+     Q: For MultiplyMode=Overdub it might be interesting to stay
+     in Multiply, just reverse direction, but in traditional mode it
+     violates the strict cycle length.
+     OK
+
+8.17 Reverse, Insert
+     Insert in reverse
+     BUG: strange blip ending insert, probably the play resume?
+     BUG: seemed to get a pop undoing back to original layer?
+
+8.18 Reverse, Insert/Reverse
+     Rounds off insert as usual and returns to forward.
+     BUG: play blip similar to 8.15
+
+8.19 Quantize=On, MIDI SUSToggleReverse
+     Quick tap should cause reverse of exactly one quantization unit.
+     OK
+
+8.20 Reverse, Overdub, Undo
+     Possible to undo back to the point of reversal.
+     Extension: possible to undo before the point of reversal.
+     Q: should layers remember their reverse/speed for undo or should
+     we retain whatever was current when we started undoing?
+     OK
+
+8.21 Reset, Reverse, Record
+     Recording a new loop happens in reverse.
+     OK
+
+8.22 Reverse, Reset
+     Going in to Reset cancels Reverse.
+     OK
+
+8.23 Record, Overdub, Reverse
+     End the record with overdub, overdub a few cycles then reverse.
+     BUG:
+     1 66902: 1 Unexpected play frame after reverse: 144159 expecting 77259
+     1 66902: 1 Attempting to reflect frame greater than loop size!
+     1 0: 1 AudioCursor: play frame overflow
+     1 44939: 1 Layer pending frame miscalculation
+
+8.24 Reverse, Record, Next, LoopCopy=Sound
+     Copied from reverse to forward resulting in a normal forward loop.
+     The loops retain their reverse flag so switching changes reverse.
+     ! Probably not right, you'd want to build up a series of loops
+     in reverse just like foward and switch among them staying in reverse.
+     Letting loops maintain their own record/half settings after they're
+     recorded is however interesting.
+
+----------------------------------------------------------------------
+9 Speed
+----------------------------------------------------------------------
+
+HalfSpeed is similar to Reverse in that it is a "sticky" mode that
+toggles and remains on through other commands.  
+
+Seems to be reasonbly good, get this on occasion:
+
+  1 83778: 2 Starting halfspeed play at 89527
+  1 84034: 2 Capture fade tail, fade frames 100 tail frames 100
+  1 84034: 2 Starting play fade in
+  1 84802: 2 E: Speed(SUSSpeed) 84919
+  1 84989: 1 Reached end of record layer preplay!
+  1 90109: 2 E: Loop 90112
+
+Usually immediately before the loop.
+UPDATE: This seemed to get better, but still saw it:
+
+  1 77170: 2 Starting halfspeed play at 82919
+  1 77426: 2 Capture fade tail, fade frames 100 tail frames 100
+  1 77426: 2 Starting play fade in
+  1 78194: 2 E: Speed(SUSSpeed) 78311
+  1 78893: 1 Reached end of record layer preplay!
+
+Where the loop end was 83968
+
+
+
+9.1 Play, Speed
+    Basic up and down, check display accuracy.
+    OK
+
+9.2 Record, Speed (full->half)
+    End record and immediately change speed.
+    OK
+
+9.3 Reset, HalfSpeed, Record, HalfSpeed (half->full)
+    End record and immediately change speed.
+    OK
+
+9.4 Quantize=On, Speed
+    Wait for quantize boundary before changing.
+    OK
+
+9.5 Quantize=On, Speed, Escape
+    OK
+
+9.6 HalfSpeed, Reset
+    Going in to Reset cancels HalfSpeed.
+    OK
+
+9.7 Reset, HalfSpeed
+    Sets HalfSpeed before the next Record
+    bug: need a visual indication of speed during Reset
+    OK
+
+9.8 HalfSpeed, Mode switching
+    Remains in effect over all other functions.
+    Overdub, Replace, Substitute, Mute, Record
+    bug: halfspeed color conflicts with record color, need different
+    speed indicator than thermometer color
+    OK
+    
+9.9 HalfSpeed, Insert
+    OK
+
+9.10 HalfSpeed, Multiply
+     OK
+
+9.11 MIDI SUSToggleSpeed
+     OK
+
+9.12 MIDI HalfSpeed
+     OK
+
+9.13 MIDI FullSpeed
+     OK
+
+9.14 Speed/Mute
+     BUG: space key activates last button
+
+----------------------------------------------------------------------
+10 Mute
+----------------------------------------------------------------------
+
+In both Start and Continuous mode, the clock keeps running.
+In the extended Pause mode, the clock stops.
+
+10.1 MuteMode=Start, Mute
+     Mute then restart from the beginning
+     OK
+
+10.2 MuteMode=Continuous, Mute
+     Restart from current position. 
+     OK
+
+10.3 MuteMode=Continuous, Quantize=On, Mute
+     Restart from current position. 
+     OK
+
+10.4 MuteMode=Continuous, Quantize=Loop, Mute
+     OK
+
+10.5 MuteMode=Continuous, Unmute
+     OK
+
+10.6 MuteMode=Continuous, Quantized=Cycle, Mute
+     OK
+
+10.7 MuteMode=Pause, Mute
+     Stop clock, restart from previous position.
+     OK
+
+10.8 Quantize=On, MuteMode=Pause, Mute
+     Stop clock, restart from previous position.
+     OK
+
+10.9 MuteMode=Start, Mute/Undo
+     Like ending with Mute but uses MuteMode=Continuous.
+     OK
+
+10.10 MuteMode=Continuous, Mute/Undo
+      Like ending with Mute but uses MuteMode=Start. Similar to ReTrigger.
+      OK
+
+10.11 MuteMode=Pause, Mute/Undo
+      Extension.  Same as MuteMode=Start.
+      OK
+
+10.12 Mute/Insert
+      Play loop once and go back to Mute.  Pressing Insert again
+      will retrigger for stuttering effects.  Sensitive to Quantize.
+      NI: not implemented
+
+10.13 Mute/Multiply
+      Perform a ReAlign
+      FW: Synchronization tests
+
+10.14 MIDI SUSMuteCommand
+      Like Mute/Mute with SUS.
+      OK
+
+----------------------------------------------------------------------
+11 Undo
+----------------------------------------------------------------------
+
+Mostly tested in combination with other functions.
+
+11.1 Quantize=Loop, Multiply
+     OK
+
+11.2 Record, Record, Undo
+     Cancels second recording and returns to the previous loop.
+     OK
+
+11.3 Record, Multiply, Play, Undo
+     Undo from a higher cycle back to a single cycle loop, return to 
+     an adjusted frame counter that keeps the rhythm in sync.
+     OK
+
+11.4 ShortUndo
+     Undo just the tail of the layer from the press of Undo to the end.
+     NI: not implemented
+
+11.5 Feedback!=100, Undo  
+     Undo through layers of feedback.  
+     OK
+
+11.6 NoUndoFeedback=On
+     Do not add layers just for feedback.
+     NI: not implemented, have to shift but not keep previous layer.
+
+11.7 MaxUndo!=0
+     Limit the number of layers we will save for undo.
+     NI: not implemented, important since we have unlimited memory.
+
+11.8 Record, Switch, Undo
+     Undo cancels the pending transtion
+     BUG: undoes the entire layer
+
+11.9 Short Undo
+     NI
+
+11.10 Undo(Continue)
+      When undoing to previous layer pick up where we left off rather
+      than warping the play frame.  Nice when using quantized
+      unrounded multiply to splice out a section, then return.
+
+11.11 Undo(Quantized)
+      Option to quantize undo interesting when using it like loop switch?
+
+----------------------------------------------------------------------
+12 Switch Triggering
+----------------------------------------------------------------------
+
+Some confusion over differences in behavior when functions executed
+with MIDI vs front panel buttons.  Notes indicate than when
+SamplerStyle=Run a MIDI trigger should behave like SamplerStyle=Start
+if we're in the same loop.  I decided to make this the common behavior
+for ReTrigger which makes sense since Run would be meaningless otherwise.
+
+Base SwitchQuant=Off, SamplerStyle=Run, AutoRecord=Off
+
+12.1 NextLoop/PrevLoop
+     OK
+
+12.2 SwitchQuant=On, NextLoop/PrevLoop
+     OK
+
+12.3 ReTrigger
+     OK
+     
+12.4 SamplePlay
+     Like ReTrigger but only plays once regardless of SamplerStyle.
+     Auto schedule a Mute event at the end of the loop.
+     OK
+
+12.5 Loop Trigger
+     Direct triggering of numbered loop.  
+     If already in the loop performs ReTrigger regardless of SamplerStyle
+     Q: EDP may not ReTrigger if already in loop?
+     OK
+
+12.6 MoreLoops=1, NextLoop
+     Performs ReTrigger of the current loop.
+
+12.7 SamplerStyle=Start
+     ReTrigger from the beginning
+     OK
+
+12.8 SamplerStyle=Continuous
+     Loop logically continues playing while not audible, resumes
+     from where it would be if playing.
+     OK
+
+12.9 SwitchQuant=Loop, Switch, Switch
+     Changes loop while in quantize period.
+     OK
+
+12.10 SwitchQuant=Confirm, Switch, Undo, 
+      Switch immediately after Undo
+      OK
+
+12.11 SwitchQuant=ConfirmSubCycle,ConfirmCycle,ConfirmLoop, Switch, Undo
+      Wait for quantization boundary after Undo, then switch
+      OK
+
+12.12 Velocity=On, MIDI Trigger
+      Loops triggered by MIDI note messages play with volume scaled
+      according to MIDI note velocity.  127 is full volume.
+      NI
+
+12.13 Samplerstyle=Attack, MIDI Trigger
+      Play while note held, volume scaled by velocity.
+      NI
+
+12.14 Samplerstyle=Attack, NextLoop or PreviousLoop
+      Behaves like SamplerStyle=Run
+      NI
+
+12.15 SUSNextLoop
+      NoteOn goes to the next loop, NoteOff returns to the original loop.
+      If you only program NoteOff, it effectively is the same as PrevLoop.
+      EDP: With SwitchQuant, if the up transition happens before the switch,
+      it is treated as an immediate return to the original loop, may
+      be interesting to defer the up transition until after the switch
+      if SwitchQuant is on.
+      bug: would be nice of this pending event appeared AFTER all other
+      events, but we can't make a general decision based on pending since
+      the child events of a SwitchEvent need to appear after
+      OK
+
+12.16 SUSPrevLoop
+      NoteOn goes to the prev loop, NoteOff returns to the original loop.
+      OK
+
+12.17 SUSMuteReTrigger
+      Mute while sustained, then retrigger. (page 5-57)
+      OK
+      
+12.18 MuteMode=Continuous, Mute/Undo
+      Like ending with Mute but uses MuteMode=Start. Similar to ReTrigger.
+      Q: Undo is being quantized ok?
+      OK
+
+12.19 Mute/Insert
+      Play loop once and go back to Mute.  Pressing Insert again
+      will retrigger for stuttering effects.  Sensitive to Quantize.
+      NI
+
+12.20 SwitchQuant, Switch, Switch back to original loop
+      BUG: Being handled as a ReTrigger even if SamplerStyle=Run.
+      I think this should be processed like an ordinary switch?
+
+----------------------------------------------------------------------
+13 Switch AutoRecord & LoopCopy
+----------------------------------------------------------------------
+
+13.1 AutoRecord=On, Switch (empty)
+     Record new loop	   
+     OK
+
+13.2 LoopCopy=Sound, Switch (empty)
+     Copy loop, enter Multiply
+     Q: When Quantize=Off, we start from the beginning of the loop 
+     after the copy, I was expecting it to keep playing from the last frame.
+     A new parameter?
+     Q: I don't like always going into Multiply, have a LoopCopy option 
+     that just copies and stays in Play.
+     bug: The multiply will happen in the copied layer without creating
+     a new one, so there is no way to undo back to the original layer.
+     Not bad, but could be handy.
+     OK
+
+13.3 AutoRecord=On, LoopCopy=Sound, Switch (empty)
+     LoopCopy has precedence
+     OK
+
+13.4 AutoRecord=On, SUSNextLoop
+     Record next loop, bounce back when SUS goes up.
+     OK
+
+13.5 LoopCopy=Sound, MIDI SUSNextLoop
+     Copy into next loop, bounce back.
+     bug: fade bump when switching, since the sound is the same could
+     be seamless?
+     OK
+
+13.6 SwitchQuant=Loop, Switch, Record
+     Begin Record upon entering the loop, like unconditional AutoRecord=On 
+     OK
+
+13.7 SwitchQuant=Loop, Switch, Multiply (extension)
+     Perform LoopCopy=Sound after switch, add cycles.  
+     Erases current contents of loop.
+     OK
+
+13.8 SwitchQuant=Loop, Switch, Multiply (truncation)
+     Perform LoopCopy=Sound after switch, Multiply before all cycles 
+     have played, truncate the remaining cycles.
+     OK
+
+13.9 SwitchQuant=Confirm|Loop, Switch, Multiply/alternate endings
+     Should behave the same as usual Multiply endings
+     OK 
+
+13.10 SwitchQuant=Loop, Switch, Overdub (empty)
+      Perform SimpleCopy (no Multiply), enable Overdub.
+      OK
+
+13.11 SwitchQuant=Confirm|Loop, Switch, NextLoop to curent loop, Overdub
+      Alternative quantization techinque.  Overub begins on cycle boundary.  
+      OK
+
+13.12 LoopCopy=Timing, Switch (empty)
+      OK
+
+13.13 SwitchQuant=Loop, Switch, Insert
+      Perform LoopCopy=Timing, begin Insert, end Insert
+      Erases current contents of loop.
+      OK
+
+----------------------------------------------------------------------
+14 Switch Event Stacking
+----------------------------------------------------------------------
+
+14.1 SwitchQuant=Confirm|Loop, Switch, Mute
+     Toggles Mute upon entering the loop.
+     OK
+
+14.2 SwitchQuant=Confirm|Loop, Switch, Speed
+     OK, mostly
+     BUG: if you do a quantized Speed, then a Switch get the
+     "Obscure speed calculation" error
+
+14.3 SwitchQuant=Confirm|Loop, Switch, Reverse
+     bug?: when entering reverse, doesn't seem to be starting exactly 
+     on the end
+
+----------------------------------------------------------------------
+15 Switch SamplerStyle=Once
+----------------------------------------------------------------------
+
+15.1 SamplerStyle=Once, MIDI Trigger
+      Loop plays once then Mute.
+      BUG: Doesn't mute
+      Q: Not sure I like this, it's desireable but makes MIDI triggering
+      different than Next/Prev commands.  Add TriggerMode
+
+15.2 SamplerStyle=Once, NextLoop or PrevLoop
+      Loop plays once then return
+      OK
+
+15.3 SamplerStyle=Once, TriggerMode=Enhanced, MIDI Trigger
+      Loop plays once then returns like NextLoop trigger.
+      This is the default behavior, need to implement TriggerMode.
+      OK
+
+15.4 SamplerStyle=Once, Switch, Undo
+      Stay in next loop
+      OK
+
+15.5 SamplerStyle=Once, Switch, Mute
+      Enter mute and stay in loop
+      OK
+
+15.6 SamplerStyle=Once, Switch, Insert
+      ReTrigger but eventually return
+      BUG: goes into insert mode, loses return event
+
+15.7 SamplerStyle=Once, Switch, Multiply
+      Q: technially not allowed, why not, just cancel the return 
+      and enter multiply
+      BUG: some thumping entering into and returning from the next loop, 
+      seems like we should be able to avoid the fade?
+
+15.8 SamplerStyle=Once, Switch, Overdub
+      Enable overdub and stay in next loop
+      BUG: not enabling overdub, returning
+
+15.9 SamplerStyle=Once, SwitchQuant=On, Switch, Overdub (pre-transition)
+      Enables overdub immeditely after transition, and stays there.
+      BUG: enables overdub, but doesn't cancel return
+
+15.10 SamplerStyle=Once, Switch, Switch
+      Stack another transition, but return through all loops.
+      Q: Ambiguity in how many times we play the "returned to" loops.
+
+15.11 SamplerStyle=Once, NextLoop, NextLoop
+      Ignore stacking if we cycle back to the first loop (though we could
+      allow infinite stacking)
+      BUG: Secondary NextLoop is incrementing the pending switch, 
+      not stacking another one.
+      BUG: if wait until after the first switch to do the next one, 
+      we return to the second loop, but lose the return to the first loop
+
+15.12 SamplerStyle=Once, Switch, Record
+      Record a new loop and stay there
+      BUG: reording but not canceling return
+
+15.13  SamplerStyle=Once, Switch, Resets
+      BUG: strange behavior when bouncing around with one of the loops	
+      in reset
+
+15.14 SamplerStyle=Once, AutoRecord=On, Switch, Record ending
+      Record new loop, then return the previous one when ending with Record
+      Bug: Record not happening after the switch.  Does the loop have to
+      be empty? Yes, it seems to work if the loop is empty.
+
+15.15 SamplerStyle=Once, AutoRecord=On, Switch, Record alternate ending
+      Record new loop, process alternate ending, and stay in loop.
+      Bug: We do process the ending and stay in the loop, but when switching
+      back to the previous loop, sometimes we crash on the return transition.
+      We get to EDPLoop::Return but mTransition is NULL.
+
+15.16 SamplerStyle=Once, AutoRecord=On, Switch, Switch
+      Record new loop, process alternate ending, and stay in loop.
+      This is because NextLoop is an alternate ending to Record so ignore
+      any stacked return transitions.
+      Q: The record is terminated but we return to the first loop and stay
+      there.  This sort of makes sense, we're not taking a stacked
+      return transition, we are making a real transition.  Would be
+      clearer with 3 loops instead of 2.  But if we do that, shouldn't there
+      be a return transition in loop 3?  Sounds like we should have
+      stayed in loop 2.
+
+15.17 SamplerStyle=Once, LoopCopy=Sound/Timing, Switch
+      Copy, continue Multiply or Insert, return to previous loop
+      Bug: taking return transition at the end if the first cycle, not
+      allowing new cycles to be added.
+
+15.18 SamplerStyle=Once, SwitchQuant=On, Switch, 
+      Multiply/Insert/Overdub pre-switch
+
+      Copy, continue Multiply or Insert, return to previous loop
+      Bug: taking return transition at the end if the first cycle, not
+      allowing new cycles to be added.
+      Bug: When a Transition gets a deferred event, the event text wipes
+      out the transition text in the event display making it look like
+      a simple event.  Need to stack these somehow.
+
+15.19 SamplerStyle=Once, SwitchQuant=On, Switch, 
+      Multiply/Insert/Overdub pre-switch, AND some other operation
+      Copy, finish Multiply or Insert, perform next operation, stay in loop
+      Bug: taking first return transition like the other cases.
+
+----------------------------------------------------------------------
+16 Quantization
+----------------------------------------------------------------------
+
+Quantization is mostly tested in other sections.  One general concept
+to test is "escaping" quantization.  When in the quantize period, if
+you submit the same command again it will break out of quantization
+and happen immediately.  This is like "double clicking" the command.
+
+16.1 Quantized Multiply
+16.2 Quantized Insert
+16.3 Quantized Replace
+16.4 Quantized Substitute
+16.5 Quantized Speed
+16.6 Quantized Reverse
+16.7 Quantized Mute
+16.8 OverdubMode=Quantize
+
+16.9 Escape Quantization
+
+16.10 Escape Quantization with SUS commands
+      Q: Need clarification on the interaction of quantization escape and 
+      SUS commands.
+
+16.11 Quantization Range
+      Quantization=1-96, 128, 256, verify full range.
+
+16.12 Deferred Quantize Change
+      Quantize change deferred until StartPoint in Play mode.
+      Alt: an extended option that allows immediate application
+
+----------------------------------------------------------------------
+17 Start Point / Trim
+----------------------------------------------------------------------
+
+17.1 TrimStart
+     Clip front of loop, recalculate cycle boundaries.
+     Bug: currently recalculating the start point RELATIVE to the
+     current position, which may push it backwards.  I like this, need
+     to make it an option.  Also consider commands to bump the start point
+     forward and backwards.
+     Bug: not adding a layer when StartPoint is changed
+
+17.2 TrimStart, Undo
+     Return to loop before TrimStart modified.
+
+17.3 TrimEnd
+17.4 TrimEnd, Undo
+
+17.5 StartPoint
+     No audible change, but the logical loop start point changes.
+     Verify visually and with retrigger.
+
+----------------------------------------------------------------------
+18 Misc Parameters & Functions
+----------------------------------------------------------------------
+
+18.1 Feedback=0-100
+     OK
+
+18.2 GeneralReset (MIDI or Button)
+     BUG: pop after general reset, Reset avoids this by capturing
+     a fade tail, but GeneralReset and GlobalReest don't.
+ 
+18.3 Change Preset, MoreLoops
+     When changing presets, if the MoreLoops parameter in the new
+     preset is different than the current value, and any of the
+     current loops have content, ignore the change.
+
+18.4 Edit Preset, Exit
+     Do not made immediate persistent modifications to saved presets,
+     require they be explicitly saved.
+  
+18.5 Reset, Mute
+     Select the previous preset.  (see page 8-6)
+     TEST
+
+18.6 Reset, Insert
+     Select the next preset.
+     TEST
+
+MIDI SmartButtons
+
+These are only supposed to be accessible from MIDI, but we'll allow
+them for all function triggers.
+
+? Doesn't say how long the double click period lasts.
+
+18.7 SwitchQuant=On, Trigger, Trigger
+      "Double-Click Copying"
+      If you trigger the same loop during quantize period, perform
+      a LoopCopy=Sound after the switch.  Equivalent to Trigger, Multiply.
+
+18.8 Reset, Trigger, Trigger
+      "Double-Click Record"
+      From Reset, two triggers of the same loop will start Record.
+
+18.9 Play, Trigger, Trigger
+      "Double-Click Multiply"
+      When playing, double trigger for the current loop will start Multiply.
+      ? This suggests that a "single click" won't retrigger, or that
+      the multiply will happen after the retrigger.  The former would
+      be more useful?
+  
+18.10 Reset, Trigger, Trigger, Record, Trigger
+      "Double-Click Stop Record"
+      If same trigger that was used to start the record is received, 
+      record stops.
+
+18.11 Play, Trigger, Trigger, Multiply, Trigger
+      "Double-Click Stop Multiply"
+      If same trigger that was used to start the multiply is received, stop.
+
+18.12 SamplerStyle!=Attack, Long-Trigger
+      A long press of the trigger for the current loop performs Reset.
+
+----------------------------------------------------------------------
+19 MIDI
+----------------------------------------------------------------------
+
+19.1 MidiChannel Parameter
+19.2 FeedBkCont Parameter
+19.3 VolumeCont Parameter
+19.4 Modification of all parameter values
+
+----------------------------------------------------------------------
+20 Tracks
+----------------------------------------------------------------------
+
+BUG?: With several tracks containing commercial loops, easy to get
+clipping.  Either start output down, or implement some kind of
+limiting?
+
+20.1 GlobalReset (MIDI or Button)
+     BUG: pop after global reset, Reset avoids this by scheduling
+     an EV_RESET after a fade but GeneralReset and GlobalReest don't.
+ 
+----------------------------------------------------------------------
+21 Loop and Project Files
+----------------------------------------------------------------------
+
+21.1 Load Loop
+  OK
+  bug? got some odd behavior once after looping for awhile, felt
+  like audio buffer pool corruption?
+  Q: when we load a loop and exit mute, would be nice to have a mode
+  where we start playing from the beginning without factoring in
+  output latency loss so the attack sounds crisp, would then need
+  to make a corresponding input latency adjustment
+  BUG: Getting some audio clicks when loading loops in one track
+  while another is playing
+
+21.2 Save Recorded Audio
+  NI: Need something that will save it to a track for immediate use
+
+----------------------------------------------------------------------
+22 Synchronization, Sync=Out
+----------------------------------------------------------------------
+
+22.x Sync=Out, MIDI Sync Indicators
+     MIDI note messages sent at various sync points.
+     Send on: loop start point, MIDI start point, cycle start, subcycle start
+     MIDI start point sent only if different from loop start point
+     Require either implementation of Source# or individual global bindings.
+     This applies to all sync modes!
+     NI
+
+22.x Sync=Out, Record, Reset
+     Record a loop, at end send StartSong and begin sending clocks.
+     On Reset, send StopSong and stop sending clocks.
+     Test: sync1
+     OK
+
+22.x Sync=Out, AutoRealign
+     While playing, retrigger the loop to align with the MIDI clocks
+     being generated by the millisecond timer.
+     Test: sync2
+     OK
+
+22.x Sync=Out, Record/Multiply
+     Spec says StartSong send when "finishing with Record" but this
+     should be done for any Record ending?
+     Test: manual
+     !!
+
+22.x Sync=Out, AutoRealign disabled
+     Suppress drift realign during any recording or loop extension mode.
+     Test: manual
+     !!
+
+22.x Sync=Out, AutoStartPoint
+     When AutoRealign is disabled during recording, and feedback is low,
+     automatically set the start point.  When feedback is raised we can
+     then continue with AutoRealign but with a more accurate 
+     audible start point
+     This applies to all sync modes!
+     NI      
+
+------------
+
+22.x Sync=Out, Multiply
+     No change to tempo or external pulse count.  Drift stays constant.
+     Test: sync3
+     OK
+
+22.x Sync=Out, ReMultiply
+     Tempo stays the same, adjust pulse frames.
+     Test: sync3
+     OK
+
+22.x Sync=Out, Stutter
+     No change to tempo or external pulse count.  Drift stays constant.
+     Test: sync3
+     OK
+
+22.x Sync=Out, Insert
+     No change to tempo or external pulse count.  Drift stays constant.
+     Test: sync3
+     OK
+
+22.x Sync=Out, Unrounded Multiply
+     No change to tempo or external pulse count.  Drift stays constant.
+     Test: sync4
+     OK
+
+22.x Sync=Out, UnroundedSyncAdjust=Tempo, Unrounded Multiply
+     Change to tempo but keep external pulse count.  Drift stays constant.
+     Test: sync4-2
+     OK
+
+22.x Sync=Out, UnroundedSyncAdjust=Tempo, MaxTempo, Unrounded Multiply
+     Change to tempo but wrap it for the maximum.   Wrapping will
+     cause a change in the external pluse count.  Drift stays constant.
+     Test: sync4-3
+     OK
+
+22.x Sync=Out, Unrounded Insert
+     No change to tempo or external pulse count.  Drift stays constant.
+     Test: sync5
+     OK
+
+22.x Sync=Out, UnroundedSyncMode=Tempo, Unrounded Insert
+     Change tempo, keep pulse count.
+     Test: sync5-2
+     OK
+
+22.x Sync=Out, UnroundedSyncMode=Tempo, MinTempo, Unrounded Insert
+     Insert enough to trigger an activation of MinTempo.
+     Test: sync5-3
+     OK
+
+22.x Sync=Out, Divide (even)
+     Effectively the same as Remultiply.
+     Cycle length stays the same, no tempo change, change pulse frames.
+     Test: sync13
+     OK
+
+22.x Sync=Out, Divide (odd)
+     Effectively the same as Unrounded Multiply.
+     No change to tempo or external pulse count.  Cycle size changes.
+     Loop frame and pulse frame adjusted.  Drift stays constant.
+     Test: sync13
+     OK
+
+22.x Sync=Out, UnroundedSyncAdjust=Tempo, Divide (odd)
+     Effectively the same as Unrounded Multiply.
+     Change to tempo but keep external pulse count.  Drift stays constant.
+     Test: sync13-2
+     OK
+
+22.x Sync=Out, UnroundedSyncAdjust=Tempo, MaxTempo, Divide (odd)
+     Change to tempo but wrap it for the maximum.   Wrapping will
+     cause a change in the external pluse count.  Drift stays constant.
+     Test: sync13-2
+     OK
+
+------------
+
+22.x Sync=Out, Undo, Redo
+     Tempo stays the same, drift is stable.
+     Test: sync6
+     OK
+
+22.x Sync=Out, UnroundedSyncAdjust=Tempo, Undo, Redo
+     Tempo changes as layer cycle size changes.  Drift is stable.
+     Test: sync6-2
+     OK
+
+------------
+
+22.x Sync=Out, Move,SlipForward,SlipBackward
+     Tempo stays the same, drift is stable.
+     Test: sync7
+     OK
+
+22.x Sync=Out, Move,SlipForward,SlipBackward
+     Tempo stays the same, drift is stable.
+     Test: sync7
+     OK
+
+------------
+
+22.x Sync=Out, StopSong
+      Send a quantized MIDI StopSong message.
+      Q: More useful to always do this on a cycle boundary rather
+      than track the Quantize parameter?
+      Test: sync8
+      OK
+
+22.x Sync=Out, MinorRetrigger
+     MinorRetrigger happens when MuteMode=Start, RateShiftRetrigger=true,
+     and PitchShiftRetrigger=true.  Like a move, but may restart sync out.
+     Test: sync8
+     OK
+
+22.x Sync=Out, MuteMode=Continuous, Mute/Undo
+     Undo forces the unmute to be handled like MuteMode=Start, so we
+     send StartSong like MinorRetrigger.
+     Test: sync8
+     OK
+
+22.xx Sync=Out, Record/Undo
+      Manual says this sends StartSong but "only at the next loop start point".
+      Q: Doesn't make sense, if you undo the initial record there is
+      no loop start point?
+      A: If we don't allow undo of the initial loop, then undo could
+      be overloaded to send StartSong.  The effect is sort of like 
+      OutUserStart but it always starts after one repetition of the first loop?
+      bug: Once you establish a loop, if you record again then undo, 
+      sync is not restored.  EDP doesn't allow this.
+      NI
+
+22.x Sync=Out, StartSong (EDP calls it QuantMIDIStartSong)
+     Send a MIDI StartSong message at the next loop start point.
+     Operates in all the Sync modes.
+     Test: sync9
+     OK
+
+22.x Sync=Out, MuteStartSong (EDP calls it MuteQuantMIDIStartSong)
+      Mute the current loop and send a MIDI StartSong message at the
+      next loop start point. Operates in all the Sync modes.
+      Q: Functionally the same as MuteRealign when Sync=Out?
+      Q: Is the mute quantized or immediate?  Assuming immediate.
+      Q: Is this a mode or an undoable event?  Assuming event.
+      Q: If the event is undone, should we unmute?  Leaving in mute.
+      Q: Should this send a StopSong first?  Seems useful to get both the
+      loop and drum machine back in sync.  If the song is already started
+      can be a flam when StartSong is sent.
+      Test: sync9
+      OK
+
+22.xx Sync=Out, StartPoint
+      Send a StartSong event immediately. Reset pulse state to zero.
+      Test: sync10
+      bug: should be handling internal timer start/continue events like
+      external sync, requires logic changes
+      OK
+      
+22.xx Sync=Out, QuantMidiStartPoint (Long StartPoint)
+      Wait for the external start point, then set the local loop start point.
+      Test: sync10
+      bug: should be handling internal timer start/continue events like
+      external sync, requires logic changes
+      OK
+
+22.xx Sync=Out, Reverse
+      Go in and out of reverse and verify that drift does not increase.
+      bug: there seems to be a slight jump by about 100 after the change,
+      but it drops back down.
+      Test: sync10
+      OK
+
+------------
+
+22.xx Sync=Out, OutRealignMode=StartSong, Realign
+      Dealign the internal and external loops, at the next internal
+      loop start point, send StartSong and reset the external pulse counters.
+      Q: Spec says StartSong is sent during Sync=OutUserStart but
+      contradicts for Sync=Out.  Assume the same.
+      Test: sync12
+      OK
+
+22.xx Sync=Out, OutRealignMode=StartSong, MuteRealign
+      Mute, then wait for loop start point and send StartSong.
+      Test: sync12
+      OK
+
+22.xx Sync=Out, OutRealignMode=StartSong, Mute/Multiply
+      Same as MuteRealign.
+      Test: sync12
+      OK
+
+22.xx Sync=Out, OutRealignMode=StartSong, Realign/Multiply
+      A Multiply during ReAlign mode cancels the realign.
+      This is odd, but I guess consistent with using Mute/Multiply to
+      enter ReAlign.  Support the more obvious Undo too.
+      Test: sync12
+      OK
+
+22.xx Sync=Out, OutRealignMode=Retrigger, RealignTime=External, Realign
+      Dealign the internal and external loops, at the next external
+      start point retrigger the internal loop from zero and reset internal
+      pulse counters.
+      Test: sync12-2
+      OK
+
+22.xx Sync=Out, OutRealignMode=Retrigger, RealignTime=Loop, Realign
+      Dealign the internal and external loops, at the next external pulse
+      that crosses the internal start point, retrigger to the frame 
+      corresponding to the external pulse number.
+      Test: sync12-2
+      OK
+
+22.xx Sync=Out, OutRealignMode=Retrigger, RealignTime=Subcycle, Realign
+      Dealign the internal and external loops, at the next external pulse
+      that crosses a subcycle, retrigger to the frame corresponding to the
+      external pulse number.
+      Test: sync12-2
+      OK
+
+22.xx Sync=Out, OutRealignMode=Retrigger, RealignTime=Cycle, Realign
+      Dealign the internal and external loops, at the next external pulse
+      that crosses a cycle, retrigger to the frame corresponding to the
+      external pulse number.
+      Test: sync12-2
+      OK
+
+22.xx Sync=Out, OutRealignMode=Retrigger, RealignTime=Immediate, Realign
+      Dealign the internal and external loops, at the next external pulse,
+      retrigger to the frame corresponding to the external pulse number.
+      Test: sync12-2
+      OK
+
+------------
+
+22.xx Sync=Out, SpeedSyncAdjust=None, Speed
+      Maintain current tempo, halve or double internal pulse width.
+      No excessive drift.
+      Test: sync14
+      OK
+
+22.xx Sync=Out, SpeedSyncAdjust=None, Rate
+      Same as Speed, but with other rates.
+      Maintain current tempo, scale the internal pulse width.
+      No excessive drift.
+      Test: test14
+      OK
+
+22.xx Sync=Out, SpeedSyncAdjust=Tempo, Speed
+      Maintain internal pulse width, halve or double the tempo.
+      Test: sync14-2
+      OK
+
+22.xx Sync=Out, SpeedSyncAdjust=Tempo, Rate
+      Same as Speed, but with other rates.
+      Maintain internal pulse width, scale the tempo.
+      Test: sync14-2
+      OK
+
+22.xx Sync=Out, SpeedSyncAdjust=Tempo, MaxTempo, Rate
+      Halve the tempo to stay within MaxTempo, scale pulse width to compensate
+      Test: sync14-2
+      OK
+
+22.xx Sync=Out, SpeedSyncAdjust=Tempo, MinTempo, Speed
+      Double the tempo to stay within MaxTempo, scale pulse width to compensate
+      Test: sync14-2
+      OK
+      bug: getting drift jump like sync14-3
+
+22.xx Sync=Out, SpeedSyncAdjust=Tempo, Rate, pulse remainder
+      Test: sync14-3
+      BUG: When shifting from -5 to 3 at the drift checkpoint we seem
+      to cause more drift than if we quantized the shift.  I suspect
+      this is because the tempo doesn't change until the next pulse, 
+      but the rate changes immediately.  This may actually represent
+      a true drift, just adjusting the pulseFrame remainder doesn't reflect
+      the reality of the external device!  We would have to defer the rate
+      shift to a pulse boundary to get closer.
+      !!
+
+------------
+
+22.xx Sync=Out, Switch, Empty
+      Clock should keep running as we pass through empty loops, 
+      restore pulseFrame when returning to original loop.
+      Test: sync20
+      OK
+
+22.xx Sync=Out, SamplerStyle=Continuous, LoopCopy (Sound,Timing)
+      No disruption in sync state.  Loop frame carries over.
+      Test: sync21
+      OK
+      bug: getting some slight pulse width overflows
+
+22.xx Sync=Out, SamplerStyle=Continuous, Switch
+      No disruption in sync state.  Loop frame carries over.
+      Test: sync22
+      OK
+
+22.xx Sync=Out, SamplerStyle=Run, Switch
+      Maintain pulseFrame relative to loopFrame but dealign from 
+      external pulses.
+      Q: EDP won't send SongPosition, but may be an interesting option.
+      Test: sync22
+      OK
+
+22.xx Sync=Out, SamplerStyle=Start, Switch
+      Send StartSong, pulse resets to zero.
+      Test: sync22
+      OK
+
+22.xx Sync=Out, SamplerStyle=Attack, Switch
+      Same as SamplerStyle=Start, but the input level is reduced
+      according to the velocity of the MIDI note event.
+      Test: sync22
+      OK
+
+22.xx Sync=Out, ReTrigger
+      Send StartSong, pulse resets to zero.
+      Q: Not in manual, but should behave like SamplerStyle=Start?
+      Test: sync22
+      OK
+
+22.xx Sync=Out, SamplerStyle=Once, Switch
+      Send StartSong, pulse resets to zero.
+      Return behaves like SamplerStyle=Run, does not send StartSong.
+      Q: This isn't in the manual but since it triggers from the beginning
+      it makes sense?
+      Test: sync22
+      OK
+
+22.xx Sync=Out, SamplePlay
+      Retrigger the current loop, let it play once, then mute.
+      StartSong is not sent, clocks continue while in mute.
+      Test: sync23
+      OK
+      
+------------
+
+22.xx Sync=Out, Pause, Resume
+      Send StopSong, SongPosition.
+      Test: sync24
+      bug: Sends StopSong, but doesn't send SongPosition on resume.
+      External device generally quantizes to the nearest song position
+      boundary on continue, externalPulse counter may go out of alignment.
+
+22.xx Sync=Out, Load Loop
+      New loop should become the sync master if there is none.
+      Sync out should be suspended until the loop is unpaused.
+      Test: sync24
+      bug: There are problems here, but in practice loading pre-recorded
+      loops 
+
+22.xx Sync=Out, Load Project
+      Essentially the same as the Load Loop test.
+      First track that is unmuted should become the sync master.
+      NI
+
+22.xx Sync=Out, TrackCopy=Sound, TrackCopy
+      New track should become the sync master if there is none.
+      !!
+ 
+22.xx Sync=Out, TrackCopy=Timing, TrackCopy
+      New track should become the sync master if there is none.
+      !!
+
+-------------------------
+
+22.xx Sync=Off, AutoRecord
+      Test: sync40
+      OK
+
+22.xx Sync=Out, AutoRecord
+      Test: sync40
+      OK
+
+22.xx Sync=Track, AutoRecord
+      Test: sync40
+      OK
+
+----------------------------------------------------------------------
+23 Synchronization, Sync=OutUserStart
+----------------------------------------------------------------------
+
+The same as Sync=Out, except for handling of the StartSong message.
+
+bug: Think about how scheduling a StartSong event interacts with other
+functions that happen before we reach the loop end.  This isn't a mode
+so they have to interact predictably?  Hmm, these can't be quantized 
+so is this really an issue?
+
+Q: would this be better as a pending event?
+
+23.xx Sync=OutUserStart, Record, StartSong
+      Record a loop, it plays without sending a StartSong event.
+      After a StartSong function, StartSong event sent at start point.
+      Can undo the StartSong event and continue as if nothing happened.
+      Test: sync30
+      OK
+
+23.xx Sync=OutUserStart, Record, MuteStartSong
+      Like previous but mutes first
+      Test: sync30
+      OK
+
+23.xx Sync=OutUserStart, StartSong suppression
+      The following functions will normally cause a StartSong to be sent
+      in Sync=Out, but should not when Sync=OutUserStart:
+        Retrigger, MinorRetritter(mute,rate,pitch), StartPoint, 
+	UnroundedMultiply, Realign, MuteRealign
+      Test: sync30
+      OK
+
+----------------------------------------------------------------------
+24 Synchronization, Sync=Track
+----------------------------------------------------------------------
+
+Set in the EDP with Sync=Out combined with cable interconnect.  Here
+it is defined with TrackSync=true and any Sync=Out|Ous.  The first
+track to record becomes the "master".  Once the master is defined,
+other tracks in output sync mode and TrackSync on will quantize their
+start and end to the master track.
+
+24.xx Sync=Track, Record
+      First track to record becomes the sync master.
+      Remaining tracks enter Synchronize mode until the master 
+      start point is reached, then begin recording.  Record end is
+      quantized to the cycle length of the master track, slave loops
+      may be more than one cycle.
+      Test: sync31
+      OK
+
+24.xx Sync=Track, DriftReAlign
+      Brother sync'd tracks receive MIDI clocks like the master track
+      so they will drift realign at exactly the same time.
+      Q: Might be a nice feature to have a Realign performed in the
+      master track immediately realign any brother tracks without having
+      them count pulses?
+      Test: sync32
+      OK
+
+24.xx Sync=Track, Record, No Drift Retrigger
+      Disable drift retrigger of the master track if there are
+      any brother tracks recording.
+      Test: sync33
+      OK
+
+24.xx Sync=Track, Realign
+      Retrigger at master track start point.
+      Q: Spec says that brother sync is ignored in OutUserStart, why?
+      Test: sync34
+      OK
+
+24.xx Sync=Track, MuteReAlign
+      Alternate form of realign.
+      Test: sync35
+      OK
+
+24.xx Sync=Track, Mute/Multiply
+      Converts to MuteRealign.
+      Test: sync35-2
+      OK
+
+24.xx Sync=Track, RealignTime=Immediate, Realign
+      Test: sync36
+      OK
+
+24.xx Sync=Track, RealignTime=Subcycle, Realign
+      Test: sync36-2
+      OK
+
+----------------------------------------------------------------------
+25 Synchronization, Sync=MIDI
+----------------------------------------------------------------------
+
+Sync=MIDI means any of the three MIDI input modes: In, MIDIBeat, MIDIBar
+
+Sync=In behaves like the EDP.  Sync=MIDIBeat quantizes the recording
+to a MIDI beat boundary.  MIDIBar quantized to a MIDI bar boundary as 
+defined by 8thsPerCycle.  MIDIBar is similar to In when quantize is
+Cycle, but MIDIBar always quantized to the cycle regardless of the
+quantize parameter.
+
+Interesting to have a Quantize option for MIDIBeat?
+
+BUG: Delay in Korg responding to StartSong may be a Korg bug?
+
+BUG: Record, QuantMidiStartSong, ReAlign
+     leaves pending Realign event
+
+25.1 Sync=In, Quantize=Off, Record
+     Begin recording at next MIDI clock, quantize record end to a
+     MIDI bar calculated using 8thsPerCycle.  If Record continues
+     beyond bar length, the loop will have more than one cycle.
+     OK
+
+25.2 Sync=In, Quantize=SubCycle, Record
+     Quantize the start of the recording to the next MIDI beat.
+     Similar to Sync=MIDIBeat, but rounds the ending to a full bar.
+     OK
+
+25.3 Sync=In, Quantize=Cycle|Loop, Record
+     Quantize the start to the next MIDI bar determined by 8thsPerCycle.
+     Effectively the same as Sync=MIDIBar
+     OK
+
+25.4 Sync=MIDIBeat, Record
+     Begin and end recording at next pulse.  Unaffected by Quantize,
+     or 8thsPerCycle.
+     OK
+     
+25.5 Sync=MIDIBar, Record
+     Same as Sync=In with Quantize=Cycle.
+     OK
+
+25.x Sync=Any, Mode=Reset, StartSong
+     Send a MIDI StartSong message to start the external device.
+     OK
+     ISSUE: On the Korg there is a delay between the function
+     and when the Korg responds, I think it is trying to auto
+     detect int/ext sync.  Clock must be set to Auto.
+
+25.x Sync=Any, Mode=Reset, StopSong
+     Send a MIDI StopSong message to stop the external device.
+     OK
+
+25.30 Sync=MIDI, Mode!=Reset, StopSong
+      Extended function, send a quantized MIDI StopSong message.
+      Q: More useful to always do this on a cycle boundary rather
+      than track the Quantize parameter?
+      BUG: Event not quantized.
+
+25.6 Sync=MIDI, StartSong
+     Send a MIDI StartSong message at the next loop start point.
+     ISSUE: The Korg adds a substantial delay after the StartSong,
+     probably the same issue as Mode=Reset+StartSong
+     OK
+
+25.7 Sync=MIDI, MuteStartSong
+     Mute, wait for loop start point, unmute and send StartSong.
+     OK
+     ISSUE: same as 25.6
+
+25.8 Sync=MIDI, Multiply|Insert
+     AutoReAlign remembers the original loop frame count, and aligns
+     on a cycle boundary rather than at the loop start point.
+     Q: want an option to always defer the realign to the start point?
+     NI: not sure I want this, realign produces thumps, do it infrequently
+
+25.9 Sync=MIDI, Unrounded Operation, Close pulse multiple
+     Unrounded operations are Multiply, Insert, TrimStart, and TrimEnd, 
+     If the resulting loop length is close to a pulse multiple, recalculate
+     pulses and dealign.  May result in round off error causing 
+     premature drift retrigger.
+     bug: Subcycle unrounded multiply properly adjusted pulse count, 
+     but the dealign was 2x the loop length.  Need to be warping 
+     dealign after the resize.
+     BUG: Actually, I think the external pulse counter may have
+     gone wrong, reset didn't cure it.
+
+25.23 Sync=MIDI, Reverse
+      Dealign.
+      OK
+
+25.21 Sync=MIDI, Undo, Redo
+      Dealign if loop has same cycle length, otherwise NoAlign.
+      OK?
+      How can we start from an unrounded loop and redo to a normal one?
+
+25.22 Sync=MIDI, Speed
+      Dealign.  This one feels more complicated since the rate
+      of frame consuption changes.  Could change external pulse
+      count to match, or factor the speed into the cycle boundary
+      calculation for AutoReAlign.
+      BUG: Need to be adjusting pulse counters, causes premature
+      drift realign in the middle.
+
+25.10 Sync=MIDI, Unrounded Operation, Not pulse multiple
+      Disable drift retrigger.
+      OK
+      bug: Undo back to the original layer seemed to set dealign, but
+      Realign didn't work.  The external start point ended up in the middle,
+      must be a dealign calculation error somwehere.
+
+25.25 Sync=MIDI, ReAlign
+      ReAlign on the next external start point.
+      OK
+      bug: getting huge negative dealign after trying to dealign with
+      reverse.  It sounded OK, but should be warping somewhere.       
+
+25.26 Sync=MIDI, MuteReAlign
+      Same as ReAlign but mute first.
+      OK
+
+25.25 Sync=MIDI, Mute/Multiply(same as ReAlign)
+      ReAlign on the next external start point.
+      BUG: Mute/Multiply gives unimplemented error (but seemed to work!)
+        see Loop::multiplyEvent, shouldn't even have had this event.
+      BUG: Getting a drift retrigger shortly after entering Mute, like
+      it's trying to realign but not leave mute.  Maybe this was 
+      because I had MuteMode=Start and Quantize=SubCycle?
+
+25.7 Sync=MIDI, ReAlign, StartSong
+     Retrigger from loop start point, reset dealign.
+     Spec on 6-16 suggests this only happens when in ReAlign mode,
+     and only when we're not receiving MIDI clocks.
+     Q: Not practical for many devices since they send clocks all the
+     time.  Think we should just watch for StartSong.
+     bug: For this to work, have to stop paying attention to clocks
+     after a StopSong is received, or ignore ReAlign after StopSong received.
+
+25.7 Sync=MIDI, ReAlign, SongPositionPointer+Continue  
+     When in ReAlign, calculate when the next global start point will be,
+     wait for it, and retrigger from the beginning.
+     Q: Could provide an option to  always track this when not in ReAlign?
+     Shouldn't we at least adjust the external loop position and dealign?
+     NI
+     Since the Korg always sends clocks, we'll realign as normal.
+
+25.11 Sync=MIDI, MuteMode=Start, Unmute
+      Retrigger and Dealign.
+      BUG: retriggering, but not dealiging, immediate drift retrigger.
+
+25.12 Sync=MIDI, MuteMode=Continuous, Mute/Undo
+      Undo forces the unmute to be handled like MuteMode=Start, so
+      Retrigger and Dealign.
+      BUG: same as MuteMode=Start, Unmute
+
+25.13 Sync=MIDI, ReTrigger
+      Dealign.
+      BUG: dealign seemed to work, but ReAlign after didn't.  External
+      pulse count looks like it matches internal pulse count.
+
+25.19 Sync=MIDI, Trigger
+      Dealign if loop has same cycle length, otherwise NoAlign.
+      BUG: 2nd loop had different cycle length through unrounded multiply,
+      returned to 1st loop, ReAlign couldn't get back.  This looks
+      like the same bug we've seen before.
+      !! need to fix this one
+
+25.20 Sync=MIDI, StartPoint
+      Dealign.
+
+25.14 Sync=MIDI, SamplerStyle=Start, Switch
+      Dealign if loop has same cycle length, otherwise NoAlign.
+      BUG: Loop switching, event with same cycle size really
+      confuses things.  Dealign way off.  Beaters not matching
+      audible beats.
+
+25.15 Sync=MIDI, SamplerStyle=Once|Attack, Switch
+      Dealign if loop has same cycle length, otherwise NoAlign.
+      Do the same on return to the previous loop.
+
+25.16 Sync=MIDI, SamplerStyle=Run, Switch
+      Dealign if loop has same cycle length, otherwise NoAlign.
+
+25.17 Sync=MIDI, SamplerStyle=Continuous, Switch
+      Align if loop has same cycle length, otherwise NoAlign.
+
+25.18 Sync=MIDI, SamplePlay
+      Dealign if loop has same cycle length, otherwise NoAlign.
+      Do the same on return to the previous loop.
+
+25.24 Sync=MIDI, QuantStartPoint
+      At the next external start point, set the loop start point,
+      no audible change.  Clear dealignment.
+
+25.28 Sync=MIDI, MIDI StopSong Received
+      Set NoAlign, depending on the device we may still receive clocks.
+      ReAlign when we eventually receive StartSong or Continue.
+      
+25.29 Sync=MIDI, MuteMode=Pause, Mute
+      Dealign when leaving mute.
+
+25.31 Sync=MIDI, Reset/Undo (SyncStartPoint)
+      Send StartSong and reset external loop counter.
+
+24.5 Sync=MIDIBar|MIDIBeat|HostBar|HostBeat, TrackSync=True, Any
+     TrackSync is ignored.
+     BUG: Sync=In with TrackSync=true causes track to become unresponsive
+     if there is an existing track sync master.
+
+----------------------------------------------------------------------
+26 Synchronization, VST
+----------------------------------------------------------------------
+
+26.5 Sync=HostBeat, Record
+     Begin and end recording at next pulse.  Unaffected by Quantize,
+     or 8thsPerCycle.  
+     OK
+     
+26.5 Sync=HostBar, Record
+     Begin and end recording at next pulse.  Unaffected by Quantize,
+     or 8thsPerCycle.  
+     Q: Could have an option to implement HostBar using 8thsPerCycle 
+     like MIDIBar and be independent of the host bar length.
+     OK
+     
+----------------------------------------------------------------------
+27 Synchronization, AutoRecord
+----------------------------------------------------------------------
+
+27.xx Sync=Track, AutoRecord
+      Test: sync42
+
+27.xx Sync=In, AutoRecord
+      Test: sync43
+
+27.xx Sync=Vst, AutoRecord
+      Test: sync44
+
+----------------------------------------------------------------------
+28 Synchronization, TempoSelect
+----------------------------------------------------------------------
+
+28.1 Sync=Out, Reset/Undo (or TempoSelect)
+     Load tempo from preset. Display tempo select soft mode indiciator
+     and current tempo.  Flash subcycle beater in time with tempo.
+     Display resulting loop time.
+
+28.2 Sync=Out, TempoSelect, Reset
+     Cancel TempoSelect mode, remove mode indicator and tempo.
+
+28.2 Sync=Out, TempoSelect, Overdub
+     Cancel TempoSelect mode, remove mode indicator and tempo,
+     but remember the tempo.
+     Unfortunately can't use Undo here and be compatible with EDP.
+
+28.2 Sync=Out, TempoSelect, Overdub, Overdub
+     Cancel, then reenter TempoSelect mode?
+     Spec for StopSync implies this is more like StopSync than
+     actually cancelling the TempoSelect.
+
+28.2 Sync=Out, TempoSelect, LongUndo
+     Cancel TempoSelect mode, remove mode indicator and tempo.
+     Tempo is discarded and returns to last preset tempo.
+
+28.2 Sync=Out, TempoSelect, Insert|Mute
+     Insert decreases, Mute increases in increments.  Start with 100ms,
+     could have a Global parameter for this.
+
+28.2 Sync=Out|OutUserStart, TempoSelect, Undo
+     Locks the tempo (replaces preset value), and triggers StartSong.
+
+28.2 Sync=Out, TempoSelect, Record
+     Lock the tempo, wait for the next clock pulse, send StartSong and
+     begin recording. Increase cycles as we pass the external start point
+     and round off recording to a cycle boundary.
+
+28.2 Sync=Out, TempoSelect, Undo, Record
+     Since the sequencer has already started, wait for the external
+     start point, then begin recoring.
+
+----------------------------------------------------------------------
+29 Synchronization, StopSync
+----------------------------------------------------------------------
+
+Pressing Overdub during Reset toggles reception of incomming sync.  It
+also toggles adherence of the tempo specified by TempoSelect.  I don't
+like overloading Overdub for this.  Presumably this would track the
+last setting of Overdub when you Reset a loop, which seems hard to
+predict.  A workaround would be a script that toggled the Sync
+parameter, could also add a function specifically for this.  This
+doesn't seem terribly useful.
+
+29.1 Sync=In, Reset, Overdub
+     Toggle the StopSync soft mode.  Display soft mode indiciator
+
+29.2 Sync=In, Reset, Overdub, Record
+     Record freely with no sync.
+
+----------------------------------------------------------------------
+40 InterfaceMode=Loop|Input|Output|Expert
+----------------------------------------------------------------------
+
+For testing would be nice to have functions that could simulate MIDI
+continuous controllers.
+
+Consider promoting a preset parameter to enable secondary feedback for
+overdub/multiply/substitute without changing interface modes.
+
+40.1 InterfaceMode=Loop, Mute, 100% Feedback
+     Feedback is not applied during Mute mode.  Should be ok as long as
+     we don't shift.
+     OK
+
+40.2 InterfaceMode=Input, MIDI Feedback controls Input
+     MIDI feedback controller sets input level.  GUI knobs not affected.
+     Unaffected by PedalMode.
+     OK
+
+40.3 InterfaceMode=Output, MIDI Feedback controls Input
+     MIDI feedback controller sets output level.  GUI knobs not affected.
+     Unaffected by PedalMode.
+     OK
+
+40.4 InterfaceMode=Expert, Play
+     Primary feedback active during play.
+     OK
+
+40.5 InterfaceMode=Expert, Overdub
+     Secondary feedback active during overdub.
+     OK
+
+40.6 InterfaceMode=Expert, Multiply
+     Secondary feedback active during overdub.
+     OK
+
+40.7 InterfaceMode=Expert, Substitute
+     Secondary feedback active during substitute.  Causes previous content
+     to be merged with overdubbed content.
+     OK
+
+----------------------------------------------------------------------
+41 InterfaceMode=Stutter, Stutter, SUSStutter
+----------------------------------------------------------------------
+
+Doc says that the *next* cycle is stuttered and implies that the loop
+must have more than one cycle.  We'll stutter the current cycle and
+don't care if there is only one cycle.  To stutter the NEXT cycle, all
+we have to do is quantize the beginning of the stutter to the next
+cycle regardless of quantize mode.
+
+Stutter as an alternate ending for Switch causes a stutter into the
+next loop.  EDP suggests that this hapens only if SwitchQuant=On, but
+I'd prefer that it be unconditional.  It doesn't say how this
+interacts with LoopCopy, but I think it should ignore it and perform
+an unconditional stutter just like Switch/Insert performs unconditional
+LoopCopy=Timing.
+
+41.1 InterfaceMode=Stutter, Insert
+     Perform Stutter.
+     BUG: click comming out of insert
+
+41.2 InterfaceMode=Stutter, SUSInsert
+     Perform SUSStutter.
+     OK
+
+41.3 InterfaceMode=Stutter, InsertOnly|SUSUnroundedInsert
+     Normal insert.
+     OK
+
+41.4 InterfaceMode=Stutter, Substitute
+     Like InterfaceMode=Expert, secondary feedback active during the
+     substitute resulting in a merge.
+     OK
+
+41.5 Stutter
+     Stutter current cycle at end of each cycle, with overdubbing.
+     OK
+
+41.6 SUSStutter
+     Stutter current cycle at end of each cycle, with overdubbing,
+     end when function goes up.
+     OK
+
+41.7 Quantize=Off, SUSStutter, start/end within same cycle
+     Simple overdub with no stutter.
+     OK
+
+41.8 StutterMode=Next, Stutter
+     Quantize stutter start to beginning of next cycle, ignoring
+     current Quantize parameter.
+     NI
+
+41.9 Stutter, Undo
+     Return to previous loop with no change in play position.
+     Will need to remember the cycle where the stutter started
+     and add this to the warped frame.  Use mModeStartFrame?
+     This differs from Switch/Insert?
+     OK? close enough
+
+41.10 Stutter, Undo, Redo
+      Normal warp.
+      OK
+      bug: if we're after the stutter cycle, could maybe be smarter about
+      jumping over the stutters on Redo, would have to remember more
+      about the start/end of the stutter
+
+41.11 InterfaceMode=Stutter, Switch/Insert
+      Begin unconditional stutter in next loop.  Insert to remain.
+      Doc says only if SwitchQuant=On, don't require this.
+      NI
+
+41.12 InterfaceMode=Stutter, Switch/Insert, Undo
+      Begin unconditional stutter in next loop.  Return to original
+      loop retaining same position.
+      NI
+
+41.13 Switch/Stutter
+      Same as Insert with InterfaceMode=Stutter.
+      NI
+
+41.14 Switch/SUSStutter
+      Same as Insert with InterfaceMode=Stutter but can't undo.
+      NI
+
+----------------------------------------------------------------------
+42 InterfaceMode=Delay
+----------------------------------------------------------------------
+
+Feedback controls Input, AltFeedback controls Feedback.  Delay time
+set with pair of Records, Overdub is always on.  Overdub toggles
+between Delay and Hold modes.
+
+Spec says that during Multiply mode there is no overdubbing in
+Delay or Hold modes.  Doesn't make sense to me, would like to have
+normal multiply in Delay mode?
+
+42.1 Feedback=0%, Record, Delay
+     Enter Delay mode after initial record (same as Overdub mode).
+     Signal repeats once.  New layer on each repeat, subject to 
+     max undo layers.
+
+42.2 Feedback=100%, Record, Delay
+     Repeats keep stacking.
+
+42.3 Feedback=50%, Record, Delay, Hold
+     Build up a few layers, press Overdub to perform Hold.
+     Logically feedback goes to 100% and overdub stops.  Feedback
+     is restored when Hold turns off.
+
+42.4 Reset, Overdub, Record
+     Immediately enters hold mode (overdub turned off).
+
+42.5 InterfaceMode=Loop, Reset, InterfaceMode=Delay
+     Overdub turned on when entering InterfaceMode.
+
+42.6 InterfaceMode=Delay, Reset, InterfaceMode=Loop
+     Overdub turned off when leaving InterfaceMode.
+
+42.7 Record, Hold, Multiply
+     No overdubbing during multiply.
+
+42.8 Record, Delay, Multiply
+     Allow overdubbing during multiply (opposite of EDP).
+
+----------------------------------------------------------------------
+43 InterfaceMode=Replace
+----------------------------------------------------------------------
+
+MIDI feedback controller controls feedback and output simultaneously.
+Requires that we implement continuous feedback.
+
+Supposedly can hear the feedback effect immediately rather than
+waiting for the next shift.  This is sort of a mistatement,
+what you hear is the reduction of output that will resemble what you
+will hear when feedback is applied.
+
+Talks about when Overdub is on, the pedal serves as a Replace function
+with with smooth level control.  I think that means that when the
+pedal is up, output and feedback are at zero, you can't hear the
+current content and it will be gone in the next loop.  You CAN hear
+the input though so make sure that output level does not affect pass
+through monitoring of the input signal.
+
+43.1 Record, Adjust Feedback
+     Hear dynamic change in output level, similar flucuations
+     on playback of the next layer.
+     OK
+
+43.2 Record, Overdub, Feedback 0 (and Output 0)
+     Functions like Replace, can monitor input sigal.
+     OK
+
+43.3 Record, Overdub, Feedback 50%
+     Functions like Substitute with merge.
+     OK
+
+----------------------------------------------------------------------
+44 InterfaceMode=Flip
+----------------------------------------------------------------------
+
+Feedback pedal controls both input level and feedback, but feedback is
+reversed.  At toe up feedback is 100 and input is 0, behaves like a
+Hold pedal.
+
+Is this like Delay mode, where overdub is always performed as long as
+input level is positive?
+
+During Overdub, pedal doesn't control feedback, but front panel knob
+does (and is also reversed).
+
+Insert does Stutter.
+
+Mute records loop silently.  For EDP this works because the input
+level is what determines whether there will be recording, in Mute they
+just let input level go up.  We will need a "soft" mute that just
+turns the output down, but keeps overdubbing.
+
+44.1 Record, Feedback 0 (actual 100%)
+     Recording holds, input not audible.
+     OK
+
+44.2 Record, Feedback 100% (actual 0)
+     Recording repeats once, input audible.
+     Overdub allowed like delay mode?
+     OK
+
+44.3 Record, Feedback 50%
+     Recording fades, input half audible.
+     Overdub allowed like delay mode?
+     OK
+
+44.4 Record, Overdub, Feedback 100% (actual 0)
+     Feedback pedal ignored, Alt Feedback used.
+
+44.5 Record, Insert
+     Performs stutter.
+
+44.6 Record, Feedback 50%, Mute
+     Silence loop but continue overdubbing.
+
+----------------------------------------------------------------------
+50 Loop Windowing
+----------------------------------------------------------------------
+

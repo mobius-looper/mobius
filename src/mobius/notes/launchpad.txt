@@ -1,0 +1,93 @@
+8 bottons along top
+  up, down, left, right, session, user1, user2, mixer
+
+8x8 
+
+8 buttons along right
+
+Loop Trigger Mode
+
+  - grid columns are tracks, rows are loops
+  - could split and have the top 2 grids for loop selection (4 per track)
+    and the bottom 2 grids for track operations
+  - right buttons could be used for "scenes" or just functions
+  - top buttons fixed:
+
+       session - go to loop trigger mode
+       mixer - cycle among mixer pages
+       user1, user2 - user assignable
+
+  - up/down loop switch
+  - left/right track select
+
+    
+Level Mode
+
+  - grid columns are output level meters
+
+
+----------------------------------------------------------------------
+Handshake
+----------------------------------------------------------------------
+
+0013D1DE   1  --     B0    11    43    1  ---  Control Change        
+0013D1E0   1  --     B0    12    1B    1  ---  Control Change        
+0013D1E0   1  --     B0    13    21    1  ---  Control Change        
+0013D1E4   1  --     B0    14    12    1  ---  Control Change        
+0013D1F9  13  --     F0  Buffer:     8 Bytes   System Exclusive      
+SYSX: F0 00 20 29 06 22 7B F7
+
+0013D2E1   1  --     B0    11    1D    1  ---  Control Change      
+0013D2EE   1  --     B0    12    40    1  ---  Control Change      
+0013D2EE   1  --     B0    13    41    1  ---  Control Change      
+0013D2F1   1  --     B0    14    13    1  ---  Control Change      
+0013D300  13  --     F0  Buffer:     8 Bytes   System Exclusive    
+SYSX: F0 00 20 29 06 55 30 F7
+
+0013D3C7   1  --     B0    11    4F    1  ---  Control Change        
+0013D3C8   1  --     B0    12    6E    1  ---  Control Change        
+0013D3CB   1  --     B0    13    46    1  ---  Control Change        
+0013D3D0   1  --     B0    14    07    1  ---  Control Change        
+0013D3D8  13  --     F0  Buffer:     8 Bytes   System Exclusive      
+SYSX: F0 00 20 29 06 55 63 F7
+
+Later after loading a session:
+
+0016CA6F   1  --     B0    11    61    1  ---  Control Change       
+0016CA71   1  --     B0    12    5E    1  ---  Control Change       
+0016CA71   1  --     B0    13    5F    1  ---  Control Change       
+0016CA79   1  --     B0    14    11    1  ---  Control Change       
+0016CA8E  13  --     F0  Buffer:     8 Bytes   System Exclusive     
+SYSX: F0 00 20 29 06 4F 3A F7
+
+0016CC78   1  --     B0    11    60    1  ---  Control Change        
+0016CC7C   1  --     B0    12    67    1  ---  Control Change        
+0016CC7D   1  --     B0    13    65    1  ---  Control Change        
+0016CC7D   1  --     B0    14    00    1  ---  Control Change        
+0016CC96  13  --     F0  Buffer:     8 Bytes   System Exclusive      
+SYSX: F0 00 20 29 06 29 12 F7
+
+Oh how clever.  There's some amount of crypto in here.
+
+The little block of CC values changes now and then as does
+the last two bytes of the sysex response:
+
+Send: 43 1B 21 12
+Return: 22 7B
+
+Send: 1D 40 41 13
+Return: 55 30
+
+Send: 4F 6E 46 07
+Return: 55 63
+
+Send: 61 5E 5F 11
+Return: 4F 3A
+
+Send: 60 67 65 00
+Return: 29 12
+
+
+Okay crypo hackers, what's the pattern? :)
+
+

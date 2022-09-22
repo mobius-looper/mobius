@@ -1,0 +1,96 @@
+Switching Issues
+
+Because switches and triggers can happen with different quantization
+settings than other previous scheduled events we can get some odd
+overlapping of the events.  In the usual case the switch will occur
+after any other events:
+
+    ReverseJump-Reverse------SwitchJump-Switch
+
+If Quantize=Loop and SwitchQuant is less, then this can happen:
+
+    SwitchJump-Switch------------ReverseJump-Reverse
+
+
+If SwitchQuant=Confirm this means that we can't try to devine the 
+eventual mode of the switch because we don't know if it will occur
+before or after the remaining events. 
+
+The funny ones are these:
+
+
+     ReversePlay-SwitchJump-Reverse-Switch
+     
+     SwitchJump-ReverseJump-Switch-Reverse
+
+Interleaved jumps are ok when we're not changing loops (always?)
+but when switching, things will be confused.  A simpler case:
+
+  Quantize=Loop, SwitchQuant=Loop
+  Reverse
+  Switch
+
+They won't be interleaved but they will be stacked on top of each other.
+The jumps are ok, the reverse jump will happen followed by the switch jump.
+The problem is the reverseEvent handler may not find the state it expects
+because switchJump may have changed it.  
+
+In general any time a pair of jump/primary events overlap, the primaries
+may not find the expected state, some will issue an error message, others
+may try to make a correction we don't want!  In these cases we have
+to defer validation/correction until after the last of the overlapping
+primaries has finished.  A situation much like stacked switch events.
+
+In practice this situation only occurs in scripts where we can
+invoke functions with inhuman speed, when quantizing functions
+that allow themselves to be stacked on the same clock, or when
+one function is quantized, and another unquantized function is 
+performed very close to the quantization boundary.  
+
+Where this was discovered was when deciding what to display when
+stacked events were scheduled after a switch.  If we ignore
+the current state of the loop we must stack 5 events to force
+the next loop into the desired state, but these are usually
+rendant ant it is annoying to display them.   
+
+The best solution to this seems to be to keep the events scheduled
+so they happen reliably, but filter them from the display if they
+are not semantically relevant.  This is more robust and easier
+than trying to guess what the play state will eventually be.
+
+
+----------------------------------------------------------------------
+Other appoaches
+
+struct MinorModes {
+
+       bool active;
+       bool overdub;
+       bool reverse;
+       bool halfSpeed;
+       int scaleRate;
+       int scalePitch;
+}
+
+When a SwitchEvent is scheduled (mSwitch) is non-null, calculate
+the initial minor modes that will be in effect in the next loop,
+this can be saved as a field in Loop.  We do not then have to stack
+events to implement the transfer modes.  This is only used for transfer
+modes off and remember, they are ignored for follow mode.
+
+This can be exposed in the TrackState for the UI, and displayed 
+in a clearer way than stacked events.  JumpPlayEvent consults
+this when the jump is adjusted.  
+
+TransferMode=Off could be implemented by simply clearing all the save
+fields rather than saving the current values.
+
+SwitchEvent handler converts the minormodes into actual events scheduled
+at frame zero so we can process them consistently.
+
+ 
+
+
+
+
+

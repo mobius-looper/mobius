@@ -1,0 +1,90 @@
+58836: 101 85215: SyncLoop:pulse external start point, pulse drift -33, loop dealign 0
+58836: 101 735: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 735: Sync: Track 0 drift check point frame 735 drift -33
+58836: 101 85215: SyncLoop:pulse external start point, pulse drift -33, loop dealign 0
+58836: 101 735: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 735: Sync: Track 0 drift check point frame 735 drift -33
+
+
+
+58836: 101 18911: Function Speed down
+58836: 101 18911: Loop: Add event Speed(Speed) 85248
+58836: 101 18911: Loop: Add event JumpPlay( ) 84677
+58836: 101 18911: Track::doFunction beginning long press for XSpeed
+58836: 101 24287: Track::doFunction canceling long press for XSpeed
+58836: 101 84447: E: JumpPlay 84677
+58836: 101 84677: Loop: Playback jumping from 85248 to frame 0 of layer 1 latency loss 0
+58836: 101 85215: SyncLoop:pulse external start point, pulse drift -33, loop dealign 0
+58836: 101 85215: E: Speed(Speed) 85248
+58836: 101 85248: Loop: Entering half speed
+58836: 101 85248: Sync: pulseAdvance: 33 loopFrame 0 pulseFrame 85161
+58836: 101 85248: Sync: calcLoopTempo rate adjusted from 12415 to 6207 (x100)
+58836: 101 85248: Sync: calcLoopTempo cycleFrames 85248 beats 4 tempo 6207 (x100)
+58836: 101 85248: Sync: adjustMasterTempo basePulseFrames remains 88800 (x100)
+58836: 101 85248: MidiTransport: tempo changed from 12415 to 6207 (x100) millis/clock 40 frames/clock 1776
+58836: 101 368: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 368: Sync: Track 0 drift check point frame 368 drift -400
+58836: 101 84720: SyncLoop:pulse external start point, pulse drift -1057, loop dealign -529
+58836: 101 368: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 368: Sync: Track 0 drift check point frame 368 drift -400
+58836: 101 84720: SyncLoop:pulse external start point, pulse drift -1057, loop dealign -529
+58836: 101 368: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 368: Sync: Track 0 drift check point frame 368 drift -400
+58836: 101 84720: SyncLoop:pulse external start point, pulse drift -1057, loop dealign -529
+58836: 101 368: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 368: Sync: Track 0 drift check point frame 368 drift -400
+58836: 101 84720: SyncLoop:pulse external start point, pulse drift -1057, loop dealign -529
+58836: 101 368: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 368: Sync: Track 0 drift check point frame 368 drift -400
+58836: 101 84720: SyncLoop:pulse external start point, pulse drift -1057, loop dealign -529
+58836: 101 368: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 368: Sync: Track 0 drift check point frame 368 drift -400
+58836: 101 84720: SyncLoop:pulse external start point, pulse drift -1057, loop dealign -529
+58836: 101 368: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 368: Sync: Track 0 drift check point frame 368 drift -400
+58836: 101 42224: Function Speed down
+58836: 101 42224: Loop: Add event Speed(Speed) 85248
+58836: 101 42224: Loop: Add event JumpPlay( ) 84962
+58836: 101 42224: Track::doFunction beginning long press for XSpeed
+58836: 101 44656: Track::doFunction canceling long press for XSpeed
+58836: 101 84720: SyncLoop:pulse external start point, pulse drift -1057, loop dealign -529
+58836: 101 84848: E: JumpPlay 84962
+58836: 101 84962: Loop: Playback jumping from 85248 to frame 0 of layer 1 latency loss 0
+58836: 0 0: 3 millis between interrupts
+58836: 0 0: 9 millis between interrupts
+58836: 101 85232: E: Speed(Speed) 85248
+58836: 101 85248: Loop: Leaving half speed
+58836: 101 85248: Sync: pulseAdvance: wrapping to 408
+58836: 101 85248: Sync: pulseAdvance: 528 loopFrame 0 pulseFrame 408
+58836: 101 85248: Sync: calcLoopTempo cycleFrames 85248 beats 4 tempo 12415 (x100)
+58836: 101 85248: Sync: adjustMasterTempo basePulseFrames remains 88800 (x100)
+58836: 101 85248: MidiTransport: tempo changed from 6207 to 12415 (x100) millis/clock 20 frames/clock 888
+58836: 101 85248: Loop: Compensating for scheduling roundoff: mPlayFrame=572 wrappedPlayFrame=571
+58836: 101 736: Sync: Track 0 drift check point frame 736 drift -32
+58836: 101 85216: SyncLoop:pulse external start point, pulse drift -33, loop dealign -1
+58836: 101 736: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 736: Sync: Track 0 drift check point frame 736 drift -32
+58836: 101 85216: SyncLoop:pulse external start point, pulse drift -33, loop dealign -1
+58836: 101 736: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 736: Sync: Track 0 drift check point frame 736 drift -32
+58836: 101 84960: SyncLoop:pulse external start point, pulse drift -289, loop dealign -1
+58836: 101 736: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 736: Sync: Track 0 drift check point frame 736 drift -32
+58836: 101 85216: SyncLoop:pulse external start point, pulse drift -33, loop dealign -1
+58836: 101 736: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 736: Sync: Track 0 drift check point frame 736 drift -32
+58836: 101 85216: SyncLoop:pulse external start point, pulse drift -33, loop dealign -1
+58836: 101 736: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 736: Sync: Track 0 drift check point frame 736 drift -32
+58836: 101 85216: SyncLoop:pulse external start point, pulse drift -33, loop dealign -1
+58836: 101 736: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 736: Sync: Track 0 drift check point frame 736 drift -32
+58836: 101 85216: SyncLoop:pulse external start point, pulse drift -33, loop dealign -1
+58836: 101 736: Sync: incPulses: wrapped pulse frame from 8601600 to 76800 (x100)
+58836: 101 736: Sync: Track 0 drift check point frame 736 drift -32
+58836: 101 41184: Function Reset down
+58836: 101 41184: Sync: Master track reset, stop clocks and send MIDI Stop
+58836: 101 41184: MidiTransport: Sending MIDI Stop and stopping clocks
+58836: 101 41184: Layer: Capture fade tail, 128 frames at 41755
+58836: 101 -289: Sync: Stop Event
+58836: 0 0: MidiState internal stopped receiving clocks

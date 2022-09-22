@@ -1,0 +1,11 @@
+!name Global Variable Test
+
+Variable global GlobalTest
+
+if GlobalTest = true
+  Message Turning global variable off
+  set GlobalTest false
+else
+  Message Turning global variable on
+  set GlobalTest true
+endif

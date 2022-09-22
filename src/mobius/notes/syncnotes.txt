@@ -1,0 +1,185 @@
+
+----------------------------------------------------------------------
+The Passage Of Time
+----------------------------------------------------------------------
+
+44100	samples (frames) per second
+44.10	samples per millisecond
+.02268	milliseconds per sample
+256	    frames per audio buffer
+5.805	milliseconds per buffer
+172.27	buffers per second
+
+60	    beats per minute
+1	    beat per second
+24	    midi clocks per beat
+44100	samples per beat
+1837.5	samples per midi clock
+41.66   milliseconds per midi clock	
+7.177   buffers per midi clock
+
+120 BPM = 20.83 millis, 3.59 buffers per midi clock
+240 BPM = 10.415 millis, 1.79 buffers per midi clock
+480 BPM = 5.2075 millis, .90 buffers per midi clock
+
+----------------------------------------------------------------------
+MidiTimer, MidiClockListener
+----------------------------------------------------------------------
+
+The timer is started by calling MidiTimer::midiStart.  This enables
+the emission of MS_CLOCK events and sets a flag to send MS_START
+followed by it's companion MS_CLOCK on the next millisecond interrupt.
+
+Since we immediately enable clocks but wait one interrupt to send
+MS_START, in theory a clock could be sent before the listener sees the
+start.  This should be rare but possible.  Actually no, if we're starting
+for the first time, mMidiTick will be zero and increment by 1.  This
+won't be larger than mMidiMillisPerClock since that will always
+be at least 5 (see time notes above).  We could send a clock right
+away since we reset the tick counter, but since this is only used
+for tempo tracking it is not critical.
+
+On the next millisecond the timer sees the pending start and sends
+MS_START followed immediately by MS_CLOCK.  It calls the midiStartEvent
+method on the clock listener but NOT midiClockEvent.  Code upstream
+is supposed to assume the clock was implicit.
+!! This is not the way the external midi queue works.
+
+After sending MS_START+MS_CLOCK, the tick counter is reset, then
+we add 1.0 to it.  I think this is wrong we should be starting over
+from zero not making 1.0 the basis for the new tick counter.  
+Fixed.
+
+If MidiTimer::midiStop is called we schedule an MS_STOP event for the
+next millisecond.
+
+If MidiTimer::midiContinue is called we schedule an MS_CONTINUE for the
+next millisecond.  This may have to delay even longer if the slave
+device needs time to seek to the new location but we don't support
+delays.
+
+The deferred processing of MS_START, MS_STOP, and MS_CONTINUE is done
+primarily so that only the time thread will be accessing the MIDI output
+device.  Hmm, actually that isn't true the same device can be in use
+by Mobius when exporting status, make sure this is reentrant!!
+Deferral also prevents a little jitter because we can send the event
+and reset the tick counters at the same time.
+
+This deferal screws up Synchronizer though which expects to advance
+it's MidiQueue right away so the results are visible in the
+current audio interrupt.  
+
+----------------------------------------------------------------------
+Timer Control
+----------------------------------------------------------------------
+
+The timer sends MS_START when MidiTransporr::start is called.
+This happens:
+
+   - Synchronizer::loopFinishedRecord
+      Recording has completely finished, after the latency delay.
+      Old comments indiciate that we should be starting earlier but it's
+      complicated.  This means that the actual start will be delayed
+      by latency plus one millisecond.
+
+   - Synchronizer::loopResume
+      Resuming after a pause.  Sends MS_CONTINUE
+
+   - Synchronizer::sendStartResetPulse, called by:
+       doRealign when RealignMode=MIDIStart
+       loopEndMultiply after an unrounded multiply
+       loopChangeStartPoint
+       restartSyncOut if we're not too close to the start point
+
+   - Synchronizer::restartSyncOut
+       loopRetrigger
+       loopMidiStart
+       loopChangeLoop when switch options retrigger
+
+Basically any time the out sync master loop change size or is
+retriggered, we send a START and reset the pulse trackers.
+
+I HATE the kludges around when MS_START and it's twin MS_CLOCK 
+are processed. Why is this, so we can reflect the
+status immediately in the MidiQueue?  
+
+
+There are two issues surrounding the uglieness:
+
+  1) residual events
+
+     After sending MS_START there can still be clock
+     events in the queue and less slikely the Timer
+     could be posting a clock event at the moment.
+
+     Since these are "in between" clocks that will effectively
+     be ignored once the MS_START comes through we don't have to 
+     process them.
+
+     OR DO WE?  The clocks did in fact happen, so something that
+     is waiting on a pulse might still want to see them.  The problem
+     is that the pulses could trigger realign and drift correction.
+
+     I would prefer a "waiting for start" state where we say we're
+     started and we continue to consume residual pulses, but
+     we don't act on them until we see the MS_START event come
+     in, normally on the next audio block.
+
+  2) immediate drift
+
+     It's the delay between what we do with the audio stream and
+     when we see the timer events.
+
+     In the middle of a buffer we process a Retrigger, Record End,
+     or some other event that starts playback and sends MS_START
+     or MS_CONTINUE.  The SyncTracker then advances the audio
+     frame to the end of the buffer.
+
+     In the next interrupt we finally see the MS_START event come in
+     and we reset the pulse frame.
+
+     BUT the audioFrame will already have advanced up to one buffer
+     length, logically they should both be aligned at frame zero.
+     Can't we just zero audioFrame when the START finally comes in?
+     YES! We can now because we're not comparing the audioFrame "loop"
+     against a real loop that will have already advanced.
+
+     Well, no we will lose the advance that actually DID happen.  
+     Technically this isn't drift it's a dealign.  The pseudo loop
+     will start advancing normally with both pulse and audioFrame
+     reset, but the audible loop will have started slightly earlier.
+     This can't really be helped, we can't delay the audible loop until
+     we actually send START.  We could try to pre-schedule the START so it
+     more closely matches the audible start (good idea!)  but there will
+     always be some amount of dealignment.  This is okay since it is small and
+     drift adjust works just fine.  
+
+     Where the accuracy matters more is when we use Realign on a pulse.
+     Now we will be adjusting the audible loop based on a pulse that we
+     received late and quantized down to a block boundary.  
+
+     Summary:
+
+        When sending START or CONTINUE during buffer processing, the 
+        audible loop will always be ahead of the real MIDI loop by
+        up to 1 millisecond, and ahead of the SyncTracker loop by up
+        to one buffer size.  
+   
+        When doing Realign to a pulse the audible loop will end
+        up behind the real MIDI loop by up to one buffer size
+        due to queueing.  The audible loop and the SyncTracker 
+        loop will match exactly.
+
+        Various techniques can be used to reduce this dealign,
+        scheduling the START ahead of time or factoring in an immediate
+        jump similar to an output latency adjustment when we change
+        position based on a pulse.  But while those may make it
+        sound tighter, they are not absolutely necessary now that
+        we've detached the SyncTracker loop from the audible loop.
+
+            
+     
+
+
+
+

@@ -1,0 +1,105 @@
+On Sunday 26 October 2003 20.20, Anders Torger wrote:
+> I've come up with an algorithm that seems to work, I'm currently
+> implementing in the convolution engine (BruteFIR), I'll post on this thread
+> when I'm ready. If it works... :-)
+
+I just released BruteFIR v0.99l 
+(http://www.ludd.luth.se/~torger/brutefir.html)
+which contains a simple algorithm that merges discontinuties, which seems to 
+work well and is cheap in terms of processor time. Any interested should look 
+in "merge.c" in the source.
+
+Anyway, it simply registers the derivative and amplitude of the last sample of 
+the previous block, and have a short transition window (64 samples at 48kHz) 
+in the start of the current block (where discontinuity has been registered). 
+In this transation window the waveform is:
+
+y'[x] = s[x] * (a + k * x) + (1 - s[x]) * y[x]
+
+'s' is a window-length reverse s-curve made from a sinus curve section, it 
+starts at 1 with derivative 0, and ends at 0 with derivative 0. 'a' is the 
+amplitude of the last sample in the previous block, 'y' is the original 
+signal, 'k' is the derivative of the last sample in the previous block.
+
+At the first samples, the (a + k * x) signal is dominating, at the end the 
+y[x] signal is dominating, and the derivative at the start of the signal is 
+the same as for the last sample of the previous block, and there is a smooth 
+transformation into the original signal.
+
+/Anders Torger
+
+----------------------------------------------------------------------
+
+I don't think there is any "rule" on how to do ADSR or any fade in and 
+fade out for that matter.  But there is a very simple way that is 
+computationaly very efficient and gives pretty good results.  Use the 
+square, it's just one multiply:
+
+for (long i = 0; i < rampUpLength; i++) {
+  float rampValue = (float) i / (float) rampUpLength;
+  *out++ = *in++ * rampValue * rampValue;
+}
+
+In the middle of the ramp, rampValue is 0.5, and when you square it you 
+get 0.25, which is approximately -12dB.
+
+Don't agonize over something like this.  Choose a simple formula that 
+sounds good (not perfect) and move on.
+
+Dan
+
+----------------------------------------------------------------------
+A "scientific" explanation for the clicks follows: Applying a volume envelope
+over a signal is same as multiplying it by the envelope. Time domain
+multiplication is frequency domain convolution. If the envelope is
+changing slowly, there are mainly low frequencies in it, and the
+convolution doesn't smear the spectrum very much. If there's a sudden
+change (discontinuity, edge) in the envelope, then all frequencies are
+present, and the convolution results in totally smeared, ruined spectrum.
+
+One way to avoid this problem is to lowpass filter the
+brick-wall envelope. Check out 'the archive', there's a filter designed
+for this purpose! Even a single-pole lowpass "out(t) = in(t) +
+c*(out(t)-in(t))" helps. Another solution is to form the envelope from
+ramps, avoiding discontinuities.
+
+Sorry for a stupid question but I thought something was missed in recent
+discussions.
+
+I thought panning should be done (for this argument I'm talking mono-stereo)
+like:
+
+Pan= -0.5 to 0.5
+lp = sqrt(0.5-pan)
+rp = sqrt(0.5+pan)
+
+loutput = lp * input
+routput = rp * input
+
+This is because intensity is inversely proportional to distance.  Having a
+linear fade would produce a whole in the middle.
+
+----------------------------------------------------------------------
+> which basically mantains the stereo to mono conversion property (no phase
+> distorsion) but uses a non linear scale for the panning factor.
+> (basically BALANCE with a non linear scale , right ?), but it still has
+> the "middle quieter than the extreme" problem as normal balance.
+
+I thought it didn't have the middle quiter problem.
+
+I = intensity
+I = lp^2 + rp^2
+
+At pan = -0.5, lp= 1, rp=0, I = 1
+At pan = 0, lp=sqrt(0.5), rp=sqrt(0.5), I = 1
+At pan = 0.4, lp = 0, rp = 1, I = 1
+
+In general, I = sqrt(0.5-pan)^2 + sqrt(0.5+pan)^2
+                  = 0.5 - pan + 0.5 + pan
+                  = 1
+
+So intensity is kept constant.
+
+
+Am I wrong?
+

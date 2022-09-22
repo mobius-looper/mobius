@@ -1,0 +1,96 @@
+Thu Aug 04 21:09:26 2005
+
+This file contains a list of some of the more obvious Mobius bugs.
+You are encouraged to read this before you start using Mobius so you
+have some idea of what to expect.  If you find something that isn't
+listed here, please report it to jeff@zonemobius.com.
+
+The bugs are divided into two sections, those related to the UI and
+those related to the looping engine.
+
+----------------------------------------------------------------------
+User Interface Bugs
+----------------------------------------------------------------------
+
+2 The space key triggers the last selected button in addition to the
+  function bound to the space key.
+
+  This is a Windows feature for automatic selection of buttons.
+  Need to find a way to disable that.
+
+3 If we can't open the audio devices (like when an instance of
+  Mobius is already running), no error dialog is displayed.
+
+4 Maximize, then restore window, not doing a relayout
+
+6 When saving loops in the Save Loop dialog, if you type in a filename
+  without an extension, it is saved without an extension, need to
+  be setting the extension based on the selected file type
+  (normally .wav).
+
+----------------------------------------------------------------------
+Looping Engine Bugs
+----------------------------------------------------------------------
+
+2 Save Layers option not saving internal layers
+
+  Internal layers are sometimes synthesized to represent complex
+  modifications like an insert.  These are not linked in to the undo layer
+  list and are not being saved.  You will not be able to fully recover
+  the project if there were internal layers.
+
+3 Loading a project with segments not properly resolving layer ids
+
+  Avoid saving and loading projects with the <i>Save Layers</i> option.
+
+5 Adjusting feedback up while playing results in an audible
+  "bump" in the middle of the layer.
+
+6 SaveRecordedAudio function may cause audio interrupt overruns
+
+  This needs to be performed in a thread outside the audio interrupt.
+
+7 files with spaces can't be loaded from a .mob file
+
+8 AutoRecord=On, Record/Switch (full loop)
+  This is supposed to unconditionally re-record the next loop, it doesn't.
+
+9 Threshold > 0, RecordMode=Sustain, Record
+
+  If RecordMode=Sustain, then the down transition arms the recording 
+  and the up transition is ignored.  After the threshold is reached
+  another down transition stops the recording, but the up transition 
+  immediately starts a new recording.  Need to either ignore up transition
+  if the down transition of a SUS record ends a recording OR
+  ignore the down transition if we're in a SUS record.
+
+10 Record, Switch, Undo
+   Supposed to cancel the pending transition, undoes the entire layer.
+
+11 SamplerStyle=Once, MIDI Trigger
+   Loop is supposed to play once then mute, doesn't mute.
+
+12 SamplerStyle=Once, Switch, Insert
+   ReTrigger but eventually return.  Losing returning event,
+   going into insert mode.
+
+13 SamplerStyle=Once, Switch, Overdub
+   Supposed to enable overdub and stay in next loop.  Not enabling
+   overdub and returning.
+
+14 SamplerStyle=Once, NextLoop, NextLoop
+   Supposed to stack two NextLoop events, instead just incrementing
+   the loop number of the first switch.
+   If wait until after the first switch to do the next one, 
+   we return to the second loop, but lose the return to the first loop
+
+15 SamplerStyle=Once, Switch, Record
+   Record a new loop and stay there.  Recording, but not canceling return.
+
+16 Overdub/Switch
+   Supposed to remember overdub when returning to loop, but it is lost.
+
+17 Replace/Switch
+   End replace, start switch.  If LoopCopy is on, not getting the
+   replaced content into the copy, copying from the play layer
+   rather than the record layer.

@@ -1,0 +1,99 @@
+
+Release 1.40 added support for complex shuffle patterns.  This feature
+is only available from scripts.  Binding MIDI event to the standard
+Shuffle function uses Shuffle Mode to determine the pattern and
+works has it did before.
+
+When using Shuffle in a sript, you follow the keyword with
+a list of arguments. For example:
+
+   Shuffle 8 1,2,3,4,5,6,7,8
+
+The first argument is the number of "granules" the loop will
+be cut into.  In this example the loop is cut into 8 even sized
+granules.
+
+The rest of the arguments are the "shuffle pattern".  In the simplest
+case these the granule numbers starting from 1.  The pattern 
+1,2,3,4,5,6,7,8 simply plays all 8 granules in order which would
+sound the same as the original loop.  This pattern reverses
+the order of the granules:  
+
+  8,7,6,5,4,3,2,1
+
+There may one element in the shuffle pattern for each granule.  If
+you have fewer pattern elements than granules the pattern will
+be repeated.  For example this:
+
+    Shuffle 8 1,2,3,4,1,2,3,4
+
+is the same as:
+
+    Shuffle 8 1,2,3,4
+
+You may repeat granules any number of times.  
+
+    Shuffle 8 1,1,1,1,2,2,2,2
+
+To leave gaps in the pattern where nothing is audible use number 0.
+
+    Shuffle 8 1,0,3,0,5,0,7,0
+
+Besides granule numbers you may use these letters:
+
+    r - select a random granule
+    u - select a random granule that has not been used
+    p - use the previous granule
+
+The difference between "r" and "u" is that "u" will never select
+a granule that has already been used in the pattern.  For example
+this pattern:
+
+    Shuffle 4 r
+
+Could result in the pattern 1,2,2,4 because duplicates are allowed.
+But this pattern:
+
+    Shuffle 4 u
+
+will never have duplicate granules.
+
+The "p" symbol is most useful when next to "r" or "u".  For example,
+this selects a granule at random and repeats the same granule 3 times.
+
+   Shuffle 4 r,p,p,p
+
+Each element in the shuffe pattern separated by a comma is called
+a "pattern element".  A pattern element may also be a list of values:
+
+   Shuffle 4 (1,2,3),(2,3,4)
+
+Lists are surrounded by () or [] and have elements separated with commas.
+When a pattern element is a list, it means to select one of the list
+elements at random.  So in the previous example the loop is divided into 
+4 granules.  The first granule of the new loop will have granule 1, 2, or 3
+of the original loop selected at random.  The second granule of the new
+loop will have granule 2, 3, or 4 of the original loop selected at random.
+
+Within a pattern element list you may have another level of nesting to
+specify the probability of selecting the granule:
+
+    ((1,.5),(2,.25),(3,.25))
+
+In this pattern there is a 50% probability of selecting granule 1, 
+and a 25% probability of selecting either granule 2 or 3.
+
+You may use the r, u, and p symbols here too:
+
+    ((1,.75),(r,.25))
+
+In this pattern there is a 75% chance of selecting granule 1 and
+a 25% chance of selecting any other granule at random.
+
+As a shorthand, it is not necessary to specify a percentage in the
+last element of a pattern element list:
+
+   ((1,.75),r)
+
+Since there are only 2 elements in the list and the first as a 75% probability
+we now that "r" will have a 25% probability and it does not have to be written.

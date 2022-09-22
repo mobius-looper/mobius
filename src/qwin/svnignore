@@ -1,0 +1,15 @@
+*.sln
+*.suo
+*.ilk
+*.pdb
+*.obj
+*.exe
+*.exp
+*.res
+*.RES
+*.opt
+*.lib
+libqwin.a
+mactest
+qwintest
+.DS_Store

@@ -1,0 +1,4 @@
+!name Shuffle Test
+!autoload
+
+Shuffle 4,1,2,3,r

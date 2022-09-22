@@ -1,0 +1,103 @@
+Need: Millisecond callback from the timer
+  - set timer the same as now with a master loop
+  - or display a transport that can be started and stopped
+    - this will be tricky
+
+Concept: Play MIDI Track
+  - If a MIDI track is the master track and you start it, it
+    needs to define the tempo.  This could be track specific rather
+    than global.  But if not global you then need a way to say that
+    one track will follow the tempo of another.
+
+Use Case 1: Starting Background
+
+  - load MIDI track with pattern (File->Open MIDI?)
+  - Play function, tempo comes from MIDI file
+  - Track becomes sync master
+  - Tempo UI component shows for MIDI tracks (only?)
+  - Shows tempo of file, but can be changed
+    - requires number input space component
+    - first example of a focusable space component
+  - Requires the notion of a "transport"
+
+----------------------------------------------------------------------
+Transport
+
+  - extension of MidiTransport?
+  - has a tempo, MIDI pulse resolution (number of millis per pulse)
+  - start, stop, restart buttons
+    - rewind, forward?
+  - Controls Timer 
+  - can use MidiOut for sending MIDI clocks
+  - Current MidiTransport is controlled by Synchronizer to start/stop/continue
+    based on the OutSyncMaster track.  If this is the same transport used
+    to advance MIDI tracks, then all MIDI tracks will start/stop/continue
+    along with the master track.  That isn't the way audio tracks would
+    behave.  Better to auto-select a different master the way we do 
+    with TrackSyncMaster?  
+
+    
+
+----------------------------------------------------------------------
+
+Common Tempo vs Independent Tempo
+
+Common Tempo
+
+  - there is a single "transport" that you start/stop/continue/rewind etc.
+    and you dial in a tempo
+
+  - alternatively slave tempo to a Mobius audio loop
+
+Independent Tempo
+
+   - each MIDI track can have it's own tempo, though this is unlikely
+     to be useful?  Can have simple adjustments with a multiplier or
+     divisor to he common tempo.  Yes, common tempo plus TimeStretch
+     is basically the same as independent tempo.  
+
+
+In both cases, need a reliable millisecond pulse and a conversion to "clocks" 
+in the timeline.  Fine resolution clocks will require larger numbers.  MIDI clocks way to coarse, should be a multiple of that for sync with other devices.
+
+Can pull up the MIDI clock generation stuff now burried in Timer to a higher
+level that can also play MIDI sequences.  
+
+@milliseond
+  - count down to next "clock"
+  @clock
+    - send clock tick to all MIDI tracks
+      - send note on/off CC, MIDI clock
+
+  This happens in the TIMER interrupt, may have to be careful about
+  governors.
+
+  Some MIDI "sends" will actually be routed to internal plugins, handled
+  on the next audio interrupt.  
+
+@interrupt
+
+  check to see what happened with MIDI since the last interrupt
+  can continue to use the current much of the same MIDI clock watcher 
+  code but without an OutSyncMaster track, or perhaps an OutSyncMaster
+  that is the transport (virtual) or a MIDI track. 
+
+  Once an audio track sets the MIDI tempo, it must follow it, just
+  like OutSyncMaster.
+
+Tempo
+
+  Tempo needs to remain constant when syncing to audio tracks, 
+  or else we need time stretch.
+
+  
+MIDI Looping
+
+Record
+  - let note offs carry over the loop end point?
+    - not as obvious as with audio
+    - assume "closure" any notes held when the loop is closed
+      will have a note off eventually if ending with Overdub
+
+
+  - 

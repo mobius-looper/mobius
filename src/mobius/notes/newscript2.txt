@@ -1,0 +1,305 @@
+----------------------------------------------------------------------
+Latency Adjustments in Scripts
+----------------------------------------------------------------------
+
+Simple "macro" scripts want to add the usual latency adjustments:
+
+   set quantize off
+   Insert
+
+   Once a script waits though, we assume we are at the exact time
+and disable latency adjustment.
+
+   Wait cycle
+   Insert
+
+If a script calls another script, this "absolute time" status
+needs to be passed down.
+
+One way to accomplish this would be temporarily overriding inputLatency
+to zero, but this would be a global change that would affect other
+scripts, it needs to be visible only within the script thread.
+
+Any wait for a "named" frame should be enter "absolute time":
+
+  subcycle
+  cycle
+  loop
+  until subcycle
+  until cycle
+  until loop
+
+Any unnamed time based wait does not necessarily enter absolulte time,
+but it could:
+
+  msec
+  frame
+  until msec
+  until frame
+
+Example: anonymous time wait that should NOT enter absolute time
+
+  Record
+  Wait msec 1000
+  Record
+
+The goal here is to create a loop exactly one second long.  Both
+records will be adjusted for latency, but it will still be 1000 msecs
+long since both the start and end were adjusted.
+
+Waiting for a specific frame would be similar, though it is more likely
+we would want to use frame counts for finely tuned tests.  To force
+us into absolute time, we need a statement:
+
+  Time absolute|user
+  
+Example: Stopping a record at a specific frame
+
+  Record
+  Wait frame 1000
+  Time absolute
+  Record
+
+The the loop will be 1000 - inputLatency frames.  This is unusual
+
+Once we enter absolute time, certain events can put is back into user time.
+
+   Reset
+   GeneralReset
+   GlobalReset
+
+Example: Returning to user time
+
+  Record
+  Wait msec 1000
+  Record
+  Wait loop
+  # now in absolute time, Overdub begins immediately
+  Overdub
+  Wait loop
+  Overdub
+  # let it play once
+  Wait loop
+  Reset
+  # are we in user time or absolute?
+  Record
+
+Not sure if we would return to user time, we just completed a named
+wait for "loop" now we want to reset and start over, this isn't
+any different than the absolute overdub.  
+
+Another option would be to delay the starting of the script for 
+InputLatency and immediately enter absolute time?  Or make it explicit:
+
+  Wait frame inputLatency
+  Record
+  Wait frame 1000
+  Record
+
+Now we stay in absolute time forever.  The only time we go back to user
+time is if we pause waiting for an external simulous:
+
+  Wait ScriptResume
+
+Here we wait for an invocation of the ScriptResume function.  If 
+ScriptResume latency adjusted, we remain in absolute time, if it is not
+we return to user time, or have to account for it with
+another latency wait
+
+  Record
+  Wait msec 1000
+  Record
+  Wait ScriptResume
+  Wait frame inputLatency
+  Record
+
+Fundamental Issue:  When we do a function wait, do we break
+out at the moment the function is invoked, or when the scheduled
+function event is processed?
+
+    Record
+    Wait msec 1000
+    Record
+    Wait Overdub
+    # automatically limit the overdub to one subcycle
+    Wait frame subcycleFrames
+    Overdub
+
+
+
+
+Potential Issue: Where are we after "Wait up" and "Wait long"
+
+Concept: Immediate vs Scheduled Script
+
+When a script is triggered, we can either evaluate it
+immediately upon receipt of the MIDI event, or we can delay
+it by InputLatency as we do for most other functions. 
+
+By delaying, we'll immediately be in "absolute time" mode and we can
+disable all further latency adjustment.  (Subject to resolution the
+Function Wait issue).   This is what you want for most "macro" commands,
+and has the advantage that the confusing "Wait last" would rarely
+be necessary.
+
+In relatively rare cases we might want the script to execute immediately.
+This could be declared with:
+
+  !immediate
+
+If an immediate script need to call a function that would begin
+or end recording, you would have to wait first.
+
+   Wait inputLatency
+
+This could be confusing.  Instead on the first function we could
+invoke it, if it returns a scheduled event automatically wait for
+the processing of that event (an implicit Wait inputLatency) 
+then continue in absolute time mode.
+
+Things we do immediately:
+
+  switchConfirmation (but what it does is adjusted for latency)
+   !! need option to eliminate latency adjust here, pass down
+   FunctionContext
+  cancelReturn
+  stopInitialRecord
+  Reset
+  Record
+    set synchronize mode
+    set play mode if currently in reset
+    stop playback
+    then schedule event
+    !! play mode was necessary to get the counter to advance, I think
+    this should no longer be necessary if we decrement the frame
+    count while in Reset mode
+  Overdub
+    toggle when in Reset or Synchronize
+  Multiply
+    Cancel realign mode
+  Insert
+    Change preset in Reset
+    Something funky in Rehearse
+  Mute
+    Change preset in Reset
+  Undo
+    Reset in Threashold and Synchronize mode
+    confirmSwitch
+  Reverse
+     toggle if in Reset
+  Speed
+     toggle in Reset
+  FocusLock
+  SampleTrigger
+  TrackSelect
+  TrackCopy
+  ScriptRecorder
+  AudioRecorder
+  ScriptTrigger
+    immediate
+
+Too much logic required to know if we need to delay BEFORE invoking
+the function, but we should be able to invoke it and determine
+if we need to wait AFTER.   
+
+Places to check for InputLatency suppression:
+  activateRecordEnd
+  scheduleModeEnd
+  scheduleTrigger
+  confirmSwitch
+
+
+Doing an initial InputLatency delay on the triggering of the script
+would also work in most cases, but we could potentially overshoot
+some quantization boundaries that we would otherwise have hit
+(with latency loss).  
+
+Concept: Function wait duration
+
+When you wait on a function, do you want for the invocation 
+or the completion of the function.  If we wait on invocation
+then we're back into latency compensation land.  If we wait
+for the event, compensation has already been performed.
+
+However waiting on the event also makes us subject to quantization.
+Q: Do function waits wait for the quantization boundary?
+This seems to be the most useful.  For testing only we might
+want to wait for the invoke but not the event:
+
+   Wait invoke Record
+
+which drops you back into "user time".
+
+
+Concept: user time vs. adjusted time
+  external/internal
+  user/system
+  user/real
+  user/adjusted
+
+During "user time" we in the period between the invocation of a
+function and the passage of InputLatency.  Once we pass InputLatency
+or a quantized event less than InputLatency (allowed?)  we enter
+"system time".
+
+A script starts in user time and enters system time automatically
+after the first function that schedules an event.  
+
+A script enters system time after ANY wait.  This alows you
+to do:
+
+   Wait frame inputLatency
+
+to simulate a scheduled invocation.  Or to violate latency
+compensation by waiting less than required.
+
+A script returns to user time after:
+
+    Wait invoke
+    Wait up
+    Wait long
+
+----------------------------------------------------------------------
+Time Altering Plugins
+----------------------------------------------------------------------
+
+The general catetory of "time stretching" plugins can effectively
+shorten or lengthen a loop with or without altering the percieved pitch.
+The change in loop length must be reflected in quantization boundaries
+and the scheduling of events.  
+
+When the length is shortened, each interrupt block will consume
+more that number of frames from the Loop.  For example with a 
+perfect 1/2 time change, a interrupt block of 256 frames will 
+require 512 frames from the loop.
+
+When the length is lengthened, each interrupt block will consume
+less that number of frames from the Loop.  For example with a 
+perfect 2x time change, a interrupt block of 256 frames will 
+require 128 frames from the loop.
+
+Event scheduling can be performed as usual, events will fire
+when the loop's frame counter reaches them, either faster or
+more slowly than normal.
+
+NO: Consuming events for output uses the play cursor, event
+scheduling uses the record cursor.  The cursors will not move
+at the same rate:
+
+Option 1: apply the reverse time shift to the input stream
+as the output stream.  E.g. if output has a 2x shift, then
+input has a 1/2 shift since it will take twice as long to record.
+This is like half speed?
+
+Hmm, I don't think that will work well.  Conceptually "stretch"
+is like an immediate resizing of the loop.  If you overdub
+over that, it's like a multiply the overdub length will
+be longer than the original loop.  But the original loop
+is copied into the next layer as the stretch is applied, so 
+
+
+
+
+
+
+----------------------------------------------------------------------

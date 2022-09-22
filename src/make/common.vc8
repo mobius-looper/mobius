@@ -1,0 +1,201 @@
+#
+# This was designed for Visual Studio 8.0, aka Visual Studio 2005
+#
+# $Revision: 1.4 $
+#
+# Note that this is an nmake file so we can make use of win32.mak,
+# but we do assume that cygwin exists and call things like 'rm' and 'cp'.
+#
+# Since this file contains rules, any makefile that includes it should
+# have a default: target preceeding this file.
+#
+# MSVC8 Notes
+#
+# -GX is deprecated, supposed to use EHsc instead
+# 
+# Get this warning for strcpy, strncpy, sprintf
+#
+#  x:\msvc8\VC\include\string.h(156) : see declaration of 'strncpy'
+#  Message: 'This function or variable may be unsafe. 
+#  Consider using strncpy_s instead. To disable deprecation, 
+#  use _CRT_SECURE_NO_DEPRECATE. See online help for details.
+#
+#
+
+# need to use features added starting with Windows98
+
+# the usual output directories
+BINDIR = ..\..\bin
+LIBDIR = ..\..\lib
+INCDIR = ..\..\include
+
+# A common bin directory known to be on the PATH environment variable.
+# The BINDIR directory is normally under the muse development and not
+# necessarily on the path.
+HOMEBINDIR = ..\..\..\..\bin
+
+# Target both NT and 95/98
+# Don't really need to do this any more, not sure what would happen
+# if it was taken out.
+#TARGETOS=BOTH
+
+# Target IE 4.0
+#_WIN32_IE=0x0400
+
+# need some newer stuff defined in W2K minimum
+# one comment says: 0x0400 is for Windows NT 4.0. For Windows 2000 use 0x0500
+# another says: 
+#    A general rule with WINVER: < 0x0500 means it is the version of
+#    the 9x serius, > 0x0500 means it is the version of the NT serius.
+# setting this directly doesn't work
+#WINVER=0x0500
+
+# Enable features for NT 4.0 & 95/98 with DCOM
+APPVER=4.0
+
+# Enable features for 98, 2k
+# !! ugh, causes annoying warning messages, just go copy the constants
+# for now
+# need a more recent version of the platform SDK or get the damn
+# thing to build under VS.NET (2005 or greater)
+#APPVER=5.0
+
+!include <win32.mak>
+
+# add -GX so we can throw exceptions
+# Note we end up with msvcrt.lib so we're NOT linking with the
+# debug runtime library.  Apps will have to do the same.
+# Debugging is always on, need to conditionalize this someday
+# winmm.lib is required for multimedia stuff
+# msvcprt for standard C++
+# shell32.lib is for SHBrowseForFolder
+
+# In MSVC8 GX is deprecated, supposed to use EHsc instead
+# In MSVC8 have to set _CRT_SECURE_NO_DEPRECATE to avoid warnings
+# about strcpy, strncpy, sprintf.
+
+# /MT gives you multithreade static link
+# /MD gives you multithreaded dynamic link and requires MSVCP80.dll
+# which was not on my machine by default
+# /MTd and /MDd get debug versions of those libraries
+#
+# The libraries are in a the "vc/redist" directory but just copying
+# those over to windows/system32 didn't seem to work, still got
+# a popup error for "application attempted to load the C runtime
+# library incorrectly..."
+#
+# link statically until we figure out a way to distribute MSVCP80
+#
+# NOTE: With VC6 we had been explicitly including msvcprt.lib in
+# both DLL_SYSLIBS and EXE_SYSLIBS, this somehow causes a reference 
+# to MSVCP80.dll.  Took these out and the reference went away.  Strange
+# since this is the static lib, but it is better to let the compiler
+# pick the libraries it's own self based on /MTd
+
+MY_CFLAGS  = -EHsc -D_CRT_SECURE_NO_DEPRECATE=1 
+
+# gives you dll runtime
+#DLL_CFLAGS	= $(MY_CFLAGS) $(cflags) $(cdebug) $(cvarsdll)
+#DLL_LFLAGS	= $(dlllflags) $(ldebug)
+#DLL_SYSLIBS	= $(guilibsdll) $(olelibsdll) winmm.lib comctl32.lib
+#EXE_CFLAGS	= $(MY_CFLAGS) $(cflags) $(cdebug) $(cvarsdll)
+#EXE_SYSLIBS	= $(conlibsdll) winmm.lib comctl32.lib
+#EXE_LFLAGS	= $(conlflags) $(ldebug)
+#WIN_LFLAGS	= $(winlflags) $(ldebug) 
+
+# gives you static runtime
+DLL_CFLAGS	= $(MY_CFLAGS) $(cflags) $(cdebug) $(cvarsmt)
+DLL_LFLAGS	= $(dlllflags) $(ldebug)
+DLL_SYSLIBS	= $(guilibsmt) $(olelibsmt) winmm.lib comctl32.lib shell32.lib
+EXE_CFLAGS	= $(MY_CFLAGS) $(cflags) $(cdebug) $(cvarsmt)
+EXE_SYSLIBS	= $(conlibsmt) winmm.lib comctl32.lib
+EXE_LFLAGS	= $(conlflags) $(ldebug)
+WIN_LFLAGS	= $(winlflags) $(ldebug) 
+
+# jsl - FIXED:NO added for Quantify/Purify
+EXE_LFLAGS	= /FIXED:NO $(EXE_LFLAGS)
+DLL_LFLAGS	= /FIXED:NO $(DLL_LFLAGS)
+
+######################################################################
+#
+# usual targets & rules
+#
+######################################################################
+
+# NOTE: .exp is a necessary file on Mac, it contains exports for
+# the AU plugin AUMobius.exp.  We'll delete it on windows but
+# it isn't used.  cvs update will restore it.
+#
+# For some reason the rule for building .res files from .rc file
+# produces the extension .RES, have to use that capitalization
+# with rm
+
+standardclean:
+	@-rm -f *~
+	@-rm -f *.*~
+	@-rm -f *.obj
+	@-rm -f *.exe
+	@-rm -f *.bak
+	@-rm -f *.pdb
+	@-rm -f *.lib
+	@-rm -f *.exp
+	@-rm -f *.res
+	@-rm -f *.RES
+	@-rm -f *.dll
+	@-rm -f *.class
+	@-rm -f *.opt
+	@-rm -f *.mdp
+	@-rm -f *.ilk
+	@-rm -f *.manifest
+
+!ifndef NO_COMMON_CLEAN
+clean: standardclean
+!endif
+
+finish:
+	-del /q *~
+	-del /q *.*~
+
+oldclean:
+	-del /q *~
+	-del /q *.*~
+	-del /q *.obj
+	-del /q *.exe
+	-del /q *.bak
+	-del /q *.pdb
+	-del /q *.lib
+	-del /q *.exp
+	-del /q *.res
+	-del /q *.RES
+	-del /q *.dll
+	-del /q *.class
+	-del /q *.opt
+	-del /q *.mdp
+
+ignore:
+	@svn propset svn:ignore -F svnignore .
+
+#
+# Standard rules
+# NOTE: Historically I always built DLLs though that isn't
+# done any more.  Leave DLL_FLAGS for default compilation, 
+# it generally doesn't hurt anything.
+#
+# !! this does not appear to be used
+#
+
+.c.obj:
+	cl $(DLL_CFLAGS) /c $*.c
+
+.cxx.obj:
+	cl $(DLL_CFLAGS) /c $*.cxx
+
+.cpp.obj:
+	cl $(DLL_CFLAGS) /c $*.cpp
+
+.rc.res:
+	rc -r $*.rc
+
+######################################################################
+######################################################################
+######################################################################

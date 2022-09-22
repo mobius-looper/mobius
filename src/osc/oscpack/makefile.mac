@@ -1,0 +1,68 @@
+#
+# Makefile for the oscpack OSC library
+#
+# I decided to use my own make framework rather than Ross' so we can
+# build universal binaries and keep things consistent.
+#
+# This only builds the core library and the OscDump utility.  If you want
+# the tests and all the examples use the original makefile in Makefile-orig.
+# 
+
+default: lib oscdump
+
+include ../../make/common.osx
+
+INCLUDES = -I.
+
+# Ross uses these, optimization is probably okay everywhere but
+# I don't want to test it yet
+OTHER_CFLAGS = -Wall -O3
+
+######################################################################
+#
+# liboscpack
+#
+######################################################################
+
+LIBNAME = liboscpack
+
+LIB_SRC = \
+	./osc/OscTypes.cpp \
+	./osc/OscReceivedElements.cpp \
+	./osc/OscPrintReceivedElements.cpp \
+	./osc/OscOutboundPacketStream.cpp \
+	./ip/IpEndpointName.cpp \
+	./ip/posix/NetworkingUtils.cpp \
+	./ip/posix/UdpSocket.cpp
+
+LIB_O = $(LIB_SRC:.cpp=.o)
+
+$(LIBNAME).a: $(LIB_O)
+	libtool -static -o $(LIBNAME).a $(LIB_O)
+
+lib: $(LIBNAME).a
+
+######################################################################
+#
+# oscdump
+#
+######################################################################
+
+DUMP_SRC = ./examples/OscDump.cpp
+DUMP_O = $(DUMP_SRC:.cpp=.o)
+
+oscdump: $(LIBNAME).a $(DUMP_O)
+	g++ $(LDFLAGS) -g -o oscdump $(DUMP_O) -L. -loscpack
+
+######################################################################
+#
+# General
+#
+######################################################################
+
+.PHONY: clean
+clean: commonclean
+	@-rm -f $(LIB_O)
+	@-rm -f $(DUMP_O)
+	@-rm -f liboscpack.a
+	@-rm -f oscdump

@@ -1,0 +1,47 @@
+
+The Mobius Technological Enslavement Device is now available
+
+
+Some of you may recall that about 9 months ago during an embarassing
+bout of hubris, I announced that I was writing a Windows looping
+application that emulated a Loop IV EDP.  It probably comes as no
+suprise that I underestimated how hard that was going to be :-)
+
+But I'm pleased (and relieved) to finally say that a public beta of
+the Mobius looping device is now available.  You can find it at
+www.zonemobius.com.  It was developed on Windows XP, should run on W2K
+and ME, but might not run on 98.  
+
+Mobius is essentially 8 independent stereo EDPs with the ability to
+copy loops and timing between them.  Extensive MIDI, computer
+keyboard, and UI button control is provided.  Progress through the
+loop is displayed as a horizontal "thermometer" annotated with markers
+that show when quantized functions will occur.  Loops (including
+complete layer histories) may be saved to and loaded from files.
+
+I believe there is fairly complete coverage of features except for
+three notable areas: Loop Windowing, Interface Mode, and external
+synchronization.  I'm working on loop windowing now.  Andy Butler made
+the wise suggestion not to get too fixated on a perfect
+emulation and instead implement features the way they made sense to
+me.  I do have an EDP and use it to cross check behavior, but if you
+are an expert you will notice some differences.  Most of these are
+discussed in the user's manual.
+
+While anyone is welcome to try it out, it would be best if you already
+have some knowledge of the EDP.  For obvious reasons I don't have the
+resources to replicate the EDP manual, the documentation I do have
+is concerned mostly with configuration and how Mobius is different
+than the EDP.  This is a true beta, so it's still a little rough
+around the edges.  Basic operations should work but as you explore the
+fringes you will find problems.  PLEASE report them.
+
+There is no immediate plan for a Mac port or a VST plugin.  I am
+finding it easier and more interesting to evolve Mobius as a
+standalone application that can host VST plugins and provide the
+optimized performance features I want, rather than having it be a VST
+plugin and wrestle with host interaction issues.
+
+I hope some of you find this as entertaining as I do.
+
+Jeff

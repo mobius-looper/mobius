@@ -1,0 +1,66 @@
+#
+# Makefile for the core utilities
+# 
+
+default: utiltest threadtest doc2html xomtest wavtest
+
+include ../make/common.osx
+
+######################################################################
+#
+# libutil
+#
+######################################################################
+
+LIBUTIL_O = \
+	  Trace.o Util.o Vbuf.o List.o Map.o Thread.o \
+	  TcpConnection.o MessageCatalog.o \
+	  XmlBuffer.o XmlModel.o XmlParser.o XomParser.o \
+	  WaveFile.o \
+          MacUtil.o
+
+libutil: libutil.a
+
+libutil.a: $(LIBUTIL_O)
+	   libtool -static -o libutil.a $(LIBUTIL_O)	    
+
+######################################################################
+#
+# doc2html
+#
+######################################################################
+
+doc2html: libutil.a Doc2Html.o
+	g++ $(LDFLAGS) $(FRAMEWORKS) -g -o doc2html Doc2Html.o libutil.a
+
+######################################################################
+#
+# tests
+#
+######################################################################
+
+utiltest: libutil.a utiltest.o
+	g++ $(LDFLAGS) $(FRAMEWORKS) -g -o utiltest utiltest.o libutil.a
+
+threadtest: libutil.a threadtest.o
+	g++ $(LDFLAGS) $(FRAMEWORKS) -g -o threadtest threadtest.o libutil.a
+
+xomtest: libutil.a xomtest.o
+	g++ $(LDFLAGS) $(FRAMEWORKS)-g -o xomtest xomtest.o libutil.a
+
+wavtest: libutil.a wavtest.o
+	g++ $(LDFLAGS) $(FRAMEWORKS) -g -o wavtest wavtest.o libutil.a
+
+######################################################################
+#
+# General
+#
+######################################################################
+
+.PHONY: clean
+clean: commonclean
+	@-rm -f utiltest
+	@-rm -f threadtest
+	@-rm -f xomtest
+	@-rm -f wavtest
+	@-rm -f doc2html

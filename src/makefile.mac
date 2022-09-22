@@ -1,0 +1,40 @@
+#
+# Outer build file for Mac
+# This does not clean or build the au, vst, and PortAudio directories
+# au and vst are built manually and have makefiles
+# PortAudio was built from an xcode project included with the distribution
+# and the binaries have been checked in.
+#
+
+default:
+	@echo util
+	@make -C util -f makefile.mac
+	@echo osc
+	@make -C osc -f makefile.mac
+	@echo qwin
+	@make -C qwin -f makefile.mac
+	@echo midi
+	@make -C midi -f makefile.mac
+	@echo audio
+	@make -C audio -f makefile.mac
+	@echo soundtouch
+	@make -C soundtouch -f makefile.mac
+	@echo mobius
+	@make -C mobius -f makefile.mac
+
+clean:
+	@echo util
+	@make -C util -f makefile.mac clean
+	@echo osc
+	@make -C osc -f makefile.mac clean
+	@echo qwin
+	@make -C qwin -f makefile.mac clean
+	@echo midi
+	@make -C midi -f makefile.mac clean
+	@echo audio
+	@make -C audio -f makefile.mac clean
+	@echo soundtouch
+	@make -C soundtouch -f makefile.mac clean
+	@echo mobius
+	@make -C mobius -f makefile.mac clean
+

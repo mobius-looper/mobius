@@ -1,0 +1,48 @@
+A customized mac hosts file is in "hosts".
+To install do:
+
+   sudo cp hosts /private/etc/hosts
+
+---------------
+
+After upgrading to Snow Leopard I also upgraded to Xcode 3.2
+
+Starting getting compile failures on include_next of <stdarg.h>
+This is the raw compiler command line for an example console application.
+
+CompileC build/skeleton.build/Debug/skeleton.build/Objects-normal/i386/main.o main.c normal i386 c com.apple.compilers.gcc.4_2
+cd /Users/jeff/dev/mactest/skeleton
+setenv LANG en_US.US-ASCII
+
+/Developer/usr/bin/gcc-4.2 
+-x c -arch i386 
+-fmessage-length=0 
+-pipe 
+-std=gnu99 
+-Wno-trigraphs 
+-fpascal-strings 
+-fasm-blocks -O0 
+-Wreturn-type 
+-Wunused-variable 
+-isysroot /Developer/SDKs/MacOSX10.6.sdk 
+-mfix-and-continue 
+-mmacosx-version-min=10.6 
+-gdwarf-2 
+-iquote /Users/jeff/dev/mactest/skeleton/build/skeleton.build/Debug/skeleton.build/skeleton-generated-files.hmap 
+-I/Users/jeff/dev/mactest/skeleton/build/skeleton.build/Debug/skeleton.build/skeleton-own-target-headers.hmap 
+-I/Users/jeff/dev/mactest/skeleton/build/skeleton.build/Debug/skeleton.build/skeleton-all-target-headers.hmap 
+-iquote /Users/jeff/dev/mactest/skeleton/build/skeleton.build/Debug/skeleton.build/skeleton-project-headers.hmap 
+-F/Users/jeff/dev/mactest/skeleton/build/Debug 
+-I/Users/jeff/dev/mactest/skeleton/build/Debug/include 
+-I/Users/jeff/dev/mactest/skeleton/build/skeleton.build/Debug/skeleton.build/DerivedSources/i386 
+-I/Users/jeff/dev/mactest/skeleton/build/skeleton.build/Debug/skeleton.build/DerivedSources 
+-c /Users/jeff/dev/mactest/skeleton/main.c 
+-o /Users/jeff/dev/mactest/skeleton/build/skeleton.build/Debug/skeleton.build/Objects-normal/i386/main.o
+
+----------------------------------------------------------------------
+Snow Leopard Linking
+
+Ld build/Debug/skeleton normal i386
+cd /Users/jeff/dev/mactest/skeleton
+setenv MACOSX_DEPLOYMENT_TARGET 10.6
+/Developer/usr/bin/gcc-4.2 -arch i386 -isysroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/jeff/dev/mactest/skeleton/build/Debug -F/Users/jeff/dev/mactest/skeleton/build/Debug -filelist /Users/jeff/dev/mactest/skeleton/build/skeleton.build/Debug/skeleton.build/Objects-normal/i386/skeleton.LinkFileList -mmacosx-version-min=10.6 -o /Users/jeff/dev/mactest/skeleton/build/Debug/skeleton

@@ -1,0 +1,15 @@
+#
+# Spread script example
+#
+
+!name Spread Test
+
+# the default spread is taken from the global configuration, it
+# usually defaults to 24, for 2 octaves up and down
+
+!spread 4
+
+# when the function is called, this built-in variable has the 
+# relative spread value
+
+Message Spread $triggerOffset

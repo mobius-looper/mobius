@@ -1,0 +1,104 @@
+Stack Frames
+
+  - things we must save
+    mStatement
+    mWaitEvent
+    mWaitThreadEvent
+    mWaitFunction
+    mWaitBlock
+    mWaitSustain
+
+  - things that can't change
+    mScript (changd in stack)
+    mTrack (the default, changed in stack)
+
+  - things it is ok to change
+    mLoadedScripts
+    mVariables     
+    mStack
+    mStackPool
+    mPostLatency
+    mSustainedMsecs
+    mSustainCount
+
+  - transient things
+    mContext
+    mFunction
+      
+Would be *very* nice if we didn't allow notifications
+to enter wait states, so we don't have to save state.
+Actually, this may be really confusing if we don't since
+previously scheduled events may not be evaluated in the
+right context!
+
+StackFrame
+  mStack
+  mScript
+  mCall
+  mIterator
+  mLabel
+  mTracks
+  mMax
+  mIndex
+
+mCall
+
+  - need to save the CallStatement on the stack frame so we can resolve
+    arguments
+
+  - CallStatement currently being returned by popStack, but shouldn't
+    need this?
+
+mIterator
+  ScriptForStatement::isDone
+    - sanity check to make sure the stack matches the statement
+  ScriptRepeatStatement::isDone
+    - sanity check to make sure the stack matches the statement
+  ScriptNextStatement::eval
+    - sanity check to make sure we're read to pop
+  ScriptStack::getTrack
+    - !! used to locate the innermost For statement when resolving tracks
+
+mLabel
+  - might be necessary to know we're in a notification handler?
+
+
+
+PUSHES
+
+  ScriptForStatement::eval
+    - pushes self
+  ScriptRepeatStatement::eval
+    - pushes self
+  ScriptCallStatement::eval
+    - pushes Call with external Script (or this Script for a proc call)
+      - returns mProc->getNext() or sub->getStatements()
+
+POPS
+
+  ForStatement::eval
+    - pops the For statement
+    - returns the statement after the NextStatement, or an EndStatement if 
+       unbalanced
+    - doesn't need the saved mStatement from the stack
+
+  NextStatement::eval
+    - pops For/Repeat stack frame
+    - returns NULL so we pick up with the statement after the Next
+
+  ScriptInterpreter::advance
+    - when the mStatement list goes NULL, pops stack and *if* there
+      was a call statement on the stack, resumes after the call
+
+
+
+At End
+  - through various means, either an explicit "end" or falling off the end,
+    mStatement will become NULL
+
+Continue
+  - usable only with notifications
+  - when mStatemet
+
+
+

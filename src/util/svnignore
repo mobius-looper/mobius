@@ -1,0 +1,10 @@
+*.exe
+*.obj
+*.lib
+*.exp
+*.pdb
+doc2html
+threadtest
+utiltest
+wavtest
+xomtest

@@ -1,0 +1,1162 @@
+
+LAYER NOTATION
+
+To describe how functions affect the structure of layers and segments
+it is useful to have a symbolic notation.  We will first define a
+simple ASCII notation that can be used to describe many, but not all,
+layer structures.  In this notation, letters represent functions that
+were performed in the layer, for example the initial recording of the
+first layer can be described as:
+
+    rrrrrrrr
+
+Where 'r' is the code for the Record function.  The actual duration of
+letter is not important, you can think of them as subcycles or beats.
+In the next example, we will perform an overdub in the middle of the
+second layer:
+
+    rrrrrrrr
+    ---oo---
+
+A '-' represents a beat during which the layer is simply played with
+no function being performed.  An 'o' represents a beat during which an
+overdub was performed.  So far these lines represent the content of
+the local Audio object in each layer, call these "layer lines".
+Segments are represented with a line between two layer lines.
+
+  1  rrrrrrrr
+     ++++++++
+  2  ---oo---
+
+The '+' represents the range of a segment, in this case there is one
+segment that extends over all of the first layer.  We've also added
+numbers to identify the layers.  The contents of layer 1 is not copied
+intolayer 2, it is simply referenced and merged at runtime.
+
+In the next example, we'll perform a replace operation.
+
+  1  rrrrrrrr
+     +++  +++
+  2  ---RR---
+
+Here 'R' represents when the Replace was performed.  Note that we now
+have two segments, one referencing the layer before the replace, and
+one after the replace.
+
+When recording progresses seamlessly from the end of one layer to the
+beginning of another, we do not fade the edges of the layers.  This
+will allow the content to be heard without a fade bump at the end as
+the layer loops.  These are called "deferred fades" and are described
+in detail later.  The presence of a deferred fade is indiciated
+with a '>' character at the end or beginning of the layer.
+
+  1  rrrrrrrr>
+     ++++++++
+  2 >oooooooo
+
+Here, the initial record was ended with an overdub so we deferred the
+fade at the end of the first layer and at the beginning of the second.
+A similar notation is used if the layers were recorded in reverse, 
+the difference is that '<' is used to indicate the direction.
+
+  1 <rrrrrrrr
+     ++++++++
+  2  oooooooo<
+
+Normally a process called "layer flattening" is performed as the layer
+is recorded.  Flattening means that the contents of the previous layer
+is copied into the next layer rather than being indirectly referenced
+and merged during playback.  The '|' character is used to represent the 
+presence of flattening.
+
+  1  rrrrrrrr
+     ||||++++
+  2  --------
+
+In the previous example, the first half of layer 1 has been copied
+into layer 2 and is no longer referenced by a segment.  The second
+half has not yet been copied and is still referenced through a
+segment.  In theory flattening can be applied at random points in a
+layer and the model supports this.
+
+  1  rrrrrrrr
+     ++||++||
+  2  --------
+
+But in practice, flattening always occurs uninterrupted from one
+side of the layer to the other so you should not have gaps.  It
+is however possible for flattening to be interrupted before we have
+a chance to copy the entire layer, such as if the layer were 
+retriggered.  So structures like these can happen, the first one
+represents an interrupted forward flattening, the second one
+a reverse flattening.
+
+  1  rrrrrrrr         1  rrrrrrrr
+     ||||++++            ++++||||
+  2  --------         2  --------
+
+In some cases, a layer "shift" is performed before we finish iterating
+over the layer from start to finish.  A shift is represented with
+empty space in the layer line.
+
+  1  rrrrrrrr
+     ++++++++
+  2  oooo
+     ++++++++
+  3      oooo
+
+Here we shifted from layer 2 to 3 before we finished recording, then
+started recording layer 3 in the middle.  In terms of what you would
+hear, spaces are just like '-' they just indiciate that we never
+actually processed this portion of the layer.  This condition is rare.
+
+A final piece of notation is used in rare cases where segments are
+adjacent.  The boundary between adjacent segments is represented with
+the ']' character.
+
+  1  rrrrrrrr
+     +++]++++
+  2  --------
+
+Here there are two adjacent segments, both are 4 "beats" long.  The
+']' is considered owned by the segment on the left.  Direction of
+recording does not matter, it is always owned by the segment on the
+left.  It is difficult to cause this to happen, but the segment model
+must support it.
+
+LEGEND
+
+The letters assigned to each function are:
+
+  + indirect layer reference
+  | layer copy
+  - Play
+  r Record
+  o Overdub
+  m Multiply
+  i Insert
+  R Replace
+  s Substitute
+  u Undo
+  d Round (the roundoff period after Insert/Multiply)
+  t Stutter
+  e Speed
+  v Reverse
+  T Trigger
+  S StartPoint
+  
+We don't use letters for SUS variants, sustain can be specified with
+an annotation on the diagram.
+
+Unrounded functions will be always be written with a 'r' Record
+alternate ending.  Trim Start and Trim End can be represented as
+normal unrounded multiplies.
+
+'T' can be used for all variants of loop switching including NextLoop,
+PrevLoop, Triggern, SamplePlay, Retrigger, Mute/Retrigger.
+
+Functions that don't affect layer structure like MuteReAlign do not
+have letter assignments, though they behave like Trigger in some
+cases.
+
+DEFERRED FADES
+
+When recording progresses seamlessly from the end one layer to the
+beginning of another, we do not fade the edges of the two layers.
+This will allow the content to be heard without a fade bump at the end
+as the layer loops.
+
+In this example an initial Record was ended with an Overdub which
+was held until the middle of the second layer.
+
+    1  rrrrrrrr>
+       ++++++++
+    2 >oooo----
+
+During forward recording, the first layer will be marked as having a
+deferred right fade and the second layer as having a deferred left
+fade.  As long as the second layer maintains a reference to the end of
+the first layer the fades can continue to be deferred.
+
+Reverse recording is the same, except the edges are reversed.
+
+    1 <rrrrrrrr
+       ++++++++
+    2  ----oooo<
+
+Here layer one is marked as having a deferred left fade and layer
+two is marked as having a deferred right fade.
+
+These two types of deferred fades are named:
+
+  - Trailing Deferred Fade
+      A fade that would normally be applied to the end of a layer
+      before exiting to the next layer.
+
+  - Leading Deferred Fade
+      A fade that would normally be applied to the beginning of
+      a layer after entering from the previous layer.
+
+Leading and trailing fades are processed differently.  It is not
+enough to know if the fade is on the left or right, you must also know
+the direction of the recording in to know which which edge is leading
+and which is trailing.
+
+For simplicity we require that a layer must be recorded in only one
+direction.  If we allowed direction to change during recording (or
+overdubbing), one edge may have both a leading and trailing deferred
+fade and we would need to maintain more state.  In segment notation,
+what you cannot do is this:
+
+  1   rrrrrrrr>
+  2 <>oooo----
+  3   oooooooo<
+
+The '<>' means that there was a forward leading deferred fade on entry
+to layer 2, we overdubbed for awhile, then went into reverse.  While
+in reverse we exited layer 2 and continued a seamless overdub into layer 3.
+
+(Think about this, we can't do this on the initial record but might 
+be able to on overdub).
+
+Instead what must happen is that a layer shift is performed when the
+direction is reversed, resulting in this structure.
+
+  1   rrrrrrrr>
+      ++++++++
+  2  >ooooV
+      ++++++++
+  3  <oooo
+      ++++++++
+  4   oooooooo<
+
+
+Deferred fades must be "applied" whenever the content from the
+other side of the fade is removed.  This commonly happens
+after an Undo.  Consider this structure:
+
+    1  rrrrrrrr>
+       ++++++++
+    2 >oooooooo>
+       ++++++++
+    3 >oooooooo
+
+There are trailing deferred fades on the right edges of layers 1 and
+2, and leading deferred fades on the left edges of 2 and 3.
+
+If you undo from layer 3 back to 2, the trailing deferred fade in
+layer 2 must be applied because the content that followed the end of
+layer 2 has been removed.  But note that we do *not* apply the
+leading deferred fade in layer 2.  This is because the content that
+preceeds the beginning of layer 2 is still present at the end of layer
+1.
+
+If this same content were recorded in reverse it would look like this:
+
+    1 <rrrrrrrr
+       ++++++++
+    2 <oooooooo<
+       ++++++++
+    3  oooooooo<
+
+Here when we undo from 3 to 2, we have to apply the deferred fade to
+the *left* edge of layer 2 since that was the trailing edge in
+reverse.  This is why you must know the direction the layer was
+recorded in.  You cannot assume that the right edge is the trailing
+edge.
+
+When layer flattening is enabled, deferred fades work the same
+during undo.
+
+    1  rrrrrrrr>
+       ||||||||
+    2 >oooooooo>
+       ||||||||
+    3 >oooooooo
+
+Because deferred fades apply to *new* content not the old content, it
+doesn't matterh how the old content is being merged with the new.
+When undoing from 3 to 2 we must still apply the trailing deferred
+fade in 2.  
+
+During Redo however, layer flattening and segment references 
+behave differently.  Back to the segment example:
+
+    1  rrrrrrrr>
+       ++++++++
+    2 >oooooooo>
+       ++++++++
+    3 >oooooooo
+
+When we undo from 3 to 2 we must apply the deferred trailing fade in
+2.  If we then redo back to 3, we must apply the deferred leading fade
+since 2 no longer has a deferred trailing fade.  This will result in a
+fade bump even though the original overdub crossed the loop boundary.
+There is no solution to this other than to undo the fade in layer 2,
+which would require we save the original tail.  Not impossible.
+
+With layer flattening it is easier.
+
+    1  rrrrrrrr>
+       ||||||||
+    2 >oooooooo>
+       ||||||||
+    3 >oooooooo
+
+When we undo from 3 to 2 we apply the trailing deferred fade as
+before, but when we redo from 2 back to 3 we do not need to apply the
+leading deferred fade.  This is because the content at the end of
+layer 2 has been copied to the end of layer 3 and was not affected by
+the fade applied to the end of 2 after the undo.  
+
+It is still necessary however to remember the presence of the leading
+deferred fade, and presence of a trailing deferred fade in the copy.
+A deferred fade that has been copied from a previous layer is
+called a "background deferred fade" and is notationed with {}.
+
+    1  rrrrrrrr>
+    2 >oooooooo>
+    3 >oooo----}
+
+A layer may have both local deferred fades and background deferred fades:
+
+   1   rrrrrrrr
+   2   ====oooo>
+   3  >oooooooo}>
+   4 >}oooo====}
+
+
+MULTIPLY NOTATION
+
+Multiply complicates the notation by introducing the need to represent
+a cycle boundary, and to represent references to the source layer at
+positions that are not directly under the corresponding beat of the
+source layer.
+
+The segment notation is extended as follows:
+
+  - Each beat of a referenced layer is logically numbered from 0 to 9,
+    wrapping back to 0
+
+  - If the first beat of a segment contains a number, it indiciates
+    the starting beat of the source layer
+
+  - the '+' is optional and may be replaced with a source beat number
+  
+  - the ']' is optional, if a number is adjacent to a + or is
+    not one greater than the previous number, it implies a segment boundary
+
+A cycle boundary is indiciated with a blank space, applied
+consistently to all lines of the notation.  This space does not
+represent a "beat" it contains no content and consumes no time.  Each
+beat of the referenced cycle is numbered from 0, rolling from 9 back
+to 0.  These beat numbers are repeated above the references in the new
+cycles.
+
+Simple cycle quantized multiply:
+
+    1  rrrrrrrr
+       01234567 01234567
+    2  mmmmmmmm mmmmmmmm
+
+It is only necessary to number the first beat of the segment, 
+'+' may be used to imply that the beat is one greater than the last.
+
+    1  rrrrrrrr
+       0+++++++ 0+++++++
+    2  mmmmmmmm mmmmmmmm
+
+
+In the first cycle, the beat number is optinal because it falls
+directly under the referenced beat.
+
+    1  rrrrrrrr
+       ++++++++ 0+++++++
+    2  mmmmmmmm mmmmmmmm
+
+The layer following the multiply renumbers the beats, and collapses
+the refrence to one segment.
+
+    1  rrrrrrrr
+       ++++++++ 0+++++++
+    2  mmmmmmmm mmmmmmmm
+       01234567 89012345
+    3  -------- --------
+
+Which is also the same as:
+
+    1  rrrrrrrr
+       ++++++++ 0+++++++
+    2  mmmmmmmm mmmmmmmm
+       ++++++++ ++++++++
+    3  -------- --------
+
+Because the first beat of the segment in the second cycle is +, it
+means that it is a continuation of the previous segment.
+
+A Unquantized Multiply with RoundMode=true looks like this: 
+
+    1  rrrrrrrr
+       ++++++++ 0+++++++
+    2  mmmmmmmm mmmmmmmm
+       01234567 ++++++++
+    3  ----mmmm mmmm----
+       4+++++++
+    4  --------
+
+Beat numbers in the first half of layer 3's segment are written
+explicitly for clarity.  Note how the segment in layer 4 starts on
+beat 4 rather than zero.  This notation is the same but the beat
+numbers are implied.
+
+    1  rrrrrrrr
+       ++++++++ 0+++++++
+    2  mmmmmmmm mmmmmmmm
+       ++++++++ ++++++++
+    3  ----mmmm mmmm----
+       4+++++++
+    4  --------
+
+For clarity this can also be written this way, though the two forms
+are the same.  Note though that because layer 4 does not have a cycle
+gap, the beats won't all line up correctly with layer 3.
+
+    1  rrrrrrrr
+       ++++++++ 0+++++++
+    2  mmmmmmmm mmmmmmmm
+       ++++++++ ++++++++
+    3  ----mmmm mmmm----
+           4+++++++
+    4      --------
+
+Unquantized multiply with RoundMode=false looks like this, where 'd'
+indiciates the rouding region during which there will be no overdubs.
+
+    1  rrrrrrrr
+       ++++++++ 0+++++++
+    2  mmmmmmmm mmmmmmmm
+       ++++++++ ++++++++
+    3  ----mmmm dddd----
+       4++++++++
+    4  ---------
+
+Remultiply is notationally the same as unrounded multiply.
+
+Method one using explicit beat numbers and no left justification:
+
+    1  rrrrrrrr
+       ++++++++ 0+++++++ 0+++++++
+    2  mmmmmmmm mmmmmmmm mmmmmmmm
+       01234567 89012345 67890123
+    3  ----mmmm mmmmmmmm mmmm----
+           45678901 23456789
+    4      -------- --------
+
+Method two, implicit beat numbers and left justification:
+
+    1  rrrrrrrr
+       ++++++++ 0+++++++ 0+++++++
+    2  mmmmmmmm mmmmmmmm mmmmmmmm
+       ++++++++ ++++++++ ++++++++
+    3  ----mmmm mmmmmmmm mmmm----
+       4+++++++ ++++++++
+    4  -------- --------
+
+Remultiply with extension:
+
+    1  rrrrrrrr
+       ++++++++ 0+++++++ 0+++++++
+    2  mmmmmmmm mmmmmmmm mmmmmmmm
+       ++++++++ ++++++++ ++++++++ 0+++++++
+    3  -------- mmmmmmmm mmmmmmmm mmmmmmmm
+       8+++++++ ++++++++ ++++++++
+    4  -------- -------- --------
+
+Stutter Notation
+
+    1  rrrrrrrr
+       ++++++++ 0+++++++ 0+++++++
+    2  mmmmmmmm mmmmmmmm mmmmmmmm
+       ++++++++ 8+++++++ 8+++++++ ++++++++
+    3  -------- tttttttt tttttttt --------
+
+
+Deferred Fades and Multiply
+
+Entering overdub during the rounding period can produce this:
+
+    3  -------- mmmmmmmm>
+       8+++++++
+    4 >oooooooo
+
+Should be ok, but cannot currently allow this:
+
+    3  ----mmmm mmm>----
+       4+++++++
+    4 >oooooooo
+
+Problems:
+
+  - most deferred logic expects fade to be at the end
+  - if we undo back to 3, will have to remember the *location*
+    of the deferred fade so it can be applied
+  - having the location could factor into the deferred logic,
+    but it adds complexity
+  - only applies to Remultiply, Unrounded Multiply
+
+Note that the > has to be entered on a beat rather than off to the
+side as in previous examples.  Could follow this consistently.
+
+  1  rrrrrrr>
+     ++++++++
+  2  >ooooooo
+
+Trailing fade is assumed to be the same function as previous beat,
+leading fade assumed to be same as next beat.  This can be allowed but
+it isn't as clear to me.
+
+
+INSERT NOTATION
+
+Right Insert
+
+  1 rrrrrrrr
+    ++++++++ 
+  2 -------- iiiiiiii
+    
+
+Left Insert
+
+  1 rrrrrrrr
+             0+++++++
+  2 iiiiiiii --------
+
+Centred Insert
+
+  1 rrrrrrrr
+    ++++         4+++
+  2 ----iiii iiii----
+
+
+Unrounded Insert
+
+Like unrounded multiply, since this redefines the cycle length we will
+collapse the cycle gaps which can result in inexact character
+alignment between the two layers.
+
+  1 rrrrrrrr
+    ++++    4+++
+  2 ----iiir----
+
+
+  1 rrrrrrrr
+    ++++++++ 0+++++++
+  2 mmmmmmmm mmmmmmmm
+    ++++    4+++++++++++
+  3 ----iiir------------
+
+
+MULTIPLE LAYER REFERENCES
+
+It is possible for a segment to reference a layer other than the
+immediately previous layer.  This for example can happen during Loop
+Windowing.  This can be easily represented with a functional notation
+such as:
+
+    s(offset, layer, start, length) 
+
+Where "offset" is the location of this segment in the owning layer,
+"layer" is the number of the referenced layer, "start" is the first
+frame in the referenced layer and "length" is the number of frames in
+the referenced layer, e.g.
+
+  1  rrrrrrrr
+     ++++++++
+  2  --------
+
+The segment in layer two could be represented as:
+
+    s(0,1,0,8)
+
+Graphically, this is represented with a prefix 'n:' before each
+segment.  The functional notation:
+
+   s(0,1,0,8), s(8,2,0,16)
+
+can be represented graphically as:
+
+    1  rrrrrrrr
+       ++++++++ 0+++++++ 0+++++++
+    2  mmmmmmmm mmmmmmmm mmmmmmmm
+       1:0+++++++ 2:0+++++++ ++++++++
+    3    --------   -------- --------
+
+The cycle gaps can be adjusted to make this align better:
+
+    1    rrrrrrrr
+         ++++++++   0+++++++ 0+++++++
+    2    mmmmmmmm   mmmmmmmm mmmmmmmm
+       1:0+++++++ 2:0+++++++ ++++++++
+    3    --------   -------- -------- 
+
+
+OCCLUSION FADES
+
+Some operations like Replace and Substitute cause content from the
+backing layers to be removed or "occluded".  If the occluded content
+is adjacent to a deferred fade, we will need to apply the fade to
+avoid a click.  For example:
+
+    1  rrrrrrrrrrrr>
+       ++++++++++++
+    2 >oooo----oooo>
+       ++++++++
+    3 >oooo----RRRR
+
+There is a trailing deferred right fade in layers 1 and 2, and a
+leading deferred left fade in layers 2 and 3.  The R character
+represents a Replace operation.
+
+Two things must happen in the third layer.  First the leading deferred
+fade into layer 3 must be applied since we have occluded the end of
+layer 2.  This is applied permanently to layer 3's local Audio.
+
+Second, the segment in layer 3 that references the beginning of layer
+2 must be told to perform a fade at the beginning.  This is because
+not only have we occluded the end of layer 2, but we have also occluded
+the end of layer 1.  Since there is no content leading up to the
+beginning of layer 2, it will click unless a fade is applied.
+
+We cannot however apply a fade permanently to layer 2's Audio, we have to
+apply it in the Segment that references it.  This is because if we
+undo from 3 back to 2, the end of layer 1 will no longer be occluded
+and we'll return to seamless audio between 1 and 2.
+
+These types of fades are given names:
+
+  - Layer Occlusion Fade
+    A fade applied permanently to an edge of a layer's Audio
+    when the fade on that edge was deferred and the content from
+    the previous layer leading up to that edge is occluded.
+
+  - Segment Occlusion Fade
+    A fade applied temporarily in a segment to an edge of the
+    previous layer when the fade on that edge was deferred and
+    the other edge of the previous layer is occluded.  
+
+
+Occlusion fades may need to be performed even if the immediately
+previous layer does not have a deferred fade.
+
+    1  rrrrrrrrrrrr>
+       ++++++++++++
+    2 >oooo--------
+       ++++++++++++
+    3  ----oooo----
+       ++++++++
+    4  --------RRRR
+
+If layer 4's segment does not force a leading fade, then the deferred
+fade in layer 2 will cause a click.  Note that doing so will apply
+a redundant fade to layer 3, and these redundant fades can accumulate 
+if we keep replacing the end.  If they are applied too many times we
+may also get a click because the ramp up becomes too steep.  This problem
+will not be solved since it can be avoided with layer flattening.
+
+To detect deep defered fades, we can either walk backward through the
+layer hierarchy whenever segment fades are calculated, or we can try
+to accumulate cached state from the previous layers in each layer.  
+Layer maintains a pair of "background deferred fade" flags that are
+always propagated forward to the next layer.  These are notated
+using {}.
+
+    1  rrrrrrrrrrrr>
+       ++++++++++++
+    2 >oooo--------}
+       ++++++++++++
+    3 }----oooo----}
+       ++++++++
+    4 }--------RRRR}
+
+The background deferred flags are also used when layer flattening is
+enabled.
+
+    1  rrrrrrrrrrrr>
+       ||||||||||||
+    2 >oooo--------}
+       ||||||||||||
+    3 }----oooo----}
+       ||||||||
+    4 }--------RRRR}
+
+Since we do not have a segment, a fade cannot be setup in the
+reference to layer 3.  Instead a permanent fade must be applied to the
+local audio in layer 4 since that now contains the leading fade from
+layer 2.  That may result in an unnecessary fade to the new content
+recorded at the beginning of layer 4.  This could be avoided by using
+the head window to remove the new head, performing the fade, and
+adding the head back in.  But since there will only be one extra fade
+applied, it should not be that noticeable.  The result is:
+
+    3 }----oooo----}
+       ||||||||
+    4 }--------RRRR}
+       ||||||||||||
+    5  ------------
+
+Layer 5 no longer has any background deferred fades.
+
+
+Detecting the need for the occlusion fades is harder when layer
+flattening is enabled if the Segment structure is removed during
+the flattening.  We normally recalculate the presence of background
+deferred fades by looking at the background layer through the segment,
+without a segment we won't know.  There are two alternatives:
+
+  - set background deferred fade flags as the copy is performed,
+    and once true do not clear them
+
+  - retain the Segment structure but maintain a "copy watermark"
+    that shows how much of them have been copied locally
+
+The first is simplest, but the second has some nice properties
+and may simplify the logic.
+
+Occlusion fades logic is more complex.  In general you do not
+need an occlusion fade if the adjacent audio has been copied into the
+current layer rather than referenced through a segment.  Existing
+occlusion detection relies on segments.  With flattening, in theory
+we have no record of the origin of the local audio because the segments
+are lost after the copy.  In practice we can assume that if there is a segment
+on the trailing edge but not the leading edge, that the leading edge
+has been copied.  This rule will hold until such time as we allow "jumps"
+in the recording that do not proceed seamlessly from beginning to end.
+
+No, we still need the segments around to tell us if the right portion 
+of the layer was copied??!!
+
+
+SEGMENT EDGE FADES
+
+A segment that does not include the edges of the referenced layer
+will normally apply fades automatically to the edges of the segment.
+
+    1  rrrrrrrr
+         ++++
+    2  RR----RR
+
+In this example, we've used the Replace function on the edges of the
+second layer and are left with a segment that references the middle of
+the first layer.  Since fades will not have been applied to the edges
+of the section of audio from layer 1, they must be performed
+dynmically by the segment.
+
+There are two conditions where this fading will be disabled:
+
+    - there is an adjacent segment that references the adjacent
+      content from the previous layer
+
+    - the content from the backing layer has been copied into
+      the local Audio during when layer flattening is enabled
+
+The first condition is represented graphically as:
+
+    1  rrrrrrrr
+       +++]++++
+    2  --------
+
+There are two segments each 4 beats long, but there are adjacent.
+Since the result is that the contents of layer 1 will be played
+seamlessly, there is no feed to apply a fade to the end of segment 1
+and to the beginning of segment 2.  In practice adjacent segments are
+rare, and may actually be impossible in the current implementation.
+But the layer model is general enough to support the concept.
+
+The second condition is represented graphically as:
+
+    1  rrrrrrrr
+       ||||++++
+    2  --------
+
+Here '|' means that the contents of the previous layers has been
+copied into layer 2.  Although the segment starts the 
+middle of layer 1, there is no need to apply a fade to the 
+beginning of the segment because the content of layer 1 has
+been copied and it will play seamlessly.  
+
+Complications arise when the segments are on an edge.
+
+    1  rrrrrrrrrrrr
+       ++++    ++++
+    2  ----RRRR----
+
+In this example, there was a Replace in the middle of layer 2 which
+resulted in a pair of split segments along each edge.  Because the
+first segment is referencing the first frame of layer 1, and layer 1
+will already have a fade at this location, there is no need for the
+segment to introduce another leading fade, it only has to apply a
+trailing fade.  Similarly segment 2 must apply a leading fade but it
+does not need to apply a trailing fade because there will already be a
+fade at the end of layer 1.
+
+Further complications arise when a segment is on an edge and
+the referenced layer has a deferred fade.
+
+    1  rrrrrrrrrrrr>
+       ++++++++++++
+    2 >oooooooooooo
+       ++++++
+    3  ooooooRRRRRR
+
+While normally a segment would not apply a leading fade if it
+references the beginning of a layer, in this case it must because the
+layer has a deferred leading fade and the content leading up to that
+edge has been occluded by a Replace.
+
+A special case of the adjacent segment rule applies when there
+are two segments on each edge.
+
+    1  rrrrrrrrrrrr>
+       ++++++++++++
+    2 >oooooooooooo
+       ++++    ++++
+    3  ----RRRR----
+
+The two segments in layer 3 are considered adjacent because the first
+segment starts at the first frame, and the second ends on the last
+frame.  During playback we will loop seamlessly from the end of the
+second segment to the beginning of the first.  Further, the content of
+layer 2 that these segments reference is also adjacent, resulting in
+seamless playback from the end of layer 2 to the beginning of layer 1.
+Because they are adjacent, we do not need to apply a leading fade to
+the first segment, or a trailing fade to the second.
+
+INSERT COMPLICATIONS
+
+Insertion in the middle of the layer is uncomplicated since
+both deferred edges will still be adjacent.
+
+    1  rrrrrrr>
+       ++++    4+++>
+    2 >ooooiiir----
+       ++++++++++++       
+    3  ------------
+
+You can check for deferred fades by scanning backward, as long
+as the end of the immediately previous layer is not occluded you
+can keep the deferred fade.
+
+An insertion that is entirely on the right is a problem:
+
+    1  rrrrrrrr>
+       ++++++++
+    2 >ooooooooiiiiiiii
+
+Here the content from the end of layer 1 will not be immediately
+followed by the content at the beginning of layer 2.   
+
+RULE: A deferred leading edge fade must be applied whenever the
+trailing edge of the previous layer is no longer adjacent to trailing
+edge of the current layer.  This is handled by the edge occlusion rule
+since the segment does not also cover the end of the current layer.
+
+But now we have another problem, after applying the leading fade in
+layer 2, we've still got a deferred fade in layer 1 that must also be
+applied.  This can be done in two ways, temporarily in the segment
+referencing layer 1, or permanently in layer 1.
+
+RULE: Whenever a deferred leading edge fade of a layer is permanently
+applied, the corresponding deferred trailing edge faded of the
+*previous* layer must also be applied.
+
+A different problem exists when inserting on the left:
+
+    1           rrrrrrrr>
+                ++++++++
+    2          >oooooooo>
+                ++++++++
+    3  >iiiiiiii--------
+
+
+The trailing edge of layer 1 is no longer adjacent to the leading
+edge of layer 2.
+
+RULE: A segment that does not start at offset zero must always
+apply a leading fade if the backing layer has a deferred fade.
+
+This rule is actually covered by the adjacent segment rule.  
+Since layer 3 is larger, the segment will not span the entire
+layer and it will be considered to have uncontiguous content.
+
+Note however that the trailing deferred fade from 2 to 3 is
+still preserved.  This presents a problem however because
+this also retains the deferred trailing edge fade in layer 1.
+Since layer 1 no longer seamlessly transitions to the beginning
+of layer 2, there will be a click.  We cannot perform this
+fade in layer 3's segment without also applying the deferred
+trailing fade in layer 2 which will then cause a click when
+transitioning to the deferred leading fade in layer 3.
+
+It is even more complicated if there is more than one 
+segment to consider in the backing layers:
+
+    1       rrrrrrrrrrrr>
+            ++++    ++++
+    2      >ooooRRRRoooo>
+            ++++++++++++
+    3  >iiir------------
+
+Starting from layer 3, the operations are:
+
+   - force a leading fade in segment 1 of layer 3
+   - force a trailing fade in segment 2 of layer 2
+
+The only way to solve this problem is to modify the fades of the *OLD*
+layers as we walk backwards flattening them.  This would be ok as long
+as we reevaluated the segment fades when we undo to a previous layer
+to restore them to their original state.
+
+It would still be hard though because we can't apply permanent
+deferred fades, so we would have to carry down a "segment fade
+applied" flag to make the backing layer behave as if it did not have a
+deferred fade.  Thankfully we would only have to perform the traversal
+after the insertion finished.
+
+This problem will not be solved.  In the cases where we can detect
+this has happened, we can take these positions:
+
+  - Be conservative and apply a fade even if it breaks continunity
+    between the current layer and the previous layer (bad).
+
+  - Ignore it under the assumption that there will be enough 
+    added content that it will tend to mask the level jump in the 
+    older layers
+
+  - Ignore it because most people will be using layer flattening,
+    and the problem does cannot exist since flattening will maintain
+    a maximum of two levels of segments to traverse.
+    (Hmm, not sure this is true)
+
+No, the problem exists with flattening as well
+
+
+    1       rrrrrrrrrrrr>
+            ||||    ||||
+    2      >ooooRRRRoooo>
+            ||||||||||||
+    3  >iiir}-----------}
+
+There will be a gap between the end of the content from layer 1
+and the beginning of layer 2.    This seems easy to do 
+accidentally, probably easier than deliberately trying to do
+a seamless recording into an insert?  
+
+The safest thing is to disallow seamless recording into an insert
+and *always* apply segment edge fades to the previous layer.
+
+    1       rrrrrrrrrrrr>
+            ||||    ||||
+    2      >ooooRRRRoooo
+            ||||||||||||
+   
+ 3   iiir------------
+
+
+START POINT
+
+    1  rrrrrrrr>
+       ++++++++
+    2 >oooooooo
+       ++++++++
+    3  ----S
+       4+++0+++
+    4  --------
+
+The deferred fades are still ok since they will be adjacent in 
+the resulting segment list.
+
+TRIGGER
+
+Trigger does not affect the layer structure, but it does
+"close off" the layer if it is currently being recorded before
+moving to the next layer.  In this example, we'll be Retriggering
+and staying in the same loop.
+
+    1  rrrrrrrr
+       ++++++++
+    2  ooooT
+       ++++++++
+    3  --------
+
+Funtions that cause the recording of the layer to be terminated
+will leave spaces in the unreached beat columns.  
+
+HALF SPEED
+
+Speed changes to not affect layer structure.
+
+REVERSE
+
+Reverse is like Trigger in that it must close off the layer if
+it is being recorded.
+
+    1  rrrrrrrr
+       ++++++++
+    2 <oooov
+       ++++++++
+    3  oooooooo<
+
+
+TRUE CROSS FADES
+
+Think about softening the fade bump by moving the edges of the replace
+segment to overlap the surrounding segments.
+
+UNDO/REDO WITH FLATTENING
+
+Undo/Redo cause unusual segment structures when flattening.  Since
+undo/redo often happen in the middle of the loop, we will end
+up with a segment referenceing the front of the layer, space
+in the middle as we copy from the point of undo/redo, and an
+ever diminishing segment referencing the end of the layer:
+
+
+  1    rrrrrrrr
+  2    ||||||||
+  3    ++||||++
+
+Layer 3 could have been created by undoing from 4 or redoing from 2.
+The problem arises when the flattening finishes and the tail
+segment is collapsed.
+
+  1    rrrrrrrr
+  2    ||||||||
+  3    ++||||||
+
+At this point we have a segment that has no adjacent content
+on the left, so we normally assume that it must have a left fade.
+However we actually did copy the preceeding content during flattening
+so cannot add a fade.  Unfortunately the segment is gone so we
+do not no for sure if the copy happened.  
+
+Leaving the "drained" segments around for analysis would solve this
+problem.
+
+In current usage it is reasonable to assume that:
+
+   - if we're flattening
+   - and there is a leading segment
+   - and there is no trailing segment (tail occlusion)
+   - assume the trailing segment was fully copied and suppress the 
+     fade in the leading segment
+
+This logic won't hold true if we can modify the segment after the
+point we've flattened to the end (before the shift and finalize).
+It also won't hold true if segments can reference abitrary layers
+since there was no guarentee that we actually has a reference
+to the preceeding content that was flattened.  The only way to solve
+these problems is to leave "drained" segments.
+
+Similar issues for trailing segments left after a retrigger:
+
+    1 rrrrrrrr
+    2 ||||||||
+    3 ||||++++
+
+Normal segment rules would force the segment to have a right fade.
+However since the following content has been copied, it must be
+suppressed.
+
+In reverse, undo/redo and retrigger edges are swapped, but the effect
+is the same.  So reverse status is not important.  For any segment
+that extends to an edge, if the opposite edge has been occluded
+(copied) then do not fade that egde.
+
+----------------------------------------------------------------------
+
+Layer Flattening TODO
+
+When flattening is enabled, deferring the compilation of the segment
+fades till the end doesn't work, they have to be complied AS WE RECORD!
+Since we have to do that anyway, we could simplify compileSegmentFades?
+Application of deferred fades must however be left to the end.  
+
+Complication:
+
+With flattening, keeping the segments around to detect occlusion
+isn't enough, since we don't know the feedback level that was applied
+to the copy.  If we have this:
+
+    rrrrrrrr>
+   >oooooooo
+
+But if feedback tapered to 0 before the end, effectively doing a replace,
+then the trailing content from the previous layer is no longer contiguous
+and we must apply the deferred fade in.  We could let it be within 5-10%
+without forcing the fade, but anything more and the level will be too abrupt.
+
+Could try to avoid this by automatically adjusting the playback level 
+at the front to smoothly transition from the ending feedback level the
+effect would be the same as a fade if feedback ended at 0, but smoother
+if the level was 50%.  Complicated and unlikely to be noticed by
+many people.  Leave for later.
+
+This actually simplifies deferred fade application.  
+
+  Deferred trailing fades are applied under these conditions:
+
+     - immediately after recording begins in the next layer     
+       and a gap or direction change is detected (checkRecording)
+       ok 
+
+     - on undo
+       ok
+
+  Deferred leading fades are applied under these conditions:
+
+    Layer Flattening Off
+  
+      - on redo
+        ok
+      - on finalize if the trailing edge of the backing
+        layer is occluded
+        - detected by collapsing the segment list during replace
+        ok
+
+    Layer Flattening On
+
+      - on redo, if trailing edge of backing layer not fully copied
+        - still have segment reference to content that was faded
+          after the undo
+        - potential "click" if we have copied a portion of the 
+          now faded content
+          - would require a retrigger milliseconds before the end,
+            followed by an undo
+          - avoid this by always finishing flattening to the 
+            end if we're within the fade range
+          ok
+
+      - on finalize if feedback is not 100%
+        - effectively the same as occlusion when not flattening
+        - if feedback is less than 100% but greater than 0
+          - performing a fade in from zero will cause click
+            because trailing copy won't be all the way to zero
+          - have to begin the fade from the ending level, not zero
+            - simpler alternative is to apply full fades on both
+              sides, but this then has to be applied to the backing
+              layer not the new content so it can be carried over
+              seamlessly to the next layer
+          ok
+
+      - maintaining segments to detect occlusion is useless since
+        it is the feedback level that is important
+        - feedback level can be captured in prepare/finalize
+        ok
+
+----------------------------------------------------------------------
+
+
+
+
+
+

@@ -1,0 +1,72 @@
+----------------------------------------------------------------------
+Level 1 
+----------------------------------------------------------------------
+
+MidiByte.h
+  common constants
+
+MidiUtil.cpp
+MidiUtil.h
+   various utils, note names, checksums, sysex utils
+
+MidiEvent.h
+MidiEvent.cpp
+  event model, abstracts through MidiEventManager 
+
+MidiSequence.cpp
+MidiSequence.h
+   currently unused sequence model, built on MidiEvent
+
+MidiMap.h
+MidiMap.cpp
+  simple model for mapping, not really used
+
+MidiPort.cpp
+MidiPort.h
+  model for representing ports or "endpoints"
+
+--------------------------------------------------------------
+Level 2
+--------------------------------------------------------------
+
+MidiEnv.cpp
+MidiEnv.h
+  The primary fascade for input, output, and timer device management
+  also a factory for MidiEvents.  This must be a singleton.
+
+MidiInput.cpp
+MidiInput.h
+MidiOutput.cpp
+MidiOutput.h
+MidiTimer.cpp
+MidiTimer.h
+  Device abstractions
+
+MacMidiEnv.cpp
+MacMidiEnv.h
+MacMidiInput.cpp
+MacMidiOutput.cpp
+MacMidiTimer.cpp
+WinMidiEnv.cpp
+WinMidiEnv.h
+WinMidiInput.cpp
+WinMidiOutput.cpp
+WinMidiTimer.cpp
+WinSysexBuffer.cpp
+WinSysexBuffer.h
+   platform implementations
+
+MidiListener.h
+  interfaces for things that can register themselves with MidiEnv
+
+----------------------------------------------------------------------
+Level 3
+----------------------------------------------------------------------
+
+A fascade around MidiEnv that provides a slightly higher level
+interface for Mobius.
+
+MidiInterface.cpp
+MidiInterface.h
+
+

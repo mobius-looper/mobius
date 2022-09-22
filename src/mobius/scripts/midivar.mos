@@ -1,0 +1,7 @@
+#
+# Test access of built-in variables containing MIDI trigger info
+#
+
+!name Midi Trigger Info
+
+Message $midiType channel $midiChannel number $midiNumber value $midiValue

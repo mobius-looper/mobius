@@ -1,0 +1,32 @@
+
+GlobalReset
+   - resets all global and track variables
+   - need an initial variable list in the Setup!
+
+TrackReset
+  - resets all track variables
+
+Reset
+  - resets all track variables
+
+
+? Is the concept of a Loop Variable interesting?
+  Yes, could be used instead of arrays sometimes?
+
+Variable globalPermanent
+   - global and not initialized on GlobalReset, useful?
+  
+
+Variable trackPermanent
+   - not reset with TrackReset or Reset 
+    
+-----------------------------------------------------------------------
+Script Reset
+
+  Reset, TrackRest, GlobalReset
+    reset all scripts running in the track if the reset did not itself
+    come from a script
+
+
+
+

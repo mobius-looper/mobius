@@ -1,0 +1,862 @@
+// !$*UTF8*$!
+{
+	08FB7793FE84155DC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 1FC052C60FE08FB000BB8C43 /* mobius */;
+		activeTarget = 1FC052C20FE08E6100BB8C43 /* mobius */;
+		breakpoints = (
+			1F0CF79E13541C5E00AD543C /* Script.cpp:1073 */,
+			1F0CF7A513541F0200AD543C /* Move.cpp:117 */,
+			1F0CF7A713541F0500AD543C /* Move.cpp:149 */,
+			1FB0168F14F5EA9E00B6F70C /* Reverse.cpp:237 */,
+			1FB0169614F5EBAE00B6F70C /* Function.cpp:1115 */,
+			1FB0169914F5EC7300B6F70C /* Reverse.cpp:356 */,
+			1FBE831A15D7203400F1D4D0 /* Trace.cpp:210 */,
+			1FC3BB2916065E1A00EA1BC2 /* SetupDialog.cpp:225 */,
+		);
+		codeSenseManager = 1FC052C10FE08DC800BB8C43 /* Code sense */;
+		executables = (
+			1FC052C60FE08FB000BB8C43 /* mobius */,
+		);
+		perUserDictionary = {
+			"PBXConfiguration.PBXBreakpointsDataSource.v1:1CA1AED706398EBD00589147" = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXBreakpointsDataSource_BreakpointID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					20,
+					198,
+					20,
+					99,
+					99,
+					29,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXBreakpointsDataSource_ActionID,
+					PBXBreakpointsDataSource_TypeID,
+					PBXBreakpointsDataSource_BreakpointID,
+					PBXBreakpointsDataSource_UseID,
+					PBXBreakpointsDataSource_LocationID,
+					PBXBreakpointsDataSource_ConditionID,
+					PBXBreakpointsDataSource_IgnoreCountID,
+					PBXBreakpointsDataSource_ContinueID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					1102.58349609375,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					1215,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					1175,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 369515960;
+			PBXWorkspaceStateSaveDate = 369515960;
+		};
+		perUserProjectItems = {
+			1F087D4310699FA80055EE22 /* PBXTextBookmark */ = 1F087D4310699FA80055EE22 /* PBXTextBookmark */;
+			1F0CF78613541BF900AD543C /* PBXTextBookmark */ = 1F0CF78613541BF900AD543C /* PBXTextBookmark */;
+			1F0CF78713541BF900AD543C /* PBXTextBookmark */ = 1F0CF78713541BF900AD543C /* PBXTextBookmark */;
+			1F0CF78913541BF900AD543C /* PBXTextBookmark */ = 1F0CF78913541BF900AD543C /* PBXTextBookmark */;
+			1F1CD28310B66A77002BBAF7 /* PBXTextBookmark */ = 1F1CD28310B66A77002BBAF7 /* PBXTextBookmark */;
+			1F1CD2A510B79440002BBAF7 /* PBXTextBookmark */ = 1F1CD2A510B79440002BBAF7 /* PBXTextBookmark */;
+			1F1CD2C710B86D57002BBAF7 /* PBXTextBookmark */ = 1F1CD2C710B86D57002BBAF7 /* PBXTextBookmark */;
+			1F3C13E612DD715200F46722 /* PBXTextBookmark */ = 1F3C13E612DD715200F46722 /* PBXTextBookmark */;
+			1F3C13F112DD71AE00F46722 /* PBXTextBookmark */ = 1F3C13F112DD71AE00F46722 /* PBXTextBookmark */;
+			1F3C13F312DD71AE00F46722 /* PBXTextBookmark */ = 1F3C13F312DD71AE00F46722 /* PBXTextBookmark */;
+			1F3C13F412DD71AE00F46722 /* PBXTextBookmark */ = 1F3C13F412DD71AE00F46722 /* PBXTextBookmark */;
+			1F3C13F612DD71AE00F46722 /* PBXTextBookmark */ = 1F3C13F612DD71AE00F46722 /* PBXTextBookmark */;
+			1F3C13F812DD71AE00F46722 /* PBXTextBookmark */ = 1F3C13F812DD71AE00F46722 /* PBXTextBookmark */;
+			1F8FB36F1061F3F4001CEB19 /* PBXTextBookmark */ = 1F8FB36F1061F3F4001CEB19 /* PBXTextBookmark */;
+			1F8FB3711061F3F4001CEB19 /* PBXTextBookmark */ = 1F8FB3711061F3F4001CEB19 /* PBXTextBookmark */;
+			1F8FB3731061F3F4001CEB19 /* PBXTextBookmark */ = 1F8FB3731061F3F4001CEB19 /* PBXTextBookmark */;
+			1FB440AF13023D5B00F921EF /* PBXTextBookmark */ = 1FB440AF13023D5B00F921EF /* PBXTextBookmark */;
+			1FB440B013023D5B00F921EF /* PBXTextBookmark */ = 1FB440B013023D5B00F921EF /* PBXTextBookmark */;
+			1FBE833215D720FC00F1D4D0 /* PBXTextBookmark */ = 1FBE833215D720FC00F1D4D0 /* PBXTextBookmark */;
+			1FBE833315D720FC00F1D4D0 /* PBXTextBookmark */ = 1FBE833315D720FC00F1D4D0 /* PBXTextBookmark */;
+			1FC3BB3316065E3C00EA1BC2 /* PBXTextBookmark */ = 1FC3BB3316065E3C00EA1BC2 /* PBXTextBookmark */;
+			1FC3BB44160660EF00EA1BC2 /* PBXTextBookmark */ = 1FC3BB44160660EF00EA1BC2 /* PBXTextBookmark */;
+			1FC3BB46160660EF00EA1BC2 /* PBXTextBookmark */ = 1FC3BB46160660EF00EA1BC2 /* PBXTextBookmark */;
+			1FC3BB48160660EF00EA1BC2 /* PBXTextBookmark */ = 1FC3BB48160660EF00EA1BC2 /* PBXTextBookmark */;
+			1FE14E0B151E565E00C4C05B /* PBXTextBookmark */ = 1FE14E0B151E565E00C4C05B /* PBXTextBookmark */;
+		};
+		sourceControlManager = 1FC052C00FE08DC800BB8C43 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	1F087D4310699FA80055EE22 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F087D4410699FA80055EE22 /* TabbedPane.cpp */;
+		name = "TabbedPane.cpp: 751";
+		rLen = 0;
+		rLoc = 20503;
+		rType = 0;
+		vrLen = 1263;
+		vrLoc = 17702;
+	};
+	1F087D4410699FA80055EE22 /* TabbedPane.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = TabbedPane.cpp;
+		path = /Users/jeff/dev/mobius/src/qwin/TabbedPane.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F0CF78613541BF900AD543C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F3C13E812DD715200F46722 /* Window.cpp */;
+		name = "Window.cpp: 120";
+		rLen = 38;
+		rLoc = 2734;
+		rType = 0;
+		vrLen = 1349;
+		vrLoc = 2138;
+	};
+	1F0CF78713541BF900AD543C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F0CF78813541BF900AD543C /* Layer.cpp */;
+		name = "Layer.cpp: 3451";
+		rLen = 4;
+		rLoc = 116657;
+		rType = 0;
+		vrLen = 1868;
+		vrLoc = 115925;
+	};
+	1F0CF78813541BF900AD543C /* Layer.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Layer.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/Layer.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F0CF78913541BF900AD543C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F0CF78A13541BF900AD543C /* Loop.cpp */;
+		name = "Loop.cpp: 2757";
+		rLen = 25;
+		rLoc = 84625;
+		rType = 0;
+		vrLen = 1540;
+		vrLoc = 83991;
+	};
+	1F0CF78A13541BF900AD543C /* Loop.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Loop.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/Loop.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F0CF79E13541C5E00AD543C /* Script.cpp:1073 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1F69CB0310B8D23400FC7429 /* Script.cpp */;
+		functionName = "ScriptVariableStatement::eval(ScriptContext* con)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 1073;
+		location = mobius;
+		modificationTime = 369516070.557404;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	1F0CF7A313541EFF00AD543C /* Move.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Move.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/functions/Move.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F0CF7A513541F0200AD543C /* Move.cpp:117 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1F0CF7A313541EFF00AD543C /* Move.cpp */;
+		functionName = "MoveFunction::prepareJump(Loop* l, Event* e, JumpContext* jump)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 117;
+		location = mobius;
+		modificationTime = 369516070.621618;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	1F0CF7A713541F0500AD543C /* Move.cpp:149 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1F0CF7A313541EFF00AD543C /* Move.cpp */;
+		functionName = "MoveFunction::doEvent(Loop* loop, Event* event)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 149;
+		location = mobius;
+		modificationTime = 369516070.72357;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	1F13B7B21518FAE000BB5234 /* Record.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Record.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/functions/Record.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F1CD25C10B4FB98002BBAF7 /* Synchronizer.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Synchronizer.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/Synchronizer.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F1CD28310B66A77002BBAF7 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F1CD28410B66A77002BBAF7 /* MacMidiInput.cpp */;
+		name = "MacMidiInput.cpp: 181";
+		rLen = 0;
+		rLoc = 4371;
+		rType = 0;
+		vrLen = 1186;
+		vrLoc = 3603;
+	};
+	1F1CD28410B66A77002BBAF7 /* MacMidiInput.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MacMidiInput.cpp;
+		path = /Users/jeff/dev/mobius/src/midi/MacMidiInput.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F1CD28610B66A77002BBAF7 /* Mobius.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Mobius.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/Mobius.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F1CD2A510B79440002BBAF7 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F1CD28610B66A77002BBAF7 /* Mobius.cpp */;
+		name = "Mobius.cpp: 3596";
+		rLen = 0;
+		rLoc = 102826;
+		rType = 0;
+		vrLen = 1174;
+		vrLoc = 96592;
+	};
+	1F1CD2C710B86D57002BBAF7 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F1CD2C810B86D57002BBAF7 /* Reset.cpp */;
+		name = "Reset.cpp: 120";
+		rLen = 0;
+		rLoc = 2670;
+		rType = 0;
+		vrLen = 920;
+		vrLoc = 2004;
+	};
+	1F1CD2C810B86D57002BBAF7 /* Reset.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Reset.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/functions/Reset.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F1CD2F910B88C68002BBAF7 /* Track.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Track.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/Track.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F3C13C412D574DF00F46722 /* Components.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Components.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/Components.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F3C13E612DD715200F46722 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F1CD2F910B88C68002BBAF7 /* Track.cpp */;
+		name = "Track.cpp: 1751";
+		rLen = 0;
+		rLoc = 52009;
+		rType = 0;
+		vrLen = 1397;
+		vrLoc = 41671;
+	};
+	1F3C13E812DD715200F46722 /* Window.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Window.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/functions/Window.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F3C13F112DD71AE00F46722 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F3C13F212DD71AE00F46722 /* MacGraphics.cpp */;
+		name = "MacGraphics.cpp: 737";
+		rLen = 45;
+		rLoc = 21642;
+		rType = 0;
+		vrLen = 1584;
+		vrLoc = 20647;
+	};
+	1F3C13F212DD71AE00F46722 /* MacGraphics.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MacGraphics.cpp;
+		path = /Users/jeff/dev/mobius/src/qwin/MacGraphics.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F3C13F312DD71AE00F46722 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F3C13C412D574DF00F46722 /* Components.cpp */;
+		name = "Components.cpp: 3193";
+		rLen = 47;
+		rLoc = 81845;
+		rType = 0;
+		vrLen = 960;
+		vrLoc = 81446;
+	};
+	1F3C13F412DD71AE00F46722 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F3C13F512DD71AE00F46722 /* Sample.cpp */;
+		name = "Sample.cpp: 909";
+		rLen = 74;
+		rLoc = 21599;
+		rType = 0;
+		vrLen = 2031;
+		vrLoc = 21036;
+	};
+	1F3C13F512DD71AE00F46722 /* Sample.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Sample.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/Sample.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F3C13F612DD71AE00F46722 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F3C13F712DD71AE00F46722 /* Script.cpp */;
+		name = "Script.cpp: 2788";
+		rLen = 16;
+		rLoc = 79146;
+		rType = 0;
+		vrLen = 1387;
+		vrLoc = 78584;
+	};
+	1F3C13F712DD71AE00F46722 /* Script.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Script.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/Script.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F3C13F812DD71AE00F46722 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F3C13F912DD71AE00F46722 /* Shuffle.cpp */;
+		name = "Shuffle.cpp: 260";
+		rLen = 15;
+		rLoc = 7929;
+		rType = 0;
+		vrLen = 1223;
+		vrLoc = 7213;
+	};
+	1F3C13F912DD71AE00F46722 /* Shuffle.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Shuffle.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/functions/Shuffle.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F69CB0310B8D23400FC7429 /* Script.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Script.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/Script.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F8FB36F1061F3F4001CEB19 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F8FB3701061F3F4001CEB19 /* List.cpp */;
+		name = "List.cpp: 150";
+		rLen = 0;
+		rLoc = 2728;
+		rType = 0;
+		vrLen = 841;
+		vrLoc = 2344;
+	};
+	1F8FB3701061F3F4001CEB19 /* List.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = List.cpp;
+		path = /Users/jeff/dev/mobius/src/util/List.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F8FB3711061F3F4001CEB19 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F8FB3721061F3F4001CEB19 /* UIMac.h */;
+		name = "UIMac.h: 2154";
+		rLen = 0;
+		rLoc = 48318;
+		rType = 0;
+		vrLen = 840;
+		vrLoc = 53276;
+	};
+	1F8FB3721061F3F4001CEB19 /* UIMac.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = UIMac.h;
+		path = /Users/jeff/dev/mobius/src/qwin/UIMac.h;
+		sourceTree = "<absolute>";
+	};
+	1F8FB3731061F3F4001CEB19 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F8FB3741061F3F4001CEB19 /* Table.cpp */;
+		name = "Table.cpp: 1803";
+		rLen = 0;
+		rLoc = 46647;
+		rType = 0;
+		vrLen = 1467;
+		vrLoc = 37329;
+	};
+	1F8FB3741061F3F4001CEB19 /* Table.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Table.cpp;
+		path = /Users/jeff/dev/mobius/src/qwin/Table.cpp;
+		sourceTree = "<absolute>";
+	};
+	1FB0168F14F5EA9E00B6F70C /* Reverse.cpp:237 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FB0169014F5EA9E00B6F70C /* Reverse.cpp */;
+		functionName = "ReverseFunction::scheduleEvent(FunctionContext* context, Loop* l)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 237;
+		location = mobius;
+		modificationTime = 369516070.836341;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	1FB0169014F5EA9E00B6F70C /* Reverse.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Reverse.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/functions/Reverse.cpp;
+		sourceTree = "<absolute>";
+	};
+	1FB0169614F5EBAE00B6F70C /* Function.cpp:1115 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FB0169714F5EBAE00B6F70C /* Function.cpp */;
+		functionName = "Function::rescheduleEvent(Loop* l, Event* src)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 1115;
+		location = mobius;
+		modificationTime = 369516070.922558;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	1FB0169714F5EBAE00B6F70C /* Function.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Function.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/Function.cpp;
+		sourceTree = "<absolute>";
+	};
+	1FB0169914F5EC7300B6F70C /* Reverse.cpp:356 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FB0169014F5EA9E00B6F70C /* Reverse.cpp */;
+		functionName = "ReverseFunction::doEvent(Loop* l, Event* e)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 356;
+		location = mobius;
+		modificationTime = 369516071.012438;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	1FB440AF13023D5B00F921EF /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F1CD25C10B4FB98002BBAF7 /* Synchronizer.cpp */;
+		name = "Synchronizer.cpp: 4397";
+		rLen = 28;
+		rLoc = 151505;
+		rType = 0;
+		vrLen = 1217;
+		vrLoc = 150713;
+	};
+	1FB440B013023D5B00F921EF /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FB440B113023D5B00F921EF /* Window.cpp */;
+		name = "Window.cpp: 120";
+		rLen = 0;
+		rLoc = 2646;
+		rType = 0;
+		vrLen = 760;
+		vrLoc = 2090;
+	};
+	1FB440B113023D5B00F921EF /* Window.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Window.cpp;
+		path = /Users/jeff/dev/mobius/src/qwin/Window.cpp;
+		sourceTree = "<absolute>";
+	};
+	1FBE831A15D7203400F1D4D0 /* Trace.cpp:210 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FBE831B15D7203400F1D4D0 /* Trace.cpp */;
+		functionName = "SaveArgument(const char* src, char* dest)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 210;
+		location = mobius;
+		modificationTime = 369516071.060503;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	1FBE831B15D7203400F1D4D0 /* Trace.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Trace.cpp;
+		path = /Users/jeff/dev/mobius/src/util/Trace.cpp;
+		sourceTree = "<absolute>";
+	};
+	1FBE832315D7204200F1D4D0 /* Trace.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Trace.cpp;
+		path = /Users/jeff/dev/mobius/src/util/Trace.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {827, 9022}}";
+			sepNavSelRange = "{18283, 0}";
+			sepNavVisRange = "{5135, 1379}";
+			sepNavWindowFrame = "{{15, 338}, {886, 685}}";
+		};
+	};
+	1FBE833215D720FC00F1D4D0 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FE14E0D151E565E00C4C05B /* UI.cpp */;
+		name = "UI.cpp: 2066";
+		rLen = 0;
+		rLoc = 63788;
+		rType = 0;
+		vrLen = 1017;
+		vrLoc = 49671;
+	};
+	1FBE833315D720FC00F1D4D0 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FBE832315D7204200F1D4D0 /* Trace.cpp */;
+		name = "Trace.cpp: 672";
+		rLen = 0;
+		rLoc = 18283;
+		rType = 0;
+		vrLen = 1382;
+		vrLoc = 5135;
+	};
+	1FC052C00FE08DC800BB8C43 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+		scmType = "";
+	};
+	1FC052C10FE08DC800BB8C43 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	1FC052C20FE08E6100BB8C43 /* mobius */ = {
+		activeExec = 0;
+	};
+	1FC052C60FE08FB000BB8C43 /* mobius */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+			"PBXLSLaunchAction-0" = {
+				PBXLSLaunchAction = 0;
+				PBXLSLaunchStartAction = 1;
+				PBXLSLaunchStdioStyle = 2;
+				PBXLSLaunchStyle = 0;
+				class = PBXLSRunLaunchConfig;
+				commandLineArgs = (
+				);
+				displayName = "Executable Runner";
+				environment = {
+				};
+				identifier = com.apple.Xcode.launch.runConfig;
+				remoteHostInfo = "";
+				startActionInfo = "";
+			};
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+			{
+				active = YES;
+				name = MOBIUS_DEVELOPMENT;
+				value = YES;
+			},
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		launchableReference = 1FC052C70FE08FB000BB8C43 /* mobius */;
+		libgmallocEnabled = 0;
+		name = mobius;
+		savedGlobals = {
+		};
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+		startupPath = /Users/jeff/dev/mobius/src/mobius/mac/bundles/Mobius.app/Contents/Resources;
+		variableFormatDictionary = {
+		};
+	};
+	1FC052C70FE08FB000BB8C43 /* mobius */ = {
+		isa = PBXFileReference;
+		explicitFileType = "compiled.mach-o.executable";
+		name = mobius;
+		path = /Users/jeff/dev/mobius/src/mobius/mac/bundles/Mobius.app/Contents/MacOS/mobius;
+		sourceTree = "<absolute>";
+	};
+	1FC3BB2916065E1A00EA1BC2 /* SetupDialog.cpp:225 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FC3BB2A16065E1A00EA1BC2 /* SetupDialog.cpp */;
+		functionName = "SetupDialog::SetupDialog(Window* parent, MobiusInterface* mob, MobiusConfig* config)";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 225;
+		location = mobius;
+		modificationTime = 369516096.95203;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	1FC3BB2A16065E1A00EA1BC2 /* SetupDialog.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = SetupDialog.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/SetupDialog.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {827, 10868}}";
+			sepNavSelRange = "{6159, 0}";
+			sepNavVisRange = "{5672, 1440}";
+		};
+	};
+	1FC3BB3316065E3C00EA1BC2 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FC3BB3416065E3C00EA1BC2 /* SetupDialog.cpp */;
+		name = "SetupDialog.cpp: 225";
+		rLen = 0;
+		rLoc = 6159;
+		rType = 0;
+		vrLen = 1475;
+		vrLoc = 5672;
+	};
+	1FC3BB3416065E3C00EA1BC2 /* SetupDialog.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = SetupDialog.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/SetupDialog.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1155, 10777}}";
+			sepNavSelRange = "{6203, 0}";
+			sepNavVisRange = "{5785, 912}";
+		};
+	};
+	1FC3BB44160660EF00EA1BC2 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FC3BB45160660EF00EA1BC2 /* UI.cpp */;
+		name = "UI.cpp: 2060";
+		rLen = 0;
+		rLoc = 63788;
+		rType = 0;
+		vrLen = 1300;
+		vrLoc = 49507;
+	};
+	1FC3BB45160660EF00EA1BC2 /* UI.cpp */ = {
+		isa = PBXFileReference;
+		name = UI.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/UI.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1393, 27937}}";
+			sepNavSelRange = "{63788, 0}";
+			sepNavVisRange = "{49507, 1300}";
+		};
+	};
+	1FC3BB46160660EF00EA1BC2 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FC3BB47160660EF00EA1BC2 /* SetupDialog.cpp */;
+		name = "SetupDialog.cpp: 225";
+		rLen = 0;
+		rLoc = 6159;
+		rType = 0;
+		vrLen = 1475;
+		vrLoc = 5672;
+	};
+	1FC3BB47160660EF00EA1BC2 /* SetupDialog.cpp */ = {
+		isa = PBXFileReference;
+		name = SetupDialog.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/SetupDialog.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1155, 10959}}";
+			sepNavSelRange = "{6313, 0}";
+			sepNavVisRange = "{5949, 947}";
+			sepNavWindowFrame = "{{15, 338}, {886, 685}}";
+		};
+	};
+	1FC3BB48160660EF00EA1BC2 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FC3BB49160660EF00EA1BC2 /* Trace.cpp */;
+		name = "Trace.cpp: 667";
+		rLen = 0;
+		rLoc = 18283;
+		rType = 0;
+		vrLen = 1437;
+		vrLoc = 5135;
+	};
+	1FC3BB49160660EF00EA1BC2 /* Trace.cpp */ = {
+		isa = PBXFileReference;
+		name = Trace.cpp;
+		path = /Users/jeff/dev/mobius/src/util/Trace.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {827, 9022}}";
+			sepNavSelRange = "{18283, 0}";
+			sepNavVisRange = "{5135, 1437}";
+		};
+	};
+	1FE14E0B151E565E00C4C05B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F13B7B21518FAE000BB5234 /* Record.cpp */;
+		name = "Record.cpp: 786";
+		rLen = 0;
+		rLoc = 27360;
+		rType = 0;
+		vrLen = 1095;
+		vrLoc = 26220;
+	};
+	1FE14E0D151E565E00C4C05B /* UI.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = UI.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/UI.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1393, 27937}}";
+			sepNavSelRange = "{63788, 0}";
+			sepNavVisRange = "{49507, 1248}";
+		};
+	};
+}

@@ -1,0 +1,2566 @@
+<html>
+<head>
+<title>Mobius Scripting</title><style type='text/css'>
+<!-- 
+div.constraint,div.issue,div.note,div.notice     { margin-left: 2em; }dt.label       { display: run-in; }li           { margin-top: 0.3em; margin-bottom: 0.3em; }p           { margin-top: 0.6em; margin-bottom: 0.6em; }.diff-chg	{ background-color: orange; }.diff-del	{ background-color: red; text-decoration: line-through;}.diff-add	{ background-color: lime; }table          { empty-cells: show; }div.exampleInner { margin-left: 1em;                       margin-top: 0em; margin-bottom: 0em}div.exampleOuter {border: 4px double gray;                  margin: 0em; padding: 0em}div.exampleInner { background-color: #d5dee3;                   border-top-width: 4px;                   border-top-style: double;                   border-top-color: #d3d3d3;                   border-bottom-width: 4px;                   border-bottom-style: double;                   border-bottom-color: #d3d3d3;                   padding: 4px; margin: 0em }div.exampleWrapper { margin: 4px }div.exampleHeader { font-weight: bold; margin: 4px}body {  padding: 2em 1em 2em 70px;  margin: 0;  font-family: sans-serif;  color: black;  background: white;  background-position: top left;  background-attachment: fixed;  background-repeat: no-repeat;}:link { color: #00C; background: transparent }:visited { color: #609; background: transparent }a:active { color: #C00; background: transparent }a:link img, a:visited img { border-style: none } /* no border on img links */a img { color: white; }        /* trick to hide the border in Netscape 4 */@media all {                   /* hide the next rule from Netscape 4 */  a img { color: inherit; }    /* undo the color change above */}th, td { /* ns 4 */  font-family: sans-serif;}h1, h2, h3, h4, h5, h6 { text-align: left }/* background should be transparent, but WebTV has a bug */h1, h2, h3 { color: #005A9C; background: white }h1 { font: 170% sans-serif }h2 { font: 140% sans-serif }h3 { font: 120% sans-serif }h4 { font: bold 100% sans-serif }h5 { font: italic 100% sans-serif }h6 { font: small-caps 100% sans-serif }.hide { display: none }div.head { margin-bottom: 1em }div.head h1 { margin-top: 2em; clear: both }div.head table { margin-left: 2em; margin-top: 2em }p.copyright { font-size: small }p.copyright small { font-size: small }@media screen {  /* hide from IE3 */a[href]:hover { background: #ffa }}dd { margin-top: 0.3em; margin-bottom: 0.6em }dt { margin-top: 0; margin-bottom: 0 } /* opera 3.50 */dt { font-weight: bold }pre, code { font-family:monospace; font-size: medium }ul.toc {  list-style: disc;		/* Mac NS has problem with 'none' */  list-style: none;}-->
+</style>
+</head>
+<body>
+<h1 class=title1>Mobius Scripting</h1>
+<h2 class=title2>March 2012</h2>
+<br>
+<h1 class=sec1>Contents</h1>
+<table>
+<tr align=left><th>1</th><td></td><td><a href='#Introduction'>Introduction</a></td>
+<tr align=left><th>2</th><td></td><td><a href='#Writing Scripts'>Writing Scripts</a></td>
+<tr align=left><th>3</th><td></td><td><a href='#Running Scripts'>Running Scripts</a></td>
+<tr align=left><th>4</th><td></td><td><a href='#Debugging Scripts'>Debugging Scripts</a></td>
+<tr align=left><th>5</th><td></td><td><a href='#Script Language Fundamentals'>Script Language Fundamentals</a></td>
+<tr align=left><th>5.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Anatomy of a Statement'>Anatomy of a Statement</a></td>
+<tr align=left><th>5.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Intrinsic and Function Statements'>Intrinsic and Function Statements</a></td>
+<tr align=left><th>5.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Case Insensitivity'>Case Insensitivity</a></td>
+<tr align=left><th>5.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Parameters and Variables'>Parameters and Variables</a></td>
+<tr align=left><th>5.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Statement Blocks and Indentation'>Statement Blocks and Indentation</a></td>
+<tr align=left><th>5.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#The Mysterious $'>The Mysterious $</a></td>
+<tr align=left><th>6</th><td></td><td><a href='#Script Execution Environment'>Script Execution Environment</a></td>
+<tr align=left><th>7</th><td></td><td><a href='#Script Language Reference'>Script Language Reference</a></td>
+<tr align=left><th>7.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Declarations'>Declarations</a></td>
+<tr align=left><th>7.1.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#!autoload'>!autoload</a></td>
+<tr align=left><th>7.1.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#!controller'>!controller</a></td>
+<tr align=left><th>7.1.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#!focuslock'>!focuslock</a></td>
+<tr align=left><th>7.1.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#!multiclick'>!multiclick</a></td>
+<tr align=left><th>7.1.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#!name'>!name</a></td>
+<tr align=left><th>7.1.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#!quantize'>!quantize</a></td>
+<tr align=left><th>7.1.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#!spread'>!spread</a></td>
+<tr align=left><th>7.1.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#!sustain'>!sustain</a></td>
+<tr align=left><th>7.1.9</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#!switchQuantize'>!switchQuantize</a></td>
+<tr align=left><th>7.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Expressions'>Expressions</a></td>
+<tr align=left><th>7.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Intrinsic Statements'>Intrinsic Statements</a></td>
+<tr align=left><th>7.3.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#break'>break</a></td>
+<tr align=left><th>7.3.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#call'>call</a></td>
+<tr align=left><th>7.3.2.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Procedures'>Procedures</a></td>
+<tr align=left><th>7.3.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#cancel'>cancel</a></td>
+<tr align=left><th>7.3.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#diff'>diff</a></td>
+<tr align=left><th>7.3.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#end'>end</a></td>
+<tr align=left><th>7.3.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#endproc'>endproc</a></td>
+<tr align=left><th>7.3.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#echo'>echo</a></td>
+<tr align=left><th>7.3.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#else'>else</a></td>
+<tr align=left><th>7.3.9</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#elseif'>elseif</a></td>
+<tr align=left><th>7.3.10</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#endif'>endif</a></td>
+<tr align=left><th>7.3.11</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#end'>end</a></td>
+<tr align=left><th>7.3.12</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#for'>for</a></td>
+<tr align=left><th>7.3.13</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#if'>if</a></td>
+<tr align=left><th>7.3.14</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#initpreset'>initpreset</a></td>
+<tr align=left><th>7.3.15</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#jump'>jump</a></td>
+<tr align=left><th>7.3.16</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#label'>label</a></td>
+<tr align=left><th>7.3.17</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#load'>load</a></td>
+<tr align=left><th>7.3.18</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#message'>message</a></td>
+<tr align=left><th>7.3.19</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#next'>next</a></td>
+<tr align=left><th>7.3.20</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#preset'>preset</a></td>
+<tr align=left><th>7.3.21</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#proc'>proc</a></td>
+<tr align=left><th>7.3.22</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#prompt'>prompt</a></td>
+<tr align=left><th>7.3.23</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#repeat'>repeat</a></td>
+<tr align=left><th>7.3.24</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#save'>save</a></td>
+<tr align=left><th>7.3.25</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#set'>set</a></td>
+<tr align=left><th>7.3.26</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#setup'>setup</a></td>
+<tr align=left><th>7.3.27</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#unittestsetup'>unittestsetup</a></td>
+<tr align=left><th>7.3.28</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#variable'>variable</a></td>
+<tr align=left><th>7.3.29</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#wait'>wait</a></td>
+<tr align=left><th>7.3.30</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#while'>while</a></td>
+<tr align=left><th>7.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Special Labels'>Special Labels</a></td>
+<tr align=left><th>7.4.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#reentry'>reentry</a></td>
+<tr align=left><th>7.4.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#sustain'>sustain</a></td>
+<tr align=left><th>7.4.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#endSustain'>endSustain</a></td>
+<tr align=left><th>7.4.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#click'>click</a></td>
+<tr align=left><th>7.4.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#endClick'>endClick</a></td>
+<tr align=left><th>7.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Functions'>Functions</a></td>
+<tr align=left><th>7.5.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Divide'>Divide</a></td>
+<tr align=left><th>7.5.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Backward'>Backward</a></td>
+<tr align=left><th>7.5.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Forward'>Forward</a></td>
+<tr align=left><th>7.5.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#SpeedCancel'>SpeedCancel</a></td>
+<tr align=left><th>7.5.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Halfspeed'>Halfspeed</a></td>
+<tr align=left><th>7.5.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#InstantMultiply'>InstantMultiply</a></td>
+<tr align=left><th>7.5.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Loop'>Loop</a></td>
+<tr align=left><th>7.5.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#MidiOut'>MidiOut</a></td>
+<tr align=left><th>7.5.9</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Move'>Move</a></td>
+<tr align=left><th>7.5.10</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#MuteOff'>MuteOff</a></td>
+<tr align=left><th>7.5.11</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#MuteOn'>MuteOn</a></td>
+<tr align=left><th>7.5.12</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#OverdubOff'>OverdubOff</a></td>
+<tr align=left><th>7.5.13</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#OverdubOn'>OverdubOn</a></td>
+<tr align=left><th>7.5.14</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#PitchBend'>PitchBend</a></td>
+<tr align=left><th>7.5.15</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#PitchOctave'>PitchOctave</a></td>
+<tr align=left><th>7.5.16</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#PitchStep'>PitchStep</a></td>
+<tr align=left><th>7.5.17</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#SpeedBend'>SpeedBend</a></td>
+<tr align=left><th>7.5.18</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#SpeedOctave'>SpeedOctave</a></td>
+<tr align=left><th>7.5.19</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#SpeedStep'>SpeedStep</a></td>
+<tr align=left><th>7.5.20</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#SpeedToggle'>SpeedToggle</a></td>
+<tr align=left><th>7.5.21</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Sample'>Sample</a></td>
+<tr align=left><th>7.5.22</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Shuffle'>Shuffle</a></td>
+<tr align=left><th>7.5.23</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Slip'>Slip</a></td>
+<tr align=left><th>7.5.24</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Sustain Functions'>Sustain Functions</a></td>
+<tr align=left><th>7.5.25</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#TimeStretch'>TimeStretch</a></td>
+<tr align=left><th>7.5.26</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Track'>Track</a></td>
+<tr align=left><th>7.5.27</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#LoopWindowing'>Loop Windowing</a></td>
+<tr align=left><th>7.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Parameters'>Parameters</a></td>
+<tr align=left><th>7.6.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Comma Separated Values'>Comma Separated Values</a></td>
+<tr align=left><th>7.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Track Parameters'>Track Parameters</a></td>
+<tr align=left><th>7.7.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#trackParameterFocus'>focus</a></td>
+<tr align=left><th>7.7.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#trackParameterGroup'>group</a></td>
+<tr align=left><th>7.7.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#trackParameterPreset'>preset</a></td>
+<tr align=left><th>7.7.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#trackParameterPresetNumber'>presetNumber</a></td>
+<tr align=left><th>7.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Track Controls'>Track Controls</a></td>
+<tr align=left><th>7.9</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Variables'>Variables</a></td>
+<tr align=left><th>7.9.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Script State'>Script State</a></td>
+<tr align=left><th>7.9.1.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#clickCount'>clickCount</a></td>
+<tr align=left><th>7.9.1.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#midiChannel'>midiChannel</a></td>
+<tr align=left><th>7.9.1.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#midiNumber'>midiNumber</a></td>
+<tr align=left><th>7.9.1.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#midiType'>midiType</a></td>
+<tr align=left><th>7.9.1.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#midiValue'>midiValue</a></td>
+<tr align=left><th>7.9.1.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#returnCode'>returnCode</a></td>
+<tr align=left><th>7.9.1.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#sustainCount'>sustainCount</a></td>
+<tr align=left><th>7.9.1.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#triggerNumber'>triggerNumber</a></td>
+<tr align=left><th>7.9.1.9</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#triggerOffset'>triggerOffset</a></td>
+<tr align=left><th>7.9.1.10</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#triggerValue'>triggerValue</a></td>
+<tr align=left><th>7.9.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Loop Sizes'>Loop Sizes</a></td>
+<tr align=left><th>7.9.2.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#cycleCount'>cycleCount</a></td>
+<tr align=left><th>7.9.2.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#cycleFrame'>cycleFrame</a></td>
+<tr align=left><th>7.9.2.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#cycleFrames'>cycleFrames</a></td>
+<tr align=left><th>7.9.2.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#cycleNumber'>cycleNumber</a></td>
+<tr align=left><th>7.9.2.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#layerCount'>layerCount</a></td>
+<tr align=left><th>7.9.2.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#loopCount'>loopCount</a></td>
+<tr align=left><th>7.9.2.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#loopFrame'>loopFrame</a></td>
+<tr align=left><th>7.9.2.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#loopFrames'>loopFrames</a></td>
+<tr align=left><th>7.9.2.9</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#loopNumber'>loopNumber</a></td>
+<tr align=left><th>7.9.2.10</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#redoCount'>redoCount</a></td>
+<tr align=left><th>7.9.2.11</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#subCycleNumber'>subCycleNumber</a></td>
+<tr align=left><th>7.9.2.12</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#subCycleFrame'>subCycleFrame</a></td>
+<tr align=left><th>7.9.2.13</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#subCycleFrames'>subCycleFrames</a></td>
+<tr align=left><th>7.9.2.14</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#subCycleCount'>subCycleCount</a></td>
+<tr align=left><th>7.9.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Loop Events'>Loop Events</a></td>
+<tr align=left><th>7.9.3.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#nextEvent'>nextEvent</a></td>
+<tr align=left><th>7.9.3.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#nextEventFunction'>nextEventFunction</a></td>
+<tr align=left><th>7.9.3.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#nextLoop'>nextLoop</a></td>
+<tr align=left><th>7.9.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Loop Modes'>Loop Modes</a></td>
+<tr align=left><th>7.9.4.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#effectiveFeedback'>effectiveFeedback</a></td>
+<tr align=left><th>7.9.4.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#inHalfspeed'>inHalfspeed</a></td>
+<tr align=left><th>7.9.4.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#inMute'>inMute</a></td>
+<tr align=left><th>7.9.4.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#inOverdub'>inOverdub</a></td>
+<tr align=left><th>7.9.4.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#inPause'>inPause</a></td>
+<tr align=left><th>7.9.4.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#inRealign'>inRealign</a></td>
+<tr align=left><th>7.9.4.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#inReturn'>inReturn</a></td>
+<tr align=left><th>7.9.4.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#inReverse'>inReverse</a></td>
+<tr align=left><th>7.9.4.9</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#isRecording'>isRecording</a></td>
+<tr align=left><th>7.9.4.10</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#mode'>mode</a></td>
+<tr align=left><th>7.9.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Speed and Pitch'>Speed and Pitch</a></td>
+<tr align=left><th>7.9.5.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#rate'>rate</a></td>
+<tr align=left><th>7.9.5.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#rawPitch'>rawPitch</a></td>
+<tr align=left><th>7.9.5.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#rawSpeed'>rawSpeed</a></td>
+<tr align=left><th>7.9.5.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#speedToggle'>speedToggle</a></td>
+<tr align=left><th>7.9.5.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#speedSequenceIndex'>speedSequenceIndex</a></td>
+<tr align=left><th>7.9.5.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#pitchSequenceIndex'>pitchSequenceIndex</a></td>
+<tr align=left><th>7.9.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Track State'>Track State</a></td>
+<tr align=left><th>7.9.6.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#globalMute'>globalMute</a></td>
+<tr align=left><th>7.9.6.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#outSyncMaster'>outSyncMaster</a></td>
+<tr align=left><th>7.9.6.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#solo'>solo</a></td>
+<tr align=left><th>7.9.6.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#track, trackNumber'>track, trackNumber</a></td>
+<tr align=left><th>7.9.6.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#trackCount'>trackCount</a></td>
+<tr align=left><th>7.9.6.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#trackSyncMaster'>trackSyncMaster</a></td>
+<tr align=left><th>7.9.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Generic Sync'>Generic Sync</a></td>
+<tr align=left><th>7.9.7.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncAudioFrame'>syncAudioFrame</a></td>
+<tr align=left><th>7.9.7.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncBar'>syncBar</a></td>
+<tr align=left><th>7.9.7.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncBeat'>syncBeat</a></td>
+<tr align=left><th>7.9.7.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncCorrections'>syncCorrections</a></td>
+<tr align=left><th>7.9.7.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncCyclePulses'>syncCyclePulses</a></td>
+<tr align=left><th>7.9.7.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncDealign'>syncDealign</a></td>
+<tr align=left><th>7.9.7.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncDrift'>syncDrift</a></td>
+<tr align=left><th>7.9.7.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncDriftChecks'>syncDriftChecks</a></td>
+<tr align=left><th>7.9.7.9</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncLoopFrames'>syncLoopFrames</a></td>
+<tr align=left><th>7.9.7.10</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncPreRealignFrame'>syncPreRealignFrame</a></td>
+<tr align=left><th>7.9.7.11</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncPulse'>syncPulse</a></td>
+<tr align=left><th>7.9.7.12</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncPulseFrames'>syncPulseFrames</a></td>
+<tr align=left><th>7.9.7.13</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncPulses'>syncPulses</a></td>
+<tr align=left><th>7.9.7.14</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncRawBeat'>syncRawBeat</a></td>
+<tr align=left><th>7.9.7.15</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncTempo'>syncTempo</a></td>
+<tr align=left><th>7.9.8</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Out Sync'>Out Sync</a></td>
+<tr align=left><th>7.9.8.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncOutBar'>syncOutBar</a></td>
+<tr align=left><th>7.9.8.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncOutBeat'>syncOutBeat</a></td>
+<tr align=left><th>7.9.8.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncOutRawBeat'>syncOutRawBeat</a></td>
+<tr align=left><th>7.9.8.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncOutSending'>syncOutSending</a></td>
+<tr align=left><th>7.9.8.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncOutStarted'>syncOutStarted</a></td>
+<tr align=left><th>7.9.8.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncOutStarts'>syncOutStarts</a></td>
+<tr align=left><th>7.9.8.7</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncOutTempo'>syncOutTempo</a></td>
+<tr align=left><th>7.9.9</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#MIDI Sync'>MIDI Sync</a></td>
+<tr align=left><th>7.9.9.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncInBar'>syncInBar</a></td>
+<tr align=left><th>7.9.9.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncInBeat'>syncInBeat</a></td>
+<tr align=left><th>7.9.9.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncInRawBeat'>syncInRawBeat</a></td>
+<tr align=left><th>7.9.9.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncInReceiving'>syncInReceiving</a></td>
+<tr align=left><th>7.9.9.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncInStarted'>syncInStarted</a></td>
+<tr align=left><th>7.9.9.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncInTempo'>syncInTempo</a></td>
+<tr align=left><th>7.9.10</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Host Sync'>Host Sync</a></td>
+<tr align=left><th>7.9.10.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncHostBar'>syncHostBar</a></td>
+<tr align=left><th>7.9.10.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncHostBeat'>syncHostBeat</a></td>
+<tr align=left><th>7.9.10.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncHostRawBeat'>syncHostRawBeat</a></td>
+<tr align=left><th>7.9.10.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncHostReceiving'>syncHostReceiving</a></td>
+<tr align=left><th>7.9.10.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncHostStarted'>syncHostStarted</a></td>
+<tr align=left><th>7.9.10.6</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#syncHostTempo'>syncHostTempo</a></td>
+<tr align=left><th>7.9.11</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Miscellaneous'>Miscellaneous</a></td>
+<tr align=left><th>7.9.11.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#blockFrames'>blockFrames</a></td>
+<tr align=left><th>7.9.11.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#configurationDirectory'>configurationDirectory</a></td>
+<tr align=left><th>7.9.11.3</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#installationDirectory'>installationDirectory</a></td>
+<tr align=left><th>7.9.11.4</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#noExternalAudio'>noExternalAudio</a></td>
+<tr align=left><th>7.9.11.5</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#sampleFrames'>sampleFrames</a></td>
+<tr align=left><th>8</th><td></td><td><a href='#Examples'>Examples</a></td>
+<tr align=left><th>8.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Sustain Scripts'>Sustain Scripts</a></td>
+<tr align=left><th>8.2</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Long Press Scripts'>Long Press Scripts</a></td>
+</table>
+<a name='Introduction'>
+<h1 class=sec1>1 Introduction</h1>
+</a>
+<p>Mobius provides a powerful feature called <i>scripting</i> that can
+be used to add new functions or customize the behavior of Mobius to
+match your looping style.  Some of the things that can be done with
+scripts include:</p>
+<ul>
+<li>Perform several functions at exactly the same time 
+with a single button press.</li>
+<li>Perform different functions from the same button, depending 
+on the current loop mode.</li>
+<li>Perform a function while temporarily changing one or more of the 
+preset parameters.</li>
+<li>Perform a sequence of functions at musically useful intervals.</li>
+<li>Automate gradual changes to output level and pan.</li>
+</ul>
+<p>A script is simply a text file that can be created with any text
+editor.  The contents of the script file are statements in a language
+called the <i>Mobius Scripting Language</i>.  Once the script files
+have been written, they are <i>registered</i> so that Mobius knows
+their names and locations.  Once a script file has been registered, it
+may be assigned one or more <i>triggers</i> which can be MIDI messages,
+computer keyboard presses, or buttons in the Mobius window.</p>
+<p>When a trigger for a script is received, the statements in the
+script are performed.  This process is called <i>running the
+script</i>, <i>executing the script</i>, or <i>calling the
+script</i>.</p>
+<p>The following is an example of a simple script:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  wait loop
+  Reverse
+  Halfspeed
+</pre>
+</div></div>
+<p>When this script is called, it will first wait until the loop
+reaches its start point, then perform a <i>Reverse</i> and 
+<i>Halfspeed</i> function at exactly the same time.</p>
+<a name='Writing Scripts'>
+<h1 class=sec1>2 Writing Scripts</h1>
+</a>
+<p>You may write a script using any text editor, though it is
+critical that you save the files as "plain text".  If you are not
+in the United States you need to be careful about the character
+encoding used for the script file.  Scripts must be written in an
+8-bit character encoding that is compatible with ASCII.</p>
+<p>If you are using <i>Notepad</i> on Windows, you must
+save the file using the <i>ANSI</i> encoding, you must <b>not</b>
+use <i>Unicode</i>.  If you are using <i>Wordpad</i>, in 
+the <i>Save as type:</i> menu you must select either <i>Text Document</i>
+or <i>Text Document - MS-DOS Format</i>.</p>
+<p>If you are using <i>TextEdit</i> on a Mac, you need to save the
+file in a plain text encoding, either <i>Western (Mac OS Roman)</i>
+or <i>Western (Windows Latin 1)</i>.  When you use the <i>Save As</i>
+menu item, if you see a <i>File Format:</i> menu with items like
+<i>Rich Text Format</i> or <i>Web Page (.html)</i> then you are editing
+the file using rich text rather than plain text.   Open the TextEdit
+Preferences window and under the <i>New Document</i> tab select 
+the <i>Plain Text</i> radio button under the <i>Format</i> section.  Once
+you do this create a new document and the <i>Save As</i> window should
+show a <i>Plain Text Encoding:</i> menu, select <i>Western (Mac OS Roman)</i>.</p>
+<p>There are many text editors available that present encoding options
+in different ways or using different words.  The presentation may also be
+different on different versions of the operating system.  The main thing
+to keep in mind is that you must always pick the simplest text format 
+available, usually this is referred to as "plain text" with encodings
+such as "ansi", "latin 1", "roman", or "MS-DOS".  Stay away from anything
+that says "rich" or "unicode" or that looks like a word processor format.</p>
+<p>A script file may have any name, but it is recommended that they
+have the extension <b>.mos</b>.  Scripts may be stored in any
+directory.  On OS X most people keep them in
+<i>/Library/Application Support/Mobius/scripts</i>.  On Windows
+most people keep them in a directory under the Mobius installation
+directory, usually <i>c:\Program Files\Mobius 2\scripts</i>.  </p>
+<p>Once you have created the script file, you need to tell Mobius
+about it through a process called <i>script registration</i>.  There
+are two ways to register scripts: by file and by directory.  When you
+register a script file, that file is loaded into Mobius when it
+starts.  If you register a script directory, all scripts in that
+directory are loaded.  Registering script directories is convenient if
+you have a lot of scripts and you don't want to register all of them
+one at a time.  You do need to be careful though to only put things in
+this directory you really need.</p>
+<p>To register a script open the <i>Configuration</i> menu and
+select <i>Scripts</i>, the Script Registration window will open.</p>
+<img alt='Graphic' src='images/starting-scripts-windows.gif'/>
+<p>On Windows you will see <i>Add Script</i> and <i>Add Directory</i>
+buttons that will bring up standard selection dialogs for files or
+directories.  On Mac you will see a similar window but it will only
+have a single <i>Add</i> button because the standard Mac file selector
+lets you select both files and directories.</p>
+<p>To register a new script or script directory, click one of the add buttons,
+navigate to the file or directory you want to register and click <i>Open</i>
+on Windows or <i>Choose</i> on Mac.   The name of the file or directory
+should now appear in the list in the center of the script registration window.
+If you want to remove an item from the list, click on it so that it
+becomes highlighted then click the <i>Delete</i> button.  Finally
+click the <i>Ok</i> button at the bottom of the widow to save
+the changes.  The new set of scripts will be loaded into Mobius and
+are available for binding.</p>
+<a name='Running Scripts'>
+<h1 class=sec1>3 Running Scripts</h1>
+</a>
+<p>Like build-in functions, scripts are run in response to a
+<b>trigger</b> such as a MIDI message, computer keyboard key, or a button
+in the Mobius user interface.   The process of associating a trigger
+with a script is called <b>binding</b>.  
+&gt;See the <a href='starting.htm#Controlling Mobius'>Controlling Mobius</a>
+
+in the <i>Getting Started</i> manual for a full description of how
+to create bindings. Once you
+have registered some scripts or script directories you will start
+seeing their names in the <i>Scripts</i> tab of the binding windows.</p>
+<p>Note that scripts will usually appear in the binding windows with
+a name other than the raw file name.  Most scripts include a line
+starting with <i>!name</i> at the top that specifies a user friendly name
+you want to see in the binding windows.  For example:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    !name Global Fade Out
+</pre>
+</div></div>
+<p>A typical script file may have a name like "fadeoutall.mos" but the
+name you see in the binding windows might be "Global Fade Out" or something
+else more meaningful than the file name.  You will need to look in each
+script to see if it contains a <i>!name</i> line and remember to look for
+that name in the binding windows.  If the script doesn't have a <i>!name</i>
+line you will just see the name of the script file without the ".mos" 
+extension.</p>
+<p>When binding a script to a trigger, consider whether you want
+to use advanced script features such as <a href='#Sustain Scripts'>Sustain Scripts</a>
+or <a href='#Long Press Scripts'>Long Press Scripts</a>.  These features require that the
+script be bound to a 
+<a href='starting.htm#Sustainable Trigger'>Sustainable Trigger</a>
+
+such as a MIDI <i>note</i> message.</p>
+<a name='Debugging Scripts'>
+<h1 class=sec1>4 Debugging Scripts</h1>
+</a>
+<p>TODO: Introduce DBWIN32, Echo, Message, Prompt...</p>
+<a name='Script Language Fundamentals'>
+<h1 class=sec1>5 Script Language Fundamentals</h1>
+</a>
+<p>A script is simply a text file containing lines of characters with
+each line ending with a return character.  Each line of text will be
+one of the following types:</p>
+<ul>
+<li>Empty</li>
+<li>Comment</li>
+<li>Declaration</li>
+<li>Statement</li>
+</ul>
+<p>For a given line of text the first <i>significant</i> character
+determines the type.  The first significant character is anything
+other than <i>white space</i> characters such as spaces and tabs.</p>
+<p>If all the characters on a line are <i>white space</i>, the line is
+<i>empty</i> and is ignored.</p>
+<p>If the first significant character is a <b>#</b> the line
+is a <i>comment</i> and the entire line is ignored.</p>
+<p>If the first significant character is a <b>!</b> the line
+is a <i>declaration</i>.</p>
+<p>If the first significant character is anything other than whitespace,
+<b>#</b> or <b>!</b> the line is a <i>statement</i>.</p>
+<p>Declarations are used to give Mobius information about how
+to run the script.  They can appear anywhere in the script but
+it is recommended that you put them all at the top.  The order of
+declarations is not important.</p>
+<p>Statements are performed in the order they are written in the script.</p>
+<p>This example script shows each of the line types.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  # Do the NextLoop function after turning off switch quantize
+  !name Next Loop Now
+
+  set switchQuant off
+  NextLoop
+</pre>
+</div></div>
+<p>The first line begins with a # so it is a comment.  You may put
+comments anywhere in the script to explain what the script is doing.</p>
+<p>The second line is a declaration, in this example it is specifying
+the name you want to display in the binding windows.</p>
+<p>The third line is empty.</p>
+<p>The fourth and fifth lines are statements.</p>
+<p><b>GEEK NOTE:</b>If you have experience with other programming
+languages, note that Mobius does not support multi-line statements
+(with or without a line continuation character) and there are no block
+comments.  If you don't know what that means don't worry.  All that
+you need to remember is that a comment, declaration or statement must
+all be one line.</p>
+<a name='Anatomy of a Statement'>
+<h2 class=sec2>5.1 Anatomy of a Statement</h2>
+</a>
+<p>A statement always begins with a <i>Keyword</i> which is a sequence
+of letters and numbers with no spaces.  Example keywords are
+<i>Record</i>, <i>set</i>, and <i>if</i>.  When we talk about
+statements, we usually identify them by their keyword, such as <i>"a
+Record statement"</i> or <i>"an if statement"</i>.</p>
+<p>After the keyword, a statement may contain <i>arguments</i> or
+<i>expressions</i>.  An argument is a single word or number without
+spaces, an expression is a complex sequence of characters that may
+include spaces.  Consider this example:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  variable nextLoop
+</pre>
+</div></div>
+<p>In the previous example the keyword is <i>Variable</i> so this
+is called a <i>Variable statement</i>.  After the keyword
+is the argument <i>nextLoop</i>.  The meaning of the argument
+depends on the keyword, in this case the argument is the name
+of a script variable.  Here is a more complex example:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  variable nextLoop loopNumber + 2
+</pre>
+</div></div>
+<p>In a <i>variable</i> statement, all of the characters after
+the name argument are an expression.  This expression is used
+to calculate the initial value of the variable.  In this example
+<i>loopNumber + 2</i> is the expression.</p>
+<p>Some statements have no arguments, a few have more than one
+argument.  Most statements will either zero or one expression.  When a
+statement has both an argument and an expression, the argument comes
+first.  In a few rare cases a statement may allow more than one
+expression, if so the expressions must be separated by a comma.</p>
+<a name='Intrinsic and Function Statements'>
+<h2 class=sec2>5.2 Intrinsic and Function Statements</h2>
+</a>
+<p>There are two categories of statements: those that are an intrinsic
+part of the scripting language, and those that execute Mobius looping
+functions.  Examples of intrinsic statements are <i>variable</i>,
+<i>set</i>, <i>if</i> and <i>for</i>.  Examples of function statements 
+are <i>Record</i>, <i>Overdub</i> and <i>NextLoop</i>.</p>
+<p>The intrinsic statements do not change often, but new function
+statements are added frequently.  All the Mobius functions that are
+visible in the binding windows may be used in scripts, as well as
+several special functions that are available only in scripts.
+Whenever we talk about new functions being added to Mobius,
+you can assume that these functions can also be used in scripts.</p>
+<p><b>GEEK NOTE:</b>If you are familiar with the C language, you can
+think of intrinsic statements as being similar to the core C language,
+and the functions being similar to the "stdio.h" standard library.</p>
+<p>All of the intrinsic statements will be described in detail 
+because you need to understand all of them to write complex scripts.</p>
+<p>The names of the function statements will not be listed here.  Instead
+consult the <a href='reference.htm'>Mobius Reference</a>
+ manual and find the
+function you want to use, look for it's <b>Internal name</b>, and use
+that internal name as the first word in the statement.</p>
+<a name='Case Insensitivity'>
+<h2 class=sec2>5.3 Case Insensitivity</h2>
+</a>
+<p>The script language is <i>case insensitive</i> which means that
+upper case and lower case letters are considered to be the same.  In
+the examples you will see, function names usually start with a capital
+letter and variable names start with a lowercase letter.  When a
+function or variable name contains more than one word, a
+capitalization style called "camel case" is used which means that the
+initial letter of adjacent words are upper case and the other letters
+are in lower case.  For example:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  NextLoop
+  variable saveQuantize quantize
+</pre>
+</div></div>
+<p>You do not have to follow this style, "NextLoop", "nextloop",
+"NEXTLOOP", or "NeXtLoOp" all mean the same thing.</p>
+<p>Intrinsic statements will begin with a lower case letter in this
+document, but this is very inconsistent in older script examples.
+Keywords whose names are found in common programming
+languages are usually written in all lower case, these include
+<i>if</i>, <i>else</i>, <i>for</i>, and <i>while</i>.  But other
+Other keywords are often capitalized, such as
+<i>Variable</i>, <i>Label</i>, and <i>Jump</i>.</p>
+<a name='Parameters and Variables'>
+<h2 class=sec2>5.4 Parameters and Variables</h2>
+</a>
+<p>TODO: The difference between parameters and variables, User defined
+and system variables, variable scoping...</p>
+<a name='Statement Blocks and Indentation'>
+<h2 class=sec2>5.5 Statement Blocks and Indentation</h2>
+</a>
+<p>A few statements are used to define a range of statements
+that may be executed more than once or not at all.   The range
+of statements is called a <i>statement block</i>, the statements
+that surround the block are called <i>block start</i> and <i>block end</i>
+statements.</p>
+<p>The following table lists the block start statements with their
+corresponding block end statements:</p>
+<table>
+<tr><th>Start</th><th>End</th></tr>
+<tr><td>if</td><td>endif, else, elseif</td></tr>
+<tr><td>elseif</td><td>endif, else, elseif</td></tr>
+<tr><td>else</td><td>endif</td></tr>
+<tr><td>for</td><td>next</td></tr>
+<tr><td>repeat</td><td>next</td></tr>
+<tr><td>while</td><td>next</td></tr>
+<tr><td>proc</td><td>endproc</td></tr>
+</table>
+<p>How the block statements behave will be described later.
+The important thing to know now is that statement blocks must have
+both a start and end statement and you must use the end statement that
+is appropriate for the start statement.</p>
+<p>Here are some examples of statement blocks:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  if mode = record
+    Overdub
+  else
+    Reset
+  endif
+
+  for *
+    set 8thsPerCycle 8
+  next
+</pre>
+</div></div>
+<p>To help make it clear where the statement blocks start and end
+it is recommended that you use <i>indentation</i> for the lines
+inside the block.  Most examples use 2 spaces of indentation but
+you can use any number.  Indentation is not required but it makes
+the script easier to read and understand.</p>
+<p>Block statements may be <i>nested</i> which means that a block may
+appear inside another block.  Here is a simple example of a nested block:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  if mode = record
+    if track = 1
+      Overdub
+    endif
+  endif
+</pre>
+</div></div>
+<p>When blocks are nested, the block start statement is paired with
+the nearest block end statement that follows.  It is strongly
+recommended that you use indentation to make it clear which block
+start and end statements belong together.</p>
+<a name='The Mysterious $'>
+<h2 class=sec2>5.6 The Mysterious $</h2>
+</a>
+<p>The <b>$</b> is a special character used to indicate that the word
+that follows it is a parameter or variable reference.  In early versions of
+Mobius the $ was required for references, now it is optional
+in most places.  Since it appears in example scripts it tends to keep
+reappearing even though it is not required.</p>
+<p>The $ is required in a few statements where it is not clear whether
+a word is a reference, or simply a word.  These statements are:</p>
+<ul>
+<li>echo</li>
+<li>message</li>
+<li>prompt</li>
+</ul>
+<p>These functions all use the remainder of the line following the
+keyword as a message to be displayed to the user.  The message will be
+displayed exactly as it is written.  For example the statement
+"message mode" will display the string "mode".  If you want to display
+a message with the name of the current looping mode, you reference
+the <i>mode</i> variable with a $.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  message The current mode is $mode
+</pre>
+</div></div>
+<a name='Script Execution Environment'>
+<h1 class=sec1>6 Script Execution Environment</h1>
+</a>
+<p><b>NOTE</b>: This section introduces concepts that may be difficult
+for people without programming experience to understand.  It is not
+necessary to understand this section in order to write scripts.  But
+if you write scripts using the <a href='#wait'>wait</a> statement, the
+<a href='#!sustain'>!sustain</a> declaration, or the <a href='#!multiclick'>!multiclick</a>
+declaration, this section will help you understand how to get the most
+power out of these features.</p>
+<p>Scripts are similar to a re-entrant function in a multi-threaded
+programming language.  These concepts should be familiar to most
+programmers, but they basically mean that there can be several copies
+of the script running at the same time.</p>
+<p>Each of the calls for the down transition, up
+transition, and sustain notifications are done in an environment
+similar to a thread.  If you use Wait statements, it is possible for
+the script to be active in more than one thread.  By using variables,
+the threads can communicate with each other.</p>
+<p>More here...</p>
+<a name='Script Language Reference'>
+<h1 class=sec1>7 Script Language Reference</h1>
+</a>
+<a name='Declarations'>
+<h2 class=sec2>7.1 Declarations</h2>
+</a>
+<p>In this section we will describe the declarations.  These may
+appear anywhere in the script though there are usually written
+at the top.</p>
+<a name='!autoload'>
+<h3 class=sec3>7.1.1 !autoload</h3>
+</a>
+<p>Normally scripts are loaded once when Mobius is first started and
+remain in memory for as long as Mobius runs.  If you make changes to
+the script file they will not be used by Mobius until you restart it.</p>
+<p>The <i>!autoload</i> declaration will cause the script file to be
+reloaded from the file system every time the script is called.  
+This is very useful when writing new scripts as it allows you to keep
+Mobius running while you make changes the script.</p>
+<p>After the script is working properly you should remove this
+declaration.  Reloading the script causes a small delay before
+the script is run.  This can make it difficult to apply the script
+to exact locations in the loop.</p>
+<a name='!controller'>
+<h3 class=sec3>7.1.2 !controller</h3>
+</a>
+<p>This option identifies the script as a <i>controller</i> script.
+When the script is triggered by a MIDI continuous controller, the
+script is called whenever the value of the controller changes.</p>
+<p>Normally, when a script is bound to a MIDI continuous controller,
+it is assumed that the controller messages are being sent by a momentary
+switch rather than an expression pedal.  Momentary switches typically
+send a non-zero controller value when the switch is pressed and a zero
+value when the switch is released.  Mobius will only call the script
+when it receives a non-zero value which means the switch has been 
+pressed.  It will not call the script when it receives a zero value
+after the switch is released, unless you also use the <a href='#!sustain'>!sustain</a>
+declaration.</p>
+<p>This behavior is usually not desired when the continuous controller
+values are being generated by an expression pedal.  With an expression
+pedal, you want the script called whenever the position of the pedal
+changes, even when it goes to zero.</p>
+<p>Controller scripts are most often used to change the 
+<a href='reference.xml#Track Controls'>track controls</a>
+: 
+<i>Input Level</i>,
+<i>Output Level</i>,
+<i>Feedback</i>,
+<i>Secondary Feedback</i>, and
+<i>Pan</i>.</p>
+<p>They may also be used to change speed and pitch shift for each track,
+and change preset parameters such as <i>8ths Per Cycle</i> or any other
+parameter that has a range of values.</p>
+<p>Including the <i>!controller</i> declaration in a script will
+<b>disable</b> the following directives if they also appear in the script.</p>
+<ul>
+<li>!quantize</li>
+<li>!switchQuantize</li>
+<li>!sustain</li>
+<li>!multiclick</li>
+<li>!spread</li>
+</ul>
+<p>Here is an example script that implements a basic volume control.
+The behavior of this script is exactly the same as binding
+a controller to the <i>Output Level</i> track control.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  !name Output Level
+  !controller
+  set outut midiValue
+</pre>
+</div></div>
+<p>The <i>!controller</i> declaration tells Mobius that this script
+should be called every time the value of the trigger changes.  The
+word <i>midiValue</i> is a reference to a system variable that will
+contain the value of the continuous controller that triggered this
+script. The value will be from 0 to 127.</p>
+<p>Here is a more interesting example that sets the output level
+to the inverse of the controller value. When the controller
+value is zero (toe up) the output level will be 127, when the
+controller value is 127 (toe down) the output level will be zero.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  !name Backwards Output Level
+  !controller
+  set output 127 - midiValue
+</pre>
+</div></div>
+<p>If you are familiar with the EDP, controller scripts give you the
+ability to implement "flip mode" as well as many other combinations of
+Mobius controls that change in response to a single expression pedal.</p>
+<a name='!focuslock'>
+<h3 class=sec3>7.1.3 !focuslock</h3>
+</a>
+<p>Normally scripts do not obey focus lock or track groups.  When a
+script is run it will only run in the selected track.</p>
+<p>The <i>!focuslock</i> declaration makes the script sensitive to
+track focus lock.  The script will be run simultaneously in all focused
+locked tracks.  If the <a href='reference.htm#Groups Have Focus Lock'>Groups Have Focus Lock</a>
+ parameter is true, this declaration will also cause the script to be run in all tracks that have the same group as the selected track.</p>
+<p>This option is useful for simple scripts that only operate
+on one track.  It makes the script behave more like the built-in
+Mobius functions.  If however the script uses the <a href='#for'>for</a> 
+statement to operate on several tracks, you normally do not
+use the <i>!focuslock</i> option.</p>
+<a name='!multiclick'>
+<h3 class=sec3>7.1.4 !multiclick</h3>
+</a>
+<p>This option allows the script to change behavior if you trigger it
+more than once within a short time.  Some people think of this as
+"double clicking".  A script that uses this option is called a
+<i>multi-click script</i>.</p>
+<p>To create a multi-click script, add this declaration:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  !multiclick 2000
+</pre>
+</div></div>
+<p>The numeric argument is the <i>trigger expiration period</i>
+expressed as a number of milliseconds.  The default expiration period
+is 1000 (1 second) so you only need to include this argument if you
+want a value other than 1000.  In this example the expiration
+period will be two seconds.</p>
+<p>Next add <i>Label</i> statements to the script with these names:</p>
+<ul>
+<li><b>click</b> - run whenever the script is triggered again 
+before the expiration period</li>
+<li><b>endClick</b> - run when the trigger expiration period is reached</li>
+</ul>
+<p>As always this is best described with an example:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  !name Multiclick Test
+
+  # the default value is 1000 milliseconds, override to 2 seconds
+  !multiclick 2000
+
+  message Starting Click Test
+  end
+
+  label click
+  message Click $clickCount
+  end
+
+  label endClick
+  message Ending Click Test
+  end
+</pre>
+</div></div>
+<p>When you trigger the script for the first time, the message
+"Starting Click Test" is displayed. If you trigger the script again
+within 2 seconds, a message is displayed showing the number of
+triggers that have been received from the system variable
+<i>clickCount</i>.  If you wait 2 seconds without triggering the
+script again, the "Ending Click Test" message is displayed and the
+script is finished.</p>
+<p>Each time the script is triggered, the expiration period starts
+over at 2 seconds.</p>
+<p><b>GEEK Note</b>: As with sustain scripts, the <i>click</i> and 
+<i>endClick</i> labels are called in different threads so the script
+may be active in more than one thread.  Variables can be used for communication 
+between threads.</p>
+<a name='!name'>
+<h3 class=sec3>7.1.5 !name</h3>
+</a>
+<p>This declaration is used to specify the name to be displayed for
+this script in the binding windows.  If no name is specified, the file
+name is displayed.  It is very common to use a <i>!name</i>
+declaration since the script file name is not always meaningful to the
+user.</p>
+<p>The name consists of all characters after the space after the
+<i>!name</i> declaration up to the end of the line.  In the following
+example, the name displayed for the script would be "Auto Record 4".</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  !name Auto Record 4
+</pre>
+</div></div>
+<p>Like all declarations, <i>!name</i> may appear anywhere in the file
+but it is usually the first line to make it easier to see.</p>
+<a name='!quantize'>
+<h3 class=sec3>7.1.6 !quantize</h3>
+</a>
+<p>Normally scripts will not obey the 
+<a href='reference.htm#Quantize'>Quantize Mode</a>
+ parameter in the preset.
+When a script is triggered it will be run immediately.</p>
+<p>The <i>!quantize</i> option makes the script sensitive to the
+<a href='reference.htm#Quantize'>Quantize Mode</a>
+ parameter, 
+it will be run at the next quantization point.
+This makes scripts behave more like built-in functions.</p>
+<p>This option is most often used when the script does not begin
+with a <i>Wait</i> statement.</p>
+<p>TODO: The difference between !quantize and Wait...</p>
+<a name='!spread'>
+<h3 class=sec3>7.1.7 !spread</h3>
+</a>
+<p>This option will allow the script to be triggered by a range of
+MIDI <i>note</i>, <i>controller</i>, or <i>program change</i> messages.
+The script is bound once to the center of the range, but will then be
+triggered by messages on either side of the center.</p>
+<p>This option is usually used when binding to MIDI <i>note</i> messages.  If
+the script is bound to middle C, then notes on either side of middle C
+will automatically be bound to the script.  This is similar to the way
+the <i>Pitch Step</i> and <i>Speed Step</i> functions behave.  The
+note you select in the binding window is the center note, pressing
+notes below the center lowers the pitch/speed, pressing notes above the
+center raises the pitch/speed.</p>
+<p>For spread scripts, the script will be run when any note in the
+range is pressed.  The script can then reference internal variables to
+determine which note within the range was pressed.</p>
+<p>While it will be most common to bind spread scripts to MIDI notes
+so that you can "play" the script chromatically, you can also bind the
+script to a range of program changes or continuous controller
+values.</p>
+<p>To define a spread script, include this declaration at the top:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  !spread
+</pre>
+</div></div>
+<p>The default range of the spread is 48 values on either side of the
+center, which for notes means 4 octaves up and 4 octaves down. You can
+reduce this range by adding an argument to the <i>!spread</i> declaration:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  !spread 4
+</pre>
+</div></div>
+<p>In the previous example, the 4 argument means that the spread will
+be 4 notes on either side of the center.</p>
+<p>If there is a conflict between a spread script binding and another
+function that is bound to a specific note, the other function will
+have priority.  For example, if a spread script with a range of 12 is
+bound to note 64, the script will be called whenever notes 52 to 76
+are received. If you also have the Record function bound to note 59,
+that note will call the Record function, but all the notes around it
+will still call the script.  You can think of this like "holes being
+punched" into the spread range.  You usually do not want to have a
+spread range conflict with another function binding so it is best to
+move the center notes so they do not overlap. If you want to have a
+large spread range, you will need to use different MIDI channels for
+the center notes.</p>
+<p>When a spread script is called, the following system variables may
+be referenced to adjust the behavior of the script:</p>
+<ul>
+<li><b>triggerOffset</b> - A positive or negative integer representing the
+relative position of the trigger from the center of the range.</li>
+</ul>
+<p>For example, if you bind the script to note 64 and you press note
+63, the value of <i>triggerOffset</i> will be -1. If you press note 64
+<i>triggerOffset</i> will be 0, and if you press note 65 <i>triggerOffset</i>
+will be 1.</p>
+<p>The built-in Speed Step function could be implemented with
+this script:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  !name Script Speed Step
+  !spread 12
+  SpeedStep triggerOffset
+</pre>
+</div></div>
+<p>Spread scripts are probably most useful with the SpeedStep, PitchStep,
+LoopTrigger, and TrackSelect functions. But you could also use them
+to set the output level or 8thsPerCycle parameter.</p>
+<p>As a more interesting example, if you always want to speed shift
+in octave intervals, you could use this script and you would only need
+to reserve 9 notes:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  !name Speed Step Octaves
+  !spread 4
+  SpeedStep triggerOffset * 12
+</pre>
+</div></div>
+<a name='!sustain'>
+<h3 class=sec3>7.1.8 !sustain</h3>
+</a>
+<p>This option will cause the script to be run on both the <i>down</i>
+and <i>up</i> transitions of the trigger.  A down transition happens when
+you press a switch, an up transition happens when you release a switch.
+A script that uses this option is called a <i>sustain script</i>.  Sustain
+scripts are effective only if you are using a momentary trigger such
+as a MIDI note, MIDI continuous controller, or computer keyboard key.</p>
+<p>To use MIDI notes, the trigger device must send a <i>Note On</i>
+event when a switch is pressed and a <i>Note Off</i> event when the
+switch is released.  To use MIDI continuous controllers, the switch
+must send a CC value greater than zero when the switch is pressed and
+zero when the switch is released.  Note that you can not use MIDI
+program changes for sustain scripts since the program change is only
+sent when the switch is pressed.</p>
+<p>Sustain scripts are also run repeatedly while the switch is held
+down, this allows it to change behavior depending on how long the
+switch is held.  This allows scripts to have <i>long press</i>
+behavior like other built-in functions.</p>
+<p>To be notified when the trigger goes up, you simply add this
+label to the script:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  label endSustain
+</pre>
+</div></div>
+<p>The statements following this label will be run when the function
+trigger goes up.</p>
+<p>To be notified while the trigger is held, add this label to the script:
+</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  label sustain
+</pre>
+</div></div>
+<p>The statements following this label will be run every 250 milliseconds
+(1/4 second) while the trigger is held. You can determine how
+long the trigger has been held by testing the <i>sustainCount</i> variable.
+This will have a number starting at 1 and incrementing by 1 every time
+the sustain script is called.</p>
+<p>You can specify the duration of the sustain notifications by adding
+a number after the !sustain keyword.   This number is the number of
+milliseconds between notifications.  For example, this declaration
+will cause the sustain label to called every second rather than every 
+1/4 second.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  !sustain 1000
+</pre>
+</div></div>
+<p>Here is a more complex example that demonstrates all of the features
+of sustain scripts.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  !name Sustain Test
+
+  # default is 250 msec, raise it to 1 sec
+  !sustain 1000
+
+  # the Message statement can be used to display brief messages
+  message Starting sustain test
+  end
+
+  label sustain
+  message Sustained $sustainCount
+  end
+
+  label endSustain
+  message Ending sustain test
+  end
+</pre>
+</div></div>
+<p>You can think of this as 3 scripts in one. From the top to the first
+<i>end</i> are the statements that are run when the switch is pressed.</p>
+<p>The statements from <i>label sustain</i> to the next <i>end</i> are 
+called as the switch is held.</p>
+<p>The statements from <i>label endSustain</i> to the next <i>end</i> 
+are called when the function trigger goes up.</p>
+<p>You do not need to declare both labels, but you do need to remember
+to put an <i>end</i> before each of the sustain labels.</p>
+<p><b>GEEK Note</b>: Scripts are similar to a re-entrant function in a
+multi-threaded programming language.  Each of the calls for the down
+transition, up transition, and sustain notifications are done in an
+environment similar to a thread.  If you use Wait statements, it is
+possible for the script to be active in more than one thread.  By
+using variables, the threads can communicate with each other.</p>
+<p>Here is a more realistic example. A long-press of the Record function
+will normally perform a Reset. This script does something similar but
+with the Mute function.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  !name Mute/Reset
+
+  Mute
+  end
+
+  label sustain
+  if sustainCount = 1
+  Reset
+  endif
+</pre>
+</div></div>
+<p>Under the <i>sustain</i> label, you can test the
+<i>sustainCount</i> variable to make the script change behavior the
+longer the trigger is held.  Some examples of this might be:</p>
+<ul>
+<li>change speed or pitch shift the longer the trigger is held</li>
+<li>bounce between half speed and normal speed every second as long as the trigger is held</li>
+<li>slip forward one subcycle every 1/2 second</li>
+</ul>
+<p>Here is another example of simple sustain script that raises the
+speed a fifth while held and drops it back when released.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  !name SUSSpeedUp5
+
+  SpeedUp 7
+  end
+
+  label endSustain
+  SpeedDown 7
+  end
+</pre>
+</div></div>
+<a name='!switchQuantize'>
+<h3 class=sec3>7.1.9 !switchQuantize</h3>
+</a>
+<p>When you change loops with the <i>switchQantize</i> parameter
+set something other than <i>off</i>, Mobius will enter a special
+<i>Switch</i> mode while it waits for the next 
+switch quantization point.  During this mode, many functions that
+you trigger are queued and performed after the loop switch.</p>
+<p>By default scripts do not wait until after the loop switch, 
+they are run immediately.  The <i>!switchQuanitze</i> option
+will delay the execution of the script until after the loop switch.
+This makes scripts behave more like built-in functions.</p>
+<p>Note however that the functions performed by the script are not
+treated like alternate endings to the switch function.  For example,
+if you do an Overdub during the switch quantization and the next
+loop is empty, the current loop is copied into the next loop.  But
+if you run a script whose first function is Overdub, this will
+not cause the loop to be copied.</p>
+<a name='Expressions'>
+<h2 class=sec2>7.2 Expressions</h2>
+</a>
+<a name='Intrinsic Statements'>
+<h2 class=sec2>7.3 Intrinsic Statements</h2>
+</a>
+<p>The syntax for each statement will be summarized using a notation
+that programmers should recognize as similar to BNF.  For example:</p>
+<pre class=computer>
+    call &lt;scriptName&gt; | &lt;procName&gt; [&lt;arg&gt; ...]
+</pre>
+<p>A line in a script is divided into <i>tokens</i> separated by one or
+more spaces.  The syntax notation describes what each token means.
+Tokens are often just words without spaces like <i>call</i>.  If
+a token needs to contain spaces it must be surrounded in double
+quotes like <i>"My Script"</i>.</p>
+<p>In the syntax notation, tokens that are not surrounded by angle
+brackets must be written exactly as shown.  Tokens that are
+surrounded by angle brackets must be replaced with tokens that are
+meaningful for your environment.  For example the token
+<i>&lt;scriptName&gt;</i> would be replaced by the name of the script you
+want to call.</p>
+<p>The vertical bar is used when there is a choice of several tokens
+that may appear at this location.  In this example the token following
+the <i>Call</i> may be either a procedure name or a script name.</p>
+<p>Square brackets are used to surround optional tokens.  In this
+example the <i>call</i> statement may have an optional list of
+arguments.  The <i>...</i> means that the contents within the brackets
+may be repeated any number of times.</p>
+<p>Two special tokens are used in syntax notation:</p>
+<ul>
+<li><b>&lt;arg&gt;</b> - replaced by a symbol, string, or variable reference</li>
+<li><b>&lt;expression&gt;</b> - replaced by a complex expression</li>
+</ul>
+<p>Note that some of the intrinsic statements are intended for use
+only in special testing scripts.  The statement keywords are presented
+using the character case that is most often seen in the example
+scripts.  As mentioned in the <a href='#Case Insensitivity'>Case Insensitivity</a> section,
+case in function names is ignored.</p>
+<a name='break'>
+<h3 class=sec3>7.3.1 break</h3>
+</a>
+<p>This statement is used only by developers running Mobius under a
+debugger.  It will have no effect when running Mobius outside of a
+debugger.  Return to your homes, there is nothing to see here.</p>
+<a name='call'>
+<h3 class=sec3>7.3.2 call</h3>
+</a>
+<pre class=computer>
+    call &lt;scriptName&gt; | &lt;procName&gt; [&lt;arg&gt; ...]
+</pre>
+<p>Calls another script or a <i>procedure</i>, with optional arguments.</p>
+<p>When a script is called, the statements in the script are executed
+as if they were written directly in the calling script.  Only scripts
+that have been registered in the <i>Scripts</i> dialog can be
+called.</p>
+<p>Normally scripts are referenced using the name defined by the
+<i>!name</i> declaration in the script.  If the script has no
+<i>!name</i> you may reference the script using its file name.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  # Call a script using its !name
+  # note that quotes must be used if the script name contains spaces
+
+  call "My Script" 
+
+  # Call a script using its file name
+  call myscript.mos
+
+  # Call a script using its file name without the .mos extension
+  call myscript
+</pre>
+</div></div>
+<p>Script arguments may either be symbols, strings, or variable
+references.  A symbol is simply a word without spaces.  A string is a
+sequence of characters surrounded by double quotes.  A variable
+reference is the name of a variable or parameter prefixed with the
+<b>$</b> character.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  # Call a script passing a symbol argument
+  call "Set Sub Cycles" 8
+
+  # Call a script passing a string argument
+  call ShowMessage "This is my message to you!"
+
+  # Call a script passing a variable value
+  variable message "This is my message to you!"
+  call ShowMessage $message
+</pre>
+</div></div>
+<p>In the script being called, arguments are referenced with 
+a number preceded by the $ character.  Script arguments are numbered
+starting from 1.  For example:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  !name Set Sub Cycles
+  message Changing subcycles to $1
+  set 8thsPerCycle $1
+</pre>
+</div></div>
+<p>The previous script will set the <i>8thsPerCycle</i> preset parameter
+to the value of the first argument.</p>
+<p>Note that scripts that are designed to be called from other scripts
+usually do not have any declarations other than <a href='#!name'>!name</a> and
+sometimes <a href='#!autoload'>!autoload</a>.  Any other declarations in the called
+script will be ignored.  If you want the called script to be quantized
+for example, you will need to use the <a href='#wait'>wait</a> statement
+in the calling script.</p>
+<a name='Procedures'>
+<h4 class=sec4>7.3.2.1 Procedures</h4>
+</a>
+<p>A procedure is a set of statements defined within a script that
+will not be executed until you call them.  Procedures are defined with
+the <a href='#proc'>proc</a> statement.  Procedures are used in the Mobius test
+scripts but are not often used in user scripts.  Their primary use is
+to prevent the duplication of a set of statements that are needed more
+than once in the script.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+
+  # define a procedure
+  # the statements within the Proc/Endproc will NOT be executed
+  # until you call the procedure
+
+  # Define a procedure
+  proc ChangeDirection
+    if inReverse
+        Message Leaving reverse mode
+    else
+        Message Entering reverse mode
+    endif
+    Reverse
+  endproc
+
+  # toggle reverse mode with a message
+  call ChangeDirection
+
+  # wait for the end of the loop
+  wait loop
+
+  # toggle reverse mode with a message again
+  call ChangeDirection
+</pre>
+</div></div>
+<p>Arguments may also be passed to called procedures:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  # set 8thsPerCycle to the value of the first argument
+  proc SetSubCycles
+    set 8thsPerCycle $1
+  endproc
+
+  # call procedure passing number of subcycles desired
+  call SetSubCycles 8
+</pre>
+</div></div>
+<a name='cancel'>
+<h3 class=sec3>7.3.3 cancel</h3>
+</a>
+<a name='diff'>
+<h3 class=sec3>7.3.4 diff</h3>
+</a>
+<a name='end'>
+<h3 class=sec3>7.3.5 end</h3>
+</a>
+<a name='endproc'>
+<h3 class=sec3>7.3.6 endproc</h3>
+</a>
+<a name='echo'>
+<h3 class=sec3>7.3.7 echo</h3>
+</a>
+<a name='else'>
+<h3 class=sec3>7.3.8 else</h3>
+</a>
+<a name='elseif'>
+<h3 class=sec3>7.3.9 elseif</h3>
+</a>
+<a name='endif'>
+<h3 class=sec3>7.3.10 endif</h3>
+</a>
+<a name='end'>
+<h3 class=sec3>7.3.11 end</h3>
+</a>
+<a name='for'>
+<h3 class=sec3>7.3.12 for</h3>
+</a>
+<a name='if'>
+<h3 class=sec3>7.3.13 if</h3>
+</a>
+<a name='initpreset'>
+<h3 class=sec3>7.3.14 initpreset</h3>
+</a>
+<a name='jump'>
+<h3 class=sec3>7.3.15 jump</h3>
+</a>
+<a name='label'>
+<h3 class=sec3>7.3.16 label</h3>
+</a>
+<a name='load'>
+<h3 class=sec3>7.3.17 load</h3>
+</a>
+<a name='message'>
+<h3 class=sec3>7.3.18 message</h3>
+</a>
+<a name='next'>
+<h3 class=sec3>7.3.19 next</h3>
+</a>
+<a name='preset'>
+<h3 class=sec3>7.3.20 preset</h3>
+</a>
+<a name='proc'>
+<h3 class=sec3>7.3.21 proc</h3>
+</a>
+<pre class=computer>
+    proc &lt;procedureName&gt;
+</pre>
+<p>This statement begins a procedure definition.  The argument must be
+a literal string that defines the procedure name.  The procedure definition
+must be terminated by an <a href='#endproc'>endproc</a> statement.</p>
+<p>See <a href='#Procedures'>Procedures</a> for more information on defining and calling procedures.</p>
+<a name='prompt'>
+<h3 class=sec3>7.3.22 prompt</h3>
+</a>
+<a name='repeat'>
+<h3 class=sec3>7.3.23 repeat</h3>
+</a>
+<a name='save'>
+<h3 class=sec3>7.3.24 save</h3>
+</a>
+<a name='set'>
+<h3 class=sec3>7.3.25 set</h3>
+</a>
+<a name='setup'>
+<h3 class=sec3>7.3.26 setup</h3>
+</a>
+<a name='unittestsetup'>
+<h3 class=sec3>7.3.27 unittestsetup</h3>
+</a>
+<a name='variable'>
+<h3 class=sec3>7.3.28 variable</h3>
+</a>
+<a name='wait'>
+<h3 class=sec3>7.3.29 wait</h3>
+</a>
+<a name='while'>
+<h3 class=sec3>7.3.30 while</h3>
+</a>
+<a name='Special Labels'>
+<h2 class=sec2>7.4 Special Labels</h2>
+</a>
+<a name='reentry'>
+<h3 class=sec3>7.4.1 reentry</h3>
+</a>
+<a name='sustain'>
+<h3 class=sec3>7.4.2 sustain</h3>
+</a>
+<a name='endSustain'>
+<h3 class=sec3>7.4.3 endSustain</h3>
+</a>
+<a name='click'>
+<h3 class=sec3>7.4.4 click</h3>
+</a>
+<a name='endClick'>
+<h3 class=sec3>7.4.5 endClick</h3>
+</a>
+<a name='Functions'>
+<h2 class=sec2>7.5 Functions</h2>
+</a>
+<p>All Mobius functions may be used in scripts.  The names of the
+functions used in scripts may differ slightly from the names you will
+see in the UI.  In particular, script function names never contain
+spaces.  If a function name is displayed in the UI with spaces such as
+"Next Loop", the script function name is usually the same with the
+spaces removed such as "NextLoop".</p>
+<p>The <a href='reference.htm#Functions'>function reference</a>
+
+section of the <i>Mobius Reference</i> manual contains a complete
+list of all functions arranged in alphabetical order by the
+display name you will see in the UI.  Within the documentation
+for each function will be a line beginning with <b>Internal name:</b>,
+the word after this prefix is the name you would use in a script
+to execute this function.</p>
+<p>Note that the function names displayed in the UI are taken from a file that
+may be modified by the user.  This file is called a <i>message catalog</i>.
+The default message catalog is in the Mobius installation directory 
+and is named <i>Catalog_USEnglish.txt</i>.  If you have modified this file,
+or if you have asked Mobius to read messages from a different file, the
+names that appear in the reference manual may not be the same as
+what you will see in the UI.</p>
+<p>We will not provide reference documentation for every function in
+this manual.  We will only document functions and function features
+that are only accessible from scripts.  For more information on
+what the functions do and how they are influenced by parameters,
+you must read the documentation in the reference manual.</p>
+<a name='Divide'>
+<h3 class=sec3>7.5.1 Divide</h3>
+</a>
+<p>The function named just <i>Divide</i> without a number is
+accessible only scripts.  With this function the divisor is
+specified as an argument written after the function name.  The argument
+may be a number or an expression.  For example:</p>
+<pre class=computer>
+    Divide 6
+    Divide subcycles / 2
+</pre>
+<p>In scripts you can also use the <i>Divide</i> functions that have
+a fixed divisor in the function name.  These two script statements will have
+the same effect.</p>
+<pre class=computer>
+    # here the divisor is part of the function name
+    Divide4
+
+    # here the divisor is an argument
+    Divide 4
+</pre>
+<p>See <a href='reference.htm#Divide'>Divide</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='Backward'>
+<h3 class=sec3>7.5.2 Backward</h3>
+</a>
+<p><i>Backward</i> forces the loop direction into reverse and sets
+the <i>Reverse</i> minor mode.  This function is
+provided as a convenience for script writers 
+that need to ensure the loop is playing backward without having
+to test the <a href='#inReverse'>inReverse</a> variable.  The following
+two code blocks have the same behavior.</p>
+<pre class=computer>
+    # Force reverse playback
+    Backward
+
+    # Toggle reverse if we're not already in reverse
+    if !inReverse
+       Reverse
+    endif
+</pre>
+<p>See <a href='reference.htm#Backward'>Backward</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='Forward'>
+<h3 class=sec3>7.5.3 Forward</h3>
+</a>
+<p><i>Forward</i> forces the loop into the normal forward
+direction.  It is provided as a convenience for script writers that
+need to ensure the loop is playing forward without having to 
+test the <a href='#inReverse'>inReverse</a> variable.  The following two code
+blocks have the same behavior.</p>
+<pre class=computer>
+    # Force normal playback
+    Forward
+
+    # Toggle reverse if we're currently in reverse
+    if inReverse
+       Reverse
+    endif
+</pre>
+<p>See <a href='reference.htm#Forward'>Forward</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='SpeedCancel'>
+<h3 class=sec3>7.5.4 SpeedCancel</h3>
+</a>
+<p><i>SpeedCancel</i> forces the loop out of all speed shifting modes:
+<i>SpeedToggle</i>, <i>SpeedOctave</i>, <i>SpeedStep</i> and <i>SpeedBend</i>.
+This is provided
+as a convenience to script writers that need to ensure the loop is
+playing at normal speed without having to test the 
+<a href='#inHalfspeed'>inHalfspeed</a> or <a href='#speedToggle'>speedToggle</a> varialbes or the 
+<i>speedOctave</i>, <i>speedStep</i>, and <i>speedBend</i> controls.  
+The following two code blocks have the same behavior:</p>
+<pre class=computer>
+    # Force normal playback
+    SpeedCancel
+
+    # Toggle speed if we're currently in 1/2 speed
+    if inHalfspeed
+       SpeedToggle
+    endif
+</pre>
+<p>See <a href='reference.htm#Speed Cancel'>Speed Cancel</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='Halfspeed'>
+<h3 class=sec3>7.5.5 Halfspeed</h3>
+</a>
+<p><i>Halfspeed</i> changes the loop speed so that it plays twice as
+long and sounds one octave lower.  It is an older function that is
+provided for backward compatibility.  If you are writing scripts
+it is recommended that you use the more general <a href='#SpeedStep'>SpeedStep</a>
+function.  Executing <i>Halfspeed</i> is identical to executing
+<i>SpeedStep</i> with an argument of -12.</p>
+<p>The following threecode blocks have the same behavior.</p>
+<pre class=computer>
+    # Force 1/2 speed playback
+    Halfspeed
+
+    # Force 1/2 speed playback
+    SpeedStep -12
+
+    # Toggle speed if we're not currently in 1/2 speed
+    if !inHalfspeed
+       SpeedToggle
+    endif
+</pre>
+<p>See <a href='reference.htm#Halfspeed'>Halfspeed</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='InstantMultiply'>
+<h3 class=sec3>7.5.6 InstantMultiply</h3>
+</a>
+<p>The function with internal name <i>InstantMultiply</i> without
+a number may only be used in scripts.  The multiplier is specified as
+an argument to the function.  For example:</p>
+<pre class=computer>
+    InstantMultiply 6
+</pre>
+<p>You can also use the <i>InstantMultiply</i> functions with numbers
+in their names in scripts.  These two script statements will have the 
+same effect.</p>
+<pre class=computer>
+    # here the multiplier is part of the function name
+    InstantMultiply4
+
+    # here the multiplier is an argument
+    InstantMultiply 4
+</pre>
+<p>See <a href='reference.htm#Instant Multiply'>Instant Multiply</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='Loop'>
+<h3 class=sec3>7.5.7 Loop</h3>
+</a>
+<p>The function named just <i>Loop</i> without a number is accessible
+only in scripts.  With this function the loop you want to trigger
+is specified as a function argument, which may be a number or an expression.
+For example:</p>
+<pre class=computer>
+   Loop 3
+   Loop loopNumber + 1
+</pre>
+<p>Scripts can also use the <i>Loop</i> functions with numbers in their
+names.  These two script statements are the same.</p>
+<pre class=computer>
+   Loop4
+   Loop 4
+</pre>
+<p>See <a href='reference.htm#Loop'>Loop</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='MidiOut'>
+<h3 class=sec3>7.5.8 MidiOut</h3>
+</a>
+<p><i>MidiOut</i> can send any MIDI message to the configured
+MIDI output device.  This function is accessible only from scripts.
+The MIDI message to send is specified with up to four function arguments.
+The syntax is:</p>
+<pre class=computer>
+    MidiOut &lt;status&gt; &lt;channel&gt; &lt;value&gt; &lt;velocity&gt;
+    status: noteon noteoff control program stop start continue
+    channel: 0-15
+    value: 0-127
+    velocity: 0-127
+</pre>
+<p>For example, to send a <i>Note On</i> event on channel 3,
+note 64, velocity 127, you would write:</p>
+<pre class=computer>
+    MidiOut noteon 3 64 127
+</pre>
+<p>This function does not change the current loop and has 
+no effect on major or minor modes.</p>
+<a name='Move'>
+<h3 class=sec3>7.5.9 Move</h3>
+</a>
+<p><i>Move</i> will instantly move the loop playback position to a new
+location.  It is accessible only from scripts.  The new position is
+specified as a function argument which may either be a number or
+an expression whose result is a number.  This number is used as 
+a frame number within the loop.  The first frame in a loop has
+frame number zero.</p>
+<pre class=computer>
+   # Jump to a fixed location 1 second from the beginning
+   Move 44100
+
+   # Jump to the center of the loop
+   Move loopFrames / 2
+</pre>
+<p>See <a href='reference.htm#Move'>Move</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='MuteOff'>
+<h3 class=sec3>7.5.10 MuteOff</h3>
+</a>
+<p><i>MuteOff</i> will cancel the <i>Mute</i> minor mode.  
+If the loop is not in mute mode the function has no
+effect.  This function is not quantized and is accessible only in scripts.
+It is a convenience for script writers that want to make sure that mute mode
+is off without having to worry about the current mute state.  You can
+also use the <i>Mute</i> function but since that toggles mute mode you 
+have to test the current mute state.  The following script examples are
+equivalent:</p>
+<pre class=computer>
+    # Force mute off, ignore if it is already off
+    MuteOff
+
+    # Toggle mute off if it is currently on
+    if inMute
+       Mute
+    endif
+</pre>
+<p>See <a href='reference.htm#MuteOff'>MuteOff</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='MuteOn'>
+<h3 class=sec3>7.5.11 MuteOn</h3>
+</a>
+<p><i>MuteOn</i> will activate the <i>Mute</i>
+minor mode and immediately silence the loop.  If the loop is already muted
+the function has no effect.  This function is not quantized and is accessible 
+only in scripts.   It is a convenience for script writers that want
+to make sure that the loop is muted without having to worry about the
+current mute state.  You can also use the <i>Mute</i> function but since that
+toggles mute mode you have to test the current mute state.  The
+following script examples are equivalent:</p>
+<pre class=computer>
+    # Force mute on, ignore if it is already on
+    MuteOn
+
+    # Toggle mute on if it is currently off
+    if !inMute
+       Mute
+    endif
+</pre>
+<p>See <a href='reference.htm#MuteOn'>MuteOn</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='OverdubOff'>
+<h3 class=sec3>7.5.12 OverdubOff</h3>
+</a>
+<p><i>OverdubOff</i> forces the <i>Overdub</i> minor
+mode off.  This function is not quantized and is accessible only
+scripts.  It is provided as a convenience for the script writer that  needs
+to turn overdub off, but is more convenient than using the <i>Overdub</i>
+function that toggles overdub mode.  The following two script
+examples are equivalent:</p>
+<pre class=computer>
+    # Force overdub off
+    OverdubOff
+
+    # Toggle overdub off if it is on
+    if inOverdub
+       Overdub
+    endif
+</pre>
+<p>See <a href='reference.htm#OverdubOff'>OverdubOff</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='OverdubOn'>
+<h3 class=sec3>7.5.13 OverdubOn</h3>
+</a>
+<p><i>OverdubOn</i> activates the <i>Overdub</i>
+minor mode.  If overdub mode is already active the function has no effect.
+This function is not quantized and is accessible only in scripts.
+It is a convenience for the script writer that needs
+to turn overdub on, but is more convenient than using the <i>Overdub</i>
+function that toggles overdub mode.  The following two script
+examples are equivalent:</p>
+<pre class=computer>
+    # Force overdub on
+    OverdubOn
+
+    # Toggle overdub on if it is off
+    if !inOverdub
+       Overdub
+    endif
+</pre>
+<p>See <a href='reference.htm#OverdubOn'>OverdubOn</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='PitchBend'>
+<h3 class=sec3>7.5.14 PitchBend</h3>
+</a>
+<p><i>PitchBend</i> will change the
+playback pitch of the loop up or down in small intervals.  The number
+of intervals is specified as an argument to the fucntion.
+While this can be called as a function it is expected that pitch bend
+be usually performed by changing the value of the <i>pitchBend</i> control.
+Neither the function or the control are quantized.</p>
+<p>The range of values is from -8192 to 8181 to match the MIDI pitch wheel.</p>
+<pre class=computer>
+   # change the pitch with the PitchBend function
+   PitchBend 2091
+   PitchBend -4087
+
+   # change the pitch with the pitchBend control
+   set pitchBend 2091
+   set pitchBend -4087
+</pre>
+<p>See <a href='reference.htm#functionPitchBend'>Pitch Bend</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='PitchOctave'>
+<h3 class=sec3>7.5.15 PitchOctave</h3>
+</a>
+<p><i>PitchOctave</i> will change the
+playback pitch of the loop up or down in octave intervals.  The number
+of octaves is specified as an argument to the fucntion.  The octave can
+also be changed with the <i>pitchOctave</i> control. The difference between
+the control and the function is that the functions may be quantized but the
+control is never quantized.</p>
+<pre class=computer>
+   # setting pitch with functions
+   PitchOctave 2
+   PitchOctave -1
+
+   # setting pitch with controls
+   set pitchOctave 2
+   set pitchOctave -1
+</pre>
+<p>See <a href='reference.htm#functionPitchOctave'>Pitch Octave</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='PitchStep'>
+<h3 class=sec3>7.5.16 PitchStep</h3>
+</a>
+<p><i>PitchStep</i> can change the playback pitch of the loop up or
+down to achieve a pitch change in a number of semitones.  The number
+of semitones is specified as an argument to the function.  You may
+also change the pitch step by setting the <i>pitchStep</i> control.  
+The function may be quantized but the control is never quantized.</p>
+<pre class=computer>
+   # setting pitch with functions
+   PitchStep 5
+   PitchStep -7
+
+   # setting pitch with controls
+   set pitchStep 5
+   set pitchStep -1
+</pre>
+<p>See <a href='reference.htm#functionPitchStep'>Pitch Step</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='SpeedBend'>
+<h3 class=sec3>7.5.17 SpeedBend</h3>
+</a>
+<p><i>SpeedBend</i> will change the
+playback speed of the loop up or down in small intervals.  The number
+of intervals is specified as an argument to the fucntion.
+While this can be called as a function it is expected that speed bend
+be usually performed by changing the value of the <i>speedBend</i> control.</p>
+<p>The range of values is from -8192 to 8181 to match the MIDI pitch wheel.</p>
+<pre class=computer>
+   # change the speed with the SpeedBend function
+   SpeedBend 2091
+   SpeedBend -4087
+
+   # change the speed with the speedBend control
+   set speedBend 2091
+   set speedBend -4087
+</pre>
+<p>See <a href='reference.htm#functionSpeedBend'>Speed Bend</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='SpeedOctave'>
+<h3 class=sec3>7.5.18 SpeedOctave</h3>
+</a>
+<p><i>SpeedOctave</i> will change the
+playback speed of the loop up or down in octave intervals.  The number
+of octaves is specified as an argument to the fucntion.  The octave can
+also be changed with the <i>speedOctave</i> control. The difference between
+the control and the function is that the functions may be quantized but the
+control is never quantized.</p>
+<pre class=computer>
+   # setting speed with functions
+   SpeedOctave 2
+   SpeedOctave -1
+
+   # setting speed with controls
+   set speedOctave 2
+   set speedOctave -1
+</pre>
+<p>See <a href='reference.htm#functionSpeedOctave'>Speed Octave</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='SpeedStep'>
+<h3 class=sec3>7.5.19 SpeedStep</h3>
+</a>
+<p><i>SpeedStep</i> can change the playback speed of the loop up or
+down to achieve a pitch change in a number of semitones.  The number
+of semitones is specified as an argument to the function.  You may
+also change the speed step by setting the <i>speedStep</i> control.  
+The function may be quantized but the control is never quantized.</p>
+<pre class=computer>
+   # setting speed with functions
+   SpeedStep 5
+   SpeedStep -7
+
+   # setting speed with controls
+   set speedStep 5
+   set speedStep -1
+</pre>
+<p>See <a href='reference.htm#functionSpeedStep'>Speed Step</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='SpeedToggle'>
+<h3 class=sec3>7.5.20 SpeedToggle</h3>
+</a>
+<p><i>SpeedToggle</i> is similar to <a href='#SpeedStep'>SpeedStep</a> in that it
+changes the speed of the loop up or down by some number of semitones
+specified as an argument to the function.  The difference is that if
+you execute <i>SpeedToggle</i> a second time without an argument, the
+shift established by the previous call to <i>SpeedToggle</i> is canceled.</p>
+<p>In the following example we raise
+the speed by 5 semitones, wait for the end of the loop, then lower it
+by 5 semitones.</p>
+<pre class=computer>
+   # setting the speed toggle
+   SpeedToggle 5
+
+   Wait loop
+
+   # cancel the speed toggle
+   SpeedToggle
+</pre>
+<p>See <a href='reference.htm#functionSpeedToggle'>Speed Toggle</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='Sample'>
+<h3 class=sec3>7.5.21 Sample</h3>
+</a>
+<p>The <i>Sample</i> family of functions will play one of the loaded
+samples.  The function named just <i>Sample</i> without a number may only
+be used in scripts.  The sample to trigger is specified
+as a function argument that may be a number or an expression.</p>
+<pre class=computer>
+   # trigger the first sample
+   Sample1
+
+   # another way to trigger the first sample with the number
+   # specified as a function argument
+   Sample 1
+</pre>
+<p>See <a href='reference.htm#Sample'>Sample</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='Shuffle'>
+<h3 class=sec3>7.5.22 Shuffle</h3>
+</a>
+<a name='Slip'>
+<h3 class=sec3>7.5.23 Slip</h3>
+</a>
+<p>The <i>Slip</i> family of functions will instantly move the loop
+playback position forward or backward by a fixed amount.  The amount
+of slippage for the <i>Slip</i> script function is specified as an
+argument.  The value is a positive or negative number or an expression
+that evaluates to a number.  This number is the number of 'units' to
+slip where the unit is defined by the 
+<a href='reference.htm#Slip Mode'>Slip Mode</a>
+ parameter.</p>
+<pre class=computer>
+   # slip forward 2 cycles
+   set slipMode cycle
+   Slip 2
+
+   # slip backward four subcycles
+   set slipMode subcycle
+   Slip -4
+</pre>
+<p>See <a href='reference.htm#Slip'>Slip</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='Sustain Functions'>
+<h3 class=sec3>7.5.24 Sustain Functions</h3>
+</a>
+<p>Explain how sustain functions can be used in scripts with the
+up/down arguments.</p>
+<a name='TimeStretch'>
+<h3 class=sec3>7.5.25 TimeStretch</h3>
+</a>
+<p><i>TimeStretch</i> is available only in scripts.  It will change both the 
+playback speed and the amount of pitch shift such that the observed pitch stays the same
+but the playback speed increases or decreases.  This function must have a script argument
+that specifies the number of units of stretch.  Time stretch may also be accomplished
+with the <i>timeStretch</i> track control.  The function may be quantized, the
+control is never quantized.</p>
+<p>The range of values is from -8192 to 8181 to match the MIDI pitch wheel.</p>
+<pre class=computer>
+   # change the duration with the function
+   TimeStretch 2091
+   TimeStretch -4087
+
+   # change the duration with the control
+   set timeStretch 2091
+   set timeStretch -4087
+</pre>
+<p>See <a href='reference.htm#functionTimeStretch'>Time Stretch</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='Track'>
+<h3 class=sec3>7.5.26 Track</h3>
+</a>
+<p>The <i>Track</i> family of functions will activate one of the
+numbered tracks.  If the track is already active, the function
+will have no effect.  The function named just <i>Track</i> can only
+be used in scripts where the track to select is specified as a function
+argument.</p>
+<pre class=computer>
+   # Select a track using a numbered function
+   Track2
+
+   # Select a track using an argument
+   Track 2
+
+   # Select a track using an expression
+   Track rand(1,8)
+</pre>
+<p>See <a href='reference.htm#Track'>Track</a>
+ in the
+<i>Mobius Reference</i> manual for more information.</p>
+<a name='LoopWindowing'>
+<h3 class=sec3>7.5.27 Loop Windowing</h3>
+</a>
+<p>For a complete description of the concept of loop windowing
+see the <a href='techniques.htm#LoopWindowing'>Loop Windowing</a>
+ section
+of the <i>Mobius Techniques</i> manual.</p>
+<p>You may use any of the bindable windowing functions in scripts, but 
+there are two functions available only in scripts that can be used to
+contorol the loop window.  <i>WindowMove</i> sets the starting location
+of the window and <i>WindowResize</i> adjusts either the starting or
+ending edges of the window.  These functions use arguments
+to specify the location and size of the window.</p>
+<p>The syntax of the <i>WindowMove</i> function is:</p>
+<pre class=computer>
+    WindowMove [unit] amount
+</pre>
+<p>The unit argument is optional and if not specified defaults to the
+value of the <i>Window Slide Unit</i> parameter.  The possible values
+in scripts are <i>loop</i>, <i>cycle</i>, <i>subcycle</i>, <i>msec</i>,
+<i>frame</i>, <i>layer</i>, <i>start</i>, and <i>end</i>.</p>
+<pre class=computer>
+    # move back one loop
+    set windowSlideUnit loop
+    WindowMove -1
+
+    # move back one loop independent of the windowSlideUnit parameter
+    WindowMove loop, -1
+
+    # move forward 1 second
+    WindowMove msec, 1000
+
+    # move backward 2 subcycles
+    WindowMove subcycle, -2
+
+    # orient the window at the beginning of the previous layer
+    WindowMove layer, -1
+
+    # orient the window at the beginning of the loop history
+    WindowMove start
+
+    # orient the window at the end of the loop history
+    WindowMove end
+</pre>
+<p>Note that in these examples a comma is required if you are using
+negative amounts.  This is one of the rare functions whose argument
+list is completely parsed as an expression (Shuffle is another), 
+and since operator precedence is like C, "x -1" is the same as "x - 1" 
+which means to subtract 1 from x.  So the
+arguments "subcycle -1" would be parsed as subtracting 1 from the
+variable named subcycle.  To prevent this you need to put a comma
+between them, "subcycle,-1",  or surround -1 in parantthesis,
+"subcycle (-1)".  It is easier to use commas.</p>
+<p>The <i>start</i> and <i>end</i> units are unusual becase they are
+not relative units for sliding, they are absolute locations within the
+history and do not need an amount.</p>
+<p>The syntax of the <i>WindowResize</i> function is:</p>
+<pre class=computer>
+    WindowResize {start | end} [unit] amount
+</pre>
+<p>The first argument must be <i>start</i> or <i>end</i> to indiciate which
+edge you want to move.  The <i>unit</i> and <i>amount</i> arguments are
+the same as those for the <i>WindowMove</i> function.  If the <i>unit</i>
+is not specified, the value of the <i>Window Edge Unit</i> preset parameter
+is used.</p>
+<pre class=computer>
+   # Move the left edge back one subcycle
+   WindowResize start,subcycle,-1
+
+   # Move the right edge forward one second
+   WindowResize end,msec,1000
+</pre>
+<a name='Parameters'>
+<h2 class=sec2>7.6 Parameters</h2>
+</a>
+<p>Describe in general how parameters can be accessed and set from
+scripts..</p>
+<a name='Comma Separated Values'>
+<h3 class=sec3>7.6.1 Comma Separated Values</h3>
+</a>
+<p>When a parameter value is described as being a "comma separated
+list" it means that the value to assign in a set statement consists of
+a list of words separated by a comma.  There may also be spaces before
+and after the commas.  The following examples are all the same:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+  set altFeedbackDisable Multiply,Overdub
+
+  set altFeedbackDisable Multiply, Overdub
+
+  set altFeedbackDisable Multiply  ,  Overdub
+</pre>
+</div></div>
+<a name='Track Parameters'>
+<h2 class=sec2>7.7 Track Parameters</h2>
+</a>
+<p>Each track has a few parameters that are set in the <i>Track
+Setup</i>.  These will have their initial values specified in
+the <i>Track Setup</i> but they may be changed in scripts.</p>
+<a name='trackParameterFocus'>
+<h3 class=sec3>7.7.1 focus</h3>
+</a>
+<p><b>Value value:</b> true, false</p>
+<p>This parameter determines whether the track has <i>focus lock</i>.
+The parameter may be set with the <i>Focus Lock</i> function or by clicking
+on the <a href='exploring.htm#trackNumberStrip'>Track Number</a>
+ 
+in the track strip.</p>
+<p><b>Script example:</b></p>
+<pre class=computer>
+    set focus true
+    FocusLock 
+</pre>
+<a name='trackParameterGroup'>
+<h3 class=sec3>7.7.2 group</h3>
+</a>
+<p><b>Value:</b> an integer from 1 to 8</p>
+<p>This parameter determines whether the track is a member of a track group.
+The value is an integer parameter that has the number of the track group
+in the current track.  If the value is zero there is no track group.
+Positive group numbers are displayed as letters in the user interface.
+Group 1 is displayed as <i>A</i> group 2 is displayed as <i>B</i>
+etc.  When setting this parameter from a script you may use either numbers
+staring from 1 or letters starting from A.</p>
+<p><b>Script example:</b></p>
+<pre class=computer>
+    set group 1
+    set group A
+</pre>
+<a name='trackParameterPreset'>
+<h3 class=sec3>7.7.3 preset</h3>
+</a>
+<p><b>Value:</b> a preset name</p>
+<p>This parameter has the name of the preset that is active in the
+track.  This is intended for use only in scripts, in the user interface
+you select presets from the <a href='starting.htm#presetmenu'>preset menu</a>
+
+or from the <a href='starting.htm#Preset Window'>preset window.</a>
+</p>
+<p>When setting this from scripts you may use either the preset name
+or the preset number from 1.  While setting this parameter in scripts
+is allowed, it is preferable in scripts to use the <i>Preset</i>
+built-in script function.</p>
+<p><b>Script example:</b></p>
+<pre class=computer>
+    set preset 1
+    set preset "My Preset"
+    Preset 1
+    Preset "My Preset"
+</pre>
+<a name='trackParameterPresetNumber'>
+<h3 class=sec3>7.7.4 presetNumber</h3>
+</a>
+<p><b>Value:</b> an integer from 1 to infinity</p>
+<p>This parameter has the number of the preset that is active in the
+track.  This is intended for use only in scripts, in the user interface
+you select presets from the <a href='starting.htm#presetmenu'>preset menu</a>
+
+or from the <a href='starting.htm#Preset Window'>preset window.</a>
+</p>
+<p>When setting this from scripts you may use either the preset name
+or the preset number from 1.  While setting this parameter in scripts
+is allowed, it is preferable in scripts to use the <i>Preset</i>
+built-in script function.</p>
+<p><b>Script example:</b></p>
+<pre class=computer>
+    set presetNumber 1
+    Preset 1
+</pre>
+<p>The parameter is functionally the same as 
+<a href='#trackParameterPreset'>Preset</a> but 
+using it makes it clearer in the script that the value will be a number
+rather than a name.</p>
+<a name='Track Controls'>
+<h2 class=sec2>7.8 Track Controls</h2>
+</a>
+<p>Examples of setting track controls from scripts.</p>
+<a name='Variables'>
+<h2 class=sec2>7.9 Variables</h2>
+</a>
+<a name='Script State'>
+<h3 class=sec3>7.9.1 Script State</h3>
+</a>
+<a name='clickCount'>
+<h4 class=sec4>7.9.1.1 clickCount</h4>
+</a>
+<p>Number of times the script has been reentered due to multi-clicks.</p>
+<a name='midiChannel'>
+<h4 class=sec4>7.9.1.2 midiChannel</h4>
+</a>
+<p>The MIDI channel number of the trigger event.
+This is also embedded in triggerNumber, but it is easier to use here.</p>
+<a name='midiNumber'>
+<h4 class=sec4>7.9.1.3 midiNumber</h4>
+</a>
+<p>The MIDI key/controller number of the trigger event.</p>
+<a name='midiType'>
+<h4 class=sec4>7.9.1.4 midiType</h4>
+</a>
+<p>The type of MIDI trigger: note, control, program.</p>
+<a name='midiValue'>
+<h4 class=sec4>7.9.1.5 midiValue</h4>
+</a>
+<p> The same as triggerValue but has a more obvious name for
+use in !controller scripts.</p>
+<a name='returnCode'>
+<h4 class=sec4>7.9.1.6 returnCode</h4>
+</a>
+<p>The return code of the last ThreadEvent.
+Currently used only by Prompt statements to convey the 
+selected button.  0 means Ok, 1 means cancel.</p>
+<a name='sustainCount'>
+<h4 class=sec4>7.9.1.7 sustainCount</h4>
+</a>
+<p>Number of times the script has been notified of a sustain.</p>
+<a name='triggerNumber'>
+<h4 class=sec4>7.9.1.8 triggerNumber</h4>
+</a>
+<p>The unique id of the trigger.  For FunctionSourceMidi this will
+be a combination of the MIDI status, channel, and number.  For other
+sources it will be a key code or other simple number.</p>
+<a name='triggerOffset'>
+<h4 class=sec4>7.9.1.9 triggerOffset</h4>
+</a>
+<p>An optional extra value associated with the ranged triggers.
+This will have the relative position of the trigger from the
+center of the range.</p>
+<a name='triggerValue'>
+<h4 class=sec4>7.9.1.10 triggerValue</h4>
+</a>
+<p><b>Alias: </b> triggerVelocity</p>
+<p>An optional extra value associated with the trigger.
+For MIDI triggers this will be the second byte, the note velocity
+for notes or the controller value for controllers.</p>
+<a name='Loop Sizes'>
+<h3 class=sec3>7.9.2 Loop Sizes</h3>
+</a>
+<a name='cycleCount'>
+<h4 class=sec4>7.9.2.1 cycleCount</h4>
+</a>
+<p>The number of cycles in the loop.</p>
+<a name='cycleFrame'>
+<h4 class=sec4>7.9.2.2 cycleFrame</h4>
+</a>
+<p>The current frame relative the current cycle.</p>
+<a name='cycleFrames'>
+<h4 class=sec4>7.9.2.3 cycleFrames</h4>
+</a>
+<p>The number of frames in one cycle.</p>
+<a name='cycleNumber'>
+<h4 class=sec4>7.9.2.4 cycleNumber</h4>
+</a>
+<p>The current cycle number, relative to the beginning of the loop.</p>
+<a name='layerCount'>
+<h4 class=sec4>7.9.2.5 layerCount</h4>
+</a>
+<p>The number of layers in the current loop.  This is also
+in effect the current layer number since we are always "on"
+the last layer of the loop.  This does not include the number
+of available redo layers.</p>
+<a name='loopCount'>
+<h4 class=sec4>7.9.2.6 loopCount</h4>
+</a>
+<p>The current loop count.
+This is effectively the same as the "moreLoops" parameter but
+I like this name better.  This should really be an alias of moreLoops
+so we can get and set it using the same name!!</p>
+<a name='loopFrame'>
+<h4 class=sec4>7.9.2.7 loopFrame</h4>
+</a>
+<p>The current record frame.
+The value
+of this variable changes automatically as the loop plays. 
+You might think that setting this variable would cause the playback position to
+move but this is not allowed.  Instead you must use
+the <i>Move</i> function to change the playback position.</p>
+<a name='loopFrames'>
+<h4 class=sec4>7.9.2.8 loopFrames</h4>
+</a>
+<p>The number of frames in the loop.</p>
+<a name='loopNumber'>
+<h4 class=sec4>7.9.2.9 loopNumber</h4>
+</a>
+<p>The number of the current loop within the track.  The first
+loop number is 1 for consistency with the trigger functions
+Loop1, Loop2, etc.</p>
+<a name='redoCount'>
+<h4 class=sec4>7.9.2.10 redoCount</h4>
+</a>
+<p>The number of redo layers in the current loop.</p>
+<a name='subCycleNumber'>
+<h4 class=sec4>7.9.2.11 subCycleNumber</h4>
+</a>
+<p>The current subcycle number, relative to the current cycle.</p>
+<a name='subCycleFrame'>
+<h4 class=sec4>7.9.2.12 subCycleFrame</h4>
+</a>
+<p>The current frame relative the current subcycle.</p>
+<a name='subCycleFrames'>
+<h4 class=sec4>7.9.2.13 subCycleFrames</h4>
+</a>
+<p>The number of frames in one subcycle.</p>
+<a name='subCycleCount'>
+<h4 class=sec4>7.9.2.14 subCycleCount</h4>
+</a>
+<p>The number of subCycles in a cycle.
+This is actually the same as the <i>Subcycles</i> preset parameter and
+can change with the preset, but we expose it as an internal variable
+so it is consistent with the other loop variables.</p>
+<a name='Loop Events'>
+<h3 class=sec3>7.9.3 Loop Events</h3>
+</a>
+<a name='nextEvent'>
+<h4 class=sec4>7.9.3.1 nextEvent</h4>
+</a>
+<p>Returns the type name of the next event.  Child events are ignored
+so we will skip over JumpPlayEvents.  
+Now that we have this, could eliminate InReturn and InRealign.</p>
+<a name='nextEventFunction'>
+<h4 class=sec4>7.9.3.2 nextEventFunction</h4>
+</a>
+<p>Returns the function name associated with the next event.
+We subclass NextEventVariableType for the getTrackValue logic.</p>
+<a name='nextLoop'>
+<h4 class=sec4>7.9.3.3 nextLoop</h4>
+</a>
+<p>The number of the next loop if we're in loop switch mode.
+Loops are numbered from 1.  Returns zero if we're not loop switching.</p>
+<a name='Loop Modes'>
+<h3 class=sec3>7.9.4 Loop Modes</h3>
+</a>
+<a name='effectiveFeedback'>
+<h4 class=sec4>7.9.4.1 effectiveFeedback</h4>
+</a>
+<p>The value of the feedback currently being applied.  This
+will usually be either the <i>Feedback</i> or <i>Secondary Feedback</i> 
+control values depending on which is being used.
+It will always be zero if we're in <i>Replace</i>, <i>Insert</i>
+or another mode that does not bring forward any content from the
+previous loop.</p>
+<a name='inHalfspeed'>
+<h4 class=sec4>7.9.4.2 inHalfspeed</h4>
+</a>
+<p>True if half-speed is enabled.  From version 2.2 onward this is
+true only if the value of <a href='#speedToggle'>speedToggle</a> is -12.</p>
+<a name='inMute'>
+<h4 class=sec4>7.9.4.3 inMute</h4>
+</a>
+<p>True if playback is muted.  This usually means that we're
+also in Mute mode, but if Overdub is also on, mode
+will be Overdub.  Note also that this tests the isMute flag
+which can be on for other reasons than being in Mute mode.</p>
+<a name='inOverdub'>
+<h4 class=sec4>7.9.4.4 inOverdub</h4>
+</a>
+<p>True if overdub is enabled.   Note that this doesn't necessarily
+mean that the mode is overdub, only that overdub is enabled when
+we fall back into Play mode.</p>
+<a name='inPause'>
+<h4 class=sec4>7.9.4.5 inPause</h4>
+</a>
+<p>True if we're in Pause or Pause mode.
+This is available because the "mode" parameter is not always
+set to Pause.  Once case is if Pause and Overdub are on at the same
+time mode will be Overdub (I think this is the only case).</p>
+<a name='inRealign'>
+<h4 class=sec4>7.9.4.6 inRealign</h4>
+</a>
+<p>True if we're realigning.  This similar to a mode, but 
+it is indicated by having a Realign event scheduled.</p>
+<a name='inReturn'>
+<h4 class=sec4>7.9.4.7 inReturn</h4>
+</a>
+<p>True if we're in "return" mode.  This is a special minor mode that
+happens after a loop switch with SwitchDuration=OnceReturn, 
+SwitchDuration=SustainReturn, or the RestartOnce function.  
+It is indicated by the presence of a pending Return event.</p>
+<a name='inReverse'>
+<h4 class=sec4>7.9.4.8 inReverse</h4>
+</a>
+<p>True if reverse is enabled.</p>
+<a name='isRecording'>
+<h4 class=sec4>7.9.4.9 isRecording</h4>
+</a>
+<p>True any form of recording is being performed.  Note that this
+does not necessarily mean you are in Record mode, you could be in 
+Overdub, Multiply, Insert, etc.</p>
+<a name='mode'>
+<h4 class=sec4>7.9.4.10 mode</h4>
+</a>
+<p>This variable will contain the name of the current major mode.
+The possible values are:</p>
+<ul>
+<li>Confirm</li>
+<li>Insert</li>
+<li>Multiply</li>
+<li>Mute</li>
+<li>Overdub</li>
+<li>Pause</li>
+<li>Play</li>
+<li>Record</li>
+<li>Rehearse</li>
+<li>RehearseRecord</li>
+<li>Replace</li>
+<li>Reset</li>
+<li>Run</li>
+<li>Stutter</li>
+<li>Substitute</li>
+<li>Switch</li>
+<li>Synchronize</li>
+<li>Threshold</li>
+</ul>
+<a name='Speed and Pitch'>
+<h3 class=sec3>7.9.5 Speed and Pitch</h3>
+</a>
+<a name='rate'>
+<h4 class=sec4>7.9.5.1 rate</h4>
+</a>
+<p>Speed shift, expressed as a scale degree.
+This is provided for backward compatibility with pre-2.2 scripts.  This is now the
+same as the value of the <i>speedStep</i> track control.</p>
+<a name='rawPitch'>
+<h4 class=sec4>7.9.5.2 rawPitch</h4>
+</a>
+<p>Total pitch shift, expressed as a float times 1000000.</p>
+<a name='rawSpeed'>
+<h4 class=sec4>7.9.5.3 rawSpeed</h4>
+</a>
+<p>Total speed shift, expressed as a float times 1000000.</p>
+<a name='speedToggle'>
+<h4 class=sec4>7.9.5.4 speedToggle</h4>
+</a>
+<p>The current amount of toggled speed shift being applied to the track.
+If this is -12 it is the same as <a href='#inHalfspeed'>inHalfspeed</a> being true.</p>
+<a name='speedSequenceIndex'>
+<h4 class=sec4>7.9.5.5 speedSequenceIndex</h4>
+</a>
+<p>The current index into the speed sequence for the track.  The index
+starts at zero and has a maximum value of one less than the length of the
+speed sequence.</p>
+<p>This is one of the few variables that may be set in scripts to change
+the sequencnce position.</p>
+<a name='pitchSequenceIndex'>
+<h4 class=sec4>7.9.5.6 pitchSequenceIndex</h4>
+</a>
+<p>The current index into the pitch sequence for the track.  The index
+starts at zero and has a maximum value of one less than the length of the
+pitch sequence.</p>
+<p>This is one of the few variables that may be set in scripts to change
+the sequencnce position.</p>
+<a name='Track State'>
+<h3 class=sec3>7.9.6 Track State</h3>
+</a>
+<a name='globalMute'>
+<h4 class=sec4>7.9.6.1 globalMute</h4>
+</a>
+<p>True if the track will be unmuted when Global Mute mode is over.</p>
+<a name='outSyncMaster'>
+<h4 class=sec4>7.9.6.2 outSyncMaster</h4>
+</a>
+<p>The number of the track operating as the output sync master,
+-1 if there is no master.</p>
+<a name='solo'>
+<h4 class=sec4>7.9.6.3 solo</h4>
+</a>
+<p>True if the track will be unmuted when Global Mute mode is over.</p>
+<a name='track, trackNumber'>
+<h4 class=sec4>7.9.6.4 track, trackNumber</h4>
+</a>
+<p>The number of the current track.  The first track is 1.</p>
+<a name='trackCount'>
+<h4 class=sec4>7.9.6.5 trackCount</h4>
+</a>
+<p>The number of tracks configured.</p>
+<a name='trackSyncMaster'>
+<h4 class=sec4>7.9.6.6 trackSyncMaster</h4>
+</a>
+<p>The number of the track operating as the track sync master,
+-1 if there is no master.</p>
+<a name='Generic Sync'>
+<h3 class=sec3>7.9.7 Generic Sync</h3>
+</a>
+<a name='syncAudioFrame'>
+<h4 class=sec4>7.9.7.1 syncAudioFrame</h4>
+</a>
+<p>The actual Loop frame at the last pulse.  The difference between
+this and syncPulseFrame is the amount of drift (after wrapping).</p>
+<a name='syncBar'>
+<h4 class=sec4>7.9.7.2 syncBar</h4>
+</a>
+<p>The current bar count.
+This will be the same as syncOutBar, syncInBar, or syncHostBar
+depending on the SyncMode of the current track.</p>
+<a name='syncBeat'>
+<h4 class=sec4>7.9.7.3 syncBeat</h4>
+</a>
+<p>The current bar relative beat count.
+This will be the same as syncOutBeat, syncInBeat, or syncHostBeat
+depending on the SyncMode of the current track.</p>
+<a name='syncCorrections'>
+<h4 class=sec4>7.9.7.4 syncCorrections</h4>
+</a>
+<p>The number of sync drift corrections that have been performed
+since the sync tracker was locked.</p>
+<a name='syncCyclePulses'>
+<h4 class=sec4>7.9.7.5 syncCyclePulses</h4>
+</a>
+<p>The number of external sync pulses counted during recording.</p>
+<a name='syncDealign'>
+<h4 class=sec4>7.9.7.6 syncDealign</h4>
+</a>
+<p>The number of frames the current track is dealigned from the
+sync tracker for this track.</p>
+<a name='syncDrift'>
+<h4 class=sec4>7.9.7.7 syncDrift</h4>
+</a>
+<p>The current amount of drift, positive or negative.</p>
+<a name='syncDriftChecks'>
+<h4 class=sec4>7.9.7.8 syncDriftChecks</h4>
+</a>
+<p>The number of sync drift checks that have been performed in this
+loop since it was recorded.</p>
+<a name='syncLoopFrames'>
+<h4 class=sec4>7.9.7.9 syncLoopFrames</h4>
+</a>
+<p>The length of the sync tracker loop (external loop) in frames.</p>
+<a name='syncPreRealignFrame'>
+<h4 class=sec4>7.9.7.10 syncPreRealignFrame</h4>
+</a>
+<p>The loopFrame prior to the last Realign.</p>
+<a name='syncPulse'>
+<h4 class=sec4>7.9.7.11 syncPulse</h4>
+</a>
+<p>The number of sync pulses we have received
+at the moment in the external loop.</p>
+<a name='syncPulseFrames'>
+<h4 class=sec4>7.9.7.12 syncPulseFrames</h4>
+</a>
+<p>The length of a sync pulse in frames.  The value is a float.
+Since tracks may have different sync sources, the pulse width
+may also be different for each track.</p>
+<a name='syncPulses'>
+<h4 class=sec4>7.9.7.13 syncPulses</h4>
+</a>
+<p>The total number of sync pulses in the external loop.</p>
+<a name='syncRawBeat'>
+<h4 class=sec4>7.9.7.14 syncRawBeat</h4>
+</a>
+<p>The current absolute beat count.
+This will be the same as syncOutRawBeat, syncInRawBeat, 
+or syncHostRawBeat depending on the SyncMode of the current track.</p>
+<a name='syncTempo'>
+<h4 class=sec4>7.9.7.15 syncTempo</h4>
+</a>
+<p>The current sync tempo.  For Sync=Out this is the tempo we calculated.
+For Sync=In this is the tempo we're smoothing from the external source.
+For Sync=Host this is the tempo reported by the host.</p>
+<a name='Out Sync'>
+<h3 class=sec3>7.9.8 Out Sync</h3>
+</a>
+<a name='syncOutBar'>
+<h4 class=sec4>7.9.8.1 syncOutBar</h4>
+</a>
+<p>The current bar count maintained by the internal clock.
+This is calculated from the raw beat count, modified by the
+effective beatsPerBar.</p>
+<a name='syncOutBeat'>
+<h4 class=sec4>7.9.8.2 syncOutBeat</h4>
+</a>
+<p>The current beat count maintained by the internal clock,
+relative to the bar.</p>
+<a name='syncOutRawBeat'>
+<h4 class=sec4>7.9.8.3 syncOutRawBeat</h4>
+</a>
+<p>The current raw beat count maintained by the internal clock.
+This will be zero if the internal clock is not running.</p>
+<a name='syncOutSending'>
+<h4 class=sec4>7.9.8.4 syncOutSending</h4>
+</a>
+<p>"true" if we are currently sending MIDI clocks, "false" if not.</p>
+<a name='syncOutStarted'>
+<h4 class=sec4>7.9.8.5 syncOutStarted</h4>
+</a>
+<p>"true" if we have send a MIDI Start message, "false" if not.</p>
+<a name='syncOutStarts'>
+<h4 class=sec4>7.9.8.6 syncOutStarts</h4>
+</a>
+<p>The number of MIDI Start messages we've sent since the last
+time we were stopped.</p>
+<a name='syncOutTempo'>
+<h4 class=sec4>7.9.8.7 syncOutTempo</h4>
+</a>
+<p>The tempo of the internal clock used for out sync.
+This is the same value returned by "tempo" but only if the
+current track is in Sync=Out or Sync=OutUserStart.</p>
+<a name='MIDI Sync'>
+<h3 class=sec3>7.9.9 MIDI Sync</h3>
+</a>
+<a name='syncInBar'>
+<h4 class=sec4>7.9.9.1 syncInBar</h4>
+</a>
+<p>The current bar count derived from the external MIDI clock.</p>
+<a name='syncInBeat'>
+<h4 class=sec4>7.9.9.2 syncInBeat</h4>
+</a>
+<p>The current beat count derived from the external MIDI clock,
+relative to the bar.</p>
+<a name='syncInRawBeat'>
+<h4 class=sec4>7.9.9.3 syncInRawBeat</h4>
+</a>
+<p>The current beat count derived from the external MIDI clock.</p>
+<a name='syncInReceiving'>
+<h4 class=sec4>7.9.9.4 syncInReceiving</h4>
+</a>
+<p>True if we are currently receiving MIDI clocks.</p>
+<a name='syncInStarted'>
+<h4 class=sec4>7.9.9.5 syncInStarted</h4>
+</a>
+<p>True if we have received a MIDI start or continue message.</p>
+<a name='syncInTempo'>
+<h4 class=sec4>7.9.9.6 syncInTempo</h4>
+</a>
+<p>The tempo of the external MIDI clock being received.
+This is the same value returned by "tempo" but only if the
+current track SyncMode is In, MIDIBeat, or MIDIBar.</p>
+<a name='Host Sync'>
+<h3 class=sec3>7.9.10 Host Sync</h3>
+</a>
+<a name='syncHostBar'>
+<h4 class=sec4>7.9.10.1 syncHostBar</h4>
+</a>
+<p>The current bar count given by the host.</p>
+<a name='syncHostBeat'>
+<h4 class=sec4>7.9.10.2 syncHostBeat</h4>
+</a>
+<p>The current beat count given by the host, relative to the bar.</p>
+<a name='syncHostRawBeat'>
+<h4 class=sec4>7.9.10.3 syncHostRawBeat</h4>
+</a>
+<p>The current beat count given by the host.</p>
+<a name='syncHostReceiving'>
+<h4 class=sec4>7.9.10.4 syncHostReceiving</h4>
+</a>
+<p>True if we are currently receiving MIDI clocks from the host.
+Synchronizer has always returned false here, I guess because
+we make MIDI passing through the host look like MIDI In sync
+rather than host sync.</p>
+<a name='syncHostStarted'>
+<h4 class=sec4>7.9.10.5 syncHostStarted</h4>
+</a>
+<p>True if we have received a MIDI start or continue message from the host.
+Like syncHostReceiving we've always returned false here.</p>
+<a name='syncHostTempo'>
+<h4 class=sec4>7.9.10.6 syncHostTempo</h4>
+</a>
+<p>The tempo advertised by the plugin host.</p>
+<a name='Miscellaneous'>
+<h3 class=sec3>7.9.11 Miscellaneous</h3>
+</a>
+<a name='blockFrames'>
+<h4 class=sec4>7.9.11.1 blockFrames</h4>
+</a>
+<p>The number of frames in one audio interrupt block.</p>
+<a name='configurationDirectory'>
+<h4 class=sec4>7.9.11.2 configurationDirectory</h4>
+</a>
+<p>Base directory where Mobius configuration is saved.
+Typically <i>c:\Program Files\Mobius 2</i> on Windows and
+<i>/Library/Application Support/Mobius 2</i> on Mac.</p>
+<a name='installationDirectory'>
+<h4 class=sec4>7.9.11.3 installationDirectory</h4>
+</a>
+<p>Base directory where Mobius has been installed.
+Typically <i>c:\Program Files\Mobius 2</i> on Windows and
+<i>/Applications/Mobius 2</i> on Mac.</p>
+<a name='noExternalAudio'>
+<h4 class=sec4>7.9.11.4 noExternalAudio</h4>
+</a>
+<p>When set disables the pass through of audio received
+on the first port.  This is used in the unit tests that do their
+own audio injection, and we don't want random noise coming
+in from the sound card to pollute it.</p>
+<a name='sampleFrames'>
+<h4 class=sec4>7.9.11.5 sampleFrames</h4>
+</a>
+<p>The number of frames in the last sample we played.</p>
+<a name='Examples'>
+<h1 class=sec1>8 Examples</h1>
+</a>
+<a name='Sustain Scripts'>
+<h2 class=sec2>8.1 Sustain Scripts</h2>
+</a>
+<a name='Long Press Scripts'>
+<h2 class=sec2>8.2 Long Press Scripts</h2>
+</a>
+</body>
+</html>

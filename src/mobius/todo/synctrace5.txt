@@ -1,0 +1,565 @@
+7464: 0 0: Creating object pools
+7464: 0 0: Replacing trace listener with MobiusThread
+7464: 0 0: Loading sample c:/larson/dev/mobius/src/mobius/test/base.wav
+7464: 0 0: Loading sample c:/larson/dev/mobius/src/mobius/test/medium.wav
+7464: 0 0: Loading sample c:/larson/dev/mobius/src/mobius/test/medium2.wav
+7464: 0 0: Loading sample c:/larson/dev/mobius/src/mobius/test/short1.wav
+7464: 0 0: Loading sample c:/larson/dev/mobius/src/mobius/test/short2.wav
+7464: 0 0: Loading sample c:/larson/dev/mobius/src/mobius/test/long.wav
+7464: 0 0: Loading sample c:/larson/dev/mobius/src/mobius/test/gcloop.wav
+7464: 0 0: Reading Mobius script directory: C:\larson\dev\mobius\src\mobius\test
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/calltest.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/endmode.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/exprtest.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/functests.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/insynctests.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/jumptests.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/message.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/mutetests.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/scripttest.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/speedtests.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/startmode.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/synctests.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/testdriver.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/testdriverflat.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/testdriverflatrev.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/testdriverseg.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/testdriversegrev.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/vstsynctests.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\scripts\midiout.mos
+7464: 0 0: Reading Mobius script C:\temp\selecttrack.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\shuffle.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\scripts\shuffletest.mos
+7464: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\scripts\launchpad.mos
+7464: 0 0: ScriptEnv: Reference ScriptOfDestiny resolved to script C:\larson\dev\mobius\src\mobius\test/calltest.mos
+7464: 0 0: ScriptEnv: Reference calltest resolved to script C:\larson\dev\mobius\src\mobius\test/calltest.mos
+7464: WinMidiInput: launching WinMidiThread
+7464: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7464: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7464: WinMidiInput::connect 2- ReMOTE
+7464: WinMidiThread running...
+7464: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7464: MidiIn: MIM_OPEN
+7464: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7464: WinMidiInput::connect opened 2- ReMOTE on port 2058312
+7464: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7464: WinSysexBuffer::prepare midiInPrepareHeader
+7464: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7464: WinSysexBuffer::prepare midiInPrepareHeader
+7464: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7464: WinSysexBuffer::prepare midiInPrepareHeader
+7464: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7464: WinSysexBuffer::add midiInAddBuffer
+7464: WinSysexBuffer::add midiInAddBuffer
+7464: WinSysexBuffer::add midiInAddBuffer
+7464: WinMidiInput::connect finished
+7464: WinMidiInput::enable midiInStart for 2- ReMOTE
+7464: WinMidiOutput::connect output Out To MIDI Yoke:  1
+7464: ERROR: 0 0: Mobius: Unable to open MIDI input: UltraLite,Launchpad,2- ReMOTE
+7464: ERROR: 0 0: Mobius: Unable to open MIDI output: Out To MIDI Yoke:  1,Launchpad
+7464: ERROR: 0 0: Audio: Device with odd number of input channels: 1!
+7464: 0 0: Flushing object pools
+7464: 0 0: MidiTimer: deactivating millisecond timer
+7464: MidiIn: MIM_LONGDATA
+7464: WinMidiInput::processLongData: recieved 0 bytes.
+7464: MidiIn: MIM_LONGDATA
+7464: WinMidiInput::processLongData: recieved 0 bytes.
+7464: MidiIn: MIM_LONGDATA
+7464: WinMidiInput::processLongData: recieved 0 bytes.
+7220: 0 0: Creating object pools
+7220: 0 0: Replacing trace listener with MobiusThread
+7220: 0 0: Loading sample c:/larson/dev/mobius/src/mobius/test/base.wav
+7220: 0 0: Loading sample c:/larson/dev/mobius/src/mobius/test/medium.wav
+7220: 0 0: Loading sample c:/larson/dev/mobius/src/mobius/test/medium2.wav
+7220: 0 0: Loading sample c:/larson/dev/mobius/src/mobius/test/short1.wav
+7220: 0 0: Loading sample c:/larson/dev/mobius/src/mobius/test/short2.wav
+7220: 0 0: Loading sample c:/larson/dev/mobius/src/mobius/test/long.wav
+7220: 0 0: Loading sample c:/larson/dev/mobius/src/mobius/test/gcloop.wav
+7220: 0 0: Reading Mobius script directory: C:\larson\dev\mobius\src\mobius\test
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/calltest.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/endmode.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/exprtest.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/functests.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/insynctests.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/jumptests.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/message.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/mutetests.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/scripttest.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/speedtests.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/startmode.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/synctests.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/testdriver.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/testdriverflat.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/testdriverflatrev.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/testdriverseg.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/testdriversegrev.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\test/vstsynctests.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\scripts\midiout.mos
+7220: 0 0: Reading Mobius script C:\temp\selecttrack.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\shuffle.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\scripts\shuffletest.mos
+7220: 0 0: Reading Mobius script C:\larson\dev\mobius\src\mobius\scripts\launchpad.mos
+7220: 0 0: ScriptEnv: Reference ScriptOfDestiny resolved to script C:\larson\dev\mobius\src\mobius\test/calltest.mos
+7220: 0 0: ScriptEnv: Reference calltest resolved to script C:\larson\dev\mobius\src\mobius\test/calltest.mos
+7220: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7220: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7220: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7220: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7220: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7220: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7220: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7220: 0 0: ScriptEnv: Reference layertests resolved to script C:\larson\dev\mobius\src\mobius\test/layertests.mos
+7220: WinMidiInput: launching WinMidiThread
+7220: WinMidiInput::connect UltraLite
+7220: WinMidiThread running...
+7220: MidiIn: MIM_OPEN
+7220: WinMidiInput::connect opened UltraLite on port 2157864
+7220: WinSysexBuffer::prepare midiInPrepareHeader
+7220: WinSysexBuffer::prepare midiInPrepareHeader
+7220: WinSysexBuffer::prepare midiInPrepareHeader
+7220: WinSysexBuffer::add midiInAddBuffer
+7220: WinSysexBuffer::add midiInAddBuffer
+7220: WinSysexBuffer::add midiInAddBuffer
+7220: WinMidiInput::connect finished
+7220: WinMidiInput::enable midiInStart for UltraLite
+7220: WinMidiInput: launching WinMidiThread
+7220: WinMidiInput::connect 2- ReMOTE
+7220: MidiIn: MIM_OPEN
+7220: WinMidiInput::connect opened 2- ReMOTE on port 2158128
+7220: WinSysexBuffer::prepare midiInPrepareHeader
+7220: WinSysexBuffer::prepare midiInPrepareHeader
+7220: WinSysexBuffer::prepare midiInPrepareHeader
+7220: WinSysexBuffer::add midiInAddBuffer
+7220: WinSysexBuffer::add midiInAddBuffer
+7220: WinSysexBuffer::add midiInAddBuffer
+7220: WinMidiInput::connect finished
+7220: WinMidiInput::enable midiInStart for 2- ReMOTE
+7220: WinMidiOutput::connect output Out To MIDI Yoke:  1
+7220: ERROR: 0 0: Mobius: Unable to open MIDI input: UltraLite,Launchpad,2- ReMOTE
+7220: ERROR: 0 0: Mobius: Unable to open MIDI output: Out To MIDI Yoke:  1,Launchpad
+7220: ERROR: 0 0: Audio: Device with odd number of input channels: 1!
+7220: WinMidiThread running...
+7220: 0 0: 1709 millis between interrupts
+7220: 0 0: paCallback 52144.452925 0.000000 52144.471859 52144.460000 1709
+7220: 0 0: Mobius: Receiving interrupts, input latency 289 output 282
+7220: 0 0: paCallback 52144.458925 0.000000 52144.477859 52144.466000 1716
+7220: 0 0: paCallback 52144.464925 0.000000 52144.483859 52144.472000 1722
+7220: 0 0: paCallback 52144.470925 0.000000 52144.489859 52144.478000 1727
+7220: 0 0: paCallback 52144.476925 0.000000 52144.495859 52144.484000 1734
+7220: 0 0: paCallback 52144.481925 0.000000 52144.500859 52144.489000 1740
+7220: 0 0: paCallback 52144.487925 0.000000 52144.506859 52144.495000 1744
+7220: 0 0: paCallback 52144.493925 0.000000 52144.512859 52144.501000 1751
+7220: 0 0: paCallback 52144.499925 0.000000 52144.518859 52144.507000 1757
+7220: 0 0: 3 millis between interrupts
+7220: 0 0: paCallback 52144.505925 0.000000 52144.524859 52144.513000 1760
+7220: 0 0: 9 millis between interrupts
+7220: 0 0: paCallback 52144.511925 0.000000 52144.530859 52144.519000 1769
+7220: 0 0: paCallback 52144.517925 0.000000 52144.536859 52144.525000 1774
+7220: 0 0: paCallback 52144.521925 0.000000 52144.540859 52144.529000 1780
+7220: 0 0: paCallback 52144.527925 0.000000 52144.546859 52144.535000 1786
+7220: 0 0: paCallback 52144.533925 0.000000 52144.552859 52144.541000 1791
+7220: 0 0: paCallback 52144.539925 0.000000 52144.558859 52144.547000 1797
+7220: 0 0: paCallback 52144.545925 0.000000 52144.564859 52144.553000 1803
+7220: 0 0: paCallback 52144.557925 0.000000 52144.576859 52144.565000 1815
+7220: 0 0: paCallback 52144.557925 0.000000 52144.576859 52144.565000 1815
+7220: 0 0: paCallback 52144.562925 0.000000 52144.581859 52144.570000 1821
+7220: 0 0: paCallback 52144.568925 0.000000 52144.587859 52144.576000 1827
+7220: 0 0: paCallback 52144.574925 0.000000 52144.593859 52144.582000 1833
+7220: 0 0: paCallback 52144.580925 0.000000 52144.599859 52144.588000 1838
+7220: 0 0: paCallback 52144.592925 0.000000 52144.611859 52144.600000 1843
+7220: 0 0: 0 millis between interrupts
+7220: 0 0: paCallback 52144.592925 0.000000 52144.611859 52144.600000 1843
+7220: 0 0: 13 millis between interrupts
+7220: 0 0: paCallback 52144.598925 0.000000 52144.617859 52144.606000 1856
+7220: 0 0: paCallback 52144.603925 0.000000 52144.622859 52144.611000 1860
+7220: 0 0: paCallback 52144.609925 0.000000 52144.628859 52144.617000 1867
+7220: 0 0: paCallback 52144.615925 0.000000 52144.634859 52144.623000 1873
+7220: 0 0: paCallback 52144.623925 0.000000 52144.642859 52144.631000 1881
+7220: 0 0: 3 millis between interrupts
+7220: 0 0: paCallback 52144.627925 0.000000 52144.646859 52144.635000 1884
+7220: 0 0: paCallback 52144.632925 0.000000 52144.651859 52144.640000 1890
+7220: 0 0: paCallback 52144.638925 0.000000 52144.657859 52144.646000 1896
+7220: 0 0: paCallback 52144.643925 0.000000 52144.662859 52144.651000 1902
+7220: 0 0: paCallback 52144.649925 0.000000 52144.668859 52144.658000 1909
+7220: 0 0: paCallback 52144.655925 0.000000 52144.674859 52144.663000 1914
+7220: 0 0: paCallback 52144.661925 0.000000 52144.680859 52144.669000 1919
+7220: 0 0: paCallback 52144.667925 0.000000 52144.686859 52144.675000 1925
+7220: 0 0: paCallback 52144.673925 0.000000 52144.692859 52144.681000 1931
+7220: 0 0: paCallback 52144.679925 0.000000 52144.698859 52144.687000 1937
+7220: 0 0: paCallback 52144.684925 0.000000 52144.703859 52144.692000 1943
+7220: 0 0: paCallback 52144.690925 0.000000 52144.709859 52144.698000 1949
+7220: 0 0: paCallback 52144.696925 0.000000 52144.715859 52144.704000 1955
+7220: 0 0: 9 millis between interrupts
+7220: 0 0: paCallback 52144.706925 0.000000 52144.725859 52144.714000 1964
+7220: 0 0: 1 millis between interrupts
+7220: 0 0: paCallback 52144.708925 0.000000 52144.727859 52144.716000 1965
+7220: 0 0: paCallback 52144.714925 0.000000 52144.733859 52144.722000 1972
+7220: 0 0: paCallback 52144.720925 0.000000 52144.739859 52144.728000 1977
+7220: 0 0: paCallback 52144.726925 0.000000 52144.745859 52144.734000 1984
+7220: 0 0: paCallback 52144.730925 0.000000 52144.749859 52144.738000 1989
+7220: 0 0: paCallback 52144.736925 0.000000 52144.755859 52144.746000 1997
+7220: 0 0: 3 millis between interrupts
+7220: 0 0: paCallback 52144.742925 0.000000 52144.761859 52144.750000 2000
+7220: 0 0: paCallback 52144.748925 0.000000 52144.767859 52144.756000 2006
+7220: 0 0: paCallback 52144.754925 0.000000 52144.773859 52144.762000 2010
+7220: 0 0: paCallback 52144.760925 0.000000 52144.779859 52144.768000 2018
+7220: 0 0: paCallback 52144.766925 0.000000 52144.785859 52144.774000 2024
+7220: 0 0: paCallback 52144.771925 0.000000 52144.790859 52144.779000 2030
+7220: 0 0: paCallback 52144.777925 0.000000 52144.796859 52144.785000 2035
+7220: 0 0: paCallback 52144.783925 0.000000 52144.802859 52144.791000 2041
+7220: 0 0: paCallback 52144.789925 0.000000 52144.808859 52144.797000 2047
+7220: 0 0: paCallback 52144.795925 0.000000 52144.814859 52144.803000 2053
+7220: 0 0: paCallback 52144.801925 0.000000 52144.820859 52144.809000 2059
+7220: 0 0: paCallback 52144.807925 0.000000 52144.826859 52144.815000 2065
+7220: 0 0: paCallback 52144.812925 0.000000 52144.831859 52144.820000 2071
+7220: 0 0: paCallback 52144.818925 0.000000 52144.837859 52144.826000 2077
+7220: 0 0: paCallback 52144.824925 0.000000 52144.843859 52144.832000 2083
+7220: 0 0: paCallback 52144.830925 0.000000 52144.849859 52144.838000 2088
+7220: 0 0: paCallback 52144.838925 0.000000 52144.857859 52144.846000 2096
+7220: 0 0: 3 millis between interrupts
+7220: 0 0: paCallback 52144.841925 0.000000 52144.860859 52144.850000 2099
+7220: 0 0: paCallback 52144.847925 0.000000 52144.866859 52144.855000 2105
+7220: 0 0: 9 millis between interrupts
+7220: 0 0: paCallback 52144.855925 0.000000 52144.874859 52144.863000 2114
+7220: 0 0: 3 millis between interrupts
+7220: 0 0: paCallback 52144.858925 0.000000 52144.877859 52144.866000 2117
+7220: 0 0: paCallback 52144.864925 0.000000 52144.883859 52144.872000 2123
+7220: 0 0: 3 millis between interrupts
+7220: 0 0: paCallback 52144.870925 0.000000 52144.889859 52144.878000 2126
+7220: 0 0: paCallback 52144.876925 0.000000 52144.895859 52144.884000 2134
+7220: 0 0: paCallback 52144.882925 0.000000 52144.901859 52144.890000 2140
+7220: 0 0: paCallback 52144.889925 0.000000 52144.908859 52144.898000 2148
+7220: 0 0: paCallback 52144.893925 0.000000 52144.912859 52144.901000 2152
+7220: 0 0: paCallback 52144.899925 0.000000 52144.918859 52144.907000 2158
+7220: 0 0: paCallback 52144.905925 0.000000 52144.924859 52144.913000 2164
+7220: 0 0: paCallback 52144.911925 0.000000 52144.930859 52144.919000 2169
+7220: 0 0: paCallback 52144.917925 0.000000 52144.936859 52144.925000 2174
+7220: 0 0: paCallback 52144.923925 0.000000 52144.942859 52144.931000 2181
+7220: 0 0: paCallback 52144.929925 0.000000 52144.948859 52144.937000 2187
+7220: 0 0: paCallback 52144.934925 0.000000 52144.953859 52144.942000 2192
+7220: 0 0: paCallback 52144.940925 0.000000 52144.959859 52144.948000 2199
+7220: 0 0: paCallback 52144.945925 0.000000 52144.964859 52144.953000 2204
+7220: 0 0: paCallback 52144.951925 0.000000 52144.970859 52144.959000 2209
+7220: 0 0: 1 millis between interrupts
+7220: 0 0: paCallback 52144.957925 0.000000 52144.976859 52144.966000 2210
+7220: 0 0: 11 millis between interrupts
+7220: 0 0: paCallback 52144.963925 0.000000 52144.982859 52144.971000 2221
+7220: 0 0: 12 millis between interrupts
+7220: 0 0: paCallback 52144.974925 0.000000 52144.993859 52144.983000 2233
+7220: 0 0: 0 millis between interrupts
+7220: 0 0: paCallback 52144.975925 0.000000 52144.994859 52144.983000 2233
+7220: 0 0: paCallback 52144.980925 0.000000 52144.999859 52144.988000 2239
+7220: 0 0: paCallback 52144.986925 0.000000 52145.005859 52144.994000 2244
+7220: 0 0: paCallback 52144.992925 0.000000 52145.011859 52145.000000 2250
+7220: 0 0: paCallback 52144.998925 0.000000 52145.017859 52145.006000 2256
+7220: 0 0: paCallback 52145.004925 0.000000 52145.023859 52145.012000 2262
+7220: 0 0: paCallback 52145.010925 0.000000 52145.029859 52145.018000 2268
+7220: 0 0: paCallback 52145.016925 0.000000 52145.035859 52145.024000 2274
+7220: 0 0: paCallback 52145.021925 0.000000 52145.040859 52145.029000 2280
+7220: 0 0: paCallback 52145.027925 0.000000 52145.046859 52145.035000 2285
+7220: 0 0: 3 millis between interrupts
+7220: 0 0: 9 millis between interrupts
+7220: 0 0: 0 millis between interrupts
+7220: 0 0: 11 millis between interrupts
+7220: 0 0: 0 millis between interrupts
+7220: 0 0: 13 millis between interrupts
+7220: 101 -289: Function Record down
+7220: 101 -289: Loop: Add event Record(Record) 0
+7220: 101 -289: Loop: Set mode play
+7220: 101 -289: Track::doFunction beginning long press for XRecord
+7220: 101 -33: E: Record(Record) 0
+7220: 101 0: SyncLoop::startRecording mode 1 cyclePulses 0
+7220: 101 0: Sync: Record cycle pulses 0
+7220: 101 0: Loop: Set mode record
+7220: 101 0: Layer: Starting record fade in
+7220: 0 0: 9 millis between interrupts
+7220: 0 0: 2 millis between interrupts
+7220: 101 6367: Track::doFunction canceling long press for XRecord
+7220: 101 92383: Function Record down
+7220: 101 92383: Loop: prepareLoop: loop frames 92672 remaining 289
+7220: 101 92383: Layer: pending frames 289
+7220: 101 92383: Loop: Add event RecordStop(Record) 92672
+7220: 101 92383: Track::doFunction beginning long press for XRecord
+7220: 101 92639: Layer: Starting play fade in at 282
+7220: 101 92639: E: RecordStop(Record) 92672
+7220: 101 92672: SyncLoop::endRecording frames 92672 pulses 0
+7220: 101 92672: SyncLoop::endRecording pulseFrames (x100) 0
+7220: 101 92672: Sync: Assigning output sync master track 0
+7220: 101 92672: Sync: Assigning track sync master track 0
+7220: 101 92672: Sync: calcLoopTempo cycleFrames 92672 beats 4 tempo 11420 (x100)
+7220: 101 92672: Sync: initial master tempo 11420 (x100)
+7220: 101 92672: SyncLoop::initSyncMaster pulses 96 pulseFrames (x100) 96533
+7220: 101 92672: MidiTransport: tempo changed from 0 to 11420 (x100) millis/clock 21 frames/clock 965
+7220: 101 92672: Sync: master track 0 record ending with 96 pulses tempo (x100) 11420
+7220: 101 92672: Sync:   basePulseFrames (x100) 96533 pulseFrames (x100) 96533
+7220: 101 92672: MidiTransport: Sending MIDI Start, tempo (x100) 11420
+7220: 101 92672: Sync: first out sync pulse at block offset 33
+7220: 101 0: Loop: Set mode play
+7220: 0 0: MidiState internal started receiving clocks
+7220: 101 0: Sync: Start Event
+7220: 101 0: Layer: Applying fade out before frame 92672
+7220: 0 0: MidiState internal started receiving clocks
+7220: 101 991: MidiTransport: 22 milliseconds to get to first clock, frame 991
+7220: 101 991: SyncLoop:pulse: loop frame 991 pulse frame 965 drift 25
+7220: 0 0: 3 millis between interrupts
+7220: 0 0: 9 millis between interrupts
+7220: 101 2015: SyncLoop:pulse: loop frame 2015 pulse frame 1930 drift 84
+7220: 0 0: 2 millis between interrupts
+7220: 0 0: 9 millis between interrupts
+7220: 101 3039: SyncLoop:pulse: loop frame 3039 pulse frame 2896 drift 143
+7220: 101 3807: SyncLoop:pulse: loop frame 3807 pulse frame 3861 drift -54
+7220: 101 4831: Track::doFunction canceling long press for XRecord
+7220: 101 4831: SyncLoop:pulse: loop frame 4831 pulse frame 4826 drift 4
+7220: 0 0: 10 millis between interrupts
+7220: 0 0: 2 millis between interrupts
+7220: 101 5855: SyncLoop:pulse: loop frame 5855 pulse frame 5792 drift 63
+7220: 101 6879: SyncLoop:pulse: loop frame 6879 pulse frame 6757 drift 121
+7220: 0 0: 3 millis between interrupts
+7220: 0 0: 9 millis between interrupts
+7220: 101 7903: SyncLoop:pulse: loop frame 7903 pulse frame 7722 drift 180
+7220: 101 8671: SyncLoop:pulse: loop frame 8671 pulse frame 8688 drift -17
+7220: 101 9695: SyncLoop:pulse: loop frame 9695 pulse frame 9653 drift 41
+7220: 101 10719: SyncLoop:pulse: loop frame 10719 pulse frame 10618 drift 100
+7220: 101 11743: SyncLoop:pulse: loop frame 11743 pulse frame 11583 drift 159
+7220: 101 12511: SyncLoop:pulse: loop frame 12511 pulse frame 12549 drift -38
+7220: 101 13535: SyncLoop:pulse: loop frame 13535 pulse frame 13514 drift 20
+7220: 101 14559: SyncLoop:pulse: loop frame 14559 pulse frame 14479 drift 79
+7220: 101 15583: SyncLoop:pulse: loop frame 15583 pulse frame 15445 drift 137
+7220: 101 16607: SyncLoop:pulse: loop frame 16607 pulse frame 16410 drift 196
+7220: 101 17375: SyncLoop:pulse: loop frame 17375 pulse frame 17375 drift 0
+7220: 101 18399: SyncLoop:pulse: loop frame 18399 pulse frame 18341 drift 57
+7220: 101 19423: SyncLoop:pulse: loop frame 19423 pulse frame 19306 drift 116
+7220: 101 20191: SyncLoop:pulse: loop frame 20191 pulse frame 20272 drift -81
+7220: 101 21215: SyncLoop:pulse: loop frame 21215 pulse frame 21237 drift -22
+7220: 101 22239: SyncLoop:pulse: loop frame 22239 pulse frame 22202 drift 36
+7220: 101 23263: SyncLoop:pulse: loop frame 23263 pulse frame 23168 drift 94
+7220: 101 24287: SyncLoop:pulse: loop frame 24287 pulse frame 24133 drift 153
+7220: 101 25055: SyncLoop:pulse: loop frame 25055 pulse frame 25098 drift -43
+7220: 101 26079: SyncLoop:pulse: loop frame 26079 pulse frame 26064 drift 14
+7220: 101 27103: SyncLoop:pulse: loop frame 27103 pulse frame 27029 drift 73
+7220: 101 28127: SyncLoop:pulse: loop frame 28127 pulse frame 27994 drift 132
+7220: 101 28895: SyncLoop:pulse: loop frame 28895 pulse frame 28960 drift -65
+7220: 101 29919: SyncLoop:pulse: loop frame 29919 pulse frame 29925 drift -6
+7220: 101 30943: SyncLoop:pulse: loop frame 30943 pulse frame 30890 drift 52
+7220: 101 31967: SyncLoop:pulse: loop frame 31967 pulse frame 31856 drift 110
+7220: 101 32991: SyncLoop:pulse: loop frame 32991 pulse frame 32821 drift 169
+7220: 101 33759: SyncLoop:pulse: loop frame 33759 pulse frame 33786 drift -27
+7220: 101 34783: SyncLoop:pulse: loop frame 34783 pulse frame 34752 drift 30
+7220: 101 35807: SyncLoop:pulse: loop frame 35807 pulse frame 35717 drift 89
+7220: 101 36831: SyncLoop:pulse: loop frame 36831 pulse frame 36682 drift 148
+7220: 101 37599: SyncLoop:pulse: loop frame 37599 pulse frame 37648 drift -49
+7220: 101 38623: SyncLoop:pulse: loop frame 38623 pulse frame 38613 drift 9
+7220: 101 39647: SyncLoop:pulse: loop frame 39647 pulse frame 39578 drift 68
+7220: 101 40671: SyncLoop:pulse: loop frame 40671 pulse frame 40543 drift 127
+7220: 101 41695: SyncLoop:pulse: loop frame 41695 pulse frame 41509 drift 185
+7220: 101 42463: SyncLoop:pulse: loop frame 42463 pulse frame 42474 drift -11
+7220: 101 43487: SyncLoop:pulse: loop frame 43487 pulse frame 43439 drift 47
+7220: 101 44511: SyncLoop:pulse: loop frame 44511 pulse frame 44405 drift 105
+7220: 101 45535: SyncLoop:pulse: loop frame 45535 pulse frame 45370 drift 164
+7220: 101 46303: SyncLoop:pulse: loop frame 46303 pulse frame 46335 drift -32
+7220: 101 47327: SyncLoop:pulse: loop frame 47327 pulse frame 47301 drift 25
+7220: 101 48351: SyncLoop:pulse: loop frame 48351 pulse frame 48266 drift 84
+7220: 101 49375: SyncLoop:pulse: loop frame 49375 pulse frame 49231 drift 143
+7220: 101 50143: SyncLoop:pulse: loop frame 50143 pulse frame 50197 drift -54
+7220: 101 51167: SyncLoop:pulse: loop frame 51167 pulse frame 51162 drift 4
+7220: 101 52191: SyncLoop:pulse: loop frame 52191 pulse frame 52127 drift 63
+7220: 101 53215: SyncLoop:pulse: loop frame 53215 pulse frame 53093 drift 121
+7220: 101 53983: SyncLoop:pulse: loop frame 53983 pulse frame 54058 drift -75
+7220: 101 55007: SyncLoop:pulse: loop frame 55007 pulse frame 55023 drift -16
+7220: 101 56031: SyncLoop:pulse: loop frame 56031 pulse frame 55989 drift 41
+7220: 101 57055: SyncLoop:pulse: loop frame 57055 pulse frame 56954 drift 100
+7220: 101 58079: SyncLoop:pulse: loop frame 58079 pulse frame 57919 drift 159
+7220: 101 58847: SyncLoop:pulse: loop frame 58847 pulse frame 58885 drift -38
+7220: 101 59871: SyncLoop:pulse: loop frame 59871 pulse frame 59850 drift 20
+7220: 101 60895: SyncLoop:pulse: loop frame 60895 pulse frame 60815 drift 79
+7220: 101 61919: SyncLoop:pulse: loop frame 61919 pulse frame 61781 drift 137
+7220: 101 62687: SyncLoop:pulse: loop frame 62687 pulse frame 62746 drift -59
+7220: 101 63711: SyncLoop:pulse: loop frame 63711 pulse frame 63711 drift 0
+7220: 101 64735: SyncLoop:pulse: loop frame 64735 pulse frame 64677 drift 57
+7220: 101 65759: SyncLoop:pulse: loop frame 65759 pulse frame 65642 drift 116
+7220: 101 66527: SyncLoop:pulse: loop frame 66527 pulse frame 66607 drift -80
+7220: 101 67551: SyncLoop:pulse: loop frame 67551 pulse frame 67573 drift -22
+7220: 101 68575: SyncLoop:pulse: loop frame 68575 pulse frame 68538 drift 36
+7220: 101 69599: SyncLoop:pulse: loop frame 69599 pulse frame 69503 drift 95
+7220: 0 0: 3 millis between interrupts
+7220: 0 0: 9 millis between interrupts
+7220: 101 70367: SyncLoop:pulse: loop frame 70367 pulse frame 70469 drift -102
+7220: 101 71391: SyncLoop:pulse: loop frame 71391 pulse frame 71434 drift -43
+7220: 101 72415: SyncLoop:pulse: loop frame 72415 pulse frame 72399 drift 15
+7220: 101 73439: SyncLoop:pulse: loop frame 73439 pulse frame 73365 drift 73
+7220: 101 74463: SyncLoop:pulse: loop frame 74463 pulse frame 74330 drift 132
+7220: 101 75231: SyncLoop:pulse: loop frame 75231 pulse frame 75295 drift -64
+7220: 101 76255: SyncLoop:pulse: loop frame 76255 pulse frame 76261 drift -6
+7220: 101 77279: SyncLoop:pulse: loop frame 77279 pulse frame 77226 drift 52
+7220: 101 78303: SyncLoop:pulse: loop frame 78303 pulse frame 78192 drift 111
+7220: 101 79071: SyncLoop:pulse: loop frame 79071 pulse frame 79157 drift -86
+7220: 101 80095: SyncLoop:pulse: loop frame 80095 pulse frame 80122 drift -27
+7220: 101 81119: SyncLoop:pulse: loop frame 81119 pulse frame 81088 drift 30
+7220: 101 82143: SyncLoop:pulse: loop frame 82143 pulse frame 82053 drift 89
+7220: 101 83167: SyncLoop:pulse: loop frame 83167 pulse frame 83018 drift 148
+7220: 101 83935: SyncLoop:pulse: loop frame 83935 pulse frame 83984 drift -49
+7220: 101 84959: SyncLoop:pulse: loop frame 84959 pulse frame 84949 drift 9
+7220: 101 85983: SyncLoop:pulse: loop frame 85983 pulse frame 85914 drift 68
+7220: 101 87007: SyncLoop:pulse: loop frame 87007 pulse frame 86880 drift 126
+7220: 101 87775: SyncLoop:pulse: loop frame 87775 pulse frame 87845 drift -70
+7220: 101 88799: SyncLoop:pulse: loop frame 88799 pulse frame 88810 drift -11
+7220: 101 89823: SyncLoop:pulse: loop frame 89823 pulse frame 89776 drift 46
+7220: 101 90847: SyncLoop:pulse: loop frame 90847 pulse frame 90741 drift 105
+7220: 101 91871: SyncLoop:pulse: loop frame 91871 pulse frame 91706 drift 164
+7220: 101 92639: SyncLoop:pulse: loop frame 92639 pulse frame 0 drift -33
+7220: 101 92639: SyncLoop:pulse start point, pulse drift -33, loop dealign 0
+7220: 101 92639: Sync: incPulses: wrapped pulse frame from 9267203 to 3 (x100)
+7220: 101 92639: Sync: Track 0 drift check point frame 92639 drift -33
+7220: 101 991: SyncLoop:pulse: loop frame 991 pulse frame 965 drift 25
+7220: 101 2015: SyncLoop:pulse: loop frame 2015 pulse frame 1930 drift 84
+7220: 101 3039: SyncLoop:pulse: loop frame 3039 pulse frame 2896 drift 142
+7220: 101 3807: SyncLoop:pulse: loop frame 3807 pulse frame 3861 drift -54
+7220: 101 4831: SyncLoop:pulse: loop frame 4831 pulse frame 4826 drift 4
+7220: 101 5855: SyncLoop:pulse: loop frame 5855 pulse frame 5792 drift 62
+7220: 101 6879: SyncLoop:pulse: loop frame 6879 pulse frame 6757 drift 121
+7220: 101 7903: SyncLoop:pulse: loop frame 7903 pulse frame 7722 drift 180
+7220: 101 8671: SyncLoop:pulse: loop frame 8671 pulse frame 8688 drift -17
+7220: 101 9695: SyncLoop:pulse: loop frame 9695 pulse frame 9653 drift 41
+7220: 101 10719: SyncLoop:pulse: loop frame 10719 pulse frame 10618 drift 100
+7220: 101 11743: SyncLoop:pulse: loop frame 11743 pulse frame 11584 drift 158
+7220: 101 12511: SyncLoop:pulse: loop frame 12511 pulse frame 12549 drift -38
+7220: 101 13535: SyncLoop:pulse: loop frame 13535 pulse frame 13514 drift 20
+7220: 101 14559: SyncLoop:pulse: loop frame 14559 pulse frame 14480 drift 78
+7220: 101 15583: SyncLoop:pulse: loop frame 15583 pulse frame 15445 drift 137
+7220: 101 16351: SyncLoop:pulse: loop frame 16351 pulse frame 16410 drift -59
+7220: 101 17375: SyncLoop:pulse: loop frame 17375 pulse frame 17376 drift -1
+7220: 101 18399: SyncLoop:pulse: loop frame 18399 pulse frame 18341 drift 57
+7220: 101 19423: SyncLoop:pulse: loop frame 19423 pulse frame 19306 drift 116
+7220: 101 20447: SyncLoop:pulse: loop frame 20447 pulse frame 20272 drift 174
+7220: 101 21215: SyncLoop:pulse: loop frame 21215 pulse frame 21237 drift -22
+7220: 101 22239: SyncLoop:pulse: loop frame 22239 pulse frame 22202 drift 36
+7220: 101 23263: SyncLoop:pulse: loop frame 23263 pulse frame 23168 drift 94
+7220: 101 24287: SyncLoop:pulse: loop frame 24287 pulse frame 24133 drift 153
+7220: 101 25055: SyncLoop:pulse: loop frame 25055 pulse frame 25098 drift -43
+7220: 101 26079: SyncLoop:pulse: loop frame 26079 pulse frame 26064 drift 14
+7220: 101 27103: SyncLoop:pulse: loop frame 27103 pulse frame 27029 drift 73
+7220: 101 28127: SyncLoop:pulse: loop frame 28127 pulse frame 27994 drift 132
+7220: 101 29151: SyncLoop:pulse: loop frame 29151 pulse frame 28960 drift 190
+7220: 101 29919: SyncLoop:pulse: loop frame 29919 pulse frame 29925 drift -6
+7220: 101 30943: SyncLoop:pulse: loop frame 30943 pulse frame 30890 drift 52
+7220: 101 31967: SyncLoop:pulse: loop frame 31967 pulse frame 31856 drift 110
+7220: 101 32735: SyncLoop:pulse: loop frame 32735 pulse frame 32821 drift -86
+7220: 101 33759: SyncLoop:pulse: loop frame 33759 pulse frame 33786 drift -27
+7220: 101 34783: SyncLoop:pulse: loop frame 34783 pulse frame 34752 drift 30
+7220: 101 35807: SyncLoop:pulse: loop frame 35807 pulse frame 35717 drift 89
+7220: 101 36831: SyncLoop:pulse: loop frame 36831 pulse frame 36682 drift 148
+7220: 101 37599: SyncLoop:pulse: loop frame 37599 pulse frame 37648 drift -49
+7220: 101 38623: SyncLoop:pulse: loop frame 38623 pulse frame 38613 drift 9
+7220: 101 39647: SyncLoop:pulse: loop frame 39647 pulse frame 39578 drift 68
+7220: 101 40671: SyncLoop:pulse: loop frame 40671 pulse frame 40544 drift 126
+7220: 101 41439: SyncLoop:pulse: loop frame 41439 pulse frame 41509 drift -70
+7220: 101 42463: SyncLoop:pulse: loop frame 42463 pulse frame 42474 drift -11
+7220: 101 43487: SyncLoop:pulse: loop frame 43487 pulse frame 43440 drift 46
+7220: 101 44511: SyncLoop:pulse: loop frame 44511 pulse frame 44405 drift 105
+7220: 101 45535: SyncLoop:pulse: loop frame 45535 pulse frame 45370 drift 164
+7220: 101 46303: SyncLoop:pulse: loop frame 46303 pulse frame 46336 drift -33
+7220: 101 47327: SyncLoop:pulse: loop frame 47327 pulse frame 47301 drift 25
+7220: 101 48351: SyncLoop:pulse: loop frame 48351 pulse frame 48266 drift 84
+7220: 101 49375: SyncLoop:pulse: loop frame 49375 pulse frame 49232 drift 142
+7220: 101 50143: SyncLoop:pulse: loop frame 50143 pulse frame 50197 drift -54
+7220: 101 51167: SyncLoop:pulse: loop frame 51167 pulse frame 51162 drift 4
+7220: 101 52191: SyncLoop:pulse: loop frame 52191 pulse frame 52128 drift 62
+7220: 101 53215: SyncLoop:pulse: loop frame 53215 pulse frame 53093 drift 121
+7220: 101 54239: SyncLoop:pulse: loop frame 54239 pulse frame 54058 drift 180
+7220: 101 55007: SyncLoop:pulse: loop frame 55007 pulse frame 55024 drift -17
+7220: 101 56031: SyncLoop:pulse: loop frame 56031 pulse frame 55989 drift 41
+7220: 101 57055: SyncLoop:pulse: loop frame 57055 pulse frame 56954 drift 100
+7220: 101 58079: SyncLoop:pulse: loop frame 58079 pulse frame 57920 drift 158
+7220: 101 58847: SyncLoop:pulse: loop frame 58847 pulse frame 58885 drift -38
+7220: 101 59871: SyncLoop:pulse: loop frame 59871 pulse frame 59850 drift 20
+7220: 101 60895: SyncLoop:pulse: loop frame 60895 pulse frame 60816 drift 78
+7220: 101 61919: SyncLoop:pulse: loop frame 61919 pulse frame 61781 drift 137
+7220: 101 62943: SyncLoop:pulse: loop frame 62943 pulse frame 62746 drift 196
+7220: 101 63711: SyncLoop:pulse: loop frame 63711 pulse frame 63712 drift -1
+7220: 101 64735: SyncLoop:pulse: loop frame 64735 pulse frame 64677 drift 57
+7220: 101 65759: SyncLoop:pulse: loop frame 65759 pulse frame 65642 drift 116
+7220: 101 66783: SyncLoop:pulse: loop frame 66783 pulse frame 66608 drift 174
+7220: 101 67551: SyncLoop:pulse: loop frame 67551 pulse frame 67573 drift -22
+7220: 101 68575: SyncLoop:pulse: loop frame 68575 pulse frame 68538 drift 36
+7220: 101 69599: SyncLoop:pulse: loop frame 69599 pulse frame 69504 drift 94
+7220: 101 70623: SyncLoop:pulse: loop frame 70623 pulse frame 70469 drift 153
+7220: 101 71391: SyncLoop:pulse: loop frame 71391 pulse frame 71434 drift -43
+7220: 101 72415: SyncLoop:pulse: loop frame 72415 pulse frame 72400 drift 14
+7220: 101 73439: SyncLoop:pulse: loop frame 73439 pulse frame 73365 drift 73
+7220: 101 74463: SyncLoop:pulse: loop frame 74463 pulse frame 74330 drift 132
+7220: 101 75231: SyncLoop:pulse: loop frame 75231 pulse frame 75296 drift -65
+7220: 101 76255: SyncLoop:pulse: loop frame 76255 pulse frame 76261 drift -6
+7220: 101 77279: SyncLoop:pulse: loop frame 77279 pulse frame 77226 drift 52
+7220: 101 78303: SyncLoop:pulse: loop frame 78303 pulse frame 78192 drift 110
+7220: 101 79071: SyncLoop:pulse: loop frame 79071 pulse frame 79157 drift -86
+7220: 101 80095: SyncLoop:pulse: loop frame 80095 pulse frame 80122 drift -27
+7220: 101 81119: SyncLoop:pulse: loop frame 81119 pulse frame 81088 drift 30
+7220: 101 82143: SyncLoop:pulse: loop frame 82143 pulse frame 82053 drift 89
+7220: 101 83167: SyncLoop:pulse: loop frame 83167 pulse frame 83018 drift 148
+7220: 101 83935: SyncLoop:pulse: loop frame 83935 pulse frame 83984 drift -49
+7220: 101 84959: SyncLoop:pulse: loop frame 84959 pulse frame 84949 drift 9
+7220: 101 85983: SyncLoop:pulse: loop frame 85983 pulse frame 85914 drift 68
+7220: 101 87007: SyncLoop:pulse: loop frame 87007 pulse frame 86880 drift 126
+7220: 101 87775: SyncLoop:pulse: loop frame 87775 pulse frame 87845 drift -70
+7220: 101 88799: SyncLoop:pulse: loop frame 88799 pulse frame 88810 drift -11
+7220: 101 89823: SyncLoop:pulse: loop frame 89823 pulse frame 89776 drift 46
+7220: 101 90847: SyncLoop:pulse: loop frame 90847 pulse frame 90741 drift 105
+7220: 101 91615: SyncLoop:pulse: loop frame 91615 pulse frame 91706 drift -91
+7220: 101 92639: SyncLoop:pulse: loop frame 92639 pulse frame 0 drift -33
+7220: 101 92639: SyncLoop:pulse start point, pulse drift -33, loop dealign 0
+7220: 101 92639: Sync: incPulses: wrapped pulse frame from 9267207 to 7 (x100)
+7220: 101 92639: Sync: Track 0 drift check point frame 92639 drift -33
+7220: 101 991: SyncLoop:pulse: loop frame 991 pulse frame 965 drift 25
+7220: 101 2015: SyncLoop:pulse: loop frame 2015 pulse frame 1930 drift 84
+7220: 101 3039: SyncLoop:pulse: loop frame 3039 pulse frame 2896 drift 142
+7220: 101 3807: SyncLoop:pulse: loop frame 3807 pulse frame 3861 drift -54
+7220: 101 4831: SyncLoop:pulse: loop frame 4831 pulse frame 4826 drift 4
+7220: 101 5855: SyncLoop:pulse: loop frame 5855 pulse frame 5792 drift 62
+7220: 101 6879: SyncLoop:pulse: loop frame 6879 pulse frame 6757 drift 121
+7220: 101 7647: SyncLoop:pulse: loop frame 7647 pulse frame 7722 drift -75
+7220: 101 8671: SyncLoop:pulse: loop frame 8671 pulse frame 8688 drift -17
+7220: 101 9695: SyncLoop:pulse: loop frame 9695 pulse frame 9653 drift 41
+7220: 101 10719: SyncLoop:pulse: loop frame 10719 pulse frame 10618 drift 100
+7220: 101 11743: SyncLoop:pulse: loop frame 11743 pulse frame 11584 drift 158
+7220: 101 12511: SyncLoop:pulse: loop frame 12511 pulse frame 12549 drift -38
+7220: 101 13535: SyncLoop:pulse: loop frame 13535 pulse frame 13514 drift 20
+7220: 101 14559: SyncLoop:pulse: loop frame 14559 pulse frame 14480 drift 78
+7220: 101 15583: SyncLoop:pulse: loop frame 15583 pulse frame 15445 drift 137
+7220: 101 16351: SyncLoop:pulse: loop frame 16351 pulse frame 16410 drift -59
+7220: 101 17375: SyncLoop:pulse: loop frame 17375 pulse frame 17376 drift -1
+7220: 101 18399: SyncLoop:pulse: loop frame 18399 pulse frame 18341 drift 57
+7220: 101 19423: SyncLoop:pulse: loop frame 19423 pulse frame 19306 drift 116
+7220: 101 20447: SyncLoop:pulse: loop frame 20447 pulse frame 20272 drift 174
+7220: 101 21215: SyncLoop:pulse: loop frame 21215 pulse frame 21237 drift -22
+7220: 101 22239: SyncLoop:pulse: loop frame 22239 pulse frame 22202 drift 36
+7220: 101 23263: SyncLoop:pulse: loop frame 23263 pulse frame 23168 drift 94
+7220: 101 24287: SyncLoop:pulse: loop frame 24287 pulse frame 24133 drift 153
+7220: 101 25055: SyncLoop:pulse: loop frame 25055 pulse frame 25098 drift -43
+7220: 101 26079: SyncLoop:pulse: loop frame 26079 pulse frame 26064 drift 14
+7220: 101 27103: SyncLoop:pulse: loop frame 27103 pulse frame 27029 drift 73
+7220: 101 28127: SyncLoop:pulse: loop frame 28127 pulse frame 27994 drift 132
+7220: 101 29151: SyncLoop:pulse: loop frame 29151 pulse frame 28960 drift 190
+7220: 101 29919: SyncLoop:pulse: loop frame 29919 pulse frame 29925 drift -6
+7220: 101 30943: SyncLoop:pulse: loop frame 30943 pulse frame 30890 drift 52
+7220: 101 31967: SyncLoop:pulse: loop frame 31967 pulse frame 31856 drift 110
+7220: 101 32479: Function GlobalReset down
+7220: 101 32479: Track::GeneralReset
+7220: 101 32479: Sync: Master track reset, stop clocks and send MIDI Stop
+7220: 101 32479: MidiTransport: Sending MIDI Stop and stopping clocks
+7220: 101 32479: Layer: Capture fade tail, 128 frames at 33050
+7220: 101 -289: Sync: Disabling output sync master track 0
+7220: 101 -289: Sync: Disabling track sync master track 0
+7220: 201 -289: Track::GeneralReset
+7220: 301 -289: Track::GeneralReset
+7220: 401 -289: Track::GeneralReset
+7220: 501 -289: Track::GeneralReset
+7220: 601 -289: Track::GeneralReset
+7220: 701 -289: Track::GeneralReset
+7220: 801 -289: Track::GeneralReset
+7220: 101 -289: Sync: Stop Event
+7220: 101 -289: Mobius::notifyGlobalReset
+7220: 0 0: 2 millis between interrupts
+7220: 0 0: 10 millis between interrupts
+7220: 0 0: MidiState internal stopped receiving clocks

@@ -1,0 +1,129 @@
+
+Functions that schedule events for latency comp or quantization:
+
+  Bounce
+  Clear
+  Divide
+  Insert
+  InstantMultiply
+  LoopSwitch
+  MidiStart
+  MidiStop
+  MidiOut
+  Move
+  Multiply
+  Mute
+  Overdub
+  Pitch
+  Play
+  Rate
+  Realign
+  Record
+  Replace
+  Reverse
+  RunScript
+  SampleTrigger
+  Shuffle
+  Slip
+  Speed
+  StartPoint
+  Stutter
+  Substitute
+  Sync (think this is unused)
+  Trim
+  Undo/Redo
+  Window
+
+If you schedule any of these before a loop switch, by default
+they are canceled.  The obvious ones that should follow are:
+
+   MidiOut
+
+!! No, sliding events isn't the problem.  It is calling scripts:
+
+Say "tone4" is a script that does a MidiOut.  Then another script does:
+
+   tone4
+   for 6
+   loop2
+   next
+
+Instead of running synchronously, tone4 is scheduled with
+a new interpreter.  This interpreter is run after the interpreter
+for the calling script.  When it is finally run we go through
+scheduleSwitchStack logic since the loop switch has already
+been set up at this point.
+
+Since this did not have the switchStack option set it is ignored.
+
+Setting switchStack would work, but it is unclear whether
+you want this to be quantized or happen immediately.  
+
+Options:
+
+     MidiOut immediate
+     MidiOut quantized
+     MidiOut switch
+
+Quantized can be done in a script with wait or !quantize. 
+!! need to figure out how script invocation works in the switch quant period.
+Switch could be done if the script were deferred till after the quant.
+
+So it seems like controlling the timing of the calling script is the most
+important, MidiOut itself can operate like a global and always happen
+immediately.  The exception would be latency compensation.  
+
+When referencing a script from another script think about whether the
+default should be sync or async.  Call is synchronous, but just
+a function ref isn't.  The expectation is that they are both synchronousk,
+could use "Run" or better "Start" to to it async.
+
+---
+
+Another complication to the "scripts behave like functions" goal is when
+scripts are launched from MIDI by a sequencer with expectations over the
+order of evaluation.  For example:
+
+    note 42 -> run script foo
+    note 43 -> Reverse
+
+Processing of the script binding will cause a new interpreter to 
+be placed in the queue for processing during the next interrupt.
+
+Processing of the Reverse binding will schedule Reverse for the next 
+interrupt.  
+
+Scripts are always run first in an interrupt followed by pending functions.
+
+If the order were reversed however:
+
+    note 43 -> Reverse
+    note 42 -> run script foo
+
+the script would still run first which is not intuitive.
+
+To address this we need an "action stack" that includes everything
+that was queued for the next interrupt.  This includes both
+script and function requests.  Further it contains things for all
+tracks in the order received so you could script things in a specific
+track order whereas now they will always processed from track 1 to 8.
+
+I'm really liking the single action queue, it's a nice way to funnel
+changes from MIDI, UI, OSC, and other triggers into one queue for
+controlled access.  
+
+We can't always wait for the interrupt however, the test scripts at least
+need to run immediately and some of the global functions can, though
+it would be best if config changes were deferred, this could solve
+some of the reclamation issues, and be a good way to control parameter 
+changes.
+
+It's really another event scheduler, hmm this could be a good way
+to deal with OSC times??  We have too many events though: ThreadEvent,
+LoopEvent, ActionEvent...
+
+
+
+
+   
+

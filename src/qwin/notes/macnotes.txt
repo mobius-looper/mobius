@@ -1,0 +1,473 @@
+
+This is actually an issue that is caused by use of the standard window
+event handler, not compositing windows - you'd see the same behavior
+with a non-compositing window that used the standard handler.
+
+If you want to perform your own mouse tracking, you need to prevent
+the Control Manager from performing its default mouse tracking
+loop. You can do this in several ways:
+
+- you can implement kEventControlHitTest on your views to return a part code of zero
+- you can implement kEventControlTrack on your views to return noErr immediately (or perform your own tracking loop) rather than allowing the default kEventControlTrack implementation to run
+
+In either case, you'll prevent the standard mouse tracking loop from
+running, and your window will then get MouseMoved and MouseUp events
+that otherwise would be eaten by the loop.
+
+----------------------------------------------------------------------
+
+
+If you are using a compositing window then you probably either want to
+attach a handler for kEventControlClick onto the content view of the
+window, or create your own view that fills the content view and attach
+a handler to that.
+
+----------------------------------------------------------------------
+
+
+On Sep 25, 2004, at 12:30 AM, Mathew Burrack wrote:
+
+OK, I tried the mouse tracking region and got weird
+results, but I don't think it's because of the
+tracking region in and of itself...rather, it appears
+that I'm getting mouse down events on a mouse up! :/
+
+Here's a slim version of my event handler for mouse
+events:
+
+// 1
+s = CallNextEventHandler( nextHandler, event );
+// 2
+if( s != eventNotHandledErr )
+	return s;
+	
+if( kind == kEventMouseDown )
+{
+	// 3
+	puts( "mouse down, dragging" );
+	// 4
+	MouseTrackingResult trackingResult;
+	GetMouse( &mousePt );
+	trackingResult = kMouseTrackingMouseDown;
+	while( trackingResult != kMouseTrackingMouseUp )
+	{
+		TrackMouseLocation( GetWindowPort( GetHandle() ),
+&mousePt, &trackingResult );
+		printf( "result: %d\n", trackingResult );
+	}
+	puts( "mouse dragging stoppped" );
+}
+else if( kind == kEventMouseUp )
+{
+	// 5
+	puts( "mouse up" );
+}
+else if( kind == kEventMouseDragged )
+{
+	// 6
+	puts( "mouse dragged" );
+}
+else if( kind == kEventMouseMoved )
+{
+	// 7
+	puts( "mouse moved" );
+}
+
+Now, if I comment out the tracking code (4), then I NEVER get any printouts for any events! In other
+words, the next handler call (1) always returns something other than eventNotHandledErr.
+
+kEventMouseDown is a VERY low level event. If I had to guess, I would say that you have the standard handler associated with your window. What's probably happening is the OS is catching the mouse down event and translating it into another event, say kEventControlClick. That event then goes to a control in your window and that control "handles" the click. The OS then returns noErr from the call to CallNextEventHandler and you skip your code because the OS says it handled the event.
+
+If you want to be in charge of the clicks in your window, then don't give the OS the opportunity to handle the click. On MouseDown you do what you need to do and return noErr. By overriding such a low level event, however, you're taking on a lot of responsibility.
+
+If I comment out (2), then I get REALLY weird results: I get mouse move events (7) just fine, I never get a mouse up
+event (5), but I DO get a mouse down event (3), but when I release the mouse button, not when it goes
+down! Even better, while the button is down, I don't get mouse move OR mouse dragged events (6 and 7). That
+makes NO sense to me at all! And yes, I'm registering for all the events on creation of the window.
+
+When you reach this case. You enter a tight loop calling TrackMouseLocation. This loop is eating events (including your mouse moved and mouse up events) until the mouse is released.
+
+You're probably also not seeing the "puts" items at the time you expect because the output stream is buffered. Try creating a new routine to use in the place of puts:
+
+int putsNow(const char * str)
+{
+	int retVal = puts(str);
+	fflush(stdout);
+	return retVal;
+}
+
+The extra flush should insure that what you put on the stream is actually flushed to the screen immediately. There's probably a better way to ensure the ouput is flushed immediately, but this should work for debugging purposes.
+
+What I suggested is using a mouse tracking region using CreateMouseTrackingRegion. You would do this INSTEAD of using TrackMouseLocation.
+
+Now here is where things get weird. If I enable the tracking code (4), then the code oscillates between
+the tracking code and my normal event loop. I'm pretty sure this is because it's getting enabled on mouse up, even though I'm responding to the mouse down message (see above). When I manage to catch it right and get
+the mouse tracking when I'm really dragging, then FINALLY I get tracking drag messages.
+
+You're probably seeing the events both when they come to your code, and when they're returned by TrackMouseLocation. It's almost like you're asking the Operating system to handle tracking the mouse (by calling TrackMouseLocation) and then trying to handle the tracking of the mouse yourself by having event handlers. You need to pick one method or the other. Either handle all the tracking events yourself, or use TrackMouseLocation to handle them for you.
+
+From what I understand of the docs though, without the
+tracking code, I should just get mouse down events on
+mouse down, mouse up events on mouse up, mouse drag
+events in between and mouse moved events otherwise.
+Yet the only one that seems to work is the mouse move.
+
+I'm also finding it weird that calling the next event
+handler ALWAYS handles my mouse messages, even inside
+the blank area of my window!
+
+By passing the event to the Operating System using CallNextEventHandler, you're asking the OS to do whatever processing it normally would do and report the result. The operating system is obligingly handling the event and reporting back to you that it handled it. Why is that so surprising?
+
+Even in the "blank" areas of your window, the operating system has a control, the content view, which can handle clicks. The window will catch a low level event like kEventMouseDown and translate it to kEventControlClick. If no other view is set to handle that click event then the content view will "handle it" by doing nothing. You get back noErr because the event was handled.
+
+You're on the right track (pun intended) but you're code is confused as to who should be handling the events. You either need to decide if you want to handle the events yourself (and take on the responsibility for those low level events) or let the Operating System handle the events.
+
+--
+Macintosh Software Engineering Consulting Services
+Visit my resume at <http://homepage.mac.com/easco/RSTResume.html>
+
+_______________________________________________
+
+----------------------------------------------------------------------
+
+after 2 days of reading every Carbon source that I
+could find online I can finally say I understand how
+they work. (thanks Larry for getting me off my
+laziness)
+
+Now - as I was previously writing - I am registering
+handlers for all possible mouse events. Basically I am
+writing an application plugin that allows the mouse to
+be turned into a musical instrument. This is done by
+no longer making the mouse work as a mouse, but as a
+device that just sends data (location, delta, buttons,
+wheel axis and wheel delta, etc...). The data could
+then be used to control anything the user wants.
+So I am thinking that I should intercept mouse events
+at the kEventMouseXXX level, without turning them into
+kEventControlXXX events and letting the system
+dispatch them to the appropriate view, as it is
+usually done. Am I correct in taking this path for
+this particular use of mouse events?
+
+So my code looks like:
+
+static OSStatus InstallMouseEventHandler(t_mouse *x)
+{
+	OSStatus err;
+	const EventTypeSpec mouseEvents[] = {
+											{kEventClassMouse, kEventMouseDown},
+{kEventClassMouse, kEventMouseUp},
+{kEventClassMouse, kEventMouseMoved},
+{kEventClassMouse, kEventMouseDragged},
+{kEventClassMouse, kEventMouseWheelMoved},
+										};
+	
+err = InstallEventHandler(GetApplicationEventTarget(),
+				NewEventHandlerUPP(HandleMouseEvents),
+				GetEventTypeCount(mouseEvents),
+				mouseEvents,
+				(void *)x,
+				&gMouseHandlerRef);
+if (err != noErr) {
+	error("failed to install mouse events handler");
+}
+	return err;
+}
+
+static OSStatus RemoveMouseEventHandler(void)
+{
+	OSStatus err;
+	
+	err = RemoveEventHandler(gMouseHandlerRef);
+	if (err != noErr) {
+		error("failed to remove mouse events handler");
+	}
+	gMouseHandlerRef = NULL;
+	
+	return err;
+}
+
+static OSStatus HandleMouseEvents(EventHandlerCallRef
+outHandler, EventRef inEvent, void *refCon)
+{
+	OSStatus err = eventNotHandledErr;
+	
+	UInt32 eventClass = GetEventClass(inEvent);
+	UInt32 eventKind = GetEventKind(inEvent);
+	
+	if (eventClass == kEventClassMouse) {
+	
+		switch (eventKind) {
+		
+			case kEventMouseDown: .... break;
+                        case kEventMouseUp: ....
+break;
+                        case kEventMouseMoved: ...
+break;
+                        case kEventMouseDragged: ...
+break;
+                        case kEventMouseWheelMoved:
+... break;
+                        default: break;
+                }
+        }
+        return err;
+}
+
+So I am installing the handler when the user installs
+the plugin and removing the handler when the user
+deletes the plugin. That makes sense, doesn't it?
+
+Also in between all the switch cases I am calling the
+function GetEventParameter(...) to get the mouse data.
+(buttons, key modifiers, location, etc...) I am
+wondering if these two following constructs are
+equivalent?
+
+-------
+err = GetEventParameter(inEvent,
+kEventParamWindowMouseLocation, typeHIPoint, NULL,
+sizeof(HIPoint), NULL, &windowMouseLocation);
+-------
+
+VS:
+
+-------
+err = GetEventParameter(inEvent,
+kEventParamMouseLocation, typeQDPoint, NULL,
+sizeof(Point), NULL, &mouseLocation);
+
+GlobalToLocal(&mouseLocation);
+-------
+
+Finally I was wondering about the difference between
+kEventParamMouseChord and kEventParamMouseButton. The
+latter seems redundant to me, because all it does is
+to report the last mouse button pressed.
+kEventParamMouseChord reports in real time - as I
+press or release the button(s) - which buttons are
+they. So there's also release information in the
+kEventParamMouseChord parameters, whereas it is absent
+in kEventParamMouseButton. Am I overlooking something
+here? In what situation would kEventParamMouseButton
+be necessary?
+
+Thanks for your time.
+
+- Luigi
+
+----------------------------------------------------------------------
+
+> 
+>> I've been trying to figure this one out for a while now, it seems
+>> as though
+>> a HIView window has problems with at least 2 mouse events when used
+>> with the
+>> standard handler.  The 2 mouse events are kEventMouseUp and
+>> kEventMouseDragged.
+> 
+> The basic design of the Control Manager and the Carbon event system
+> is that views do not, in general, receive kEventMouseUp or
+> kEventMouseDragged, and nor do windows if you actually click in a
+> view in a compositing window. Here's what happens when you click in a
+> compositing window:
+> 
+> - the standard window event handler (assuming that you are using it)
+> gets the mouse-down event and calls HIViewClick with the event
+> - HIViewClick calls the view with kEventControlHit to see if the
+> click falls in a view part
+> - if the view returns a non-zero part, then the Control Manager
+> enters a tracking loop (using TrackMouseLocation) and waits for the
+> mouse to be released
+> - while the tracking loop is running, all mouse events are consumed
+> by the Control Manager. This includes kEventControlDragged; that
+> event is never dispatched to any event target.
+> - eventually the user releases the mouse. The tracking loop consumes
+> the mouse-up event as well. That event is also never dispatched to
+> any event target.
+> 
+> If you tell us why you want the MouseUp and MouseDragged events, we
+> might be able to suggest a higher-level alternative, or a better way
+> of doing what you want to do.
+---------------------------------------------------------------------
+
+
+I may create userpane controls (one for each tab pane), and embed
+controls/views into each pane. Then, to switch between panes just
+hide/show appropriate user panes.
+
+
+
+> I'm creating the control via
+> 
+> ControlTabEntry theTab[2] = { {NULL, CFSTR("Tab1"), TRUE } , {NULL,
+> CFSTR("Tab2"), FALSE } };
+> 
+> CreateTabsControl( GetWindowRef(), &tabBounds, kControlSizeNormal,
+> kControlTabDirectionNorth, 2, &theTab[0],  &m_TabControl );
+> 
+> So not sure if missed something here, what I thought I should be doing is
+> then adding in my controls embedded within one of these panes e.g.
+
+It's not documented as working this way. IB creates the user panes embedded
+in the tab control. If you create a tab control programmatically you just
+get a tab control.
+
+---
+
+
+Yes, the behavior of IBCarbonRuntime is to create a user pane for each pane in a tab control. The Control Manager doesn't do this automatically, so if you want to replicate this behavior in code, then you will have to create the user panes yourself, embed them in the tab control, then embed your controls in each user pane.
+
+
+----------------------------------------------------------------------
+
+> Oh, that's unfortunate. I thought there must have been an easy way for 
+> the common task.
+>
+> Isn't there any event that is send every time the text changes? I 
+> could then simply shorten it to the max length and it would cover all 
+> cases. I'm not getting kEventControlValueFieldChanged and 
+> kEventControlTitleChanged.
+
+In the current Unicode Edit Text control, there is not an event that is 
+sent every time the text changes. This has been a much lamented 
+mis-feature of the control and Apple has given every indication that 
+there is a solution forthcoming in a future version of the operating 
+system.
+
+Unfortunately, your best bet for the existing operating systems is to 
+take advantage of two separate features of the control that can 
+tag-team to help you out.
+
+First, you might want to provide your control with a key filter using 
+the kControlKeyFilterTag with SetControlData. The Key Filter tag will 
+allow you to access the contents of the control as each key is pressed. 
+You have the ability to accept, or reject, keystrokes using that 
+filter. Next, you will probably want a validation proc (using 
+kControlEditTextValidationProcTag). This procedure can be used to 
+validate the contents of the field when data is pasted into the 
+control.
+
+--------------------
+
+
+> 
+> Unfortunately, your best bet for the existing operating systems is to
+> take advantage of two separate features of the control that can
+> tag-team to help you out.
+> 
+> First, you might want to provide your control with a key filter using
+> the kControlKeyFilterTag with SetControlData. The Key Filter tag will
+> allow you to access the contents of the control as each key is pressed.
+> You have the ability to accept, or reject, keystrokes using that
+> filter.
+
+Unfortunately, key filters are not Unicode saavy. That's why I suggested
+using a kEventTextInputUnicodeForKeyEvent handler, which is the recommended
+approach.
+
+> Next, you will probably want a validation proc (using
+> kControlEditTextValidationProcTag). This procedure can be used to
+> validate the contents of the field when data is pasted into the
+> control.
+
+Note that a validation proc isn't called until after the text has been
+pasted. At best this means your application would be allowing a paste which
+has no effect, which as user experiences go is less than ideal. Better to
+disable the Paste command if you don't want to allow pasting of what's on
+the Clipboard.
+
+----------------------------------------------------------------------
+
+g->drawLine(0, 0, 1, 1);
+
+  black dot at 0,0 plus grey dot at 1,0
+
+g->drawLine(0, 0, 1, 2);
+
+  black dot at 0,0 and 0,1 grey dot at 1,1
+
+g->drawLine(0, 0, 0, 2);
+
+  grey dot at 0,0, and 0,1
+
+g->drawRect(0, 0, 2, 2);
+
+  black dots at 0,0  1,0  0,1  1,1
+  grey dots at 2,0  2,1  (right edge)
+  grey dots at 0,2  1,2  (bottom edge)
+
+g->drawRect(0, 0, 8, 8);
+  
+  grey rect at the expected coords with black corners
+  and grey sides, plus extra gray lines to the right and below
+
+g->drawRect(1, 1, 8, 8);
+  expected rect with black corners and grey sides plus
+  grey partial sides (no corners) on all 4 sides
+  
+
+It is like you get an extra "flare" on all sides.
+
+drawRect(0, 0, 0, 0)
+  one gray dot at 0,0
+
+drawRect(4, 4, 0, 0)
+  four gray dots at 4,4 5,4  4,5  5,5
+
+drawRect(8, 8, -1, -1)
+  black dot at 8,8 with a gray "cross" around it
+  seems to be impossible to draw a single dot
+
+-----------------
+
+Another subtle but very important difference between the Win32/GDI and QuickDraw coordinate systems is the relationship between the abstract coordinate grid and the pixels and lines drawn in relation to them. On the Win32 side, pixels (which have a measurable diameter) are drawn so that their centers correspond to the intersection of the appropriate horizontal and vertical grid lines, and the thickness of drawn lines straddle their corresponding coordinate lines.
+
+In QuickDraw, pixels and lines are drawn in the spaces between coordinate lines. To be specific, they are drawn immediately to the right of and below the points that define them. The original QuickDraw engineers felt that this method leads to less confusion when questioning whether, for example, a 10-by-10 square drawn with its upper left corner at (0,0) includes the pixel corresponding to the point (10, 10). In QuickDraw, the answer is "yes," while in Win32/GDI, the answer is "no," and Win32 programmers must keep this "up to but not including" rule in mind.
+
+----------------------------------------------------------------------
+
+> Unicode specifies character codepoints from 0 to 0x10FFFF. The
+> largest characters are represented as 6-byte value in UTF8 and as two
+> 16-bit values in UTF16.
+> 
+> This works, but only for low character values:
+> ----------------
+> cfString = CFStringCreateWithBytes(null, utf8Data,
+> utfDataSizeInBytes, kCFStringEncodingUTF8, false);
+> CFIndex utf16DataSizeInWords = CFStringGetLength(cfString);
+> UniChar *utf16Data = CFStringGetCharactersPtr(cfString);
+
+This has been discussed many times. It's documented in CFString.h that
+CFStringGetXXXPtr APIs can return NULL even when the string is valid, and
+it's because these APIs can only succeed if the backing store is in the
+format you're requesting, and no specific format is guaranteed unless you
+create the string using one of the External creation APIs.
+
+CFStringGetCharactersPtr is returning NULL because the backing store is not
+an array of UniChars, nothing more and nothing less. This is certainly not
+something you would use for conversion. Instead, you should use
+CFStringGetCharacters to put the result into a buffer you provide.
+
+The general consensus when these APIs are discussed is that virtually no one
+uses them because you can't rely on them not to return NULL.
+
+---
+
+
+If you're trying to convert to UTF-16, use CFStringGetCharacters, but yes,
+use your own buffer. As I understand it, CFStrings can use either UTF-8 or
+UTF-16 buffers as a backing store, but it's not documented which will be
+used for any given string, so you can make no assumptions. Hence most people
+don't use the CFStringGetxxxPtr APIs because you can't reliably predict when
+they'll succeed.
+
+--
+
+If worse comes to worse, Unicode.org publishes simple and portable conversion routines for the various encodings:
+
+http://www.unicode.org/Public/PROGRAMS/CVTUTF/ConvertUTF.c
+http://www.unicode.org/Public/PROGRAMS/CVTUTF/ConvertUTF.h
+---
+

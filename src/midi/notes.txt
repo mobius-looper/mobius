@@ -1,0 +1,30 @@
+Mon May 10 15:43:23 2004
+
+There are essentially three layers to this.
+
+  1) MIDI Data Model
+  2) Multi-Media Device Interfaces
+  3) Sequencer
+
+MIDI Data Model
+
+Static MIDI Mapping
+
+<MIDIMap>
+  <!-- channel='*' means all channels not explicitly specified -->
+  <ChannelMap channel='0'>
+    <Event type='C' value='7' newType='N' value='36' newChannel='2'/>
+  </ChannelMap>
+</MIDIMap
+
+Event:
+  channel, type, value, velocity
+  outChannel, outType, outValue
+  - velocity doesn't change or is ignored
+  - when mapping CC to Note, positive CC is On,
+    0 is Off
+  - when mapping Note to CC, On is 127 Off is 0,
+    velocity is 127
+
+Use case:
+  CC 10 

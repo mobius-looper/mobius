@@ -1,0 +1,50 @@
+#
+# Makefile for the MIDI interface abstraction
+#
+
+default: libmidi miditest
+
+INCLUDES = -I../util
+
+include ../make/common.osx
+
+OTHERLIBS = ../util/libutil.a
+
+######################################################################
+#
+# libmidi
+#
+######################################################################
+
+LIBMIDI_O = \
+	MidiUtil.o MidiEvent.o MidiSequence.o MidiMap.o MidiPort.o \
+	MidiEnv.o MidiTimer.o MidiInput.o MidiOutput.o MidiInterface.o \
+        MacMidiEnv.o MacMidiTimer.o MacMidiInput.o MacMidiOutput.o
+
+libmidi.a: $(LIBMIDI_O)
+	 libtool -static -o libmidi.a $(LIBMIDI_O)
+
+libmidi: libmidi.a
+
+######################################################################
+#
+# miditest
+#
+######################################################################
+
+FRAMEWORKS = -framework Carbon -framework CoreMIDI -framework CoreAudio
+
+miditest: libmidi.a miditest.o
+	g++ $(LDFLAGS) -g $(FRAMEWORKS) -o miditest miditest.o libmidi.a $(OTHERLIBS)
+
+
+######################################################################
+#
+# General
+#
+######################################################################
+
+.PHONY: clean
+clean: commonclean
+	@-rm -f *.o
+	@-rm -f *.a

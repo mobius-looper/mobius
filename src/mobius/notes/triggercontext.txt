@@ -1,0 +1,388 @@
+
+
+Action arguments
+
+  Besides the one primary value (which may be null), host, key and midi 
+  bindings may include an extra argument string that may be used to 
+  recalculate the primary value, or supply additional arguments.
+
+  Primarily this is intended for binding non-continuous triggers
+  to controls and parameters, examples:
+ 
+       5   - set to 5
+      +5   - increment by 5
+      -5   - decrement by 5
+      min  - set to minimum value (same as 0?)
+      max  - set to maximum value (less than 127 for enums)
+      up   - value up by 1
+      down - value down by 1
+      up 5 - value up by 5
+      center - set to center value, primarly for pan
+
+I like using up/down prefixes rather than + and - so we don't
+have to muddy the rules for lexing numbers.  
+
+Migrating FunctionContext
+
+Current uses of FunctionContext.arg1 
+
+  Debug
+    the number of the breakpoint to toggle
+  Divide
+    the divisor
+  InstantMultiply
+    the multiplier
+  LoopSwitch
+    the next loop number (from 1)
+  MidiOut
+    one of 4 args to specify output messsage
+  Pitch
+    next pitch or pitch increment
+  Rate
+    next rate or rate increment
+  Record
+    set to "noFade" in a script to suppress the next fade
+  SampleTrigger
+    index of sample to play
+  Slip
+    number of units to slip
+  TrackGroup
+    group index to set
+  TrackSelect
+    next track to select
+  Window
+    number of window units to move
+
+----------------------------------------------------------------------
+
+MIDI Bindings
+
+  Note->Function
+    - down/up is all that is required
+    - velocity can be used in special cases like loop triggering
+    - binding args could be used to pass info to the function like
+      loop/track numbers or rate shift amounts, usually numeric
+
+  Note->Control
+    - doesn't make much sense, but could use velocity but too twitchy
+    - best used with binding args to calculate a numeric value
+    - down/up not used, but it might be useful as a temporary override,
+      e.g. output level 127 while down then revert to previous
+ 
+  Note->Parameter
+    - not useful without binding args, velocity too twitchy
+    - could iterate over enum parameters
+    - down/up not used, though I suppose it could be used for
+      temporary overrides
+
+  Note->Config
+    - sets the config referenced in the binding
+
+  Controller->Function
+    - zero/non-zero is used for up/down
+    - could use CC value as "velocity" for loop triggering
+    - binding args can pass info to functions
+
+  Controller->Control
+    - straight pass through of the CC value
+
+  Controller->Parameter
+    - int and enum parameters can be set with scaling of the CC value
+
+  Controller->Config
+    - sets the config referenced in the binding
+    - will set it over and over if this is a CC pedal
+
+  Program->Function
+    - down only not sustainable
+    - no velocity
+
+  Program->Control
+    - not useful without binding args to specify value
+      I suppose we could use the program value, but that could be confusing
+
+  Program->Parameter
+    - not useful without a binding arg
+    - could iterate over enum parameters
+
+  Program->Config
+    - selects the config referenced in the binding
+
+KEY BINDINGS
+
+   Key->Function
+     - down/up from keyboard
+     - no velocity
+     - binding args could be used
+
+   Key->Control
+     - not useful without binding arg
+
+   Key->Parameter
+     - not useful without binding arg
+     - could iterate over enum parameters
+            
+   Key->Config
+     - selects the config referenced in the binding
+
+HOST BINDINGS
+
+   Host->Function
+     - zero/non-zero used to trigger functions
+     - non/zero could be used for velocity
+
+   Host->Control
+     - pass through of value with scaling
+
+   Host->Parameter
+     - int and enums set with scaling
+
+   Host->Config
+     - non-zero value selects config
+
+OSC BINDINGS
+
+   Same as Host bindings
+
+
+----------------------------------------------------------------------
+
+Functions
+  - need sustainable and down/up set in the Action
+  - can use velocity as a numeric argument
+  - other random arguments can be passed to the function
+  - velocity is such a special case that I dislike using an argument
+    for it that will never be set
+  - can have the functions that need velocity understand the trigger types
+    but I'd also like to get away from them needing to know  
+  - maybe all triggers can just have a single numeric or float value that
+    is used or not?  But then we'd need a way to say whether this was relevant
+    for the trigger
+
+Controls
+  - need a numeric or float value or an argument that can be used
+    to calculate a value
+
+Parameters
+  - need a scaled numeric value for ints and enums, can accept strings
+
+Configs
+  - need nothing, any activity selects the object
+
+
+Triggers with Values
+  
+  Host - float
+  Key - none except for binding arguments
+  UI - none currently, would be nice to allow binding arguments
+  MIDI Program - none except for binding arguments
+  MIDI CC - int 0-127
+  MIDI Note - velocity 0-127
+  OSC - float plus possible extra args but it doesn't have to have
+        a value we define the protocol, could have the first arg
+        be "up" or "down"  really more like scripts
+
+  Script set - arbitrary value
+  Script function - up/down as special argument, the rest pass as args
+
+  Script bindable - the name or number of the bindable
+
+Summary
+
+  Configs 
+    - no arguments 
+  Controls
+    - require scaled integer argument
+      binding args can be used to calculate the required argument
+  Parameters
+    - require a scaled ineger argument or string
+      binding args can be used to calculate the required argument
+  Functions
+    - can use velocity but it's rare
+    - binding args can be used to adjust behavior
+
+
+All but configs can use one scaled numeric argument.  Then other arguments.
+But scaled arg is not always passed so need to support nullness.
+
+ 
+         
+
+
+
+
+
+----------------------------------------------------------------------
+
+
+GenericInvocation
+  Source: Button, Keyboard, Midi, Osc, Host, Script
+  Scope: Mobius, Track, Loop, group, Preset
+
+
+
+
+
+BindingContext 
+    MobiusInterface* mobius;
+    class Track* track;
+    class Preset* preset;
+    int group;
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+
+Binding
+  - definition model, associates trigger with target
+
+RuntimeBinding
+  - Binding plus resolved references to the binding targets
+    derived from Binding but still relatively static, changes only when 
+    Binding definitions change, or as we bootstrap a set of OSC address
+    bindings
+    
+BindingContext
+  - Created at runtime for every invocation
+    - references a RuntimeBinding or copies just the relevant parts 
+    - used consistently for Functions, Parameters, Controllers, Bindables
+
+
+
+----------------------------------------------------------------------
+
+Binding
+  	// trigger
+	Trigger* mTrigger;
+        TriggerType* mTriggerType;
+        char* mTriggerValue;
+	int mValue;
+	int mChannel;
+
+	// target
+        char* mTargetPath;
+	Target* mTarget;
+	char* mName;
+
+	// scope, tracks and groups are both numberd from 1
+        // both zero means "currently selected track"
+        char* mScope;
+	int mTrack;
+	int mGroup;
+
+        // arguments
+	char* mArgs;
+	ControlChange* mControlChange;
+
+class RuntimeBinding
+    Trigger* mTrigger;
+    TriggerType* mTriggerType;
+    int mValue;
+    int mChannel;
+    int mRangePosition;
+    int mTrack;
+    int mGroup;
+    char* mArgs;
+
+    Target* mTarget;
+    Bindable* mBindable;
+    class Function* mFunction;
+    class Controller* mController;
+    class Parameter* mParameter;
+    class UIControl* mUIControl;
+
+
+
+
+
+----------------------------------------------------------------------
+
+
+class BindingContext {
+  public:
+
+	MobiusInterface* mobius;
+	class Track* track;
+	class Preset* preset;
+    int group;
+
+	BindingContext();
+    BindingContext(MobiusInterface* m, class RuntimeBinding* b);
+    BindingContext(MobiusInterface* m, class MidiBinding* b);
+	BindingContext(MobiusInterface* m, class Track* t, class Preset* p);
+
+    void init();
+    void init(MobiusInterface* m, class RuntimeBinding* b);
+
+};
+
+
+class FunctionContext {
+
+	class Function* function;
+
+	/**
+	 * Information about the triggering event.
+	 */
+	FunctionTriggerEvent trigger;
+
+	/**
+	 * True when sustained functions are possible.
+	 * Use by Track to determine whether it should track long presses.
+	 * This will be false for Program Change events that do not have an
+	 * "off" event.  It will be false for functions called from scripts,
+	 * unless the explicit "down" and "up" arguments are used.
+	 */
+	bool sustainable;
+
+	/**
+	 * True if the function trigger was is logically down.
+	 */
+	bool down;
+
+	/**
+	 * True if this is the up transition after a long press.
+	 * Also true for invocations that are done at the moment
+	 * the long-press time elapses.  
+	 */
+	bool longPress;
+
+	/**
+	 * Optional track target.
+	 * If not specified, functions are performed in the current track
+	 * and any track that has input focus.
+	 */
+	class Track* track;
+
+	/**
+	 * Optional numeric argument.  Used only to convey the numeric
+	 * argument accumulated in an InvokeEvent.
+	 * !! If Events will eventually include an inline FunctionContext,
+	 * this should take the place of Event::number.    
+	 * !! Might be able to get rid of this if we make the arg1 and arg2
+	 * local arrays rather than pointers, then we can save the integer value
+	 * as a string (though not as efficient).
+	 */
+	int numArg;
+
+        // internal
+
+	bool rescheduling;
+	bool escapeQuantization;
+	bool noLatency;
+
+	const char* arg1;
+	const char* arg2;
+	const char* arg3;
+	const char* arg4;
+        class ExValue* args;
+	class Event* event;
+	class ThreadEvent* threadEvent;
+    long millisecond;
+    double streamTime;
+
+};

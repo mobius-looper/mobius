@@ -1,0 +1,117 @@
+Out Sync Tests
+
+Test 6-2 - Sync=Out, UnroundedSyncAdjust=Tempo, Undo, Redo
+WARN: When run with the full tests you may get drift between
+WARNG: 350 and 500 at the end.
+INFO: Sync drift -16
+INFO: After insert
+ERROR: Sync drift -476 exceeds 300
+INFO: After Undo
+ERROR: Sync drift -356 exceeds 300
+INFO: After Redo
+ERROR: Sync drift -560 exceeds 300
+INFO: About to bounce...
+ERROR: Sync drift -500 exceeds 300
+ERROR: Sync drift -395 exceeds 300
+ERROR: Sync drift -493 exceeds 300
+ERROR: Sync drift -387 exceeds 300
+ERROR: Sync drift -486 exceeds 300
+ERROR: Sync drift -380 exceeds 300
+ERROR: Sync drift -478 exceeds 300
+ERROR: Sync drift -373 exceeds 300
+ERROR: Sync drift -471 exceeds 300
+ERROR: Sync drift -366 exceeds 300
+ERROR: Sync drift -464 exceeds 300
+ERROR: Sync drift -359 exceeds 300
+ERROR: Sync drift -457 exceeds 300
+ERROR: Sync drift -352 exceeds 300
+ERROR: Sync drift -1060 exceeds 300
+ERROR: Sync drift -955 exceeds 300
+ERROR: Sync drift -797 exceeds 300
+ERROR: Sync drift -842 exceeds 300
+ERROR: Sync drift -941 exceeds 300
+ERROR: Sync drift -835 exceeds 300
+INFO: Final drift check
+ERROR: Sync drift -967 exceeds 300
+
+
+----------------------------------------------------------------------
+
+Strange Multiply Jump
+
+ERROR: 0 0: Encountered dormant fade!
+ERROR: 0 0: Encountered dormant fade!
+ERROR: 0 0: Encountered dormant fade!
+ERROR: 0 0: Encountered dormant fade!
+ERROR: 0 0: Encountered dormant fade!
+ERROR: 0 0: Encountered dormant fade!
+ERROR: 0 0: End multiply at frame 136704
+ERROR: 0 0: Encountered dormant fade!
+ERROR: 0 0: End multiply at frame 138752
+ERROR: 0 0: Encountered dormant fade!
+ERROR: 0 0: End multiply at frame 99840
+ERROR: 0 0: Encountered dormant fade!
+ERROR: 101 0: Sync: Compensating for reverse pulseFrame wrap! 0 143
+ERROR: 0 0: End multiply at frame 132096
+ERROR: 0 0: Encountered dormant fade!
+
+
+
+!! this is serious, some odd extra tail after a cut off
+
+Test 17-2 - Switch Stack with Pitch
+This will often fail with a minor difference in the full suite.
+Expect difference at frame 357394
+jump17-2loop.wav - ok
+Files differ at frame 352455: 1 0: jump17-2rec.wav, test/expected/jump17-2rec.wav
+
+
+
+These are relatively harmless
+
+
+Test 14 - Sync=Out, SpeedSyncAdjust=none, Rate
+INFO: HalfSpeed
+INFO: Sync drift 69
+INFO: Sync drift 61
+INFO: FullSpeed
+INFO: Sync drift -47
+INFO: Sync drift 73
+INFO: RateShift -5
+ERROR: pulseFrames incorrect at start: 688284
+INFO: Sync drift 6
+INFO: Sync drift -65
+INFO: RateShift 3
+INFO: Sync drift 100
+INFO: Sync drift -111
+INFO: Sync drift -20
+INFO: Sync drift -53
+
+Test 24 - Sync=Out, Pause
+*** NOTE: This one will get an error after unpausing after loading a loop file
+*** Sync: Beginning master output sync at frame -289!
+*** Need to defer the generation of clocks until we reach frame zero
+*** Also getting some larger than usual drifts after unpause, still
+*** have some work to do getting clocks aligned if they are disabled
+*** during the pause.
+INFO: Sync drift -16
+ERROR: Stopped sending clocks during mute!
+INFO: Waiting one second
+INFO: Sync drift 36
+INFO: Sync drift 156
+INFO: basePulseFrames 0
+INFO: pulseFrames 0
+INFO: pulseLoopFrame 0
+ERROR: 101 -289: Sync: Beginning master output sync at frame -289!
+INFO: unpause
+INFO: basePulseFrames 3739229
+
+
+
+----------------------------------------------------------------------
+
+AudioMulch
+
+  - need to ask Ross about the way AM resizes the window after
+    opening it instead of before
+

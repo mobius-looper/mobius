@@ -1,0 +1,88 @@
+----------------------------------------------------------------------
+
+TR - real time from the perspective of the performer
+To - output time within the looper, ahead of TR by output latency
+Tr - record time within the looper, behind TR by input latency
+IL - input latency, 256
+OL - output latench, 256
+
+Player records a loop example frames:
+
+   Tr 10000
+   TR 10256
+   To 10512
+
+Enter 1/2 speed mode.  Effective latencies drop to 128, so the distance
+between Tr and To is also cut in half.
+
+   Tr 10000
+   TR 10256
+   To 10256
+
+But note that logically Tr needs to move too.  Since TR cannot change,
+the ideal state would be:
+
+   Tr 10128
+   TR 10256
+   To 10384
+
+Tr needs to jump ahead by 128!  This can't be done during recording as
+it will cause a break.   Wait...or is it that TR does appear to change?
+Yes, TR advances 1/2 as fast so it's really this:
+
+   Tr 10000
+   TR 10128
+   To 10256
+
+That's what we're doing anyway.  
+
+Moving To causes a fade bump which is quite audible in some waves.  Consider making the fade range, at least for this longer.  
+
+Can also apply a small amount of "correction" rate shift to the output stream.
+Leave this out of latency calculations, it should be small enough not
+to matter.  
+
+This needs to be canceled whenever there is a play discontinuity requiring a 
+cross fade.  
+
+Simpler to just give the stream an adjustment goal and have it add/drop frames on each buffer.  More accurate too since with resampling its hard to make 
+it stop exactly on the frame, there can be some overshoot that would need to be corrected in the other direction.
+
+----------------------------------------------------------------------
+Output Stream Processing
+----------------------------------------------------------------------
+
+Track with no events
+
+  Stream::initProcessedFrames
+	mAudioBuffer = NULL;
+	mAudioPtr = NULL;
+
+  OutputStream::setOutputBuffer  - this is the unadjusted interrupt buffer
+    mAudioBuffer = b;
+	mAudioBufferFrames = l;
+	mAudioPtr = b;
+	mMaxSample = 0.0f;
+
+  Track
+	long remaining = mInput->record(mLoop, NULL);
+	mOutput->play(mLoop, remaining, true);
+
+    mInput is supposed to return the number of interrupt frames
+    consumed so trust that...
+
+OutputStream::play
+
+  remaining = mAudioBufferFrames - deltaFrames(mAudioBuffer, mAudioPtr);
+  - some adjustments if the requested number of frames doesn't match remaining
+
+  - transfer Resampler remainder
+    - 
+
+   
+
+
+
+
+
+   

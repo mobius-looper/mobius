@@ -1,0 +1,698 @@
+Notation Update:
+
+Need a way to indicate the application of fades during flattening
+and/or segment merging.
+
+  1 rrrrrrrr
+      -++-
+  2 RR....RR
+
+The '+' or '|' are used to represent flattening or segments as
+usual, and '-' is used to represent the application of a fade to 
+the edges of the referenced region.  The '.' means play mode with
+no other operations happening.  Alternately could use:
+
+  1 rrrrrrrr
+      /++\
+  2 RR....RR
+
+A simplification can then be made when the segments exist
+only over an area that is being played:
+
+  1 rrrrrrrr
+  2 RR-++-RR
+
+  1 rrrrrrrr
+  2 RR/++\RR
+
+----------------------------------------------------------------------
+Feedback Fades
+----------------------------------------------------------------------
+
+We need some abbreviations:
+
+  DHF  - Deferred Head Fade
+  DTF  - Deferred Tail Fade
+  CDHF - Contained Deferred Head Fade
+  CDTF - Contained Deferred Tail Fade
+
+Hmm, I'm liking Indirect rather than Contained?  
+
+When flattening is enabled, lowering feedabck will produce a situation
+similar to a replace or substitute occlusion fade.  In fact, when
+flattening, replace and substitute are implemented imply by bringing
+feedback down to zero.
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+4   }++++RRRR>
+5   >RRRR++++}
+
+Note that layer 5 has a CDTF because there was a seamless recording
+from the previous layer, but there was also one from the overdub in
+layer 2.
+
+One subtlety with this picture is that layer 5 does not have a CDHF
+from from layer 3 since the beginning of layer 3 was replaced.  This
+can be detected by remembering the starting feedback.  If feedback
+was zero, then it must be a replace.  Even if feedback were raised
+immediately from zero, this would still produce a gradual fade so
+there is no CDHF.  Similarly layer 4 does not have a CDTF because
+ending feedback was zero, which would result in a fade.
+
+A problem arises in this situation:
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+4   }++++++++}
+5    RRRR+++-
+
+Since we have occluded the head of layer 3, we have to force a tail
+fade to the content from layer 2.  Using segments, this would be
+handled by the segment since there would be no adjacent edge.
+
+With flattening, we can only detect this by remembering the starting
+feedback.  If feedback was 0, then the head was replaced and a tail
+fade should be applied to the content copied from layer 4 (but not the
+new content in layer 5).  This is represented with a '-' in the last
+column of layer 5.  This case is handled by a more general feedback
+different rule specified below.
+
+But if we apply that rule, then we have a problem with this:
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+4   }++++RRRR>
+5   >RRRR+++-
+
+Here, we have a seamless record from 4 to 5, so if we fade
+the tail of 4 then we will introduce a break in the recording.
+It would have to be this:
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+4   }++++RRRR>
+5    RRRR+++-
+
+But then we get a fade bump in the middle of what was supposed
+to be a seamless recording.  In this case, it could be solved
+by saying that the occlusion fade is not applied if there
+is a deferred fade from the previous layer to the current.
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+4   }++++RRRR>
+5   >RRRR++++}
+
+This works if we were replacing, but not in this case where
+we use quantization to move from overdub to replace:
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+4   }++++oooo>
+5   >RRRR++++}
+
+Here the tail of layer 2 makes it through to layer 5 and we
+may have a click if the content is significantly louder
+than the tail of 4.  
+
+Ideally, what we want to do is fade the content copied from 3 into 4,
+but not the overdub in 4 while 4 is being copied to 5.  Since we still
+have a tail window for layer 4, we have most of the necessary data,
+but it would be difficult to arrange:
+  
+    - get tail window from 4
+    - subtract 5's window from 5, this gives you just 4's tail
+    - subtract 4's window from 5, this gives you just 3's tail
+    - fade 5's tail, which is effectively 3's tail
+    - add 4's window back to 5
+    - add 5's window back to 5
+
+The problem here is that feedback may have been changing while 4's
+tail was copied to 5, and this feedback is not represented in 4's tail
+window.  When when you subtract 4's window from 5, the content may be
+corrupted.  There no way to solve this without maintain another
+FadeWindow that contains only the new content from 4 with feedback
+applied, or by recording the feedback curve during the fade region.
+
+The easiest thing is to adopt the rule that we will force edge fades
+unless the ending feedback in 4 and the starting feedback in 5 are
+both zero, meaning that a replace was performed over the loop boundary
+and all indirect edges were occluded.  So we get these:
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+4   }++++oooo>
+5    RRRR+++-
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+4   }++++RRRR>
+5   >RRRR++++}
+
+This will cause fade bumps in a few cases, but it feels like these
+would be rare, and not really worth trying to solve.
+
+  TODO: This is a qualfication to the feedback comparison rule below.
+
+The same problem exists using segments.  The segment in layer 5 must
+have a right fade if the ending feedback level is 4 was not zero.
+This then must trigger the application of the deferred head fade in
+layer 5.
+
+Now, it gets even more fun if feedback is reduced only slightly.  For
+the purposes of the notation, assume 'f' represents a reduction if
+feedback of 50% and 'F' a reduction of 100%.  Effectively F behaves
+similar to a Replace if combined with Overdub.
+
+Feedback performed during play mode can be notated fully as this for
+flattening:
+
+  1 rrrrrrrr
+    ++++++++ 
+    ffffffff
+  2 ........
+
+And this for segments:
+
+  1 rrrrrrrr
+    ||||||||
+    ffffffff
+  2 ........
+
+In cases where the segment distinction is not important this can
+be simplified to:
+
+  1 rrrrrrrr
+    ffffffff
+  2 ........
+
+And in the case where it is applied during play mode, further
+simplified to:
+
+  1 rrrrrrrr
+  2 ffffffff
+
+These two replace examples:
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+4   }++++oooo>
+5    RRRR+++-
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+4   }++++RRRR>
+5   >RRRR++++}
+
+End up looking the same with Feedback/Overdub:
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+         FFFF
+4   }++++oooo>
+     FFFF
+5   >oooo++++}
+
+Again, the rule that the deferred fade can be kept as long as feedback
+at the layer boundary is zero still holds.
+
+But with partial feedback web must force a fade:
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+         ffff
+4   }++++oooo>
+     FFFF
+5    oooo+++-
+
+Because at least some of the content from the tail of 2 will be
+present in 4, we have to fade 4 after it has been copied, and remove
+the deferred head fade in 5.  This will produce a fade bump. It might
+be useful to let you specify a threshold rather than requiring that
+feedback be 0 in order to keep the deferred fade.  25% is probably
+enough to reduce 2's tail to inaudibility, especially if it is being
+applied over several layers.
+
+It is also annoying that if feedback is left on, then it is quite
+likely that older layers will be inaudible, yet we keep dagging the
+contains deferred fade flag forward when it is no longer meaningful.
+We can't easily turn this off without walking the segment hierarchy,
+which we can't do if we're flattening.
+
+Next we have partial feedback on both sides:
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+         ffff
+4   }++++oooo>
+     ffff
+5   }oooo++++}
+
+Here, the content from the end of layer 2 is effectively at the
+same level as the content from the beginning of layer 3, so there
+is no need to force a fade.  This is more complicated:
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+     ffffffff
+4   }++++oooo>
+     ffff
+5   >oooo++++}
+
+Here the end of layer 2 is reduced 50% but the beginning of layer 3 is
+reduced 100%, making it effectively the same as F or R.  However we
+can't know this without maintaining a complicated history of the edge
+contents.  In simple cases we might be able to do this by walking
+back the layer hierarchy and adding up the saved starting feedback, 
+but we're not necessarily referencing the previous layer from
+the beginning and we won't know the feedback from the beginning
+of our reference unless we kept the segments around.
+
+This can be partially addressed by forcing fades to both edges of the
+previous layer, if the starting and ending feedback levels are
+different.  In the previous example, the starting feedback is 50% and
+the ending 100%.  Even though the overdub from 4 to 5 will not have
+a level jump we don't know for sure if the other content in 4 will not,
+so we have to be conservative and force a fade.
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+     ffffffff
+4   }++++oooo>
+     ffff
+5    oooo+++-
+
+This is probably not so bad, in the case where feedback is just left
+on we would not do the fade, it's only when it changes dynamically in
+which case there is probably other stuff going on to hide the bump.
+
+Solving this fully requires that we be able to seperate the feeeback
+content of a layer from the new content so that we can fade the
+feedback content but not the new content.  This requires a new kind of
+FadeWindow as described above.
+
+The fade problem can be lessened somewhat by performing the fade
+over only a portion of the range rather than to/from zero.
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+4   }++++oooo>
+     ffff
+5   >oooo+++-
+ 
+Here the tail of 4 is given a fade to 50% rather than 0 to match 50%
+reduction at the head of 5.  But note though that the deferred head
+fade in 5 will also have to partially applied by 50% to match.
+
+Let's try an example with 'f' being 50% and 'e' being 25%
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+4   }++++oooo>
+     ffffeeee
+5   >oooo+++-
+
+The end of the copied content of 4 will still be slightly louder than
+the beginning, by 25%.  So we have to fade it down 25%.
+
+Now the other direction:
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+4   }++++oooo>
+     eeeeffff
+5   >oooo+++-
+
+The end of the copied content of 4 will be slightly softer than the
+beginning by 25%.  So we have to fade the beginning of the copied
+content in layer 5 by 25%.  Note though that since we're not affecting
+the tail of 4 we can keep the deferred fades from 4 to 5.
+
+This can be genearlized into this rule:
+
+In finalize():
+
+  If the starting feedback is less than the ending feedback:
+
+    The background tail must be faded to a level that matches
+    the starting feedback.  Since this also fades the recorded
+    content immediately preceeding the layer, the new content
+    at the head must be faded to match the same level.
+
+  If the starting feedabck is greater than the ending feedback:
+
+    The background head must be faded to a level that matches
+    the ending feedabck.  Since this does not include the
+    content that immediately preceeds this layer, we do not
+    need to fade any local content.
+
+Then this qualification for a special case:
+
+  If the ending feedback in the previous layer was zero and
+  the beginning feedback in the current layer was zero, then
+  there will be no old content at the edges of the new layer, 
+  no fading needs to done.
+
+----------------------------------------------------------------------
+Insert
+----------------------------------------------------------------------
+
+
+There are similar problems with Insert:
+
+1       rrrrrrrr
+2       ++++oooo>
+3      >oooo++++}
+4   iiii-++++++-
+
+Fades must be applied to both edges of the content copied from
+layer 3, this should be handled by the Segment during flattening.
+This one is harder:
+
+1  rrrrrrrr
+2  ++++oooo>
+3 >oooo++++}
+4  -++++++-iiii
+
+We can't apply the head fade to 4 until we begin the insert, so it
+must be done retroactively using the head window.  Similarly we have
+to apply a fade to the content copied from 3 to 4 immediately prior to
+the insert.  This can also be done retroactively because we have the
+tail window, but it must be done immediately before beginning the
+insert, we can't wait till finalize.
+
+----------------------------------------------------------------------
+More Crap
+----------------------------------------------------------------------
+
+1  rrrrrrrr
+2  ++++RRRR>
+3 >RRRR++++
+
+When we begin preplay of 3, we can't introduce a layer cross fade
+since 2 has a deferred right fade, the left of 2 won't be contiguous,
+so capturing a tail from 2 which will wrap around to the left will
+cause a break.  Basically, we MUST suppress the layer crossfade on
+preplay if the play layer has a deferred right fade.
+
+But then we have this problem:
+
+1  rrrrrrrr
+2  ++++oooo>
+3 >oooo++++
+4  ++++oooo>
+5 >RRRR++++
+
+We will occlude the begining of layer 3 which will cause a break
+after the end of layer 2.  If the overdub in layer 4 happens
+to contain silence, this may be audible.  This will eventually
+be corrected in finalize, the feedback difference rule will
+force a fade to both edges of layer 5, but at the moment we're
+starting the pre-play we haven't finalized the layer yet and we don't
+know for sure what the ending feedback will be. We're also past
+the point to apply a down fade.  
+
+!! This must be a problem with segments too?
+
+Options:
+
+  1) Try to detect this before we play to the end of layer 4,
+     at frames - FadeRange, guess that the current feedback will
+     remain the same and start a down fade.  Then remember this
+     happened so when we eventually start preplay of 5 we do an up
+     fade even though the deferred fade flag is on.
+
+  2) Capture a fade tail from the beginning of 4, but do not begin
+     an up fade of layer 5.
+
+1 is complicated though it would produce a preplay that would match
+what the layer will actually look like most of the time.  It is probably
+reasonable to prevent feedback from changing during the preplay period
+so we could do some of the finalize work early.
+
+2 is relatively simple, but requires some retooling between Loop and
+OutputStream so that OutputStream knows to capture the tail but not
+start an up fade.  Perhaps it can do this just by checking for a
+deferred right fade in the previous layer.
+
+This would replace the current logic of avoiding a play fade if the
+previous layer has a deferred right fade, it would always capture a
+tail from the beginning of the previous layer.  This could however
+cause a break if the beginning of the previous layer is not actually
+occluded in the new layer.  It will briefly become twice as loud.
+The level of the tail would have to be adjusted according to the
+feedback being applied at the beginning of the new layer.  If
+the feedback is 127, then no tail is required, if it is 0 a 
+full tail is required, if it is 25% then start at 75% of the range.
+This is basically what finalize() does later.
+
+Hmm, capturing the old fade tail would also help this problem.
+
+1    rrrrrrrr
+2    ++++oooo>
+3   >oooo++++}
+     ffffffff
+4   }++++oooo>
+     ffff
+5   >oooo++++}
+
+Here the end of layer 2 is reduced 50% but the beginning of layer 3 is
+reduced 100%, making it effectively the same as F or R.  However we
+can't know this without maintaining a complicated history of the edge
+contents.  This is being addressed by forcing fades to both edges of
+the previous layer, if the starting and ending feedback levels are
+different.  In the previous example, the starting feedback is 50% and
+the ending 100%.  Even though the overdub from 4 to 5 will not have a
+level jump we don't know for sure if the other content in 4 will not,
+so we have to be conservative and force a fade.
+
+And this simpler one:
+
+1  rrrrrrrr
+2  ++++oooo>
+3 >oooo++++}
+4 }++++oooo>
+5 >RRRR++++}
+
+If instead we capture a fade tail from the beginning of 4 and add it
+to the beginning of 5 we would preserve enough of the beginning of 3
+to avoid the break from the end of 2.  This would look a little weird
+if the overdub in 5 happens to be a silent replace, but it would sound
+ok.  Again, the level of the tail has to be adjusted for feedback
+already applied.  This would then make the ending loop sound the same
+as what was heard during the pre-play transition.
+
+Would be nice if we cound encapsulate this logic in Layer, but we'd have
+to extend LayerContext to include support for fade tails.
+
+----------------------------------------------------------------------
+Feedback Leveling
+
+Well, it doesn't work like I thought and I'm not enough of a
+mathmetician to explain why, but it has to do with the fact that the
+fade curve isn't linear so you can't just add and subtract levels and
+expect to produce a linear result.  For example, the fade ramp at
+offset 64 is around 0.25.  If we end a layer at feedback 127 and begin
+at 64, then according to the reasoning above we would have to capture
+a fade tail at level 64 which when added with the content reduced by
+64 would bring us back to a level of 127 so the edges meet.  But it don't
+work that way.  The sample at the beginning of the new layer is .25
+the level of the the original sample, if we capture a fade tail also at 
+64 we'll add two samples .25 the original or .5 the level we want to be.
+
+What we need is to find an offset into the fade ramp that is close to .75
+so that (sample * .25) + (sample * .75) is close to the original.  .75 
+happens to be at offset 110.  If we're using true logs there should
+be a formula.  Using squares:
+
+   - lookup ramp value for starting offset 64 = .253953
+   - determine where we want to be 1.0 - .253953 = .746047
+   - take the square root = .8837401
+   - multiply times the range of 127 = 109
+   - the ramp value at 109 is .736623
+   - to get the fade down offset 127 - 109 = 18
+
+This may get reasonably close but can never be exact.  A better method
+is to do a true cross fade, a full fade down from 100% of the tail and
+a full fade up from 0 of the head of the new layer.  This is easy
+for pre-play but is harder when we're trying to do level matching
+on finalize.  
+
+To handle this in finalize.  Two scenarios:
+
+1) Layer Starting Feedback < Layer Ending Feedback
+
+Incorrect method 1:
+The background tail must be faded to a level that matches the starting
+feedback.  Since this also fades the recorded content immediately
+preceeding the layer, the new content at the head must be faded to
+match the same level.  effective level is the starting feedback,
+raised by the amount of feedback we've already applied.
+
+Method 2:
+Capture a fade tail from the beginning of the previous layer at
+the ending feedback level.  Perform a full background head fade of
+the current layer.  Add the fade tail captured above to the beginning 
+of the current layer.  The effect is to capture a clean tail of
+only cthe background of the previous layer, not the new content comming
+into the current layer.  Since we are not then applying a fade to the content
+preceeding this layer, we do not have to fade the foreground of the
+current layer!  This results in a clean cross fade of the background
+without losing the seamless recording from the previous layer.
+
+----------------------------------------------------------------------
+Wait, this wrong..
+
+For pre-play of the record layer, previous feedback leveling comments
+are wrong.  It doesn't matter what the ending feedback of the previous
+layer was, if the starting feedback of the new layer is anything less
+than 127, then we will have an immediate reduction in the level between
+the background tail of the previous layer, and the head of the previous
+layer copied into the next layer.  
+
+The easiest thing is to apply a full cross fade whenever feedback is
+reduced.  This will however introduce a fade bump if there was a
+seamless recording from the previous layer into the next.  The fade
+tail from the beginning of the previous layer is ok, but ideally we do
+not want to fade in the foregreound of the next layer, just the
+background.  This is hard to do in pre-play since we're at the Stream level.
+
+The bump won't be recorded into the loop so it won't be audible the
+next time it plays, but if you leave feedback on all the time and record
+over the loop point, there will be a bump every time.  
+
+A better option is to capture and add a fade tail, but rather than
+try to guess at an offset into the fade range, always use the full range
+but reduce the result of each faded frame by a fixed amount so that
+the first frame in the fade tail is at the same level as the first
+frame copied into the next layer.
+
+For a starting feedback of 64 the first frame copied into the new layer
+will have been multiplied times .253953.  When we capture a fade tail
+from the beginning of the previous layer, use the full fade range, 
+but multiply 1.0 - .253953 = .746047 from each faded frame.  The first
+frame in the tail added to the first frame in the layer will then
+be close to 100%, then decay. If the adjustment factor is small, it will
+decay to zero rapidly.  Should probably put in some guards to avoid the
+demormanization problem?
+
+This will result in a smooth fade tail of the background without
+introducing a fade bump in the foreground.
+
+When the loop is finalized:
+
+  If the ending feedback in the previous layer was zero and
+  the beginning feedback in the current layer was zero
+
+    Then there will be no old content at the edges of the new layer, 
+    no fading needs to done.
+
+  If the starting feedback is less than the ending feedback:
+  
+    The background tail will be louder than the background head.
+
+    Option 1: Lower background tail
+    The background tail must be lowered to a level that
+    matches the starting feedback.  Since this also lowers the
+    recording from the prevsious layer into the new one, the 
+    foreground head of the new layer must also be lowered.
+
+    * Option 2: Raise background head
+    A fade tail from the beginning of the previous layer
+    is captured and added to the beginning of the new layer.  The
+    level of this tail is adjusted for the feedback already applied
+    at the start, the same way we do in pre-play.  Since we are not
+    lowering the background tail, we do not need to lower the
+    foreground head.  Yes, this will sound more natural!
+
+  If the starting feedback is greater than the ending feedback:
+
+    The background head will be louder than the background tail.
+
+    * Option 1: Lower background head
+    The background head must be lowered to a level that 
+    matches the ending feedabck.  Since this does not include the
+    content that immediately preceeds this layer, we do not
+    need to fade any local content.  This can be done with an up
+    fade from zero with a starting level ADDED to each ramp level until
+    it reaches 1.0.  
+
+    Option 2: Raise background tail
+    Capture sort of an inverse fade tail at the end of the previous layer.
+    This would start at 0 and ramp up to 127, then add this to the end
+    of the new layer.  Since this results in a modification to the recording
+    from the previous layer into the new layer, a corresponding change would
+    have to be made to the foreground head of the new layer.
+
+  If the ending feedback is less than 127:
+
+    If there was a deferred fade from the end of the previous layer,
+    the foreground head will be louder than the background tail.
+    
+    * Option 1: Lower foreground head by the same amount as the
+      ending feedback.  Unlike lowering the background head, this
+      is not afffected by the starting feedback.
+    
+It is better to modify the background head since this does not
+affect the recording from the previous layer into the new layer.  
+
+Technique: Raise Background Head
+
+A fade tail from the beginning of the previous layer is captured and
+added to the beginning of the new layer.  The level of this tail is
+adjusted with a fixed offset determined by taking 1.0 minus
+the ramp value of the starting feedback.  This is the same approach
+used when preplaying the record layer.
+
+Technique: Lower Background Head
+
+Use the fade window to remove the foreground head and apply an up fade 
+to the background.  AudioFade does a normal fade, but also takes a new
+"baseLevel" argument which is added to each ramp value.  If the baseLevel
+was .75, then the ramp would be 0.0 + .75.  When the ramp value exceeds one,
+floor it to 1 for the final ramp value and stop.
+
+This feels funny, but I can't place why.  It seems better to do a pair
+of overlapping cross fades.  The first a simple fade in from zero applied
+to the background head, this effectively takes the starting level down
+to zero.  Next apply an adjusted fade tail copied from the head of
+the previous layer and add it to the beginning.  The result should 
+be a level that starts at the desired reduced level then returns to the
+original level.
+
+Another way, do a full range fade up, adding an initial offset, 
+but reduce the offset as we go up the range.  
+
+   sample * ramp + (base - (base * ramp))
+
+Technique: Lower Foreground Head
+
+
+
+
+
+----------------------------------------------------------------------
+Feedback Fades
+
+  
+
+

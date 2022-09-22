@@ -1,0 +1,459 @@
+SoundTouch latencies by scale degree:
+
+0 0: Pitch shifter scale -12 latency 4352 (4096 frames in, 3087 available)
+0 0: Pitch shifter scale -11 latency 4352 (4096 frames in, 3087 available)
+0 0: Pitch shifter scale -10 latency 4352 (4096 frames in, 3087 available)
+0 0: Pitch shifter scale -9 latency 4608 (4352 frames in, 3087 available)
+0 0: Pitch shifter scale -8 latency 4608 (4352 frames in, 3087 available)
+0 0: Pitch shifter scale -7 latency 4608 (4352 frames in, 3087 available)
+0 0: Pitch shifter scale -6 latency 4608 (4352 frames in, 3087 available)
+0 0: Pitch shifter scale -5 latency 4864 (4608 frames in, 3087 available)
+0 0: Pitch shifter scale -4 latency 4864 (4608 frames in, 3087 available)
+0 0: Pitch shifter scale -3 latency 4864 (4608 frames in, 3087 available)
+0 0: Pitch shifter scale -2 latency 4864 (4608 frames in, 3087 available)
+0 0: Pitch shifter scale -1 latency 5120 (4864 frames in, 3087 available)
+0 0: Pitch shifter scale 1 latency 5120 (4864 frames in, 2883 available)
+0 0: Pitch shifter scale 2 latency 5120 (4864 frames in, 2721 available)
+0 0: Pitch shifter scale 3 latency 5120 (4864 frames in, 2568 available)
+0 0: Pitch shifter scale 4 latency 5120 (4864 frames in, 2424 available)
+0 0: Pitch shifter scale 5 latency 5120 (4864 frames in, 2288 available)
+0 0: Pitch shifter scale 6 latency 5120 (4864 frames in, 2159 available)
+0 0: Pitch shifter scale 7 latency 5120 (4864 frames in, 2039 available)
+0 0: Pitch shifter scale 8 latency 5120 (4864 frames in, 1924 available)
+0 0: Pitch shifter scale 9 latency 5120 (4864 frames in, 1816 available)
+0 0: Pitch shifter scale 10 latency 5120 (4864 frames in, 1714 available)
+0 0: Pitch shifter scale 11 latency 5120 (4864 frames in, 1617 available)
+0 0: Pitch shifter scale 12 latency 5120 (4864 frames in, 1527 available)
+
+Min/Max delta is 768, or about 15ms.
+
+Support an option to always select the highest latency and not do
+parameter edge fades?
+
+
+----------------------------------------------------------------------
+
+
+DIRAC
+
+Dirac asks for a large block up front, then seems to chew
+through this without asking again for awhile.  The next
+time it asks the block is about half as big, and stays near there.
+After the initial buffering there are around 1500 frames remaining
+after each request.
+
+
+
+----------------------------------------------------------------------
+
+
+Pitch Shifting
+
+A musical octave spans a factor of two in frequency and there are
+twelve notes per octave. Notes are separated by the factor 2 ^ 1/12 or
+1.059463. (1.059463 x 1.059463 x 1.059463...continued for a total of
+twelve = 2).
+
+Starting at any note the frequency to other notes may be calculated
+from its frequency by:
+
+  Freq = note x 2^N/12
+
+where N is the number of notes away from the starting note. N may be
+positive, negative or zero.
+
+For example, starting at D (146.84 Hz), the frequency to the next higher F is:
+
+  146.84 x 2^3/12 = 174.62
+
+since F is three notes above. The frequency of A in the next lower
+octave is:
+
+  146.84 x 2^-17/12 = 55
+
+since there are 17 notes from D down to the lower A.
+
+The equation will work starting at any frequency but remember that the
+N value for the starting frequency is zero.
+
+----------------------------------------------------------------------
+
+A       55.00   110.00  220.00  440.00  880.00
+A#      58.27   116.54  233.08  466.16  932.32
+B       61.74   123.48  246.96  493.92  987.84
+C       65.41   130.82  261.64  523.28  1046.56
+C#      69.30   138.60  277.20  554.40  1108.80
+D       73.42   146.84  293.68  587.36  1174.72
+D#      77.78   155.56  311.12  622.24  1244.48
+E       82.41   164.82  329.64  659.28  1318.56
+F       87.31   174.62  349.24  698.48  1396.96
+F#      92.50   185.00  370.00  740.00  1480.00
+G       98.00   196.00  392.00  784.00  1568.00
+Ab      103.83  207.66  415.32  830.64  1661.28
+
+This site has a more accurate table:
+
+  http://www.borg.com/~jglatt/tutr/notefreq.htm
+
+which uses the formula:
+
+DIM MIDI(127)
+A=440
+FOR x = 0 to 127
+MIDI(x) = (A / 32) * (2 ^ ((x - 9) / 12))
+NEXT x
+
+If you plan to always use 440 tuning, then you can use this simplified
+code instead:
+
+DIM MIDI(127)
+FOR x = 0 to 127
+MIDI(x) = 8.1758 * 2^(x/12)
+NEXT x
+
+----------------------------------------------------------------------
+Linear interpolation:
+
+  http://www.alpha-ii.com/Info/AudioInt.html
+
+Cubic spline interpolation produces a more natural curve.
+
+
+
+----------------------------------------------------------------------
+Latency Compensation with Rate Change
+
+Going into 1/2 speed effectively halves InputLatency and
+OutputLatency.  InputLatency is halved because we remove every other
+input frame so advancing 128 frames in the loop is equivalent to
+consuming 256 frames from the audio interrupt.  So, from Loop's
+perspective IL is 128.  OutputLatency is halved because we double
+every frame so we only need to play 128 frames to fill a 256 frame
+interrupt buffer.
+
+Shift is represented as a float with 1.0 representing no change.  1/2
+speed is then 0.5.  Oddly given the linear interpolation algorithm,
+double speed is 1.5 which is symetical, but I don't understand why.
+
+A 1.5 expansion would result in a drop of 6 semitones.  Latency
+can be adjusted by dividing 256 by 1.5 resulting in 170.6.
+
+
+
+/*
+ * Turn half speed on and off.
+ * Would be nice to support ratios other than 50% someday.
+ *
+ * Subtle latency issues!
+ * 
+ * We have to defer changing the record speed until after IL, since
+ * the currently buffered input frames were logically recorded at the
+ * current speed.  
+ * 
+ * If the event is not quantized, we have an output latency issue
+ * in that the currently buffered output frames were all supposed to
+ * have been played in the other speed and we can't undo them now.
+ * So unquantized speed changes can never be audibly accurate, they
+ * will always be delayed by at least OutputLatency.
+ *
+ * Further, you cannot simply enable the playback speed change when the
+ * SpeedEvent is scheduled as this will result in mPlayFrame advancing
+ * at a different rate than mFrame, and when SpeedEvent is reached,
+ * the mFrame + InputLatency + OutputLatency = mPlayFrame rule
+ * will not hold.  
+ *
+ * We can handle this by making a compensating  adjustment to the latency
+ * values.  In half speed, latency is also effectively halved.  
+ * Starting with a normal OL of 9216, since we double each frame put
+ * into the output buffer, we'll only really advance 4608 frames in order
+ * to fill the OL buffers. So OL is only 4608.  
+ *
+ * The complication is that IL and OL change at different times.  So while
+ * we're in the phase where play and record are happening at different rates,
+ * to do an accurate check, you have to factor in the difference between
+ * the current play frame and the START of the playback speed change.
+ * Not impossible, but ideally we don't have to check until after the
+ * SpeedEvent when record/play are at the same rate.
+ *
+ * The simplest thing is to defer the speed change for both play/record
+ * until SwitchEvent.  This results in the playback change being deferred
+ * a little more, but the distance rule always applies.  The problem
+ * though is that the distance rule is now wrong, the latencies
+ * really are twice what they should be and mFrame and mPlayFrame are
+ * not in their correct relative positions.  mPlayFrame will be
+ * (InputLatency + OutputLatency) / 2 frames too far, this will
+ * result a shift of synchronization between overdubs and audible playback.
+ * !! check this
+ *
+ * This is probably not audible with low latencies.  To handle this
+ * correctly at high latencies we need to adjust the latency
+ * values whenever the speed changes.  If the event is not quantized,
+ * there is a subtle form of latency loss.  
+ *
+ * Example: IL=10, OL=30, F=80, PF=120, speed=full
+ * 
+ * A SpeedEvent is scheduled for frame 90.  The lossless JumpPlayEvent
+ * would go at frame 50 but since we're beyond that we have a latency loss
+ * of 30.  What has happened is that we've played too far and we need
+ * to jump back in time a little so that PF will be synchronized with 
+ * F when F reaches SpeedEvent.  With no compensation, when F advances
+ * 10 frames to SpeedEvent, PF will only have advanced 5 to 125.  
+ * Applying the adjusted latencies, PF should be 90 + 5 + 15 = 110, but
+ * we're 15 beyond that.  JumpPlayEvent should have moved back PF to 105.
+ *
+ * Oddly enough, 15 is half of the 30 latency loss, so when going from
+ * full speed to half speed, the jump frame is:
+ *
+ *     PF - LL / 2
+ *
+ * Let's go the other way:
+ * 
+ * Example: IL=5, OL=15, F=80, PF=100, speed=half
+ * 
+ * A SpeedEvent is scheduled for frame 85.  The lossless JumpPlayEvent
+ * would be at 65 for a latency loss of 15.  When F reaches 85, PF
+ * needs to be 125.  Uncompensated, and advancing at twice the record
+ * rate, PF will be at 110 when F reaches 85.  We haven't played enough.
+ * JumpPlayEvent should have moved PF up to 115.  So when going from
+ * half to full, the jump frame is:
+ *
+ *     PF + LL
+ *
+ * I'm not good enough at math to explain the asymetry.  I can 
+ * see the + vs -, but don't fully understand the LL / 2 vs LL.
+ * Perhaps it is because the compensation must always be made relative
+ * to the "slow" time, when going from full->half we have to adjust down,
+ * when going from half->full we're already there.
+ * 
+ * Boundary condition:
+ * 
+ * IL=10, OL=30, F=80, PF=120, SF=119, speed=full
+ * SPE = 79, LL = 1, NPF = 120 - 1 / 2 = 120
+ * Fadvance = 39, PFadvance = 19 (with 1 remainder)
+ * Fend = 119, PFend=119+19 = 138
+ * 119 + 5 + 15 = 139!
+ * 
+ * When LL is not an even multiple of the divisor (2 in this case)
+ * we must remember this and factor it into future frame checks.  
+ * Alternately we could include the number of remainder frames when
+ * we calculate the effective PF for comparison.
+ */
+----------------------------------------------------------------------
+Compression, at it's simplest, uses a logarithmic transfer function:
+
+ int in; 
+
+
+
+ for (i=0; i <= MaxSamples; i++)
+
+ { in=unprocessed_buf[i];
+
+   processed_buf[i]=32767*sign(in)*(abs(in)/32767)^(1-level/10)
+
+ }
+
+The range of level is 0 to 10 and the samples are 16-bit words. The
+higher the level, the greater the distortion. Thus, you can achieve
+distortion this way.
+
+A Noise gate should be used with the compressor, since the compressor
+will amplify background noise when there is no foreground signal.
+
+Expansion is the opposite of compression and uses the inverse of the
+above function.
+
+----------------------------------------------------------------------
+Linear Interpolation
+----------------------------------------------------------------------
+
+transpose(float* src, float* dest, long samples)
+{
+
+
+uint RateTransposerFloat::transposeMono(SAMPLETYPE *dest, const SAMPLETYPE *src, uint numSamples)
+{
+    unsigned int i, used;
+
+    used = 0;    
+    i = 0;
+
+    // Process the last sample saved from the previous call first...
+    while (fSlopeCount <= 1.0f) 
+    {
+        dest[i] = (SAMPLETYPE)((1.0f - fSlopeCount) * sPrevSampleL + fSlopeCount * src[0]);
+        i++;
+        fSlopeCount += fRate;
+    }
+    fSlopeCount -= 1.0f;
+
+    while (1)
+    {
+        while (fSlopeCount > 1.0f) 
+        {
+            fSlopeCount -= 1.0f;
+            used ++;
+            if (used >= numSamples - 1) goto end;
+        }
+        dest[i] = (SAMPLETYPE)((1.0f - fSlopeCount) * src[used] + fSlopeCount * src[used + 1]);
+        i++;
+        fSlopeCount += fRate;
+    }
+end:
+    // Store the last sample for the next round
+    sPrevSampleL = src[numSamples - 1];
+
+    return i;
+}
+
+----------------------------------------------------------------------
+Anti Alias Filter
+----------------------------------------------------------------------
+
+
+
+
+----------------------------------------------------------------------
+Stupid Interpolation
+----------------------------------------------------------------------
+
+Expansion: count up till remainder > 1, then double frame and subtract 1
+
+  .0
+  .3
+  .6
+  .9
+ 1.2 double
+  .5
+  .8
+ 1.1 double
+  .4
+  .7
+ 1.0 double 
+  .3
+  .6
+  ...
+
+Reduction: count up till remainder > 1 then use
+
+  .0 keep
+  .3 skip
+  .6 skip
+  .9 skip
+ 1.2 keep
+  .5 skip
+  .8 skip
+ 1.1 keep
+  .4 skip
+  ...
+
+Keep an average of the skipped frames and/or dither.
+
+----------------------------------------------------------------------
+Ian:
+
+The dspGuru site at "http://www.dspguru.com/sw/opendsp/alglib.htm"; is a
+great start. They have C-code that performs interpolation/decimation
+using a FIR filter. I'm using their code and it performs as advertised.
+
+This site has some nice comparisons between methods:
+"http://leute.server.de/wilde/resample.html#RandomNoiseUp";.
+
+Another good site with lots of detail :
+"www.stanford.edu/~jos/Interpolation/Welcome.html"" target=_blank>http://ccrma-www.stanford.edu/~jos/Interpolation/Welcome.html";.
+
+Finally, in general, there are several books available that address
+"multirate" digital signal processing.
+
+Good luck,
+
+----------------------------------------------------------------------
+
+http://www.dspguru.com/info/faqs/multrate/decim.htm
+
+----------------------------------------------------------------------
+/*
+ *  printwave.c
+ *  WaveAsText
+ *
+ *  Created by Christopher Dobrian on Wed Jan 14 2004.
+ *
+ */
+
+#include <stdio.h>
+#include <math.h>
+
+#define NUM_SECONDS	(1.)
+#define SAMPLE_RATE	(44100.)
+#define TWOPI		(6.283185307179586)
+#define	MAXAMP		(1.)
+#define FREQUENCY	(1000.)
+
+int	main(void);
+
+int main(void) {
+    float amplitude = MAXAMP;
+    float frequency = FREQUENCY;
+    float phase = 0.;
+    unsigned long n; // the current sample number
+    unsigned long totalsamples = (unsigned long)(NUM_SECONDS*SAMPLE_RATE);
+    float twopiFoverR = TWOPI*frequency/SAMPLE_RATE;
+    
+    float y; // the current sample value
+	
+    for( n = 0 ; n < totalsamples ; n++ )
+    {
+        y = amplitude*sin(twopiFoverR*n+phase);
+        fprintf( stdout, "%f\n", y);
+    }
+
+    return 0;
+}
+
+----------------------------------------------------------------------
+Decimation Underflow
+
+Happens when the number of frames calculated to exist after decimation
+is too high.  Can happen due to floating point rouding errors, but should
+be off by no more than one.  
+
+Examples:
+
+  Rate -20 0.314981
+  initial threshold 0.635053 srcFrames 256 destFrames 81 remaining 1
+
+  Rate -4 0.793701
+  initial threshold 0.187391 srcFrames 256 destFrames 204 remaining 1
+
+For the input stream, this means we will produce one less frame than 
+expected, since we decimate the entire interrupt block, this simply reduces
+the size of the block.  
+
+For the output stream, it means we have to "play" an extra frame in order
+to have something to put into the interrupt buffer.
+
+Decimation Overflow
+
+Happens when the number of frames calculated to exist after decimation
+is too low.  I have not seen this happen.  
+
+On input, this would mean we just increase the size of the recorded block.
+
+On output, it means we played too far.  We could either back up, or
+just save the frame as a remainder and use it in the next block.
+
+Interpolation Underflow
+
+The number of frames calculated to exist after decimation is
+too low.  Seems to be more rare.
+
+  Rate -15 0.420449
+  initial threshold 0.206045 srcFrames 107 destFrames 255 remaining 1
+
+For the input stream, this means we will produce one less frame than 
+expected, since we interpolate the entire interrupt block, this simply 
+reduces the size of the block.  
+
+For the output stream, it means we have to "play" an extra frame in order
+to have something to put into the interrupt buffer.
+

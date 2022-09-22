@@ -1,0 +1,54 @@
+http://www.dribin.org/dave/blog/archives/2006/08/02/versioning_os_x_apps/
+
+Important keys
+
+CFBundleVersion
+  - used by sysetm, must follow rules 
+  - use nnnnn.nn.nn
+
+CFBundleShortVersionString
+  - presented to user in Finder, but not used by the system
+
+----------------------------------------------------------------------
+Core Foundation Keys
+----------------------------------------------------------------------
+
+CFBundleVersion
+
+CFBundleVersion (String - iOS, Mac OS X) specifies the build version
+number of the bundle, which identifies an iteration (released or
+unreleased) of the bundle. This is a monotonically increased string,
+comprised of one or more period-separated integers. This key is not
+localizable.
+
+Quoting the Runtime Configuration Guidelines:
+
+This key specifies the exact build version of the bundle. This string is usually of the form nn.n.nxnnn where n is a digit and x is a character from the set [abdf]. The first number is the major version number of the bundle and can contain one or two digits to represent a number in the range 0-99. The second and third numbers are minor revision numbers and must be a single numeric digit. The fourth set of digits is the specific build number for the release.
+...
+Effectively, LS expects the following format: nnnnn[.nn[.nn]][X] where n is a digit 0-9, square brackets indicate optional components, and X is any string not starting with a digit. X is ignored when present.
+
+
+
+CFBundleShortVersionString
+
+CFBundleShortVersionString (String - iOS, Mac OS X) specifies the release version number of the bundle, which identifies a released iteration of the application. The release version number is a string comprised of three period-separated integers. The first integer represents major revisions to the application, such as revisions that implement new features or major changes. The second integer denotes revisions that implement less prominent features. The third integer represents maintenance releases.
+
+The value for this key differs from the value for “CFBundleVersion,” which identifies an iteration (released or unreleased) of the application. This key can be localized by including it in your InfoPlist.strings files.
+
+
+CFBundleName
+
+CFBundleName (String - iOS, Mac OS X) identifies the short name of the bundle. This name should be less than 16 characters long and be suitable for displaying in the menu bar and the application’s Info window. You can include this key in the InfoPlist.strings file of an appropriate .lproj subdirectory to provide localized values for it. If you localize this key, you should also include the key “CFBundleDisplayName.”
+
+
+CFBundlePackageType
+
+CFBundlePackageType (String - iOS, Mac OS X) identifies the type of the bundle and is analogous to the Mac OS 9 file type code. The value for this key consists of a four-letter code. The type code for applications is APPL; for frameworks, it is FMWK; for loadable bundles, it is BNDL. For loadable bundles, you can also choose a type code that is more specific than BNDL if you want.
+
+All bundles should provide this key. However, if this key is not specified, the bundle routines use the bundle extension to determine the type, falling back to the BNDL type if the bundle extension is not recognized
+
+----------------------------------------------------------------------
+Launch Services Keys
+----------------------------------------------------------------------
+
+

@@ -1,0 +1,417 @@
+#
+# Makefile for Mobius
+#
+# See mac/notes.txt for instructions on creating the installation .pkg
+#
+
+default: libmobius libui mobius app vst expr mactest au
+
+AU_INCLUDES = -I../au/CoreAudio/PublicUtility -I../au/CoreAudio/AudioUnits/AUPublic/Utility -I../au/CoreAudio/AudioUnits/AUPublic/AUBase -I../au/CoreAudio/AudioUnits/AUPublic/AUViewBase -I../au/CoreAudio/AudioUnits/AUPublic/OtherBases -I../au/CoreAudio/AudioUnits/AUPublic/AUCarbonViewBase
+
+# unfortunately since we don't have different compilation targets for
+# each file set have to include AU_INCLUDES everywhere
+
+# note that -I. is only for subdirectories
+INCLUDES = -I. -I../util -I../midi -I../audio -I../qwin -I../osc -I../soundtouch -I../vst/2.4 $(AU_INCLUDES)
+
+include ../make/common.osx
+
+# temporary override to force a PPC build for soundtouch
+#LDFLAGS=
+
+VERSION=3
+
+OTHERLIBS = ../qwin/libqwin.a ../audio/libaudio.a ../portaudio/20071207/mac/libportaudio.a ../soundtouch/libsoundtouch.a ../osc/libosc.a ../midi/libmidi.a ../util/libutil.a
+
+######################################################################
+#
+# libmobius
+#
+######################################################################
+
+LIBMOBIUS_O = \
+	 Action.o Audio.o AudioCursor.o \
+     Binding.o BindingResolver.o \
+     Components.o ControlSurface.o \
+	 Event.o EventManager.o Export.o Expr.o FadeTail.o FadeWindow.o \
+     Function.o \
+	 HostConfig.o HostInterface.o Launchpad.o Layer.o Loop.o \
+	 MidiExporter.o MidiQueue.o MidiTransport.o \
+	 Mobius.o MobiusConfig.o MobiusPlugin.o MobiusPools.o \
+	 MobiusState.o MobiusThread.o \
+	 Mode.o ObjectPool.o OldBinding.o OscConfig.o \
+	 Parameter.o ParameterGlobal.o ParameterSetup.o ParameterTrack.o \
+	 ParameterPreset.o \
+	 PitchPlugin.o Preset.o Project.o \
+	 Recorder.o Resampler.o Sample.o Script.o Segment.o Setup.o \
+	 Stream.o StreamPlugin.o SyncState.o SyncTracker.o Synchronizer.o \
+	 SystemConstant.o \
+	 Track.o TriggerState.o UserVariable.o Variable.o WatchPoint.o
+
+libmobius.a: $(LIBMOBIUS_O) functions/mobiusfunc.a
+	 libtool -static -o libmobius.a $(LIBMOBIUS_O) functions/mobiusfunc.a
+
+libmobius: libmobius.a
+
+functions/mobiusfunc.a:
+	@make -C functions -f makefile.mac
+
+######################################################################
+#
+# libui
+#
+######################################################################
+
+LIBUI_O = \
+	AboutDialog.o AudioDialog.o BindingDialog.o ButtonBindingDialog.o \
+	CalibrationDialog.o CalibrationResultDialog.o \
+	DisplayDialog.o GlobalDialog.o \
+	KeyBindingDialog.o KeyHelpDialog.o \
+	MidiBindingDialog.o MidiDialog.o MidiHelpDialog.o \
+	PluginBindingDialog.o PresetDialog.o PromptDialog.o \
+        RenameDialog.o \
+	SampleDialog.o SaveDialog.o ScriptDialog.o SetupDialog.o \
+	UI.o UIConfig.o UITypes.o
+
+libui.a: $(LIBUI_O)
+	 libtool -static -o libui.a $(LIBUI_O)
+
+libui: libui.a
+
+######################################################################
+#
+# mobius
+#
+######################################################################
+
+# would be nice if we could include the portaudio library inside our -laudio
+PA_FRAMEWORKS = -framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework CoreServices -framework CoreFoundation
+
+MIDI_FRAMEWORKS = -framework CoreMIDI
+
+FRAMEWORKS = -framework Carbon -framework ApplicationServices $(PA_FRAMEWORKS) $(MIDI_FRAMEWORKS)
+
+MAIN_OFILES = MacInstall.o MacMain.o
+
+mobius: libmobius.a libui.a $(MAIN_OFILES)
+	g++ $(LDFLAGS) -g $(FRAMEWORKS) -o mobius $(MAIN_OFILES) libui.a libmobius.a $(OTHERLIBS)
+
+######################################################################
+#
+# plugtest
+#
+######################################################################
+
+TEST_OFILES = MacInstall.o MacTest.o
+
+mactest: libmobius.a libui.a $(TEST_OFILES)
+	g++ $(LDFLAGS) -g $(FRAMEWORKS) -o mactest $(TEST_OFILES) libui.a libmobius.a $(OTHERLIBS)
+
+######################################################################
+#
+# Application Bundle
+#
+######################################################################
+
+#
+# Bundle packaging
+# Note that we try to keep the Mobius.app directory around and 
+# only rebuild the Contents directory so we can maintain a stable
+# symlink from /Appications to Mobius.app and avoid a copy out to
+# /Applications every build.
+#
+# Now that we use an installer and pre-create Application Support
+# we don't need to be including the .xml files in the Resources
+# directory.  But keep the old auto-boostrapping in place.
+#
+
+mac/bundles/Mobius.app/Contents: mobius
+	-rm -rf mac/bundles/Mobius.app/Contents
+	-mkdir mac/bundles/Mobius.app
+	mkdir mac/bundles/Mobius.app/Contents
+	mkdir mac/bundles/Mobius.app/Contents/MacOS
+	mkdir mac/bundles/Mobius.app/Contents/Resources
+	cp mac/bundles/app/Info.plist mac/bundles/Mobius.app/Contents
+	cp mac/bundles/app/PkgInfo mac/bundles/Mobius.app/Contents
+	cp mac/bundles/app/mobius.icns mac/bundles/Mobius.app/Contents/Resources
+	cp mobius mac/bundles/Mobius.app/Contents/MacOS
+	cp Catalog_* mac/bundles/Mobius.app/Contents/Resources
+	cp install/config/mobius.xml mac/bundles/Mobius.app/Contents/Resources/mobius.xml
+	cp install/config/ui.xml mac/bundles/Mobius.app/Contents/Resources/ui.xml
+	cp install/config/host.xml mac/bundles/Mobius.app/Contents/Resources/host.xml
+	cp install/config/osc.xml mac/bundles/Mobius.app/Contents/Resources/osc.xml
+
+app: mac/bundles/Mobius.app/Contents
+
+######################################################################
+#
+# VST
+#
+######################################################################
+
+VST_OFILES = VstPlugin.o VstMobius.o VstConfig.o HostInterface.o MobiusPlugin.o MacInstall.o VstMain.o
+
+mobiusvst: libmobius.a libui.a $(VST_OFILES)
+	g++ $(LDFLAGS) -g -bundle $(FRAMEWORKS) -o mobiusvst $(VST_OFILES) libui.a libmobius.a $(OTHERLIBS) ../vst/2.4/libvst.a
+
+#
+# Note that we try to maintain the Mobius.vst diretory once created
+# so we can keep a stable symlink to it in /Library/Audio/Plug-Ins and
+# avoid a copy every time we build.
+#
+
+mac/bundles/Mobius.vst/Contents: mobiusvst
+	-rm -rf mac/bundles/Mobius.vst/Contents
+	-mkdir mac/bundles/Mobius.vst
+	mkdir mac/bundles/Mobius.vst/Contents
+	mkdir mac/bundles/Mobius.vst/Contents/MacOS
+	mkdir mac/bundles/Mobius.vst/Contents/Resources
+	cp mac/bundles/vst/Info.plist mac/bundles/Mobius.vst/Contents
+	cp mac/bundles/vst/PkgInfo mac/bundles/Mobius.vst/Contents
+	cp mac/bundles/vst/mobius.icns mac/bundles/Mobius.vst/Contents/Resources
+	cp mobiusvst mac/bundles/Mobius.vst/Contents/MacOS/mobiusvst2
+	cp Catalog_* mac/bundles/Mobius.vst/Contents/Resources
+	cp install/config/mobius.xml mac/bundles/Mobius.vst/Contents/Resources/mobius.xml
+	cp install/config/ui.xml mac/bundles/Mobius.vst/Contents/Resources/ui.xml
+	cp install/config/host.xml mac/bundles/Mobius.vst/Contents/Resources/host.xml
+	cp install/config/osc.xml mac/bundles/Mobius.vst/Contents/Resources/osc.xml
+
+vst: mac/bundles/Mobius.vst/Contents
+
+######################################################################
+#
+# AU
+#
+######################################################################
+
+# note that we rename the executable and resource file so they match
+# the bundle directory name
+
+AU_OFILES = HostInterface.o AUMobius.o MobiusPlugin.o MacInstall.o
+AU_EXP = mac/AUMobius.exp
+
+# this stopped building on the Lion laptop, can't locate <AudioUnit/AudioUnit.r>
+# The reason was that we had been setting isysroot to 
+# /Developer/SDKs/MacOSX10.4u.sdk but that's release specific.  On Lion there
+# was a symlink from MacOSX.sdk to the appropriate versioned directory but it 
+# only had 6 and 7.  Not sure if this means you can't comple for older releases?
+# The Mini didn't have this symlink so it will need to be added:
+# 
+# UPDATE: With Xcode 5, common.osx defines $(DEVROOT)
+#sysroot:
+#	ln -s /Developer/SDKs/MacOSX10.4u.sdk /Developer/SDKs/MacOSX.sdk 
+
+AUMobius.rsrc: AUMobius.r
+	Rez -o AUMobius.rsrc -d SystemSevenOrLater=1 -useDF -script Roman -d i386_YES=1 -d ppc_YES=1 -I /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -arch i386 -isysroot $(DEVROOT) AUMobius.r
+
+AUMobius: libmobius.a libui.a $(AU_OFILES) AUMobius.rsrc
+	g++ $(LDFLAGS) -g -dynamiclib -exported_symbols_list $(AU_EXP) $(FRAMEWORKS) -o AUMobius $(AU_OFILES) libui.a libmobius.a $(OTHERLIBS) ../au/libau.a
+
+auclean:
+	rm $(AU_OFILES)
+
+#
+# Create the AU component bundle directory.
+# The name of the executable doesn't have to be the same
+# as what was built but it must match the .rsrc file and
+# CFBundleExecutable in Info.plist.  I'm not sure if the
+# executable name needs to be unique for each version but
+# we're making it so.
+#
+# To preserve symlinks we keep the root .component directory
+# and replace the Contents directory.
+#
+
+mac/bundles/Mobius.component/Contents: AUMobius AUMobius.rsrc
+	-rm -rf mac/bundles/Mobius.component/Contents
+	-mkdir mac/bundles/Mobius.component
+	mkdir mac/bundles/Mobius.component/Contents
+	mkdir mac/bundles/Mobius.component/Contents/MacOS
+	mkdir mac/bundles/Mobius.component/Contents/Resources
+	cp mac/bundles/component/Info.plist mac/bundles/Mobius.component/Contents
+	cp mac/bundles/component/PkgInfo mac/bundles/Mobius.component/Contents
+	cp mac/bundles/component/mobius.icns mac/bundles/Mobius.component/Contents/Resources
+	cp AUMobius "mac/bundles/Mobius.component/Contents/MacOS/Mobius 2"
+	cp AUMobius.rsrc "mac/bundles/Mobius.component/Contents/Resources/Mobius 2.rsrc"
+	cp Catalog_* mac/bundles/Mobius.component/Contents/Resources
+	cp install/config/mobius.xml mac/bundles/Mobius.component/Contents/Resources/mobius.xml
+	cp install/config/ui.xml mac/bundles/Mobius.component/Contents/Resources/ui.xml
+	cp install/config/host.xml mac/bundles/Mobius.component/Contents/Resources/host.xml
+	cp install/config/osc.xml mac/bundles/Mobius.component/Contents/Resources/osc.xml
+
+au: mac/bundles/Mobius.component/Contents
+
+aulist:
+	auval -a
+
+# version 1: auvaltool -v aumf mobi Zmob
+auval:
+	auvaltool -v aumf mobi Circ
+
+auvalsooper: 
+	auval -v aumf loop Soop
+
+######################################################################
+#
+# Config Files
+#
+######################################################################
+
+#
+# Capture the mobius config files from /Library/Application Support/Mobius
+# back to the development directory.  These are copied from the bundle
+# the first time Mobius runs, then managed there.
+#
+
+initconfig:
+	cp install/config/mobius.xml "/Library/Application Support/Mobius 2/mobius.xml"
+	cp install/config/ui.xml "/Library/Application Support/Mobius 2/ui.xml"
+	cp install/config/host.xml "/Library/Application Support/Mobius 2/host.xml"
+
+devconfig:
+	cp config/macmobius.xml "/Library/Application Support/Mobius 2/mobius.xml"
+	cp config/macui.xml "/Library/Application Support/Mobius 2/ui.xml"
+	cp install/config/host.xml "/Library/Application Support/Mobius 2/host.xml"
+
+saveconfig:
+	cp "/Library/Application Support/Mobius 2/mobius.xml" config/macmobius.xml
+	cp "/Library/Application Support/Mobius 2/ui.xml" config/macui.xml
+
+unitconfig:
+	cp config/macunitmobius.xml "/Library/Application Support/Mobius 2/mobius.xml"
+	cp config/macunitui.xml "/Library/Application Support/Mobius 2/ui.xml"
+	cp install/config/host.xml "/Library/Application Support/Mobius 2/host.xml"
+
+saveunitconfig:
+	cp "/Library/Application Support/Mobius 2/mobius.xml" config/macunitmobius.xml
+	cp "/Library/Application Support/Mobius 2/ui.xml" config/macunitui.xml
+
+lapunitconfig:
+	cp config/lapunitmobius.xml "/Library/Application Support/Mobius 2/mobius.xml"
+	cp config/lapunitui.xml "/Library/Application Support/Mobius 2/ui.xml"
+	cp install/config/host.xml "/Library/Application Support/Mobius 2/host.xml"
+
+savelapunitconfig:
+	cp "/Library/Application Support/Mobius 2/mobius.xml" config/lapunitmobius.xml
+	cp "/Library/Application Support/Mobius 2/ui.xml" config/lapunitui.xml
+
+######################################################################
+#
+# expr
+#
+######################################################################
+
+EXPR_OFILES = exprtest.o
+
+expr: libmobius.a libui.a $(EXPR_OFILES)
+	g++ $(LDFLAGS) -o expr $(EXPR_OFILES) libmobius.a ../util/libutil.a
+
+######################################################################
+#
+# Distribution
+#
+######################################################################
+
+#
+# Export the clean install to the /Applications direcory 
+#
+
+#
+# This one leaves the Application Support configuration in place
+# Sigh, we can't have a symlink at the top-level of the Mobius.vst
+# bundle, AudioMulch doesn't like symlinks.  So leave a real directory
+# there and symlink Contents
+#
+
+export: app au vst
+	rm -rf "/Applications/Mobius 2"
+	rm -rf "/Library/Audio/Plug-Ins/VST/Mobius 2.vst"
+	rm -rf "/Library/Audio/Plug-Ins/Components/Mobius 2.component"
+	mkdir "/Applications/Mobius 2"
+	ln -s /Users/jeff/dev/mobius/src/mobius/mac/bundles/Mobius.app "/Applications/Mobius 2/Mobius 2.app"
+	mkdir "/Library/Audio/Plug-Ins/Components/Mobius 2.component"
+	ln -s /Users/jeff/dev/mobius/src/mobius/mac/bundles/Mobius.component/Contents "/Library/Audio/Plug-Ins/Components/Mobius 2.component/Contents"
+	mkdir "/Library/Audio/Plug-Ins/VST/Mobius 2.vst"
+	ln -s /Users/jeff/dev/mobius/src/mobius/mac/bundles/Mobius.vst/Contents "/Library/Audio/Plug-Ins/VST/Mobius 2.vst/Contents"
+
+lapexport: app au vst
+	rm -rf "/Applications/Mobius 2"
+	rm -rf "/Library/Audio/Plug-Ins/VST/Mobius 2.vst"
+	rm -rf "/Library/Audio/Plug-Ins/Components/Mobius 2.component"
+	mkdir "/Applications/Mobius 2"
+	ln -s /Users/jeff.larson/dev/mobius/src/mobius/mac/bundles/Mobius.app "/Applications/Mobius 2/Mobius 2.app"
+	mkdir "/Library/Audio/Plug-Ins/Components/Mobius 2.component"
+	ln -s /Users/jeff.larson/dev/mobius/src/mobius/mac/bundles/Mobius.component/Contents "/Library/Audio/Plug-Ins/Components/Mobius 2.component/Contents"
+	mkdir "/Library/Audio/Plug-Ins/VST/Mobius 2.vst"
+	ln -s /Users/jeff.larson/dev/mobius/src/mobius/mac/bundles/Mobius.vst/Contents "/Library/Audio/Plug-Ins/VST/Mobius 2.vst/Contents"
+
+# this one resets Application Support
+cleansupport: 
+	rm -rf "/Library/Application Support/Mobius 2"
+
+#
+# Build a directory of components for the Package Builder
+# Figure out a way to automate this!
+#
+
+packages: app au vst
+	 rm -rf mobius-packages
+	 mkdir mobius-packages
+	 mkdir "mobius-packages/Mobius 2"
+	 cp install/text/README.txt "mobius-packages/Mobius 2"
+	 cp -r install/loops "mobius-packages/Mobius 2"
+	 cp -r install/samples "mobius-packages/Mobius 2"
+	 cp -r install/scripts "mobius-packages/Mobius 2"
+	 cp -r mac/bundles/Mobius.app "mobius-packages/Mobius 2/Mobius 2.app"
+	 rm -rf "mobius-packages/Mobius 2/loops/.svn"
+	 rm -rf "mobius-packages/Mobius 2/samples/.svn"
+	 rm -rf "mobius-packages/Mobius 2/scripts/.svn"
+	 rm -rf "mobius-packages/Mobius 2/Mobius 2.app/.svn"
+	 cp -r mac/bundles/Mobius.vst "mobius-packages/Mobius 2.vst"
+	 cp -r mac/bundles/Mobius.component "mobius-packages/Mobius 2.component"
+	 rm -rf "mobius-packages//Mobius 2.vst/.svn"
+	 rm -rf "mobius-packages/Mobius 2.component/.svn"
+	 cp install/config/mobius.xml  "mobius-packages/Mobius 2/Mobius 2.app/Contents/Resources"
+	 cp install/config/mobius.xml  "mobius-packages/Mobius 2.vst/Contents/Resources"
+	 cp install/config/mobius.xml  "mobius-packages/Mobius 2.component/Contents/Resources"
+	 cp install/config/ui.xml  "mobius-packages/Mobius 2/Mobius 2.app/Contents/Resources"
+	 cp install/config/ui.xml  "mobius-packages/Mobius 2.vst/Contents/Resources"
+	 cp install/config/ui.xml  "mobius-packages/Mobius 2.component/Contents/Resources"
+	 cp install/config/host.xml  "mobius-packages/Mobius 2.vst/Contents/Resources"
+	 cp install/config/host.xml  "mobius-packages/Mobius 2.component/Contents/Resources"
+	 cp install/config/osc.xml  "mobius-packages/Mobius 2.vst/Contents/Resources"
+	 cp install/config/osc.xml  "mobius-packages/Mobius 2.component/Contents/Resources"
+	 mkdir "mobius-packages/Application Support"
+	 cp install/config/mobius.xml  "mobius-packages/Application Support"
+	 cp install/config/ui.xml  "mobius-packages/Application Support"
+	 cp install/config/host.xml  "mobius-packages/Application Support"
+	 cp install/config/osc.xml  "mobius-packages/Application Support"
+
+######################################################################
+#
+# General
+#
+######################################################################
+
+.PHONY: clean
+clean: commonclean
+	@make -C functions -f makefile.mac clean
+	@-rm -f mobius
+	@-rm -f mobiusvst
+	@-rm -rf mac/bundles/Mobius.app/Contents
+	@-rm -rf mac/bundles/Mobius.vst/Contents
+	@-rm -rf mac/bundles/Mobius.component/Contents
+	@-rm -rf mobius-packages
+
+uiclean:
+	@-rm -f $(LIBUI_O)
+	@-rm -f $(VST_OFILES)
+	@-rm -f libui.a
+	@-rm -f mobius
+	@-rm -f mobiusvst
+
+execlean:
+	@-rm -f mobius
+	@-rm -f mobiusvst
+	@-rm -f AUMobius
+

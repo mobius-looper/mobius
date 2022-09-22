@@ -1,0 +1,66 @@
+#
+# Makefile for the audio interface abstraction.
+# Requires both PortAudio and MidiEnv.
+#
+# PortAudio is pre-built with a universal binary static library.
+# See notes in ../PortAudio if you need to rebuild it.
+# 
+
+default: libaudio devices audiotest
+
+PORTAUDIO = ../portaudio/20071207/mac
+
+PA_INCLUDES = -I$(PORTAUDIO)
+
+PA_FRAMEWORKS = -framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework CoreServices
+
+# necessary for common.osx
+INCLUDES = $(PA_INCLUDES) -I../midi -I../util
+
+OTHERLIBS = $(PORTAUDIO)/libportaudio.a ../midi/libmidi.a ../util/libutil.a
+
+include ../make/common.osx
+
+######################################################################
+#
+# libaudio
+#
+######################################################################
+
+LIBAUDIO_O = \
+	  AudioInterface.o MacAudioInterface.o
+
+libaudio.a: $(LIBAUDIO_O)
+	 libtool -static -o libaudio.a $(LIBAUDIO_O)
+
+libaudio: libaudio.a
+
+######################################################################
+#
+# audiotest
+#
+######################################################################
+
+FRAMEWORKS = -framework Carbon -framework CoreMIDI $(PA_FRAMEWORKS)
+
+audiotest: libaudio.a audiotest.o 
+	g++ $(LDFLAGS) -g $(FRAMEWORKS) -o audiotest audiotest.o libaudio.a $(OTHERLIBS)
+
+######################################################################
+#
+# devices
+#
+######################################################################
+
+devices: libaudio.a devices.o
+	g++ $(LDFLAGS) -g $(FRAMEWORKS) -o devices devices.o libaudio.a $(OTHERLIBS)
+
+######################################################################
+#
+# General
+#
+######################################################################
+
+.PHONY: clean
+clean: commonclean
+	@-rm audiotest

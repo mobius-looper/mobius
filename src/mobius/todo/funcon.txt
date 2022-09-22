@@ -1,0 +1,69 @@
+Loop Switch
+
+  SUSReturnEvent
+    removed in a few cases if it looks like we missed an up transition
+    ! not being freed, can these have Actions?
+
+    When matching up transition is found, the SUSReturnEvent is "promoted".
+    The SUSReturnEvent is removed and freed, and replaced with either
+    a MuteOn event (for switchDuration=Once) or a Return event.
+    If we're in a rounding mode, a mode event event may also be scheduled,
+    but it 
+    
+
+----------------------------------------------------------------------
+Mode Invocation
+
+Let the mode handle function invokes?  This sounds nice but looks
+too complicated.  We definitely need to generalize how we deal
+with mode ending.  
+
+See if we can get a few of the EDP mode alternations up into
+Mode::invoke but otherwise this looks almost impossible.
+
+Some "modes" are not represented as MobiusModes, they are 
+simply scheduled events like Realign.  Having a switch
+event in EventManager is another.
+
+----------------------------------------------------------------------
+
+Only four things free Actions:
+
+   - Mobius or ScriptInterpreter that create Actions and retain
+     ownership after synchronous invocation
+
+   - Track when processing scheduled actions asynchronously
+
+   - Track when deciding to ignore actions that were added to the pending list
+
+   - Event handlers when Events are freed, after notifying the
+     ScriptInterpreter for any Wait events
+
+----------------------------------------------------------------------
+
+Long-Press Function Changes
+
+EDP has a feature where holding a trigger down will change the
+function from a normal toggle function to a SUS function.  We have
+so far done that by changing the function in the FunctionContext 
+(and now Action), in the new world the Function invoke method should
+just pay attention to the action->longPress field but the default
+scheduler in Function::invoke still needs to see "sus" in the Function
+on which the method is executed.
+
+
+Mute.cpp:// SUS first for longFunction
+Mute.cpp:			longFunction = SUSPause;
+Mute.cpp:		longFunction = SUSMute;
+Overdub.cpp:// have to define sus first for longFunction
+Overdub.cpp:		longFunction = SUSOverdub;
+Replace.cpp:// have to define SUS first for longFunction
+Replace.cpp:		longFunction = SUSReplace;
+Reverse.cpp:		longFunction = SUSReverse;
+Speed.cpp:		longFunction = SUSSpeed;
+Stutter.cpp:// SUS first for longFunction
+Stutter.cpp:		longFunction = SUSStutter;
+Substitute.cpp:// SUS first for longFunction
+Substitute.cpp:		longFunction = SUSSubstitute;
+
+----------------------------------------------------------------------

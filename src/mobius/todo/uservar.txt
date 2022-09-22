@@ -1,0 +1,385 @@
+
+Exposing User Variables
+
+UI needs to have an object that won't be deleted.  
+
+For consistency with parameters, variables should be set with
+Actions, though they're simple enough just to call UserVariable->setValue
+
+Simpler to just make these look like Parameters?
+
+  - Similar to script functions, there are static Parameters and there
+    can be user defined parameters.  May be some ambiguity in the script
+    engine if resolving a symbol finds something on both the UserVariable
+    list and the global Parameter list.
+
+Need to declare which variables will be exported.
+
+
+Declare global Something
+
+Declare [global | track] name type value [allowed values]
+
+  - default global
+
+Declare "My Mode" string null mode1 mode2 mode3
+
+Declare Level int 0 0 10
+
+  - for ints the allowed values are a low and a high
+
+Keyword args clearer?
+
+  Define Level type int low 0 high 10 value 4
+
+  Define "My Mode" type string values a,b,c,d
+
+  Define "My Mode" scope track type int 
+
+Things in a variable definition:
+
+   name - internal name used in scripts
+   displayName - name used in the UI
+   type - string, int, boolean, enum
+   allowedValues - for enum
+   high, low - for int
+   initialValue
+
+Defvar foo
+  displayName: Foo
+  allowedValues: a, b, c, d, e, f, g
+Endvar
+
+New statement concept: Keyword
+
+  - a symbol followed by a colon
+  - must be meaningful to the surrounding context
+  - could be useful to declare things about Procs ?
+
+
+Proc Foo
+  arguments: a,b,c,d
+
+  # alternative to if $1 == 1
+  if a == 1
+Endproc
+
+Parameter Foo
+
+Endparameter
+
+
+We already call the first word of a statement a "keyword" so this
+is more like "contextual keyword".  It's a little like a ! declaration
+where !name is a declaration for the containing script blok.
+
+Param foo
+  !name foo
+  !type int
+Endparam
+
+What we're doing...setting a property of the containing block.  Could
+call it just a "property" but getting geeky and confusing with parameter.
+
+  block keyword
+  declaration
+
+Just use declaration, but for consistency need to allow this
+
+name: foo
+autoload: true
+
+Could allow the parameter to have statements that run whenever the
+parameter is set.
+
+Param foo
+  type: int
+  low: 0
+  high: 8
+
+  # value has already changed, previous value in "oldValue"
+  if foo = 8
+    Message set to the highest!
+  endif
+
+Endparam
+
+The alternatve would be to create scripts to set the value rather
+than directly binding to it. More complicated.  Could have both read 
+and write labels?
+
+Param foo
+
+  Label read
+  if something
+     return 0
+  end
+
+  Label write
+  end
+
+Param
+
+Awkward most of the time the parameter will simply have a value
+maintained by the system.  A parameter whose value is dynamic is useful
+but rare, require a special declaration
+
+  Param foo
+    dynamic:
+  
+    if operation = read
+       ...calculate a value to return
+    else
+       ...store a value with side effects
+    endif
+  Endparam
+
+This is weird because the Param "function" may or may not have a return
+value.  Need a "Return" statement to specify the return.
+
+It would be somewhat clearer to let Params reference procs:
+
+  Proc ReadFoo
+     do something
+     return value
+  Endproc
+
+  Proc WriteFoo
+     Message value is $1
+     do something
+  Endproc
+
+  Param foo
+    reader: ReadFoo
+    writer: WriteFoo
+  Endparam
+
+Statements in the Param body are the writer since that's what
+you want most of the time.  Better than labels or a dual call.
+
+Usually you want to do this to have side effects not change the 
+value so when the writer block is called the value has already been
+set and the previous value is in "oldValue".  When a writer: is declared
+the old value is is argument 1 and the new value is argument 2, but
+the new value has already been set.
+
+Hmm..two different "calling" contexts.
+
+When a script is loaded we need to find and register any Params it contains.
+This will require a method in the Statement if we want to keep it
+generic and let other Statements have installation behavior.  
+
+The eval() method needs to be used whenever the parmameter is set if
+we want to support parameter scripts.  So eval() can't be used both
+when the parmaeter is "called" by setting it and to define the Parameter.
+
+Alternately let Endparam.eval() set up the definition.  Weird Proc/Endproc
+don't work that way.  Procs are post processed during a "link" phase.  
+We can just have a phase that looks for Params and have the definitions 
+promoted by code not in the Statement.  Or we could add a new install()
+method.
+
+----------------------------------------------------------------------
+Reboot...
+
+Think about a class definition.
+
+   - has a name
+   - has internal fields (variables)
+   - has declarations about how the class behaves
+   - the purpose of the class can be defined by implementing interfaces
+   - has methods
+
+Think about a script.
+
+  - has a name
+  - has internal variables
+  - has declarations about how the script behaves
+  - the purpose of the script is defined with ! declarations
+  - has Procs and Labels
+
+We have so far used Label to define the entry points for a script but
+it is cleaner to use Procs.  
+
+   !name Something
+   !multiclick 2000
+
+   ...main code...
+
+   Proc click
+      ...click code
+   Endproc
+
+The effect is very similar to using Label/end but it is more
+obvious where the blocks are since Proc/Endproc have to be balanced
+but Label doesn't.  
+
+Script objects are "instantiated" by running them.  Once running
+"methods" can be called on them by searching for Labels or Procs.
+
+Reentrancy isn't like simple OO, may need to refine the declarations
+so we can either create new instances of a script or send methods
+to existing ones.  If we provided scripts with symbols to the 
+instances of other scripts, it would provide another way to 
+control them than by setting global variables.
+
+   !name Start Something
+   !export startSomethingScript
+   Variable foo true
+   while true
+     ...
+   next
+
+   !name Control Script
+   set startSomethingScript.foo false
+
+Interesting, but what if there is more than one script running?  Maybe
+
+   !name Control Script
+   for 1
+     if scripts[Start Something] != null
+        set scripts[Start Something].foo false
+     endif
+   next
+    
+Here "scripts" is a track variable containing the list of scripts running
+in this track.  They can be searched by name.  Doesn't work for global
+scripts.  Scripts aren't really track specific, need more thought about
+the execution model.
+
+
+Ayway, back to scripts as classes...
+
+Defparam isn't necessary if we make !parameter a type of script.
+
+   !name My Parameter
+   !parameter
+   !type integer
+   !low 0
+   !high 8
+
+   # declarations are easy to extend
+   # top level code can either be the "initializer" or the "writer" 
+
+   if newValue == 8
+      Message My Parmater set to highest value
+   endif
+
+   # If there is no read proc, then we simply maintain the last
+   # value set.  The read proc overrides this.
+   Proc read
+      Variable result
+      ...calculate a result
+
+      # need a return statement
+      return result
+   Endproc
+ 
+          
+Return is almost identical to end, it just has the extra argument.  Could also
+just use "end result" but that's confusing to programmers.  Not all Procs need
+returns, the defalt return value is null.
+
+So now we have script files that behave like classes, what about having
+multiple classes in one file.
+
+  !name My Parameters
+  # this says this is a container and not visible for bindings
+  !library
+
+  #define a function
+  Function My Record
+    # need to be able to nest declarations
+    !sustain
+    focusLock: true
+    # ugly for this to apply at this level, it needs to be a script level thing
+    autoload: true
+    
+    ...the function logic, just like a normal script
+
+  # a new generic block ending statement
+  Endblock
+
+  # Procs differ from functions in that they aren't visible in bindings
+  # and can only be called from other scripts
+  Proc Some Utility
+    ...
+  Endblock
+
+  # Parameter blocks define parameters
+  # This is the same as a !parameter script
+  Param My Parameter
+    type: int
+    low: 0
+    high: 8
+    
+    Proc read
+       ...a read proc for the parameter
+    Endblock
+
+
+  Endblock
+    
+  # Control blocks define controls
+  # this is the same as a !control script
+ 
+  Control My Control
+    type: int
+    low: 0
+    high: 127
+ 
+    ...logic to handle the value
+  Endblock
+
+
+Hmm...there doesn't need to be a difference between Param and Control.  Binding a CC to a 
+!parameter script makes it behave just like a !control script.  If there is any difference
+that can be handled with declarations.  The only real difference is where it appears in the binding
+windows, so...
+
+  Param My Control
+    type: int
+    low: 0
+    high: 127
+
+    # this says it should be displayed in the Control binding window
+    # the default is the Parameter binding window
+    binding: control
+
+  Endparam
+
+We could generalize this even further and not have Functions, everything
+can be a Param
+
+  Param My Record
+    binding: function
+    sustain: 
+    focusLock:
+
+    ...the function logic, just like a normal script
+
+  Endparam
+
+
+This feels a little weird but that's the way plugin hosts work.  The parameter
+gives behavior clues to the host, maybe
+
+   Param My Function
+     behavior: momentary
+
+So instead of !control !parameter, etc. you have
+
+    behavior: button | momentary | control | parameter
+
+This has some nice qualities and is appealing from a programmer perspective, but
+feels confusing for musicians.  A script is just always expected to behave
+like a function.
+
+----------------------------------------------------------------------
+
+Continue with letting the script be the "class" rather than having multiple
+classes in one script.  This is how Java works, but not C++.  There really shouldn't
+be the need for hundreds of custom parameters and functions, so one per file is file.
+
+!library scripts can still be used to define common Procs though.
+

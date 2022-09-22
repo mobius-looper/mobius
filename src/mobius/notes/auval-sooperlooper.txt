@@ -1,0 +1,171 @@
+[/Users/jeff/dev/mobius/src/mobius] mac auvalsooper
+auval -v aumf loop Soop
+
+  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+         AU Validation Tool
+         Version: 1.2.1b3 
+          Copyright 2003-2007, Apple, Inc. All Rights Reserved.
+
+         Specify -h (-help) for command options
+  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+--------------------------------------------------
+VALIDATING AUDIO UNIT: 'aumf' - 'loop' - 'Soop'
+--------------------------------------------------
+Manufacturer String: essej.net 
+AudioUnit name: SooperLooperAU
+Component Info: SooperLooper AU
+Component Version: 1.0.0 (0x10000)
+Component's Bundle Version: 0.0.0
+
+* * PASS
+--------------------------------------------------
+TESTING OPEN TIMES:
+COLD:
+Time to open AudioUnit:         38.606 ms
+WARM:
+Time to open AudioUnit:         1.077  ms
+FIRST TIME:
+Time for initialization:        2.320 ms
+SLAU cleanup called
+
+* * PASS
+--------------------------------------------------
+VERIFYING DEFAULT SCOPE FORMATS:
+Input Scope Bus Configuration:
+ Default Bus Count:9
+    Format Bus 0: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 1: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 2: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 3: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 4: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 5: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 6: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 7: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 8: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+
+Output Scope Bus Configuration:
+ Default Bus Count:9
+    Format Bus 0: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 1: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 2: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 3: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 4: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 5: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 6: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 7: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 8: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+
+* * PASS
+--------------------------------------------------
+VERIFYING REQUIRED PROPERTIES:
+  VERIFYING PROPERTY: Sample Rate
+    PASS
+  VERIFYING PROPERTY: Stream Format
+    PASS
+  VERIFYING PROPERTY: Maximum Frames Per Slice
+    PASS
+  VERIFYING PROPERTY: Last Render Error
+    PASS
+
+* * PASS
+--------------------------------------------------
+VERIFYING RECOMMENDED PROPERTIES:
+  VERIFYING PROPERTY: Latency
+    PASS
+  VERIFYING PROPERTY: Tail Time
+WARNING: Recommended Property is not supported
+
+  VERIFYING PROPERTY: Bypass Effect
+    PASS
+
+* * PASS
+--------------------------------------------------
+VERIFYING OPTIONAL PROPERTIES:
+  VERIFYING PROPERTY Host Callbacks
+    PASS
+
+* * PASS
+--------------------------------------------------
+VERIFYING SPECIAL PROPERTIES:
+
+VERIFYING CUSTOM UI
+Carbon View Components Available: 1
+  auvw loop Soop  -  essej.net : SooperLooperAU
+    PASS
+
+Cocoa Views Available: 0
+
+VERIFYING CLASS INFO
+    PASS
+
+TESTING HOST CALLBACKS
+    PASS
+
+* * PASS
+--------------------------------------------------
+PUBLISHED PARAMETER INFO:
+Testing that parameters retain value across reset and initialization
+SLAU cleanup called
+  PASS
+
+* * PASS
+--------------------------------------------------
+FORMAT TESTS:
+
+Reported Channel Capabilities (implicit):
+      [-1, -1]
+
+Input/Output Channel Handling:
+1-1   1-2   1-4   1-5   1-6   1-7   1-8   2-2   2-4   2-5   2-6   2-7   2-8   4-4   4-5   5-5   6-6   7-7   8-8
+X                                         X                                   X           X     X     X     X     
+SLAU cleanup called
+SLAU cleanup called
+SLAU cleanup called
+SLAU cleanup called
+SLAU cleanup called
+SLAU cleanup called
+SLAU cleanup called
+
+* * PASS
+--------------------------------------------------
+RENDER TESTS:
+SLAU cleanup called
+Input Format: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+Output Format: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+Render Test at 512 frames
+Slicing Render Test at 64 frames
+  PASS
+
+Render Test at 64 frames, sample rate: 22050 Hz
+SLAU cleanup called
+Render Test at 137 frames, sample rate: 96000 Hz
+SLAU cleanup called
+Render Test at 4096 frames, sample rate: 44100 Hz
+SLAU cleanup called
+Render Test at 4096 frames, sample rate: 192000 Hz
+SLAU cleanup called
+Render Test at 4096 frames, sample rate: 11025 Hz
+SLAU cleanup called
+Render Test at 512 frames, sample rate: 48000 Hz
+SLAU cleanup called
+  PASS
+
+1 Channel Test:
+In and Out Format: AudioStreamBasicDescription:  1 ch,  48000 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+SLAU cleanup called
+Render Test at 512 frames
+  PASS
+
+Checking connection semantics:
+SLAU cleanup called
+Connection format:
+AudioStreamBasicDescription:  2 ch,  48000 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+  PASS
+
+* * PASS
+--------------------------------------------------
+SLAU cleanup called
+AU VALIDATION SUCCEEDED.
+--------------------------------------------------
+[/Users/jeff/dev/mobius/src/mobius] 

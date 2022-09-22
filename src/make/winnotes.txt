@@ -1,0 +1,13 @@
+
+To figure out whether something is 32 vs 64 bit use dumpbin:
+   
+
+    dumpbin /headers mobius.exe
+
+Then look for this:
+
+   14C machine (x86)
+vs
+   8664 machine (x64)
+
+

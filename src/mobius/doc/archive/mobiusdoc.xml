@@ -1,0 +1,4681 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document>
+<document>
+<heading>
+<title>Mobius</title>
+<version>Version 1.29</version>
+<date>July, 2006</date>
+</heading>
+
+<TOC/>
+
+<section><title>Introduction</title>
+
+<p>Welcome to Mobius!  Mobius is a tool for the real-time creation and
+manipulation of audio loops.  It was inspired by the venerable Gibson
+Echoplex Digital Pro (EDP) with Loop IV software.  Mobius implements
+much of the Loop IV functionality, removes some limitations, and adds
+many new features.  Because the EDP is an extremely complex
+device, I do not have the resources at this time to write a
+comprehensive user's manual.  Instead, I will focus on those aspects
+of Mobius that are different from the EDP.  It is <b>strongly</b>
+recommended that you either already be familiar with the EDP, or that
+you study the EDP manual to fully understand what Mobius does.</p>
+
+<p>The EDP manual is available <a href='http://www.gibson.com/products/strings/echoplex/EchoplexPlusManual12.pdf'>here</a>.</p>
+
+<p>If you are new to looping, <a href='http://www.loopers-delight.com'>Loopers
+Delight</a> is the best place to explore and learn.</p>
+
+<p>If you find problems, I kindly ask that you report them.  The best
+place to report bugs is the 
+<a href='http://groups.yahoo.com/group/zonemobius'>Yahoo discussion group</a>.
+  You can also email me bug reports at
+<b>jeff@zonemobius.com</b>.  Even if you don't find any problems feel
+free to send me a note letting me know what you liked or didn't
+like.</p>
+
+<p>If you are a new user, proceed directly to the <ref>Getting Started</ref>
+section.</p>
+
+<p>Thank you for helping me make Mobius better!  I hope you enjoy
+it as much as I do.</p>
+
+</section>
+
+<section><title>What's New</title>
+
+<p>This section is intended for users that already have experience 
+with an earlier release of Mobius.  If you are a new user, proceed
+directly to the <ref>Getting Started</ref> section.</p>
+
+<section><title>Release 1.29</title>
+
+<p>The major new features in this release are support for multi-channel
+audio interfaces, and more options for canceling mute mode.</p>
+
+<p>The standalone version of Mobius can now use all of the channels
+available on the selected audio interface, previous releases could
+only use the first two channels as a stereo pair.  Channels are
+grouped into stereo pairs called "ports".  For example, if an audio
+interface has 8 input and output jacks, there will be 4 stereo input
+and output ports.</p>
+
+<p>Ports are selected in the <i>Track Setup</i> dialog.  The 
+selectors labeled <i>ASIO Input Port</i> and <i>ASIO Output Port</i>
+are used to select the port numbers, each track may have a different
+input and output port.  See the <ref>Using Setups</ref> for more
+information.</p>
+
+<p>The <i>Mute Cancel</i> feature first introduced in release 1.26 has
+been significantly enhanced.  Several new cancel modes are now available
+including <i>Never</i> and <i>Custom</i>.  See the section
+<ref>Mute Cancel</ref> for more information.</p>
+
+<p>The <i>Slip Forward</i> and <i>Slip Backward</i> can be used
+to cause the playback position to immediately jump forward or
+backward by a selectable interval.  See the <ref>Slip Functions</ref>
+section for more information.</p>
+
+<p>In addition the following bugs have been fixed:</p>
+
+<ul>
+<li>Changing a track's Mono mode would not take effect until Mobius restarted</li>
+<li>Preset alert popup cannot be disabled</li>
+<li>Audio blip when doing a Retrigger with an immediate Mute</li>
+<li>Selecting a Setup doesn't immediately change the Presets</li>
+<li>Occasional crash running scripts that don't end with a Wait statement</li>
+</ul>
+
+</section>
+
+<section><title>Release 1.28</title>
+
+<p>The major new features for this release are <i>concurrent scripts</i>, 
+<i>mono tracks</i>, <i>improved pitch shifting</i>.</p>
+
+<p>Concurrent scripts means that you can have more than one script
+running in a track at the same time.  Previously if you attempted to
+use a script when there was another one waiting for an event, the
+first script would be canceled.  This will make scripts behave more
+like built-in functions, and should resolve a number of reported problems
+related to scripting.</p>
+
+<p>Most of the clicking noises during pitch shifting have been eliminated, 
+though you may still hear some if you are using a keyboard controller and
+are changing pitches very rapidly (about 16th notes at 120 BPM).  There is still
+however a significant amount of latency added by the pitch shifter, changes
+in pitch will sound as if they are delayed by about 1/10 second.</p>
+
+<p>Mono track mode allows a track to have a single mono input channel
+that is then panned in a stereo output field.  This is useful for
+instruments that are inheriently mono, such as accoustic instruments
+that are not passed through a stereo effects device.  Previously such
+devices would be panned hard left or hard right and could not be moved.
+See the <ref>Using Setups</ref> section for more.</p>
+
+<p>MIDI bindings to select Setups, Presets, and MIDI Configurations have
+been simplified and now work like bindings for functions and controls.  
+Bindings for all configuration objects are now done in the <i>MIDI Control</i>
+dialog.  A third panel labled <i>Configuration</i> contains the names of
+each configuration object, prefixed by the type of that object (<i>Preset</i>,
+<i>Setup</i>, or <i>MIDI</i>).  This allows you to use MIDI note and control
+change events to select configuration objects, previously you were limited
+to using program change events.</p>
+
+<p>To help position display components in the UI, when the shift key is
+helf down, the components will be erased and only their borders will be drawn.
+This is especially helpful for components that are often invisible such
+as the Tempo Display or the Message Area.</p>
+
+<p>The <i>Preset Alert</i> display component has replaced with the
+<i>Messages</i> component.  The preset alert formerly would popup a
+window whenever the preset changed, because this window would
+temporarily take keyboard focus, the keyboard would appear to freeze.
+Presets changes are now displayed in a normal UI component in the main
+Mobius window, keyboard focus does not change.  The component is
+called <i>Messages</i> and may be selected in the <i>Dispaly
+Components</i> dialog.</p>
+
+<p>The <i>Restore on Reset</i> parameter has been added to the Track
+Setups.  This parameter lets you define which track parameters will be
+changed to the values defined in the setup whenever the Reset function
+is used.  If no parameters are selected, the track will stay in its
+current state after a reset (though all audio content will be lost).</p>
+
+<p>In addition the following bugs have been fixed:</p>
+
+<ul>
+<li>Crash opening the main window when running under Usine</li>
+<li>Keyboard freeze and occasional crash when selecting tracks with the keyboard</li>
+<li>When using Setups, a Reset after recording a loop without changing any controls resets to the default state rather than the state in the Setup</li>
+</ul>
+
+</section>
+
+<section><title>Release 1.27</title>
+
+<p>The major new feature in this release is <i>Setups</i>.  Setups
+provide a mechanism to set the initial operating parameters for all
+tracks including controls like output level and pan, as well as
+assignments like presets and groups.  You can think of it like a
+"global preset" for quickly configuring the tracks for a particular
+performance.  See <ref>Using Setups</ref> for details.</p>
+
+<p><b>NOTE:</b> The <i>default project template</i> concept used
+in previous releases to assign VST ports and other track parameters
+is no longer supported.  When you upgrade to 1.27 the default
+project will be converted into a setup with the name "Default Setup".
+After this conversion the default project will not be used, and you
+may delete the file "init.mob" in the Mobius installation directory.</p>
+
+<p>Release 1.26 changed the behavior of the functions that control
+playback direction, rate and pitch so that they do not cancel Mute
+mode.  There were a few users however that preferred the old behavior
+where these functions will always cancel Mute mode.  This behavior
+may now be controlled with the <i>Mute Cancel</i> parameter.  When
+this parameter is set to <i>Major Modes</i> only functions that
+change the mode will cancel Mute (the 1.26 behavior).  If this
+is set to <i>Always</i> any function that modifies the loop will
+cancel mute mode, including the Reverse, Speed, Rate, and Pitch functions
+(pre 1.26 behavior).</p>
+
+<p>In addition the following bugs have been fixed:</p>
+
+<ul>
+<li>Crash when binding keys to the UI functions related to parameter
+control (NextParameter, PrevParameter, IncParameter, DecParameter)</li>
+<li>Main track controls snapping back to original values after changing
+tracks using the keyboard</li>
+<li>GlobalPause not working</li>
+</ul>
+
+</section>
+
+<section><title>Release 1.26</title>
+
+<p>This release includes a number of changes related to the scheduling
+of functions that affect how the loop is played: <i>Reverse</i>, 
+<i>Half Speed</i>, <i>Rate Shift</i>, and <i>Pitch Shift</i>.</p>
+
+<p>When quantizing, these functions
+(along with Overdub) may now be stacked on the same quantization point, 
+previously they would be scheduled on successive quantization points.  
+For example, this allows you to enter Reverse and Half Speed mode at
+exactly the same time by using quantization and calling both functions 
+before the quantization point.</p>
+
+<p>When using the Pitch Shift and Rate Shift functions, we will first
+look for an existing function event of that type scheduled at the next 
+quantization point.  If we find one, we modify the pitch or rate value
+accordingly rather than scheduling another event.  This can be used
+with the incremental functions like Rate Up and Rate Down to scroll 
+to any desired rate.  The last rate selected before the quantization
+point will be used.</p>
+
+<p>Reverse, Half Speed, Rate Shift, and Pitch Shift functions will
+now no longer take you out of Mute mode.  This can be used to 
+make dramatic changes to the way the loop is played without each
+change being individually audible.</p>
+
+<p>Finally, the Reverse, Rate, and Pitch functions now have
+<i>transfer modes</i> in the preset.  These modes control how the
+pitch, rate, and direction are carried forward into the next loop when
+using one of the loop switching functions.  The transfer modes for each
+function type have the following values:</p>
+
+<ul>
+<li><b>Off</b> - the mode is unconditionally turned off</li>
+<li><b>Follow</b> - the current mode is continued</li>
+<li><b>Remember</b> - the mode in effect when the next loop was last playing is restored</li>
+</ul>
+
+<p>Until now, Mobius has operated as if the transfer mode was <i>Follow</i>
+for all function types.</p>
+
+<p>The following new functions have been added:</p>
+
+<ul>
+<li><b>Pause</b> - halt playback then resume from the same location</li>
+<li><b>Clear</b> - erase the current loop contents leaving an empty loop
+of the same size</li>
+<li><b>Instant Multiply 2</b> - immediately multiply the loop by 2</li>
+<li><b>Instant Multiply 3</b> - immediately multiply the loop by 3</li>
+<li><b>Instant Multiply 4</b> - immediately multiply the loop by 4</li>
+</ul>
+
+<p>In addition the features described in this section, see the <i>README</i>
+file for more information on the bugs fixed in this release.</p>
+
+</section>
+
+<section><title>Release 1.25</title>
+
+<section><title>Bugs Fixed</title>
+
+<ul>
+<li>Crash deleting the plugin in many hosts when MIDI devices are selected</li>
+<li>Loop switch functions can now operate as mode ending events for Multiply and Insert mode</li>
+</ul>
+
+</section>
+
+<section><title>New Parameters</title>
+
+<glossary>
+
+<gi><dt>Overdub Transfer</dt>
+<dd>A preset parameter that controls how overdub mode is carried forward
+when switching loops.  If set to <i>Off</i> overdub mode is always off
+after switchign loops.  If set to <i>Follow</i> the overdub mode in the
+current loop is carried forward to the next.  If set to <i>Remember</i>
+the overdub mode of a loop is remembered when leaving the loop, and
+restored when returning to it.</dd>
+</gi>
+
+<gi><dt>Modes Ignoring Secondary Feedback</dt>
+<dd>A global parameter that lets you select loop modes during which
+the Secondary Feedback control will not be active.  This is an advanced
+parameter that is used when the <i>Interface Mode</i> parameter is
+set to <i>Expert</i> or <i>Stutter</i>.  Normally all recording modes
+are subject to Secondary Feedback when using these interface modes.</dd>
+</gi>
+
+</glossary>
+</section>
+
+<section><title>New Display Components</title>
+
+<glossary>
+
+<gi><dt>Loop Number</dt>
+<dd>A large number that may be displayed in the track strip to make it
+easier to identify loops from a distance.  The number also functions
+as the <i>focus lock</i> indiciator, you can click on it to activate or
+deactivate focus lock, and it will change color when focus lock is active.
+This is easier to see than the small focus lock button.</dd>
+</gi>
+
+<gi><dt>Loop Radar</dt>
+<dd>An alternative to the horizontal "thermometer" that displays the
+current playback position in the loop using a graphic that resembles
+a pie chart or radar screen.  This makes it easier to determine
+the position in the loop from a distance.</dd>
+</gi>
+
+</glossary>
+</section>
+
+<section><title>New Script Variables</title>
+
+<glossary>
+
+<gi><dt>globalMute</dt>
+<dd>Set to "true" if we are in global mute mode, and the current track
+will be restored to play mode when the global mute is canceled.</dd>
+</gi>
+
+<gi><dt>solo</dt>
+<dd>Set to "true" if this track is currently being soloed.</dd>
+</gi>
+
+<gi><dt>nextLoop</dt>
+<dd>Set to the number of the next loop if we are currently in
+a quantized loop switch.</dd>
+</gi>
+
+</glossary>
+
+</section>
+
+</section> <!-- Release 1.25 -->
+
+<section><title>Release 1.24</title>
+
+<p>The most significant new function is <ref>Bounce Recording</ref> which
+allows you to capture the output of several tracks, mix them together,
+and copy the result into an empty track which can then be triggered
+and manipulated like any other loop.</p>
+
+<p>The new <b>Solo</b> function behaves similar to a solo button
+on a mixing console.  When first used all tracks other than the active
+track are unmuted.  When used a second time, the mute state of all 
+tracks is restored to what it was before the first Solo.</p>
+
+<p>The new <b>Global Mute</b> function mutes all tracks that are
+currently playing, but does not unmute any tracks that are currently
+muted.  If you use Global Mute a second time, it will restore the
+previous track mutes, unmuting only those tracks that were
+playing previously.  If you do a Global Mute, then start changing
+the mute state of tracks manually, global mute mode is canceled.</p>
+
+<p>MIDI control has also been improved.  You are now able to 
+store the MIDI channel with a function or controller binding rather than
+requiring that function events all come in on the same channel.  Further,
+there are now <i>binding scopes</i> for each track and group allowing
+you to make a MIDI binding to any function or control, and have that
+binding performed in only one track or group of tracks.  See
+the <ref>MIDI Control</ref> section for more details.</p>
+
+<p>MIDI device selection has been improved.  You may now
+select any number of input and output devices, and you may select
+one device to be used a "MIDI through".  This allows Mobius to respond
+to commands sent by different devices that are not connected
+in a MIDI through chain, and send MIDI synchronization messages to more
+than one device.  If a MIDI through device is selected, all events
+received from the MIDI input devices will be echoed immediately to the
+through device.  See the <ref>MIDI Devices</ref> section for more.</p>
+
+<p>Finally a "technology preview" of the <ref>Pitch Shifting</ref> 
+function is available for the curious.  Note though that this is
+still in development and it has many problems.  It is provided only
+to give you and idea for how pitch shifting will eventually work
+within Mobius.</p>
+
+</section> <!-- Release 1.24 -->
+
+<section><title>Release 1.23</title>
+
+<p>The major new feature in this release is <i>Rate Shifting</i>.
+This allows you to change the playback and recording rate of the
+loop, similar to the original Half Speed function, but with a full
+range of rates that correspond to the notes of the chromatic scale.</p>
+
+<p>See the <ref>Rate Shifting</ref> section for more information.</p>
+
+</section>
+
+<section><title>Release 1.22</title>
+
+<p>The major new feature in this release is <i>track groups</i>.
+Track groups are similar to the existing <i>focus lock</i> feature but
+more powerful.  When tracks are assigned to groups, a function
+performed in one track can automatically be performed in all other
+tracks in the same group.  MIDI continous controllers may also be
+bound to a new set of track group controls so that the output level,
+feedback, and pan of all tracks in a group may be set at the same
+time.</p>
+
+<p>The way MIDI continuous controllers are assigned has been
+redesigned and a new concept called <i>Controls</i> has been
+introduced.  A Control is a mobius parameter that may have a large
+range of values.  Controls are bound to MIDI events in the <i>MIDI
+Control</i> dialog similar to the way functions are bound.  All MIDI
+binding is now done in the MIDI Control dialog and stored in the
+mobius.xml file, there is no more <i>Tracks</i> dialog that stored
+MIDI bindings in the project files which was a source of
+confusion.</p>
+
+<p>If you had previously assigned track controllers in the initial
+project, these will be automaticaly converted to the new format, but
+<b>only</b> for the default project.  If you have created your own
+named projects that contain track controller bindings, these cannot be
+converted to the new format.  Send me mail if you need help with the
+conversion.</p>
+
+<p>A new global parameter named <i>Group and Focus Lock Functions</i>
+allows you to specify the functions that will obey focus lock and
+track groups.  For example, you may want the <i>Next Loop</i> function
+to obey track groups, but not the <i>Record</i> or <i>Overdub</i>
+functions.</p>
+
+<p>See the section <ref>Controlling Tracks</ref> for more information.</p>
+
+</section>
+
+<section><title>Release 1.19</title>
+
+<p>The major new feature in this release is <i>continuous feedback</i>
+where changes to the feedback level are recorded into the next layer
+as it is recorded.  This differs from the previous behavior where feedback
+was only applied once for the entire layer when you reached the end
+of the loop and created a new layer.  By allowing feedback
+to vary continuously, you can "sculpt" the material being copied
+into the next layer.</p>
+
+<p>Note though that a side effect of continuous feedback is that you
+can no longer use the "Save Project Layers" option to save just the
+new material overdubbed in each layer to a file, the layer files will
+contain all of the material copied from the previous layers as well.
+If you prefer the old behavior, you can disable layer flattening by
+checking the new "No Layer Flattening" preset parameter.</p>
+
+<p>See the section <ref>Controlling Feedback</ref> for full details.</p>
+
+<p>The interface modes <i>Expert</i>, <i>Stutter</i>, <i>Replace</i>,
+and <i>Flip</i> are now supported.  See the <ref>Interface Modes</ref>
+section for details.</p>
+
+<p>A number of changes to the scripting language have been made.  If you
+have been writing scripts they may not behave as they did in an earlier
+release, especially if you have been using <i>Wait</i> statements.  Please
+read the new scripting manual, or post a message to the Yahoo group
+if you are having a problem using an old script with this release.</p>
+
+</section>
+
+</section> <!-- What's New -->
+
+<section><title>Upgrading</title>
+
+<p>This section is intended for users that already have experience 
+with an earlier release of Mobius.  If you are a new user, proceed
+directly to the <ref>Getting Started</ref> section.</p>
+
+<p>For most upgrades, you may simply install the new version of Mobius
+into the same directory as the previous version.  All of the
+configuration performed in the previous version will be carried over
+to the new version.</p>
+
+<p>Occasionally, a release may introduce changes to the user interface
+that require modifications to the UI configuration.  Since we will not
+overwrite an existing UI configuration when upgrading, what you see in
+the Mobius UI may not match what is described in the manual if you
+have made changes to the UI configuration.</p>
+
+<p>If you would like to start over with a UI configuration that matches
+what is in the manual, before installing the new version rename the file
+<i>ui.xml</i> in the Mobius installation directory to <i>ui.save</i>.  You
+will lose changes you have made to the button list, display components, 
+and color palette.  All other non-UI configuration such as MIDI and
+audio device selection will be preserved.</p>
+
+<p>You may also keep your current UI configuration and manually add
+the new components.  After the install, bring up Mobius and select the
+<i>Display Components</i> item from the <i>Configuration</i> menu.
+There may be new components on the left side of the <i>Components</i>
+selector that may now be displayed.  See the section <ref>Configuring
+the Status Area</ref> for more information.</p>
+
+<p>Note that when selecting a display component that has never been
+selected before, it will usually be drawn in the upper left corner of
+the Mobius status area.  You will normally want to move this to
+another location by holding down the <i>Shift</i> key, then clicking
+and dragging the left mouse button over the new component.  If you
+already have a component near the upper left corner, the new component
+may be hidden and you will need to move the existing components before
+the new component is visible and can be moved.</p>
+
+<p>Some components, such as <i>Minor Modes</i> and
+<i>Synchronization</i> are not always visible.  The Minor Modes will
+only be visible if the Overdub, Reverse, or Half-Speed modes are
+active.  The Synchronization component (displays the MIDI tempo) will
+only be visible if MIDI clocks are being received.  Before you can
+move these components you will have to make them visible.</p>
+
+<section><title>Upgrading to 1.24</title>
+
+<p>Release 1.24 made major changes to the way MIDI events are bound to
+functions and controls.  Among the changes are:</p>
+
+<ul>
+<li>No more Mobius global channel, Mobius receives on all channels
+and bindings are made to a specific channel.</li>
+<li>No more "track channels".</li>
+<li>Function and controller bindings may now be made for specific tracks
+and track groups.</li>
+<li>The long list of track/group number suffixed controls in the
+<i>MIDI Control</i> dialog has been replaced by a short list
+of unqualified names, and a <i>Scope</i> selector.</li>
+<li>MIDI Configuration and Preset definitions must now assign a specific
+MIDI channel as well as a program change number if they are to be
+called up with program changes.</li>
+</ul>
+
+<p>Mobius will attempt to upgrade your current MIDI function and
+control bindings to the new format.  There is one case however where
+this may fail.  If you currently have the Mobius global channel set to
+"Omni" Mobius will assume that all of your bindings will use MIDI
+channel 1.  If you have been using Omni, but sending events on a
+channel other than 1, you will have to modify your MIDI bindings after
+the upgrade to set the desired channels.  If all bindings will use the
+same channel, the easiest thing to do run the old version of Mobius
+before you install the new one, and select this channel as the global
+channel in the <i>MIDI Control</i> dialog.  Then after you install the
+upgrade, this should channel should be automatically assigned to all
+of your bindings.  If however you are using events on several
+channels, you will have to manually edit each MIDI binding after the
+upgrade and assign the desired channel.</p>
+
+<p>There will be no upgrade path for the "track channel" feature,
+because I don't think anyone actually used it.  If you do, post a
+message to the Yahoo group or send me private email and we'll discuss
+how to proceed.</p>
+
+<p>The <ref>External EDP</ref> feature has been changed such that you
+no longer select a MIDI output device.  Instead you must first
+select a general purpose <i>MIDI Through</i> device.  See the 
+<ref>MIDI Control</ref> section for details on how to select
+a through device.</p>
+
+</section>
+
+<section><title>Upgrading 1.16 (or earlier) to 1.18</title>
+
+<p>There is a new color in the palette used in the loop meter when the
+track is muted.  Releases prior to 1.16 do not have this color defined
+in the palette and since the UI configuration is not replaced on an
+upgrade, the color will default to bright blue and will not appear
+in the Palette window.  To make this color appear so that it can
+be changed, you will need to edit the <i>ui.xml</i> file contained
+in the installation directory.</p>
+
+<p>Locate the <b>&lt;Palette></b> element, and add the following line
+somewhere inside it:</p>
+
+<example>
+  &lt;PaletteColor name='muteMeter' key='613' rgb='16711680'/>
+</example>   
+
+<p>Mobius must not be running when you make this change.  The
+next time you start, you should see "Mute Meter" appear in the color
+palette.</p>
+
+</section> <!-- 1.16 to 1.18 -->
+
+</section> <!-- Upgrading -->
+
+<section><title>Getting Started</title>
+
+<p>After launching Mobius, you should proceed immediately to the
+<i>Configuration</i> menu and select the <i>Audio Devices</i> item.
+Here you must select an input and output device.</p>
+
+<p>You should select an ASIO device if one is available for your
+sound card.  This will provide the lowest possible latency and
+make Mobius feel more responsive.</p>
+
+<p><b>NOTE:</b> The standalone version of Mobius cannot currently
+access all of the channels in a multi-channel audio device, it can
+only use the first two channels.  If you need access to all channels,
+you will have to run Mobius as a VST plugin, and route device channels
+to Mobius tracks in the host application.</p>
+
+<p><b>NOTE:</b> There is an ASIO device on my system named <i>Adobe
+Default Windows Sound</i> that does not appear to work very well.  If
+you have this, I don't recommend that you use it, in my experience the
+device advertises extremely high latency values.</p>
+
+<p>If you do not have ASIO devices, you may select either <i>MME</i>
+or <i>DirectSound</i> devices.  These will both have higher latency
+than ASIO.  Mobius compensates for latency so it is still quite
+usable, though you will occasionally hear "skips" in audio playback
+after certain events.</p>
+
+<p>At the bottom of the dialog you will see a field labeled 
+<i>Suggested Latency Milliseconds</i> which will default to 10
+for ASIO devices and 100 for other devices.  This is the latency
+we request when opening the device, though the device may not
+obey it.  You may experiment with lowering this value, but if
+it is too low you may have audible "clicks" 
+during playback and have "dropouts" during recording.</p>
+
+<p>The primary factors that determine what the lowest latency can be
+are the operating system, CPU speed, and sound card.  A relatively
+recent machine (4 years or less) running Windows XP or 2000 will
+perform best.  Windows NT is the worst, with Windows 98 somewhere
+in between.  DirectSound devices may allow lower latencies
+than MME devices, though not dramatically so.</p>
+
+<p>The default latencies are average for a modern machine.  If you are
+running NT, you probably need to increase MME/DirectSound suggested
+latency to 200 or more.  ASIO devices are not usually sensitive to the
+operating system, so 10 is a reasonable starting point for all.</p>
+
+<p>Below the suggested latency field are fields labeled <i>Override
+Input Latency Frames</i> and <i>Override Output Latency Frames</i>.
+Leave these alone for now.  If you feel that overdubs aren't being
+aligned properly, you will need to adjust how Mobius performs latency
+compensation by setting these values.  See <ref>Latency Calibration</ref> 
+for more information.  You normally don't have to
+set these values when using ASIO devices.</p>
+
+<p>You should next proceed to the <i>Configuration</i> menu and select
+the <i>MIDI Devices</i> item.  A dialog will appear allowing you to
+select an input and output device.  If you want to control Mobius with
+a MIDI controller such as a foot switch or expression pedal, you will
+need to select an input device.</p>
+
+<p>You only need to select an output device if you want Mobius to
+send synchronization messages.</p>
+
+<p>Once you have devices configured, send an audio signal to your
+sound card.  You should see a narrow horizontal rectangle in the
+center of the screen flickering according to the level of the signal.
+This is the <i>Audio Meter</i>.  If you don't see any movement in the
+audio meter, check your connections or try a different audio
+device.</p>
+
+<p>When Mobius is receiving audio, press the <b>R</b> key to begin
+recording.  Play something, then press <b>R</b> again to stop the
+recording and begin looping.  Mobius is not smart about compressing
+signals to avoid digital overload, so if you notice distortion,
+lower the signal level.</p>
+
+<p><b>NOTE:</b>One common error when setting up a software looper
+is having the audio output of the looper feed back into the input.  
+For example, it is common to have several sound sources connected
+to a mixer, then have the mixer output connected to the input
+of the sound card.  If the output of the sound card is also
+connected to the mixer, you can have feedback.  When Mobius
+is overdubbing, anything that is currently playing may then
+be included in the overdub (with a slight delay).  The loop
+will become increasingly louder and sound "metallic".</p>
+
+<p>If the output of the sound card is connected directly to the
+speakers this should not be a problem.  If you are using a mixer, you
+will have to find a way to exclude the channel containing the sound
+card output from the "bus" being sent to the sound card input.  If you
+have a Mackie, <i>Mute Alt 3-4</i> combined with <i>Control Room
+Source</i> buttons can accomplish this nicely.</p>
+
+<p>If you've created a loop and it plays back without distortion then
+you're ready to proceed.  If not, drop me a note and we'll try to
+figure out what's happening.</p>
+
+<section><title>Mobius VST Plugin</title>
+
+<p>Mobius may be run either standalone or as a VST plugin.  Plugins
+are physically DLL files, the name of the Mobius plugin DLL is,
+surprisingly, <i>mobius.dll</i> and may be found in the installation
+directory (usually c:\Program Files\Mobius).</p>
+
+<p>If your VST host application supports more than one plugin
+directory (many do not) configure it to include the Mobius
+installation directory.  If the host allows only a single directory,
+you will need to copy Mobius.dll into that directory.  One common
+convention is to use <i>c:\Program Files\VstPlugins</i> as a shared
+plugin directory though that is not always the case.  Look to see
+which directory the VST host is using before copying Mobius.dll.  You
+only need to copy the one Mobius.dll file, leave everything else in
+the Mobius installation directory.  The Mobius installation program
+will automatically copy Mobius.dll to <i>c:\Program Files\VstPlugins</i>
+if it exists, so if that is the directory you normally use for plugins,
+you should not need to do any further copying.</p>
+
+<p>After copying the DLL or adding Mobius to the host's search path,
+you may need to ask the host to "rescan" its plugin directories.
+Some hosts may do an automatic rescan automatically each time they 
+are started, others do not.</p>
+
+<p>Note that unlike most VST plugins, Mobius opens two windows.  The
+first is a small window containing a blue oval that is under control
+of the VST host, this is called the <i>VST editor window</i>.  The
+second is the main Mobius window.  I wanted more control over the main
+window, such as the ability to resize it after changing the display
+configuration, and giving it a menu bar.  You cannot resize a VST editor
+window, or give it a menu bar.</p>
+
+<p>The VST editor window will contain UI components that the host
+creates, often there is one to select a "preset".  These components
+are not currently recognized by Mobius.  You must do all of your
+interaction in the main Mobius window.  If you close the main window,
+you can open it again by clicking on the blue oval in the VST editor
+window.</p>
+
+<p>Audio devices selected for Mobius in standalone mode will not
+be opened when running as a VST.  The VST host must open the audio
+devices and route them to Mobius.</p>
+
+<p>Mobius normally receives MIDI events directly from the VST host so
+it is not usually necessary to configure MIDI input or output devices
+if all you use is the VST plugin.  See <ref>MIDI Devices</ref>
+for information on some special cases where Mobius may need to open
+its own MIDI devices.</p>
+
+<p>The <i>Monitor Audio Input</i> global parameter is usually checked
+when running as a VST.  This allows you to monitor the input signal
+being sent to Mobius which may have passed through other plugins. See
+the <ref>Global Parameters</ref> section for more information.  When
+input monitoring is turned on, you should disable any monitoring you
+may be doing with an external mixer or with the sound card.  If not,
+you may hear a slight "flanging" sound because the signal passing
+through Mobius will be delayed slightly from the signal being sent to
+the sound card.  Because of latency, it is really only practical
+to enable input monitoring if you are using ASIO drivers.</p>
+
+<p>If you are using a VST host that displays more than one input and
+output port for the plugin, you may assign each Mobius track to a
+different port.  Hosts that expose multiple ports include Bidule,
+Audio Mulch, Energy XT, and Live.</p>
+
+<p>Assigning tracks to ports provides several useful performance
+options, such as having some tracks take input from a soft-synth
+rather than live audio.  You may also insert a different effects plugin 
+after the output of each track, making each track sound different even
+though they are driven by the same input signal.</p>
+
+<p>The plugin provides 8 stereo input ports and 8 stereo output ports.
+VST ports are assigned as part of a <i>Track Setup</i> see the
+<ref>Using Setups</ref> section for details.</p>
+
+</section> <!-- Mobius VST Plugin -->
+
+<section><title>MIDI Devices</title>
+
+<p>Mobius uses MIDI devices in three ways:</p>
+
+<ol>
+<li><b>Input</b> devices are used to receive commands
+from a footswitch, keyboard or control surface.</li>
+<li><b>Output</b> devices are used to send MIDI clocks
+and other MIDI synchronization messages to a drum machine
+or sequencer.</li>
+<li><b>Through</b> devices are used to pass MIDI messages 
+received from an Input device to another device.</li>
+</ol>
+
+<p>Mobius has two different operating modes: as a standalone
+application, and as a VST plugin.  Each mode has different
+requirements for MIDI devices.</p>
+
+<p>In standalone mode you almost always select at least one input
+device so that Mobius may be controlled, usually by a footswitch.
+You may also select one or more output devices if you
+want to use the external synchronization features to control a drum
+machine.  Selecting a through device is uncommon, but may be used in
+cases where the MIDI input contains commands for Mobius and one or
+more other devices that can receive them from the through device.</p>
+
+<p>In VST mode, you often do not need to open any MIDI devices, 
+instead the VST host opens all of the devices.  Mobius receives
+MIDI events from the VST host and does not care which device 
+they came from.  If you want to use external synchronization however,
+it will be necessary to have Mobius open one or more output devices
+even when running as a plugin.  This is because most VST hosts do
+not recognize MIDI clocks generated by a plugin.  Selecting a through
+device in a VST plugin is uncommon but provided for advanced 
+routing.</p>
+
+<!-- TODO: need instructions on MIDI routing for the popular hosts -->
+
+<p><b>NOTE:</b> When running as a VST plugin, it is very important that
+you do not let Mobius open any of the same MIDI devices that the VST
+host is opening.  This can cause conflicts since neither Mobius or
+the host knows the other has already opened the devices, which can 
+cause the VST host to crash when you open and then close the Mobius 
+plugin.  It is usually safe to let Mobius and the host open the
+same <i>MIDI Yoke</i> device, but not a hardware MIDI device.</p>
+
+<p>Because there are different device requirements for standalone
+and VST modes, Mobius allows you to specify two different
+sets of devices.  When you open the <i>MIDI Devices...</i> dialog,
+there will be two columns of device selection panels.  The column 
+on the left selects devices for standalone mode, and the column
+on the right for VST mode.</p>
+
+<p>You may select any number of input devices, any number of output
+devices, but only one through device.  If you select a through device,
+all events received on all input devices will be passed immediately
+to the through device.  If you select more than one input device,
+Mobius will receive commands from all devices.   If you select 
+more than one output device, MIDI synchronization messages will be 
+sent to all of them at exactly the same time.</p>
+
+<p>The through device may be the same as one of the output devices.</p>
+
+</section> <!-- MIDI Devices -->
+
+</section> <!-- Getting Started -->
+
+<section><title>Concepts</title>
+
+<p>Before diving into the details, let's review a few fundamental EDP
+concepts and define some extended Mobius concepts.</p>
+
+<glossary>
+<gi><dt>Function</dt>
+<dd>An operation performed by Mobius at the request of the user.
+Examples include Record, Overdub, and Multiply.</dd>
+</gi>
+<gi><dt>Event</dt>
+<dd>An operation Mobius performs at a certain time in the future.  Events
+are <i>scheduled</i> during the processing of a function.  A function
+may schedule more than one event.</dd>
+</gi>
+<gi><dt>Function Trigger</dt>
+<dd>An external stimulus that causes Mobius to perform a function.
+There are three types of function triggers: pressing keyboard keys,
+clicking UI buttons, and sending MIDI messages.</dd>
+</gi>
+<gi><dt>Function Binding</dt>
+<dd>The association of a function trigger with a function.  For example,
+the "R" key may be bound to the Record function.</dd>
+</gi>
+<gi><dt>SUS or Sustain Function</dt>
+<dd>A function that begins to take effect when the trigger is "down" and
+stops having effect when the trigger goes "up".  For keyboard triggers,
+this is a key going down and up.  For UI button triggers, this is the mouse
+button going down and up.  For MIDI note messages, down is note on and
+up is note off.  For MIDI control change messages, down is indicated
+with a non-zero control value, up with a zero value.</dd>
+</gi>
+<gi><dt>Long Press</dt>
+<dd>Holding down a function trigger for more than a few hundred milliseconds.  
+Some functions change behavior if they are initiated with a long press.</dd>
+</gi>
+<gi><dt>Control</dt>
+<dd>A named value that may be set by the user to control how audio is recorded
+and played in a track.  Examples include Input Level, Output Level, Feedback,
+and Pan.</dd>
+</gi>
+<gi><dt>Control Binding</dt>
+<dd>The association of a Control with a MIDI event.  Controls are almost
+always bound to MIDI continuous controllers so the value may be accurately
+and smoothly changed.  It is also possible to bind controllers to MIDI
+notes where the velocity of the note will set the controller value.</dd>
+</gi>
+<gi><dt>Parameter</dt>
+<dd>A named value that may be set by the user to control how
+functions are performed.  Parameters may be changed at any time.
+Examples include Quantize, InsertMode, and AutoRecord.</dd>
+</gi>
+<gi><dt>Preset</dt>
+<dd>A named collection of parameter values.  There may be any number
+of presets.  One preset is <i>selected</i>
+which means that its parameter values are being used when functions
+are performed.</dd>
+</gi>
+<gi><dt>MIDI Configuration</dt>
+<dd>A named collection of parameter values that determine how Mobius
+processes MIDI messages.  A MIDI Configuration is similar to a Preset, but
+only contains parameters related to MIDI.  This separation allows you
+to define many presets without having to duplicate a potentially large
+amount of MIDI parameters in each.</dd>
+</gi>
+<gi><dt>Setup</dt>
+<dd>A named collection of track parameters that define the state for each
+track when it is reset.  The track parameters that may be set include
+control values such as input and output levels, as well as assignments
+such as the preset, group, and focus lock.</dd>
+</gi>
+<gi><dt>Global Parameters </dt>
+<dd>A single collection of parameter values that control a few
+aspects of Mobius behavior that do not need to be changed dynamically,
+as is the case with Preset Parameters.</dd>
+</gi>
+<gi><dt>Sample</dt>
+<dd>The smallest unit of digital audio.</dd>
+</gi>
+<gi><dt>Audio Channel</dt>
+<dd>An audio device supports one or more channels depending
+on configuration.  Mono audio has one channel, stereo two channels,
+and 5.1 surround has six channels.</dd>
+</gi>
+<gi><dt>Frame</dt>
+<dd>One or more samples corresponding to the number of audio channels.
+A mono frame will have one sample, a stereo frame will have two samples
+etc.  The frame is the smallest unit of audio content that Mobius 
+will deal with.  Though not technically correct, you can usually
+think of a frame and a sample as being the same thing.
+Phrases like "sample accurate positioning" really should
+be "frame accurate positioning" because it rarely makes sense
+to talk about individual samples within a frame.</dd>
+</gi>
+<gi><dt>Loop</dt>
+<dd>A section of recorded audio content that may be played back continuously
+and modified during playback.</dd>
+</gi>
+<gi><dt>Layer</dt>
+<dd>A copy of a loop made before the loop is modified.  A new layer
+is created every time a loop plays from beginning to end, and is modified
+during playback.  Layers are the "history" of the loop, when you 
+use the Undo function, the previous layer is restored and begins playing.</dd>
+</gi>
+<gi><dt>Track</dt>
+<dd>A collection of loops.  Only one loop in the track may be active
+at a time, but more than one track may be playing a loop simultaneously.
+You can think of a track like a virtual instance of an EDP.</dd>
+</gi>
+<gi><dt>Mode</dt>
+<dd>A track is always in one of several modes.  Functions may change
+the mode the track is in, and the mode may affect how functions are performed.
+Example modes include Reset, Record, Play, Multiply, and Switch Quantize.</dd>
+</gi>
+<gi><dt>Project</dt>
+<dd>A collection of layers, loops, tracks, and configuration settings
+stored on the file system.   The current Mobius state, including
+all audio content, may be saved to project files at any time.  A previously
+saved project may be loaded back into Mobius.</dd>
+</gi>
+<gi><dt>Script</dt>
+<dd>A file containing the description of one or more Mobius functions that
+are to be performed at certain times.</dd>
+</gi>
+</glossary>
+
+</section>
+
+<section><title>User Interface</title>
+
+<p>The Mobius UI is functional though a bit crude.  It is built upon a
+UI toolkit that I'm developing because MFC and ATL make me ill.
+Another goal is that the toolkit be machine independent to assist in
+porting to the Mac though that won't happen for awhile.  Don't worry
+if you don't understand what any of this means, just be aware that the 
+Mobius UI will feel a bit different and look rather plain compared to other
+Windows applications.  The UI will continue to improve, I've just been
+focusing more on the looping engine than flashy graphics.</p>
+
+<p>The Mobius window is divided into three areas.  The <i>button area</i>
+at the top is where the configurable function buttons are arranged.  The
+<i>status area</i> in the center contains several components that display
+the status of the loop and the current parameters.  The <i>track area</i>
+at the bottom has controls for each of the tracks.</p>
+
+<section><title>Using Buttons</title>
+
+<p>The button area may contain any number of function buttons.  All of
+the EDP "Direct MIDI" functions, and all of the extended Mobius
+functions may be assigned a button.  To perform a function assigned to
+a button, simply click on the button.  If the function name begins
+with "Sustain" this is a sustained function, the
+function will be active as long as the mouse button is pressed.</p>
+
+<p>To configure buttons, pull down the <i>Configuration</i> menu and
+select the <i>Buttons...</i> item.  A dialog box appears with two
+large panels containing function names.  The panel on the right
+contains the functions that will have buttons in the UI, the panel on
+the left contains the functions without buttons.  In the center is a
+column of buttons that move functions between the panels.  Function buttons
+will be displayed in the order in which they appear in the right
+panel.</p>
+
+<p>To add a button, select a function in the left panel by clicking on it, 
+then click on the button labeled <b>></b>.  To remove a button, select
+a function in the right panel and click on the button labeled <b>&lt;</b>.  The
+button labeled <b>>></b> will move all of the functions to the right panel,
+and oddly enough the button labeled <b>&lt;&lt;</b> will move them all 
+to the left.</p>
+
+<p>I personally don't find the <b>>></b> button very useful, but hey, you be
+the judge.  Mobius isn't smart about resizing the window if the number
+of buttons starts to crowd the other areas, so if the track area is
+overlaying part of the status area, make the window taller.  Mobius
+will remember the window size in the UI configuration file.  If you
+want to control Mobius exclusively from the keyboard or MIDI, then you
+may remove all the buttons to reduce display clutter.</p>
+
+</section> <!-- Using Buttons -->
+
+<section><title>Using The Keyboard</title>
+
+<p>Functions may also be activated by pressing keys on the computer
+keyboard.  To bind buttons to keys, pull down the <i>Configuration</i>
+menu and select the <i>Keyboard Control...</i> item.</p>
+
+<p>The panel on the left contains a list of all of the functions, with
+the current key binding displayed along the right margin.  To change a
+key binding, highlight a function name by clicking on it.  The current
+key binding, if any, will be displayed in a text box to the right of
+the function list.</p>
+
+<p>To change the binding you may type the name of the key in the text
+box, though it is much easier to enable key capture. Enable key
+capture by clicking the checkbox under the test field.  Now, any key
+you press will be entered into the text field and bound to the
+function.</p>
+
+<p>You may also assign functions to keys combined with the Shift, 
+Control, and Alt keys.  For example "C" and "Shift-C" may reference
+different functions.  More than one modifier may be used,
+for example "Ctrl-Shift-C", "Ctrl-Shift-Alt-C".  Go nuts.</p>
+
+<p>The "Caps Lock" key is not recognized as a shift modifier and
+cannot be bound.  The "Print Screen" and "Num Lock" keys cannot be
+bound.  The right "Windows" key may be bound, but cannot be used as a
+key modifier.  The left "Windows" key may also be bound but I don't
+recommend it since Windows will popup the start menu whenever this is
+pressed.</p>
+
+<p>The keys in the number pad will have different names depending on
+the state of the "Num Lock" key.  If Num Lock is down, the keys will
+appear as "Num 0", "Num 1", etc.  If Num Lock is up, the keys will be
+duplicates of the arrow and page keys.  Keeping Num Lock down will
+provide you with more unique keys to bind.  The keys in the number pad are
+different than the number keys in the row above the letter keys.  For
+example, "1" and "Num 1" may be bound to different functions.</p>
+
+<p>If the key is bound to a sustained function, the function is active
+for as long as the key is pressed.</p>
+
+<p>A window containing a summary of all the key bindings may be
+displayed by pulling down the <i>Help</i> menu and selecting the
+<i>Key Bindings</i> item.  This is what Windows calls a <i>modeless
+dialog</i> meaning that you can leave it open while you return to the
+main Mobius window.</p>
+
+</section> <!-- Using the Keyboard -->
+
+<section><title>Using Tracks</title>
+
+<p>A <i>track</i> in Mobius is like stereo EDP.  Each of the tracks
+has independent feedback and output levels and may be set to a
+different preset.  You may build up a loop in one track, then switch
+to another track and build up another loop.  Tracks play simultaneously.</p>
+
+<p>Each track is represented by a column of controls arranged in a row
+at the bottom of the display.  One track is considered the
+<i>active</i> track and will be displayed with a white border.  You
+select a track by clicking on or near the knobs for that track, or by
+using the left and right arrow keys.  The active track has <i>input
+focus</i> meaning that it will respond to functions initiated by
+buttons, the keyboard, or by MIDI.</p>
+
+<p>Most functions will only be performed in the active track.  A few
+functions, known as <i>global</i> functions, will affect all tracks.
+For example, a <i>General Reset</i> performed in one track will not
+affect other tracks, but a <i>Global Reset</i> will perform a
+<i>General Reset</i> in all tracks.</p>
+
+<p>The small round button at the top of each track column is
+the <i>Focus Lock Button</i> which will turn red when clicked.  When
+focus lock is on, it means that the track will respond to button,
+keyboard, or MIDI events even if it is not the active track.   This
+can be used to create or modify several tracks at the same time.
+A more powerful option for controlling multiple tracks is
+described in the <ref>Track Groups</ref> section.</p>
+
+<p>Three circular knobs control feedback, output level, and pan
+position.  To change the value of a knob, click and hold the mouse
+inside the knob and drag the mouse up or down or left and right.  I
+recommend configuring two MIDI pedals to control output and feedback
+instead.  If you are among the legion of FCB1010 owners, you will want
+to do this.</p>
+
+<p>The first rectangle at the bottom of each track column displays the
+progress of loop playing in this track.  It is a smaller version of
+the loop meter in the main status area.  The second rectangle is
+the output level meter, it will fill with color according to the
+strength of the audio in this track.</p>
+
+<p>At the bottom of the track strip is some empty space in which
+the <i>track group</i> will be displayed when one is assigned.
+See the section <ref>Controlling Tracks</ref> for more information
+on track groups.</p>
+
+<p>See the section <ref>Using Presets</ref> for more information on 
+selecting presets for each track.</p>
+
+<p>See the section <ref>Using Setups</ref> for more information on 
+initializing all tracks.</p>
+
+<p><b>NOTE:</b>If you have several loud tracks playing simultaneously, it
+is easy to cause digital clipping, which sounds very nasty.  Mobius is
+not smart about compression.  If you experience this, turn down the
+output level in one or more tracks.</p>
+
+</section> <!-- Using Tracks -->
+
+<section><title>The Status Area</title>
+
+<p>The status area contains several components that help you
+understand what is happening in the active track.</p>
+
+<p>On the far left is a column of rectangles called the <i>Loop List</i>
+that represent the number of loops in the track  This is a visual
+representation of the parameter the EDP calls "MoreLoops".  A
+track may have up to 8 loops, but only one of them will be audible.
+The top rectangle represents the first loop, the active loop will
+be highlighted.</p>
+
+<p>Next to the loop rectangles are the <i>Dynamic Parameters</i> which
+display a selection of parameters from the current preset.  You may
+change dynamic parameters while Mobius is running, but these changes
+are not stored in the preset.  They will be lost when you exit Mobius
+or select a different preset.  To make permanent changes to the
+presets see the <ref>Using Presets</ref> section.</p>
+
+<p>One of the dynamic parameters is considered the <i>active
+parameter</i> and will have a white rectangle around its value.  Using
+the default key bindings, you can set the active parameter using the 8
+(up) and 2 (down) keys on the number pad.  Be sure that Num Lock is
+on.  To change the active parameter value use the 4 (left) and
+6 (right) keys on the number pad.  Use the 5 key on the number pad
+to restore the original value stored in the preset.</p>
+
+<p>To the right of the dynamic parameters are the <i>Counter</i>,
+<i>Audio Meter</i> and <i>Loop Meter</i>.  The Counter is
+arranged somewhat like the LEDs on the EDP.  The large numbers in the
+center show the loop position in seconds.  The small number on the
+left is the number of the current loop.  The numbers on the right
+indicate the current cycle and the total number of cycles in the
+loop.</p>
+
+<p>When MIDI clock synchronization is being received, the tempo of
+the MIDI clocks will be displayed above the counter.</p>
+
+<p>The Audio Meter fills with color in response to the 
+strength of the signal present in the selected audio input device.</p>
+
+<p>The Loop Meter fills with color to show the playback position
+within the loop.  Under the meter, white markers will appear wherever
+a quantized event will be performed.  Above the name of the event will
+be a small white triangle.  If the triangle is pointing up, the event
+will happen in the current loop at that position.  If the triangle is
+pointing to the right (or left if going in reverse), the event will
+happen in a later repetition of the loop.</p>
+
+<p>When a user initiates a function, Mobius schedules one or more
+events to perform the operations required by that function at the
+right time.  Most functions, such as starting a multiply, schedule a
+single event.  Ending a multiply is an example of a complex function,
+it will schedule both a <i>Record End</i> event to stop recording when
+<i>Round Mode</i> is off, and a <i>Multiply End</i> event to finally
+end multiply mode.  There are also many other events that are not
+displayed related to playback transitions and latency adjustments.</p>
+
+<p>To the right of the loop meter is a set of three adjacent circles
+called the <i>Blinkers</i>.  The first circle flashes each time
+playback reaches a sub-cycle boundary, the second circle flashes on
+cycle boundaries, and the third circle flashes on the loop boundary.</p>
+
+<p>To the right of the blinkers is a word indicating the current
+mode.  When the loop is in reset, "Reset" is displayed, during multiply
+mode "Multiply" is displayed etc.</p>
+
+<p>Above the blinkers and the mode may be text that indicates that
+the overdub, reverse, or half speed modes are active.  These
+are referred to as <i>minor modes</i> and will remain active
+even when the major mode changes.</p>
+
+<p>Across the top of the status area is the <i>Layer List</i>, this is
+a horizontal row of yellow rectangles representing the layers in the
+current loop.  A layer is created whenever you make a modification 
+to the loop during playback, or whenever a loop plays to the end
+with feedback less than 100%.  You won't see the layer list until
+you complete the first recording.  When you use the <i>Undo</i> function,
+you will be returned to the previous layer, if there are no more layers
+to undo, you will enter Reset mode.</p>
+
+<p>Like the EDP, Mobius will not create a new layer unless there was
+an audible or structural change to the loop.  So if for example you
+leave overdub on, but don't play anything new, no new layer will be
+created.</p>
+
+<section><title>Configuring the Status Area</title>
+
+<p>If you don't happen to like the layout of the status area, you can
+remove components you don't want, and change their position in the
+window.</p>
+
+<p>To change the position of a component, move the mouse over it
+then press and hold the Shift key while pressing and holding the 
+left mouse button.  You can now drag the component to a new location.
+To assist in moving components, when the shift key is pressed, the components
+will be erased and only their border is drawn.  This is is useful for
+components such as Tempo Display that are normally invisible.</p>
+
+<p>To add or remove components, pull down the <i>Configuration</i>
+menu and select the <i>Display Components</i> item.  A dialog appears
+with four selection controls.  The  controls behave like the controls
+for displaying buttons described in the <ref>Using Buttons</ref>
+section.  Select the items you want displayed in the left panel and
+click the <b>></b> button, or select the items you want removed in the
+right panel and click the <b>&lt;</b> button.</p>
+
+<p>The first selector labeled <i>Components</i> determines which major
+components will be displayed in the status area.</p>
+
+<p>The second selector labeled <i>Dynamic Parameters</i> determines
+which preset parameters will be displayed.  The parameters will be
+displayed in the order they are selected in the right box, so if you
+want them in a particular order, clear the selection with the
+<b>&lt;&lt;</b> button, and add them one at a time in the desired
+order.  The parameters will only be displayed if you also have
+<i>Parameters</i> selected in the <i>Components</i> selector
+at the top.</p>
+
+<p>The third selector labeled <i>Main Track Controls</i> determines
+which track knobs will be displayed in the common track control strip
+which is normally on the right side of the Mobius window.  This
+will be visible only if <i>Track Controls</i> is selected in
+the <i>Components</i> selector.</p>
+
+<p>The fourth selector labeled <i>Track Strip Controls</i> determines
+which track knobs will be displayed in the track strip at the bottom
+of the Mobius window.  The same sub-components are available for both
+the track strip and the common track strip.  If you like large
+cluttered windows, you can disable the shared <i>Track Controls</i>
+component and duplicate all the track knobs in the bottom track strip.</p>
+
+<p><b>NOTE:</b> There are some display bugs that may cause the 
+display to draw incorrectly after the <i>Track Strip Controls</i> 
+list is modified.  You should restart Mobius whenever this list is
+changed.</p>
+
+</section> <!-- Configuring Status Area -->
+
+</section> <!-- Status Area -->
+
+<section><title>Using Presets</title>
+
+<p>A preset is a named collection of parameter values.  On any given
+track, one preset is <i>active</i> and each track may have a different
+active preset.  You may activate a preset by selecting an item from
+the <ref>Presets Menu</ref>, by selecting a preset within the
+<ref>Presets</ref> configuration dialog, or by sending a MIDI program
+change message.  When you select a preset, the preset name will be
+displayed briefly in a popup window over the main Mobius window.</p>
+
+<p>To define a preset, pull down the <i>Configuration</i> menu and
+select the <i>Presets...</i> item.   At the top of the dialog
+is a row labeled <i>Selected Preset</i>  containing a pull down
+selection list and a pair of buttons.  When you select a preset
+from the list, the values of the other fields in the dialog
+change to reflect the values stored in that preset.  The preset
+is also made the active preset for the active track.</p>
+
+<p>To define a new preset, click the <i>New</i> button.  A copy of the
+currently selected preset will be made and added to the list.  The
+preset will be given an initial name of the form <i>Preset n</i>
+where <i>n</i> is a number.  Unless you like ambiguously named
+presets, you will want to change the generated name.  The second
+row labeled <i>Name</i> has a text field where you may enter a
+name of your own.  Note that this name will not be shown in the pull down
+list until you save the preset.</p>
+
+<p>Under the name field is a row labeled <i>Program Change</i>
+containing a text box where you may enter a number from 1 to 128,
+another pulldown menu labeled <i>Channel</i> where you select a channel
+number from 1 to 16.  When Mobius receives a MIDI program change with
+this channel and number, the preset will be selected.  If the program
+change field is empty, this preset cannot be selected with MIDI.</p>
+
+<p>Under the program change field are a variety of other fields for
+the preset parameters.  These are described in more detail in the
+<ref>Parameters</ref> section.  When you have made the desired
+changes, click the <i>Save</i> button.  If you wish to discard the
+changes, click the <i>Cancel</i> button.</p>
+
+<p>After having created one or more presets, you may delete a preset
+you no longer want by selecting it and pressing the <i>Delete</i> button.
+The next preset in the list is then automatically selected.</p>
+
+</section> <!-- Using Presets -->
+
+<section><title>Using Setups</title>
+
+<p>A <i>track setup</i> is a named collection of track parameter
+values.  They are used to define an initial state for all tracks
+before recording, and also define the state the track each will return
+to when it is reset.  The following parameters may be specified
+for each track:</p>
+
+<ul>
+<li>Preset</li>
+<li>Input Level</li>
+<li>Output Level</li>
+<li>Feedback</li>
+<li>Secondary Feedback</li>
+<li>Pan</li>
+<li>Mono</li>
+<li>Group</li>
+<li>Focus Lock</li>
+<li>VST Input Port</li>
+<li>VST Output Port</li>
+</ul>
+
+<p>In addition you may designate which track should be the active
+track after a global reset.</p>
+
+<p>You may have several track setups designed for different performances.
+Setups may be selected from the <i>Track Setups...</i> menu or
+with a MIDI program change.</p>
+
+<p>When a setup is selected, all tracks that are currently empty will
+be modified to have the parameters defined in the setup.  Tracks that
+are not empty will not be modified.  When a track is reset with either
+the Reset or GlobalReset functions, it will be modified to have the
+parameters defined in the setup if they have been changed.</p>
+
+<p>If all tracks are empty when a setup is selected, the active
+track is also changed to the one specified in the setup.</p>
+
+<p>A common application of track setups is to configure a mix using
+different Output Level and Pan values for each track.</p>
+
+<p>Once a track has been reset to the state defined in the setup,
+if you use the Reset function again in an individual track to 
+toggle between the state defined in the setup and the <i>default track 
+state</i>.  In the default track state, most controls are at 100%, 
+Secondary Feedback is at 0%, Pan is centered, Focus Lock is off,
+and there is no group assignment.</p>
+
+<p>If the <i>Mono</i> option is checked, the track is configured
+to assume that there is a single channel input signal that is then
+panned between the two output channels.  This is a "true" pan, unlike
+the usual pan that is simply controls the levels of the left and right
+channels.  Note though that there are still 2 input channels for every 
+track.  Each channel will be combined before panning.</p>
+
+<p>At the bottom of the dialog is a multi-select field labeled
+<i>Restore After Reset</i>.  The field contians the names of some
+track parameters that are stored in the setup.  When one of these parameters
+is highlighed, its value will be restored to the value set in the setup
+after the <i>Reset</i> function is used.</p>
+
+<p>Some users like to have the track return to an initial state after
+a Reset, others prefer it to be left in its current state.  This
+parameter gives you control over which track parameters will be
+changed.  If no parameters are selected, the track will stay in its
+current state after a reset (though all audio content will be lost).
+Many users prefer to have the track level controls (Input Level,
+Output Level, Feedback, Pan) return to the values defined in the
+setup, but want focus lock and group assignments to stay the same.</p>
+
+
+<p>The <i>ASIO Input Port</i> and <i>ASIO Output Port</i> selectors
+are used to select which port of the audio interface is to be used as
+the input and output of the track, when Mobius is running standalone.
+The number of ports is determined by your audio interface.  Ports
+correspond to a stereo pair of channels on the audio interface.  If
+for example your audio interface has 8 input jacks, there will be 4
+input ports.  Port selection is only available if you are using
+an ASIO driver for the audio interface.</p>
+
+<p>The <i>VST Input Port</i> and <i>VST Output Port</i> selectors
+are used to select ports when Mobius is running as a VST plugin.
+Each port corresponds to a stereo pair of "pins" on the plugin.  Some
+hosts will display pins visually and allow you to draw
+lines to connect them.  Other hosts may display the port names
+in a menu.  Not all hosts support plugins that have more than one
+pair of input and output pins.</p>
+
+
+</section> <!-- Using Setups -->
+
+<section><title>MIDI Control</title>
+
+<p>Previous sections have described ways to bind Mobius functions to
+computer keyboard keys and UI buttons.  Functions may also be bound to
+MIDI program change, note, or control change events.  The behavior of
+the function is always the same, regardless of how it was
+initiated.</p>
+
+<p>Besides functions, Mobius also supports a set of <i>Controls</i>
+which may be given MIDI bindings.  Controls are used for parameters
+whose values vary over a large range, the following table lists
+the available controls.</p>
+
+<glossary>
+<gi><dt>Input Level</dt>
+<dd>Determines the amount of audio signal present at the audio inputs that
+will be recorded.  This is normally left at the highest level of 127 but
+may be reduced if you need to "trim" a loud input.</dd>
+</gi>
+<gi><dt>Output Level</dt>
+<dd>Determines the level of the audio signal in a track that is
+sent to the audio outputs.  This is often lowered when mixing the
+output of several tracks.</dd>
+</gi>
+<gi><dt>Feedback</dt>
+<dd>Determines the level of the audio signal from the previous layer that
+is copied into the next layer being recorded.</dd>
+</gi>
+<gi><dt>Secondary Feedback</dt>
+<dd>A level of feedback that is used instead of the primary feedback during
+some special modes.</dd>
+</gi>
+<gi><dt>Pan</dt>
+<dd>Determines the balance between the left and right stereo output.  Note
+that this not a "true" pan in that panning hard left will simply silence
+the right channel, the right channel is not moved to the left.</dd>
+</gi>
+</glossary>
+
+<p>Controls are almost always bound to MIDI continuous controller
+numbers, though it is also possible to bind them to MIDI notes.  When
+using note bindings, the velocity of the note determines the
+controller value.</p>
+
+<p>In addition to functions and controls, each of the configuration
+objects (Presets, Setups, and MIDI Configurations) may also be given a
+MIDI binding.  The configuration object will be activated when the
+associated MIDI event is received.</p>
+
+<p>To define MIDI bindings, pull down the <i>Configuration</i> menu
+and select the <i>Midi Control</i> item.  Mobius supports the
+definition of several <i>Midi Configurations</i> which contain
+different bindings.</p>
+
+<p>The ability to dynamically select MIDI configurations was developed
+for controllers such as the Ground Control Pro, which have a global
+set of "instant access" buttons plus a row of buttons that send
+program changes.  Since the instant access buttons always send the
+same MIDI events, you can change their behavior by defining several
+different MIDI configurations, and selecting them with the program
+changes.  This might also be useful if you have performance situations
+that require using different controllers.</p>
+
+<p>The <i>Selected Configuration</i>. field has a pull down menu of
+all the current MIDI configurations.  To the right of the pull down
+menu are a pair of buttons.  The <i>New</i> button will add a new
+configuration by making a copy of the current configuration and
+generating a unique name.  The <i>Delete</i> button will remove the
+current configuration from the list.</p>
+
+<p>The <i>Name</i> field has a text box where you may change
+the name of the selected configuration.  Note that the new name will
+not be reflected in the pull down menu until the you save by clicking
+Ok in the window.</p>
+
+<p>Below the <i>Name</i> field are three list boxes labeled
+<i>Function</i>, <i>Control</i>, and <i>Configuration</i>.  When you select a name
+in any of these boxes it will become selected and turn red.  The current binding for
+the selected item will be displayed in the fields below the <i>Control</i> 
+selector.  Once a field is seldcted, you may specify a MIDI binding by 
+manually changing the <i>Scope</i>, <i>Type</i>, <i>Channel</i>, and <i>Value</i>
+fields.</p>
+
+<p>The most efficient way to assign MIDI bindings is to let Mobius
+automatically assign MIDI events sent from an device.  Any MIDI events
+received by Mobius are displayed in the box at the bottom of the
+window.  If you check the <i>MIDI Capture</i> box, the <i>Type</i>,
+<i>Channel</i>, and <i>Value</i> fields will automatically be set
+according to the MIDI events being received.</p>
+
+<p>A MIDI Binding is defined in one of several <b>scopes</b>, selected with
+the pulldown menu labeled <i>Scope</i>.  The available scopes are:</p>
+
+<ul>
+<li>Global</li>
+<li>Track 1</li>
+<li>Track 2</li>
+<li>Track 3</li>
+<li>Track 4</li>
+<li>Track 5</li>
+<li>Track 6</li>
+<li>Track 7</li>
+<li>Track 8</li>
+<li>Group 1</li>
+<li>Group 2</li>
+<li>Group 3</li>
+<li>Group 4</li>
+</ul>
+
+<p>Each of these scopes may have a completely different set of MIDI bindings.
+Most bindings are made in the Global scope.  Global bindings affect the
+active track, any track that has focus lock, and any track that is in the 
+same group as the active track.  This is where most of the function bindings
+are defined.</p>
+
+<p>If you make a binding in one of the 8 track scopes, it will only
+affect that one track.  If you make a binding in one of the 4 group
+scopes, it will only affect the tracks that are currently a member of
+the group.</p>
+
+<p>Track and group bindings are most useful if you have a MIDI control
+surface or keyboard with lots of programmable knobs and sliders.  One
+common application is to assign a different MIDI continuous controller
+to the Output Level in each track scope, giving you direct control 
+over the level of each track, such as you would with a mixing console.</p>
+
+<p>Track scope function bindings are useful for functions like Mute
+and Solo.</p>
+
+<p>Group scope bindings affect only the tracks in the group.  The
+Output Level control in a group scope behaves in a special way by
+maintaining the same <b>relative levels</b> of the tracks in the
+group.  For example if one track is at level 127 (max) and one at
+level 100, decreasing the group level by 10 to will lower the level of
+the first track to 127 and the second track to 90.  This allows you to
+set up a mix of tracks in a group, then fade the entire group in and
+out using a group controller while maintaining the original mix.</p>
+
+<p>Note that unlike Mobius versions before 1.24, we now store the MIDI
+channel with the MIDI binding.  This means that note 24 on channel 2
+and note 24 on channel 6 can do different things.</p>
+
+<p>Also note that it is possible to have the same MIDI event bound to
+different things in different scopes.  For example, "note 42 channel
+3" may be bound to Record in global scope and Reverse in Track 1
+scope.  In this case both functions will be performed when this MIDI
+event is received.</p>
+
+<p>The <i>Max Track Groups</i> field lets you select how may track
+groups to support up to a maximum of four.</p>
+
+</section> <!-- MIDI Control -->
+
+</section> <!-- User Interface -->
+
+<section><title>Global Parameters</title>
+
+<p>There are a few parameters that affect the operation of Mobius
+regardless of which Preset or MIDI Configuration is active.  These are
+called global parameters.  To set global parameters, pull down
+the <i>Configuration</i> menu and select the <i>Global Parameters...</i>
+item.</p>
+
+<glossary>
+<gi>
+<dt>Quick Save File</dt>
+<dd>The location of the file where the current loop is saved when
+selecting the <ref>Save Quick</ref> menu item from 
+the <ref>File Menu</ref>.  This should be an absolute path name
+including a drive letter.  If this is a relative path, it will
+be relative to the Mobius installation directory, which by default is:
+<p/>
+c:\Program Files\Mobius
+<p/>
+The name must not include
+the <b>.wav</b> extension.  The actual name of the file will be derived from the
+specified name plus a number to make the name unique.  This allows
+you to use the <ref>Save Quick</ref> item several times without overwriting
+the file containing the previous loop that was saved.</dd>
+</gi>
+<gi>
+<dt>Noise Floor</dt>
+<dd>Determines the minimum signal level that is considered to be
+"interesting" content when overdubbing.  This is used in the
+implementation of what the EDP calls "auto undo".  While overdub is on
+and new content is added to the loop, a new layer is generated at the
+end of each iteration through the loop.  If the new content is below
+the noise floor however, a new layer is not generated.  This allows
+you to leave overdub on and listen to the loop a few times without
+having unnecessary layers generated on each iteration.</dd>
+</gi>
+<gi>
+<dt>Fade Frames</dt>
+<dd>Mobius performs a cross fade whenever playback must change
+abruptly such as when performing an unquantized loop switch, replace,
+or unrounded multiply.  This value is the length of the fade in audio
+frames.
+<p/>
+This is necessary to prevent "snapping" or "clicking" sounds during
+playback caused by sudden changes in sample level.  Setting the number
+of fade frames to zero will remove all cross fade processing.  This
+can result in audible clicks which are generally undesirable but
+can sometimes be used as a rhythmic effect.  Setting the value
+too high can result in audible "pumping" or "breathing" which is
+also undesirable but might be used as an effect.</dd>
+</gi>
+<gi>
+<dt>Drift Resync Frames</dt>
+<dd>The number of frames Mobius will allow a loop to drift out
+of sync with a master clock when using one of the synchronization
+modes.  When the drift is greater than this number of frames, the 
+loop is retriggered to bring it back into alignment with the master clock.
+See the <ref>Drift Retrigger</ref> section for details.</dd>
+</gi>
+<gi>
+<dt>Save Project Layers</dt>
+<dd>When checked, complete layer histories are saved with a project.
+By default, only the most recent layer is saved.  Saving layer histories
+can be interesting if you want to know more about how Mobius manages
+memory, but is normally undesirable as it requires more disk space.
+<br/>
+<b>BUG:</b>There are problems restoring projects saved with layers,
+avoid for now.
+</dd>
+</gi>
+<gi>
+<dt>Monitor Audio Input</dt>
+<dd>Causes the audio input for the active track to be sent immediately
+to the audio output device.  This can be used to monitor the signal
+being sent to Mobius if you are not monitoring using an external
+mixer or the sound card.  This is normally done only if you are using
+Mobius as a VST plugin, and only if your sound card supports ASIO drivers.</dd>
+</gi>
+
+<!-- not ready yet
+<gi>
+<dt>Isolate Project Overdubs</dt>
+<dd>When checked, allows Mobius to open the configured MIDI output
+device when running as a VST plugin.  Normally, Mobius will
+not open MIDI devices when running as a plugin.  This allows
+Mobius to act as a master MIDI clock for the VST host.
+See <ref>Plugin MIDI Devices</ref> for details.</dd>
+</gi>
+-->
+
+<gi>
+<dt>16 Bit Wave Files</dt>
+<dd>When checked, Mobius will save all audio content as 16-bit integers.
+If not checked, audio is stored as 32-bit floating point numbers.  32-bit
+is generally preferred, but not all audio applications are able to open
+32-bit files.</dd>
+</gi>
+
+<gi>
+<dt>Group and Focus Lock Functions</dt>
+<dd>Specifies which functions and scripts are sensitive to the 
+track group and focus lock settings.  If a function or script name does
+not appear in the panel on the right, it will be performed only in the
+selected track.</dd>
+</gi>
+
+<gi><dt>Modes Ignoring Secondary Feedback</dt>
+<dd>Specifes the loop modes during which
+the Secondary Feedback control will not be active.  This is an advanced
+parameter that is used when the <i>Interface Mode</i> parameter is
+set to <i>Expert</i> or <i>Stutter</i>.  Normally all recording modes
+are subject to Secondary Feedback when using these interface modes.</dd>
+</gi>
+
+</glossary>
+
+</section> <!-- Global Parameters -->
+
+<section><title>Saving and Loading</title>
+
+<p>Mobius provides several options for saving and loading audio
+content.  You may save or load individual loops as well as
+<i>projects</i> containing all layers in all loops in all tracks.</p>
+
+<section><title>Individual Loops</title>
+
+<p>To load an individual loop, select a track, and use the <i>Next
+Loop</i>, <i>Previous Loop</i> or numbered loop trigger functions
+to select the target loop.  If the AutoRecord option is on, recording
+may begin but it will be canceled during the load.  Once the track is
+selected, pull down the <i>File</i> menu and select the <i>Open
+Loop</i> item.  A standard open file dialog will be displayed, navigate
+to the directory containing the file you want to load and select it.
+Mobius can only load Windows <i>wave</i> files having the <b>.wav</b>
+extension.</p>
+
+<p>The target loop will be reset before the loop is loaded.  After the
+loop is loaded, the track will be in <i>pause mute</i> mode.  The loop
+will begin playing from the beginning as soon as you perform the Mute
+function to bring it out of mute mode.</p>
+
+<p>If you don't have any wave files handy, Mobius includes one you can
+experiment with.  From the Open Loop dialog, navigate to the
+<i>samples</i> subdirectory of the Mobius installation directory
+(normally <b>c:\Program Files\Mobius\samples</b>) and select the file named
+<b>gcloop.wav</b>.  No, this isn't me, I assembled it from a
+commercial loop library.  This one is fun to use with subcycle
+quantized unrounded multiply.  Splice out a bar, then undo back to the
+full loop, splice out a different bar, repeat!</p>
+
+<p>To save an individual loop, select the track and the loop you
+want to save, pull down the <i>File</i> menu, and select the <i>Save Loop</i>
+item.  A standard Save File dialog will appear, navigate to the directory
+where you want to save the loop, and select or enter a file name.  Mobius
+can only save Windows <i>wave</i> files.</p>
+
+</section> <!-- Individual Loops -->
+
+<section><title>Quick Save</title>
+
+<p>The quick save feature allows you to save the current loop to a
+file without having to interact with a dialog window.  This is handy
+if you build a loop you would like to remember, but don't want to put
+down your instrument in order to interact with the computer.</p>
+
+<p>A quick save may be performed by pulling down the <i>File</i> menu
+and selecting the <i>Save Quick</i> item.  While you
+don't have to interact with a dialog window, you still have to 
+select the menu item. A more interesting way to perform a quick save
+is by binding a button, key, or especially a MIDI event to the <i>Save Loop</i>
+function.  You could for example bind the Save Loop function to a
+button on a MIDI foot controller, whenever you build something
+interesting just pounce on the button and the loop will be saved.</p>
+
+<p>By default, the saved loop files are stored in the Mobius
+installation directory with the base name <b>mobiusloop</b> plus a
+number to make it unique, for example <b>mobiusloop1.wav</b>,
+<b>mobiusloop2.wav</b> etc.  Every time you perform the Save Loop
+function, a new unique file name is generated by adding one to the
+highest numbered quick save file in the directory.</p>
+
+<p>You may change the directory and base file name for quick save
+files by pulling down the <i>Configuration</i> menu and selecting
+the <i>Global Parameters</i> item.  In the dialog, the field
+named <i>Quick Save File</i> may be set to a file system path including
+the base file name.  For example:</p>
+
+<example>
+  c:\mystuff\mobius\quicksave
+</example>
+
+<p>Files will be saved in the <b>c:\mystuff\mobius</b> directory
+with the name <b>quicksave</b> plus a number to make the name
+unique.  For example <b>quicksave1.wav</b> and <b>quicksave2.wav</b>.
+Do not specify a number or the <b>.wav</b> extension in the global parameters
+dialog, these will be added automatically.</p>
+
+<p>If you perform a quick save into a directory that already contains
+quick save files, Mobius will probe the directory to find the highest
+file number it must use in order to generate a unique file name.  This
+ensures that a quick save will not overwrite an existing quick save file
+made during a prior Mobius session.</p>
+
+</section>
+
+<section><title>Projects</title>
+
+<p>A <i>project</i> is a collection of files that contain the complete
+state of Mobius at a moment in time, including the audio content
+of all loops in all tracks.   You can use projects to capture a complex
+collection of loops that have just been improvised, or to define
+a set of background loops for a new performance.</p>
+
+<p>To save a project, pull down the <i>File</i> menu and select the
+<i>Save Project...</i> item.  A dialog appears requesting you to
+select a Mobius project file.  It may take several seconds to save
+the project.  During that time try not to perform any functions, or
+the project may be saved with loop changes you did not intend. </p>
+
+<p>To load a project, pull down the <i>File</i> menu and select the 
+<i>Load Project...</i> item.  Again, a dialog appears requesting you to 
+select an existing Mobius project file.  When you load a project, 
+a <i>Global Reset</i> is performed, meaning that all of the current
+loops and tracks will be lost.</p>
+
+<p>A project actually consists of several files, a single <i>project</i>
+file with the <b>.mob</b> extension, and one or more <b>.wav</b> files containing
+audio content.  If you have a complex collection of loops and tracks,
+there may be many files in a project.  If so you may find it convenient
+to keep each project in a separate directory.</p>
+
+<p>As an example, assume we've saved a project named "myproject" that
+has two tracks, each with two loops.  The project files that would
+be saved are:</p>
+
+<example>
+  myproject.mob
+  myproject-1-1-1.wav
+  myproject-1-2-1.wav
+  myproject-2-1-1.wav
+  myproject-2-2-1.wav
+</example>
+
+<p>The files containing audio are suffixed with three numbers.  The
+first is the number of the track, the second is the number of the loop
+within the track, and the third is the number of the layer within the
+loop.  Depending on how the loop was constructed, the layer number 
+will usually be different than 1.</p>
+
+<p>The project .mob file contains the information necessary
+to reconstruct Mobius state from all of the audio files.  See the
+<ref>XML Files</ref> section for more on the contents
+of this file.</p>
+
+<p>If the global parameter <i>Save Project Layers</i> is set, 
+then a loop's layer history is also stored in the project.  See
+the <ref>Global Parameters</ref> section for more information on
+setting this parameter.  When layers are saved, more than one
+<b>.wav</b> file may be saved for each loop, for example:</p>
+
+<example>
+  myproject-1-1-3.wav
+  myproject-1-1-2.wav
+  myproject-1-1-1.wav
+</example>
+
+<p>As mentioned earlier, the third number in the file name is the
+layer number.  These will be random numbers, though the most recent
+layer will usually have a higher number.  Saving layers may be interesting
+if you use undo as a performance technique, and you want to start
+with a complex loop, and undo back to something simpler.  I use this
+during testing, but find it to be of limited practical use since it
+can require a large amount of disk space if the loop length is long
+and you have a lot of layers.</p>
+
+<p>In addition to the audio content, the project will also save
+the selected MIDI configuration, the selected presets in
+each of the tracks, the selected track, and the selected loop
+within each track.</p>
+
+<p><b>NOTE:</b> When you save a project with the same name as an
+existing project, all of the wave files in the existing project will
+be deleted first.  This is necessary to avoid "garbage files" if you
+remove tracks or loops from the project.  This will only occur however
+if the file is contained in the same directory as the project file.
+This is so you can add files to a project from a sample library and
+not have those files be deleted when the project is deleted.</p>
+
+<p>In addition to audio files, the project also includes the current
+settings for each track including the selected preset, feedback, output,
+and pan values.  A <i>project template</i> contains all of these
+track settings, but not any of the audio content.  Creating a project
+template can be useful if you want to have different configurations
+for different performances, but don't want to start with any initial
+audio content.  To save a project template, pull down the <i>File</i>
+menu and select the <i>Save Project Template</i> item.</p>
+
+</section>
+
+</section> <!-- Save and Load -->
+
+<section><title>Functions</title>
+
+<p>In this section we will list all of the Mobius functions and
+provide a brief description of how these differ from the
+EDP.  If there is a corresponding EDP function, and the function is
+said to be implemented, then you can assume it will behave like the
+EDP (assuming of course I have interpreted the manual correctly).</p>
+
+<section><title>Unimplemented EDP Functions</title>
+
+<p>Let's start with a list of EDP functions Mobius definitely does not
+implement.</p>
+
+<ul>
+<li>Loop Windowing - actually just LongUndo and ShortUndo in a
+specific context</li>
+<li>Undo - no support right now for short undo</li>
+<li>ShortUndo - direct MIDI function</li>
+<li>LongMultiply - GeneralReset if the current loop is in Reset, 
+Substitute if the loop is not in Reset.<br/>
+But the Multiply still runs for 400ms.<br/>
+Some ambiguity on 5-37, suggests Long-Multiply becomes SUSMultiply.</li>
+<li>Long presses while in SUSOverdub behave like short presses</li>
+<li>LongReverse becomes a SUSReverse</li>
+<li>LongParameter returns to Play mode</li>
+<li>LongTrigger Resets the triggered loop (unless SamplerStyle=Att)</li>
+<li>LongInsert does Replace.  Not compatible with SUSInsert?
+Have to set up an insert for 400ms?</li>
+<li>LongMute becomes SUSMute, MuteMode always Continuous</li>
+<li>LongOverdub becomes SUSOverdub </li>
+<li>LongStartPoint does QuantStartPoint</li>
+<li>TempoSelect</li>
+<li>StopSync</li>
+<li>AutoStartPoint</li>
+<li>ParameterButton - remote control by virtually pressing 
+the parameter button</li>
+<li>Exit Parameters</li>
+<li>BeatTriggerSample - just use </li>
+<li>MIDIBeatSync</li>
+</ul>
+
+<p>I will eventually implement Loop Windowing, TempoSelect, and some of the
+long presses.  Things related to "beat sync" are not really
+relevant for Mobius since everything must be controlled through MIDI.
+MIDI control over parameter values may be useful but I would prefer the
+ability to directly bind MIDI continuous controllers to parameters
+rather than virtually pushing the EDP parameter buttons.</p>
+
+<p>This list contains a collection of things described in the manual
+that are also not implemented, but they're not exactly functions.</p>
+
+<ul>
+<li>Event gravity</li>
+<li>MIDI Smart Buttons, also known as "Double Clicks"</li>
+<li>MIDI Sync Indicators</li>
+<li>MIDI Data Wheel</li>
+<li>MIDI Pipe - not applicable?</li>
+<li>Dump - not applicable</li>
+<li>Load - not applicable</li>
+<li>SysEx - not applicable</li>
+</ul>
+
+<p>Event "gravity" refers to the EDP's behavior of quantizing events
+back to a previous quantization boundary rather than moving to the
+next one if you are within a few milliseconds of the last boundary.
+In my testing, I have not been in many situations where I felt this
+was needed.  I'm interested in hearing from anyone that has come to
+rely on this.  A Mobius feature that may lessen the need for this is
+that you can "stack" more than one quantized event.  For example, if
+you want to go into reverse and half speed at the same time, turn
+quantization on and perform the Reverse and Half Speed functions.  You
+will see them stacked on the same quantized frame.</p>
+
+<p><b>BUG:</b> This doesn't work as intended, the second function will be
+quantized to the next boundary, which is consistent with the way
+quantized SUS functions work.  These may both be useful behaviors, but
+are probably function specific.  It makes sense to stack
+non-destructive functions like Reverse and Speed with one destructive
+function like Insert or Multiply, but it doesn't make sense to stack
+two destructive functions, the first one will have no effect.</p>
+
+</section> <!-- Unimplemented EDP Functions -->
+
+<section><title>Supported EDP Functions</title>
+
+<p>You can assume that the following functions behave in
+the same way as the EDP excepted as noted.  Please let me know if you
+find otherwise.</p>
+
+<glossary>
+<gi><dt>Reset</dt>
+</gi>
+<gi><dt>GeneralReset</dt>
+</gi>
+<gi><dt>Record</dt>
+<dd>Long press Record will perform Reset.  Mobius doesn't
+throw away all of the existing layers if you start recording over a loop
+that already had content.  It just adds new layers, and you can then undo back to the previous layers.  I'm not sure I like this, but you can always use Reset to clear the layer list.</dd>
+</gi>
+<gi><dt>Overdub</dt>
+<dd>Mostly as in EDP.  Overdub is a "sticky" mode that you're supposed
+to return to when you leave another mode.  This seems to work, but there
+are probably some complicated mode transitions that cause overdub to
+be incorrectly turned off.  Mobius supports quantization of overdub
+functions with extended OverdubMode parameter values.</dd>
+</gi>
+<gi><dt>Undo, LongUndo</dt>
+<dd>Mobius only supports long undo, so the Undo, ShortUndo, and LongUndo
+functions all do the same thing.  Since Mobius does not yet support
+loop windowing, you can undo an unrounded multiply.  I actually like this a 
+lot so when loop windowing is supported Mobius will provide specific
+functions to move the window rather than overloading undo.
+<br/><br/>
+Unlike the EDP, Mobius undo is not constrained by the application of the 
+Reverse function.  You can undo past the point where a reverse was
+performed.
+<br/><br/>
+Scheduled events are always undone before the layer.  So if you
+have several quantized events stacked, you must press Undo once for each event.
+</dd>
+</gi>
+<gi><dt>Multiply</dt>
+<dd>Mostly as in EDP.  I was unsure about multiply behavior
+so I added a new MultiplyMode parameter with values <i>Traditional</i>
+and <i>Overdub</i>.  In traditional mode, when you end a multiply,
+the multiply will continue until you have reached a cycle boundary
+relative to where the multiply was started.  So if you start a multiply
+in the middle of a loop, then end the multiply AFTER the middle of the
+next new cycle, a third cycle will be added because you've already
+crossed the first cycle boundary and the end has to be 
+rounded up to the next cycle boundary.  In <i>Overdub</i> mode, multiply
+always ends in the current cycle which made more sense to me.  But this may
+be a misinterpretation of how the EDP works.
+<br/><br/>
+Long press multiply doesn't work.  Unrounded multiply during
+rounding (described on 5-36) probably does not work.
+</dd>
+</gi>
+<gi><dt>Insert, InsertOnly</dt>
+<dd>Mostly as in EDP.  Long-press insert does not do Replace.  When in 
+a loop with SamplerStyle=Once, Insert is supposed to retrigger the
+current loop but leave the return transition.  In Mobius, Insert
+cancels the return and begins inserting in the current loop.</dd>
+</gi>
+<gi><dt>Stutter, SUSStutter</dt>
+<dd>During stutter mode, repetitions of the current cycle will be inserted
+whenever the end of the cycle is reached.  Mobius stutters the cycle
+you were in when the function was performed.  The EDP manual suggests
+that the stuttered cycle should be the one AFTER the current cycle.  I have
+a slight preference for the current cycle because you can get to the next
+one just by quantizing.  Let me know if you find this difference upsetting.</dd>
+</gi>
+<gi><dt>Mute</dt>
+<dd>Long-press Mute is not being be converted to SUSMute.  Mobius
+adds an additional MuteMode parameter value <i>Pause</i>.  Pause mode
+behaves like pause on a tape recorder, the sound stops and so does
+the clock.  When you unmute after a pause, playback resumes from where it
+was paused.</dd>
+</gi>
+<gi><dt>Replace</dt>
+</gi>
+<gi><dt>Substitute</dt>
+<dd>As in EDP, except that InterfaceMode has no effect.</dd>
+</gi>
+<gi><dt>Speed, FullSpeed, HalfSpeed</dt>
+</gi>
+<gi><dt>Reverse, Forward, Backward</dt>
+<dd>As in EDP, but there is no undo restriction after changing direction.
+You can undo past the layer where the direction was changed.</dd>
+</gi>
+<gi><dt>NextLoop</dt>
+<dd>Mobius allows any function to be "stacked" for application
+after the switch.  The new TimeCopyMode and SoundCopyMode parameters may
+be used to specify which mode you will be in after a timing or sound
+copy into an empty loop.</dd>
+</gi>
+<gi><dt>SamplePlay</dt>
+</gi>
+<gi><dt>Retrigger</dt>
+</gi>
+<gi><dt>Start Point</dt>
+</gi>
+<gi><dt>SUSRecord</dt>
+</gi>
+<gi><dt>SUSOverdub</dt>
+<dd>There may be cases where overdub is lost if you
+keep the SUSOverdub trigger down at the same time as performing
+other functions.</dd>
+</gi>
+<gi><dt>SUSMultiply</dt>
+</gi>
+<gi><dt>SUSUnroundedMultiply</dt>
+</gi>
+<gi><dt>SUSInsert</dt>
+</gi>
+<gi><dt>SUSUnroundedInsert</dt>
+</gi>
+<gi><dt>SUSMute</dt>
+</gi>
+<gi><dt>SUSReplace</dt>
+</gi>
+<gi><dt>SUSSubstitute</dt>
+</gi>
+<gi><dt>SUSReverse</dt>
+</gi>
+<gi><dt>SUSSpeed</dt>
+</gi>
+<gi><dt>SUSNextLoop</dt>
+</gi>
+<gi><dt>SUSMuteRetrigger</dt>
+</gi>
+<gi><dt>ReAlign</dt>
+<dd>ReAlign doesn't always work correctly if you switch between loops
+and layers that have a different cycle size.  For best results when
+synchronizing, avoid using unrounded multiply and unrounded insert
+unless the <i>Quantize</i> parameter is set to <i>Cycle</i>.</dd>
+</gi>
+<gi><dt>MuteReAlign</dt>
+<dd>See ReAlign</dd>
+</gi>
+<gi><dt>QuantMIDIStartSong</dt>
+</gi>
+<gi><dt>MuteQuantMIDIStartSong</dt>
+</gi>
+<gi><dt>QuantStartPoint</dt>
+</gi>
+
+</glossary>
+
+</section> <!-- Supported EDP Functions -->
+
+<section><title>Mobius Functions</title>
+
+<p>This section describes new Mobius functions that are not found in
+the EDP.</p>
+
+<glossary>
+<gi><dt>Play</dt>
+<dd>End the current mode and return to play mode.  This is like a 
+universal mode cancel function.  It will get you out of modes like Insert, 
+Multiply, Rehearse, Replace, Substitute, Overdub, and Mute and return you
+to Play.  It does not cancel Reverse or HalfSpeed.  It can also be used
+to cancel a loop switch when confirmation is on, since normally Undo is
+used as a confirming action.</dd>
+</gi>
+<gi><dt>Pause</dt>
+<dd>Mute the track and freeze the playback and record positions.  The effect
+is similar to pressing the pause button on a tape deck.  When pause is released,
+the track will continue playing and recording from the same position.  This
+behavior is also available with the <i>Mute</i> function if the
+<i>Mute Mode</i> parameter is set to <i>Pause</i>.</dd>
+</gi>
+<gi><dt>Global Pause</dt>
+<dd>Perform a <i>Pause</i> function in all tracks.</dd>
+</gi>
+<gi><dt>Next Parameter</dt>
+<dd>Move to the next dynamic parameter in the UI.  
+See <ref>The Status Area</ref> and <ref>Configuring the Status Area</ref>
+for more information on dynamic parameters.</dd>
+</gi>
+<gi><dt>Previous Parameter</dt>
+<dd>Move to the previous dynamic parameter in the UI.  
+See <ref>The Status Area</ref> and <ref>Configuring the Status Area</ref>
+for more information on dynamic parameters.</dd>
+</gi>
+<gi><dt>Increment Parameter</dt>
+<dd>Increment the current dynamic parameter value.</dd>
+</gi>
+<gi><dt>Decrement Parameter</dt>
+<dd>Decrement the current dynamic parameter value.</dd>
+</gi>
+<gi><dt>Global Reset</dt>
+<dd>Perform a GeneralReset function for all tracks.</dd>
+</gi>
+<gi><dt>Global Mute</dt>
+<dd>Mute all tracks that are currently playing, but do not unmute any
+tracks that are currently muted.  After using Global Mute, if you use
+it a second time, it will unmute only those tracks that were muted 
+previously.  Note that this is different than simply toggling the
+current mute state in all tracks.</dd>
+</gi>
+<gi><dt>Solo</dt>
+<dd>Mute all tracks other than the active track, unmute the active
+track if it is currently muted.  If you immediately use Solo again, it
+will restore the mute state of all tracks to what it was before the
+first Solo.</dd>
+</gi>
+<gi><dt>Loop <i>n</i></dt>
+<dd>Trigger the numbered loop in the current track.  The EDP accomplishes
+this with MIDI note events relative to the <i>LoopTrig</i> parameter.
+Mobius defines a specific function for each loop trigger which may then
+be bound to arbitrary MIDI events.</dd>
+</gi>
+<gi><dt>Previous Loop</dt>
+<dd>Trigger the previous loop in the current track.  The same
+as the EDP's NextLoop function, but goes the other direction.</dd>
+</gi>
+
+<gi><dt>Clear</dt>
+<dd>Erase the current contents of the loop, leaving an empty loop
+of the same size as the original.</dd>
+</gi>
+
+<gi><dt>Slip Forward</dt>
+<dd>Instantly move playback position forward.</dd>
+</gi>
+
+<gi><dt>Slip Backward</dt>
+<dd>Instantly move playback position backward.</dd>
+</gi>
+
+<gi><dt>Multiply 2</dt>
+<dd>Performs an immediate 2x multiply of the loop.  This differs
+from the Multiply function in that you do not have to wait for the
+loop to be extended.</dd>
+</gi>
+<gi><dt>Multiply 3</dt>
+<dd>Performs an immediate 3x multiply of the loop.</dd>
+</gi>
+<gi><dt>Multiply 4</dt>
+<dd>Performs an immediate 4x multiply of the loop.</dd>
+</gi>
+
+<gi><dt>Trim Start</dt>
+<dd>Removes the content of the loop from the beginning to the current frame.
+This is the same as doing an unrounded multiply from the beginning but
+requires only one function></dd>
+</gi>
+
+<gi><dt>Trim End</dt>
+<dd>Removes the content of the loop from the current frame to the end.
+This is the same as doing an unrounded multiply to the end, but requires
+only one function.</dd>
+</gi>
+
+<gi><dt>Redo</dt>
+<dd>Returns to a layer that had previously been undone.  The number
+of layers that may be redone is controlled by the <i>Max Redo Layers</i>
+preset parameter.</dd>
+</gi>
+<gi><dt>Next Track</dt>
+<dd>Active the next track.  The active track will have <i>input focus</i>
+meaning that it will response to button, key, and MIDI events.  If the
+previously active track was running, it will still be running.</dd>
+</gi>
+<gi><dt>Previous Track</dt>
+<dd>Active the previous track.</dd>
+</gi>
+<gi><dt>Track <i>n</i></dt>
+<dd>Active the numbered track.</dd>
+</gi>
+<gi><dt>Next Group</dt>
+<dd>Assign the track to the next track group, or remove the assignment
+if the track is already in the last group.  A long press will always remove
+the assignment.  By default there are 4 groups, so successive calls of
+the Next Group function would assign group 1, 2, 3, 4, then back to
+no assignment.</dd>
+</gi>
+<gi><dt>Track Copy</dt>
+<dd>Copies the content of the adjacent track on the left into the current track.</dd>
+</gi>
+<gi><dt>Track Copy Timing</dt>
+<dd>Copies the timing of the adjacent track on the left into the current track.</dd>
+</gi>
+
+<gi><dt>Rate Up</dt>
+<dd>Increase the playback rate to achieve a one semitone rise in pitch.</dd>
+</gi>
+<gi><dt>Rate Down</dt>
+<dd>Decrease the playback rate to achieve a one semitone fall in pitch.</dd>
+</gi>
+<gi><dt>Rate Normal</dt>
+<dd>Return the playback rate to normal.</dd>
+</gi>
+<gi><dt>Rate Next</dt>
+<dd>Move to the next playback rate in the <i>rate sequence</i>.  If you are
+currently at the end of the sequence, move to the first rate in the sequence.
+See the <i>RateSequence</i> parameter.</dd>
+</gi>
+<gi><dt>Rate Previous</dt>
+<dd>Move to the previous playback rate in the <i>rate sequence</i>.  If you
+are currently at the beginning of the sequence, move to the last rate
+in the sequence.</dd>
+</gi>
+<gi><dt>Rate Shift</dt>
+<dd>Defines the center note for a <i>rate shift range</i>.  Pressing this
+note will return the rate to normal.  Pressing a note below will lower
+the rate, pressing a note above will raise the rate.</dd>
+</gi>
+
+<gi><dt>Pitch Up</dt>
+<dd>Increase the pitch one semitone.</dd>
+</gi>
+<gi><dt>Pitch Down</dt>
+<dd>Decrease the pitch one semitone.</dd>
+</gi>
+<gi><dt>Pitch Normal</dt>
+<dd>Return the pitch to normal.</dd>
+</gi>
+<gi><dt>Pitch Next</dt>
+<dd>Move to the next pitch in the <i>pitch sequence</i>.  If you are
+currently at the end of the sequence, move to the first pitch in the sequence.
+See the <i>PitchSequence</i> parameter.</dd>
+</gi>
+<gi><dt>Pitch Previous</dt>
+<dd>Move to the previous pitch in the <i>pitch sequence</i>.  If you
+are currently at the beginning of the sequence, move to the last pitch
+in the sequence.</dd>
+</gi>
+<gi><dt>Pitch Shift</dt>
+<dd>Defines the center note for a <i>pitch shift range</i>.  Pressing this
+note will return the pitch to normal.  Pressing a note below will lower
+the pitch, pressing a note above will raise the pitch.</dd>
+</gi>
+
+<gi><dt>Bounce Record</dt>
+<dd>Start or stop a bounce recording.  The contents of the playing
+tracks may be mixed and copied to an empty track, automatically muting
+the source tracks after the bounce.  See the <ref>Bounce Recording</ref>
+section for more details.</dd>
+</gi>
+
+<gi><dt>Sample Trigger <i>n</i></dt>
+<dd>Begin playback of a configured sample.  See <ref>Samples</ref>
+for more information.</dd>
+</gi>
+<gi><dt>Cancel Script</dt>
+<dd>Cancel any script that may be running.</dd>
+</gi>
+<gi><dt>Pause Script</dt>
+<dd>Pause execution of the script until a ResumeScript function is received.</dd>
+</gi>
+<gi><dt>Resume Script</dt>
+<dd>Resume a script that is paused after the evaluation PauseScript
+function or a <i>Wait resume</i> statement.</dd>
+</gi>
+<gi><dt>Start Script Recorder</dt>
+<dd>Begin recording user interaction with Mobius that can be saved
+as a script.</dd>
+</gi>
+<gi><dt>Stop Script Recorder</dt>
+<dd>Stop recording user interaction with Mobius.</dd>
+</gi>
+<gi><dt>Save Script</dt>
+<dd>Save the user actions recorded by Start Script Recorder to a script file.
+You will be prompted for the name of the file.</dd>
+</gi>
+<gi><dt>StartAudioRecorder</dt>
+<dd>Begin capturing audio being sent to the output device.</dd>
+</gi>
+<gi><dt>StopAudioRecorder</dt>
+<dd>Stop capturing audio being sent to the output device.</dd>
+</gi>
+<gi><dt>SaveAudio</dt>
+<dd>Save the audio captured by the Start Audio Recorder function to a file.</dd>
+</gi>
+<gi><dt>Save Loop</dt>
+<dd>Perform a "quick save" of the current loop.  
+See <ref>Saving and Loading</ref> for details.</dd>
+</gi>
+<gi><dt>Debug</dt>
+<dd>Run a debugging function.  I use this to test various things, it 
+may or may not do something catastrophic.  Think of it as that big red
+button that you're never supposed to press.</dd>
+</gi>
+
+<gi><dt>Stop Song</dt>
+<dd>Sends a MIDI <i>Stop Song</i> event.  This happens during all
+synchronization modes and is not subject to quantization.</dd>
+</gi>
+
+</glossary>
+
+<section><title>Slip Functions</title>
+
+<p>The <i>Slip Forward</i> and <i>Slip Backward</i> functions allow
+you to instantly move the playback position forward or backward.  The
+effect is similar to a Retrigger, except that you have more control
+over where the new playback position will be.</p>
+
+<p>The amount of slippage is determined by two preset parameters:
+<i>Slip Mode</i> and <i>Slip Time</i>.  The <i>Slip Mode</i>. parameter
+may have one of these values.</p>
+
+<glossary>
+<gi><dt>Next Subcycle</dt>
+<dd>Playback jumps to the next subcycle boundary.</dd>
+</gi>
+<gi><dt>Next Cycle</dt>
+<dd>Playback jumps to the next cycle boundary.  If there is only
+one cycle in the loop, the effect is identical to Retrigger.</dd>
+</gi>
+<gi><dt>Next Loop</dt>
+<dd>Playback jumps to the loop boundary.  The effect is
+identical to Retrigger.</dd>
+</gi>
+<gi><dt>Relative Subcycle</dt>
+<dd>Playback jumps an amount equal to one subcycle, relative to the
+current position.  The ending position may not be on a subcycle
+boundary.</dd>
+</gi>
+<gi><dt>Relative Cycle</dt>
+<dd>Playback jumps an amount equal to one cycle, relative to the
+current position.  The ending position may not be on a cycle boundary.
+If there is only one cycle in the loop, this will have no affect.</dd>
+</gi>
+<gi><dt>Milliseconds</dt>
+<dd>Playback jumps a configurable number of milliseconds.</dd>
+</gi>
+</glossary>
+
+<p>When <i>Slip Mode</i> is set to <i>Milliseconds</i> the amount
+of slippage is determined by the <i>Slip Time</i> parameter.  This
+is set to a positive integer number of milliseconds.  For example,
+slip time value of 1000 would cause the <i>Slip Forward</i> function
+to slip forward 1 second.</p>
+
+</section>
+
+</section> <!-- Mobius Functions -->
+
+</section> <!-- Functions -->
+
+<section><title>Parameters</title>
+
+<section><title>Unimplemented EDP Parameters</title>
+
+<p>The following parameters are either not implemented, or not
+relevant for Mobius.</p>
+
+<ul>
+<li>Channel</li>
+<li>InterfaceMode=Delay</li>
+<li>Velocity</li>
+<li>LoopTrig - not necessary, triggers have unique function names</li>
+<li>Source# - not necessary</li>
+<li>ControlSource - not necessary</li>
+<li>Overflow - not applicable</li>
+<li>Presets - not applicable</li>
+</ul>
+
+</section> <!-- Unimplemented Parameters -->
+
+<section><title>Supported EDP Parameters</title>
+
+<p>You can assume that the following parameters behave in  the
+same way as the EDP except as noted.  Please let me know if you
+find otherwise.</p>
+
+<glossary>
+<gi><dt>Feedback</dt>
+<dd>See the <ref>Controlling Feedback</ref> section for full details
+on how feedback can be used.</dd>
+</gi>
+<gi><dt>8thsPerCycle</dt>
+<dd>Specifies the number of subcycles per cycle.  There is no limit
+on this value, though large values are practically useless.</dd>
+</gi>
+<gi><dt>AutoRecord</dt>
+<dd>Determines whether we begin recording immediately when entering
+an empty loop.</dd>
+</gi>
+<gi><dt>FeedBkCont</dt>
+<dd>The MIDI controller number for adjusting feedback.  Set in the
+MIDI configuration rather than as a preset parameter.</dd>
+</gi>
+<gi><dt>InsertMode</dt>
+<dd>My interpretation of Rehearse mode seems to be quite different
+than the EDP, but I think I like mine better.  I will revisit this someday
+and add a parameter to let you switch between the two behaviors.</dd>
+</gi>
+<gi><dt>LoopCopy</dt>
+<dd>Both sound and timing copies are supported.  Supports
+the extended Mobius parameters TimeCopyMode and SoundCopyMode.</dd>
+</gi>
+<gi><dt>MoreLoops</dt>
+<dd>The number of loops in a track.  Mobius just calls this
+"Loop Count"</dd>
+</gi>
+<gi><dt>MuteMode</dt>
+<dd>Mobius adds the mode <i>Pause</i> option.  Pause behaves like
+pause on a tape recorder, the clock stops as well as muting the sound.</dd>
+</gi>
+<gi><dt>Quantize</dt>
+<dd></dd>
+</gi>
+<gi><dt>RecordMode</dt>
+<dd></dd>
+</gi>
+<gi><dt>RoundMode</dt>
+<dd></dd>
+</gi>
+<gi><dt>SamplerStyle</dt>
+<dd><i>Attack</i> is partially supported.  It will set the output level
+according to the velocity of the Note On event, but will not go into mute
+when the Note Off event is received.  <i>Once</i> is buggy, I do not recommend
+using it.</dd>
+</gi>
+<gi><dt>SwitchQuant</dt>
+<dd>Also supports SubCycle and ConfirmSubCycle.</dd>
+</gi>
+<gi><dt>Threshold</dt>
+<dd>Similar to EDP though the levels will probably feel different.
+Mobius seems to be more sensitive.</dd>
+</gi>
+<gi><dt>VolumeCont</dt>
+<dd>Specify the MIDI controller number for output level control.
+Set in MIDI configuration rather than as a preset parameter.</dd>
+</gi>
+<gi><dt>Sync</dt>
+<dd>See the <ref>Synchronization</ref> section for complete details.</dd>
+</gi>
+<gi><dt>Loop/Delay (InterfaceMode)</dt>
+<dd>Partial support for modes <i>In</i>, <i>Out</i>,
+and <i>Stutter</i>.  See the section <ref>Interface Modes</ref>
+for complete details.</dd>
+</gi>
+
+</glossary>
+
+</section> <!-- Supported EDP Parameters -->
+
+<section><title>Mobius Parameters</title>
+
+<p>The following are new Mobius parameters that are not found in the EDP.</p>
+
+<glossary>
+
+<gi><dt>MuteCancel</dt>
+<dd>Determines whether Mute mode is canceled when other functions
+are used.  See the <ref>Mute Cancel</ref> section for more information.</dd>
+</gi>
+
+<gi><dt>NoFeedbackUndo</dt>
+<dd>A boolean option.   When true, suppresses the retention of layers
+when the only change made to them during the last iteration was
+the application of feedback.</dd>
+</gi>
+
+<gi><dt>MaxUndo</dt>
+<dd>The maximum number of layers will retain for undo.</dd>
+</gi>
+
+<gi><dt>MaxRedo</dt>
+<dd>The maximum number of layers will retain for redo.</dd>
+</gi>
+
+<gi><dt>TimeCopyMode</dt>
+<dd>When performing a LoopCopy=Timing, this specifies the mode you
+want to be in after the copy.  By default this is Insert mode, but
+you may also select Play, Overdub, or Multiply modes.</dd>
+</gi>
+
+<gi><dt>SoundCopyMode</dt>
+<dd>When performing a LoopCopy=Sound, this specifies the mode you
+want to be in after the copy.  By default this is Multiply mode, but
+you may also select Play, Overdub, or Insert modes.</dd>
+</gi>
+
+<gi><dt>MultiplyMode</dt>
+<dd>Determines how a multiply is ended.  With a value of <i>Tradition</i>
+multiply ending should be as on the EDP.  With a value of <i>Overdub</i>,
+the multiply will end no later than then end of the current cycle.  That is,
+we will not necessarily add a multiple of full cycles relative
+to the time the multiply was started.  This may reflect my misinterpretation
+of how multiply works on the EDP.</dd>
+</gi>
+
+<gi><dt>OverdubMode</dt>
+<dd>May be set to <i>Quantize</i> or <i>SUSQuantize</i> so that overdub
+may be quantized like other functions.</dd>
+</gi>
+
+<gi><dt>TrackCopy</dt>
+<dd>Determines what happens when you activate a track that has no content.
+If the value is Timing, the timing of the active loop in the last track
+will be copied into a new loop in the new track.  If the value is Sound,
+the content of the active loop in the last track is copied into
+the new track.</dd>
+</gi>
+
+<gi>
+<dt>No Layer Flattening</dt>
+<dd>When checked, Mobius will not merge the content fed back from
+the previous layer with new content while the layer is recorded.
+Instead, the content of each layer will be merged dynamically as
+the loop plays.  This can be useful as a technique but requires
+more CPU overhead.  See the <ref>Controlling Feedback</ref> section
+for more information.</dd>
+</gi>
+
+<gi>
+<dt>Rate Sequence</dt>
+<dd>May be set to a space delimited list of numbers which represent positive
+or negative rate changes in semitone increments.  For example a rate of "1"
+is one semitone above normal, a rate of "-7" is 7 semitones below normal
+(or a perfect fifth lower).  Once a rate sequence is defined, the rate
+may be changed using the <i>Rate Next</i> and <i>Rate Previous</i> functions.
+</dd>
+</gi>
+
+<gi>
+<dt>Rate Shift Retrigger</dt>
+<dd>When checked, causes the loop to be retriggered whenever the
+rate changes with the RateUp, RateDown, RateNormal, RateNext, RatePrev,
+and RateShift functions.</dd>
+</gi>
+
+<gi>
+<dt>Pitch Sequence</dt>
+<dd>Same as <i>Rate Sequence</i> but defines a sequence for the
+itch Shift function that changes pitch without changing tempo.</dd>
+</gi>
+
+<gi>
+<dt>Pitch Shift Retrigger</dt>
+<dd>When checked, causes the loop to be retriggered whenever the
+rate changes with the PitchUp, PitchDown, PitchNormal, PitchNext, PitchPrev,
+and PitchShift functions.</dd>
+</gi>
+
+<gi>
+<dt>Bounce Quantize</dt>
+<dd>Selects the quantization level to be used with the 
+<ref>Bounce Record</ref> function.</dd>
+</gi>
+
+<gi><dt>Overdub Transfer</dt>
+<dd>Controls how overdub mode is carried forward
+when switching loops.  If set to <i>Off</i> overdub mode is always off
+after switching loops.  If set to <i>Follow</i> the overdub mode in the
+current loop is carried forward to the next.  If set to <i>Remember</i>
+the overdub mode of a loop is remembered when leaving the loop, and
+restored when returning to it.</dd>
+</gi>
+
+<gi><dt>Reverse Transfer</dt>
+<dd>Controls how reverse mode is carried forward
+when switching loops.  If set to <i>Off</i> the direction is always forward
+after switching loops.  If set to <i>Follow</i> the direction of the
+current loop is carried forward to the next.  If set to <i>Remember</i>
+the direction of a loop is remembered when leaving the loop, and
+restored when returning to it.</dd>
+</gi>
+
+<gi><dt>Rate Transfer</dt>
+<dd>Controls how both the Half Speed and Rate Shift modes are carried forward
+when switching loops.  If set to <i>Off</i> rate is always returned
+to normal after switching loops.  If set to <i>Follow</i> the current rate
+is carried forward to the next loop.  If set to <i>Remember</i>
+the rate of a loop is remembered when leaving the loop, and
+restored when returning to it.</dd>
+</gi>
+
+<gi><dt>Pitch Transfer</dt>
+<dd>Controls how Pitch Shift is carried forward
+when switching loops.  If set to <i>Off</i> pitch is always returned to normal
+after switching loops.  If set to <i>Follow</i> the pitch of the
+current loop is carried forward to the next.  If set to <i>Remember</i>
+the pitch of a loop is remembered when leaving the loop, and
+restored when returning to it.</dd>
+</gi>
+</glossary>
+
+<section><title>Mute Cancel</title>
+
+<p>The <i>Mute Cancel</i> parameter controls whether mute mode is
+canceled when using other functions.  In order to understand the
+mute cancel options, we must classify functions into one
+of the following groups:</p>
+
+<ul>
+<li><b>Mute</b> - A function that takes a loop in or out of mute mode.</li>
+<li><b>Modal Edit</b> - A function that modifies the loop, and 
+enters a <i>mode</i> that lasts until the mode is canceled.</li>
+<li><b>Instant Edit</b> - A function that modifies the loop, but
+does not enter a mode.</li>
+<li><b>Trigger</b> - A function that changes the playback and record
+position of the loop.</li>
+<li><b>Effect</b> - A function that changes the way the loop 
+is played, but does not result in a permanent modification.</li>
+<li><b>Global</b> - A global function that does not affect a particular
+track, or performs an operation that may temporarily override mute modes.</li>
+</ul>
+
+<p>This table shows the available values for the <i>Mute Cancel</i>
+parameter:</p>
+
+<glossary>
+
+<gi><dt>Never</dt>
+<dd>Mute mode is not canceled until you use another Mute function.
+Note that mute may still be temporarily canceled with global
+functions such as Solo.</dd>
+</gi>
+
+<gi><dt>Edits</dt>
+<dd>Mute mode is canceled whenever a function that modifies
+the loop is used.  This includes both the <i>Modal Edit</i> and
+<i>Instant Edit</i> functions.</dd>
+</gi>
+
+<gi><dt>Triggers</dt>
+<dd>Mute mode is canceled by the <i>Modal Edit</i> and <i>Instant Edit</i>
+functions as well as the <i>Trigger</i> functions such as <i>Next Loop</i>,
+<i>Retrigger</i>, etc.</dd>
+</gi>
+
+<gi><dt>Effects</dt>
+<dd>Mute mode is canceled by the <i>Modal Edit</i>, <i>Instant Edit</i>, 
+and <i>Trigger</i> functions as well as the <i>Effect</i> functions 
+such as <i>Reverse</i>, <i>Halfspeed</i>, etc.</dd>
+</gi>
+
+<gi><dt>Custom</dt>
+<dd>The functions that cancel mute mode may be individually selected.</dd>
+</gi>
+
+</glossary>
+
+<p>When <i>Mute Cancel</i> is set to <i>Custom</i> the functions
+that cancel mute mode are defined by the global parameter named
+(surprisingly) <i>Mute Cancel Functions</i>.  This parameter is
+set in the <i>Global Parameters</i> dialog, it cannot have a 
+different value in each preset.  To select the functions that
+cancel mute mode, move them from the left panel to the right panel.</p>
+
+<section><title>Function Classes</title>
+
+<p>The <b>Mute</b> functions are:</p>
+
+<ul>
+<li>Mute</li>
+<li>Mute On</li>
+<li>Mute Off</li>
+<li>Sustain Mute</li>
+<li>Sustain Mute Retrigger</li>
+<li>Mute Realign</li>
+<li>Mute Start Song</li>
+<li>Play</li>
+</ul>
+
+<p>The <b>Modal Edit</b> functions are:</p>
+
+<ul>
+<li>Reset</li>
+<li>General Reset</li>
+<li>Global Reset</li>
+<li>Record</li>
+<li>Sustain Record</li>
+<li>Rehearse</li>
+<li>Overdub</li>
+<li>Sustain Overdub</li>
+<li>Multiply</li>
+<li>Sustain Multiply</li>
+<li>Sustain Unrounded Multiply</li>
+<li>Insert</li>
+<li>Insert Only</li>
+<li>Sustain Insert</li>
+<li>Sustain Unrounded Insert</li>
+<li>Stutter</li>
+<li>Sustain Stutter</li>
+<li>Replace</li>
+<li>Sustain Replace</li>
+<li>Substitute</li>
+<li>Sustain Substitute</li>
+</ul>
+
+<p>the <b>Instant Edit</b> function are:</p>
+
+<ul>
+<li>Instant Multiply <b>X</b></li>
+<li>Undo</li>
+<li>Redo</li>
+<li>Start Point</li>
+<li>Trim Start</li>
+<li>Trim End</li>
+<li>Clear</li>
+<li>Slip Forward</li>
+<li>Slip Backward</li>
+<li>Quant Midi Start Point</li>
+</ul>
+
+<p>the <b>Trigger</b> functions are:</p>
+
+<ul>
+<li>Next Loop</li>
+<li>Previous Loop</li>
+<li>Sustain Next Loop</li>
+<li>Sustain Previous Loop</li>
+<li>Retrigger</li>
+<li>Sample Play</li>
+<li>Loop Trigger <b>X</b></li>
+<li>Realign</li>
+</ul>
+
+<p>the <b>Effect</b> functions are:</p>
+
+<ul>
+<li>Speed</li>
+<li>Fullspeed</li>
+<li>Halfspeed</li>
+<li>Rate Down</li>
+<li>Rate Up</li>
+<li>Rate Next</li>
+<li>Rate Previous</li>
+<li>Rate Shift <b>X</b></li>
+<li>Rate Normal</li>
+<li>Pitch Down</li>
+<li>Pitch Up</li>
+<li>Pitch Next</li>
+<li>Pitch Previous</li>
+<li>Pitch Shift <b>X</b></li>
+<li>Pitch Normal</li>
+<li>Reverse</li>
+<li>Forward</li>
+<li>Backward</li>
+</ul>
+
+<p>The <b>Global</b> functions are:</p>
+
+<ul>
+<li>Track <b>X</b></li>
+<li>Focus Lock</li>
+<li>Track Group</li>
+<li>Checkpoint</li>
+<li>Sample <b>X</b></li>
+<li>Start Song</li>
+<li>Stop Song</li>
+<li>Sync Master</li>
+<li>Resume Script</li>
+<li>Start Script Recording</li>
+<li>Save Script Recording</li>
+<li>Stop Script Recording</li>
+<li>Start Audio Recording</li>
+<li>Save Audio Recording</li>
+<li>Stop Audio Recording</li>
+<li>Save Loop</li>
+<li>Bounce</li>
+<li>Pause</li>
+<li>Sustain Pause</li>
+<li>Global Mute</li>
+<li>Global Pause</li>
+<li>Solo</li>
+</ul>
+
+</section> <!-- Function Classes -->
+</section> <!-- Mute Cancel -->
+
+</section> <!-- Mobius Parameters -->
+
+</section> <!-- Parameters -->
+
+<section><title>Controlling Tracks</title>
+
+<p>The simplest way to control a track is to make it the
+<i>selected</i> track by clicking on it with the mouse, or using one
+of the track selection functions bound to a UI button, key or MIDI
+event.  The selected track will have a white border around it in the
+track strip.  MIDI events bound to functions or controls in the 
+<i>global scope</i> will then be processed in the selected track.</p>
+
+<p>Often it is desirable to control a track when it is not currently
+selected, or to control more than one track at the same time.  There
+are several options available:</p>
+
+<ul>
+<li>Focus Lock</li>
+<li>Track Groups</li>
+<li>Track Binding Scope</li>
+<li>Group Binding Scope</li>
+</ul>
+
+<section><title>Focus Lock</title>
+
+<p>The <i>focus lock</i> feature was one of the first methods of
+controlling multiple tracks.  It has now been supplemented with the more
+powerful <i>track group</i> feature.  When focus lock is enabled for a
+track, the track will receive function triggers even when it is not
+the selected track.  For example, if focus lock is enabled in tracks
+1, 2, and 3, track 1 is selected, and the <i>Reverse</i> command is
+performed, the Reverse will be performed in tracks 1, 2, and 3.</p>
+
+<p>There are three ways to enable focus lock for a track, by clicking
+on the focus lock button in the track strip, with the <i>FocusLock</i>
+function, and with scripts.  See the scripting manual for more
+information about controlling tracks with scripts.  In the standard
+track strip, the focus lock button is the small circle at the top
+which will fill with red when clicked.  If you do not see a small
+circle you have customized the track strip.  Pull down the
+<i>Configuration</i> menu and select the <i>Display Components</i>
+item.  In the multi-select field labeled <i>Track Strip Controls</i>
+make sure that the item labeled <i>Focus Lock</i> is moved to the
+panel on the right side.</p>
+
+<p>Using the <i>FocusLock</i> function will toggle focus lock on and
+off.</p>
+
+<p>You may not want all functions to obey focus lock.  For example you
+may want NextLoop, Retrigger, and Mute to obey focus lock but not
+Record and Overdub so you can control the recording of tracks
+individually but still mute them at the same time.  A global parameter
+can be used to specify which functions will obey focus lock and track
+groups.  Pull down the <i>Configuration</i> menu and select the
+<i>Global Parameters...</i> item.  Then in the field labeled 
+<i>Group and Focus Lock Functions</i>, move the functions you want
+to obey focus lock to the panel on the right side.</p>
+
+</section> <!-- Focus Lock -->
+
+<section><title>Track Groups</title>
+
+<p>Track groups are a more powerful alternative to <ref>Focus
+Lock</ref>.  A track may be assigned to up to 4 track groups,
+functions performed in a track will automatically be performed in all
+other tracks in the same group.  As examples, track groups can be used
+to organize tracks by instrument (piano, bass, drums, lead) or by
+their location in a composition (verse, bridge, chorus).</p>
+
+<p>Tracks are assigned to a group using the <i>Track Group</i>
+function.  You select a specific group by using <i>Track Group</i>
+several times to cycle through the group numbers.  The first time you
+use <i>Track Group</i> the track will be assigned to group 1, the
+second time to group 2, and so on.  If the track is assigned to 
+the highest group 4, using <i>Track Group</i> again will remove the group
+assignment and return the track to normal.  The pattern is:</p>
+
+<example>
+  none -> 1 -> 2 -> 3 -> 4 -> none -> 1 -> 2 -> 3 -> 4 -> none
+</example>
+
+<p>Using MIDI, if you perform a long press of <i>Track Group</i> the
+group assignment will be removed.</p>
+
+<p>In the default track strip, track groups are displayed at the
+bottom of the track strip as "Group 1", "Group 2", etc.  Each group
+name is displayed in a different color.  You can specify the color you
+want for the group names in the <i>Palette...</i> dialog.  If you are
+upgrading from an earlier version and do not see group names, bring up
+the <i>Display Components</i> dialog, and make sure the <i>Group</i>
+item is in the right panel of the selection field labeled <i>Track
+Strip Controls</i>.</p>
+
+<p>Like the focus lock feature, you may not want all functions to obey
+the track group assignment.  You can use the <i>Group and Focus Lock
+Functions</i> global parameter to specify which functions should be
+automatically performed in other tracks in the group.</p>
+
+<p>If you find that 4 track group is more than you need, you can reduce
+the number using the <i>Max Track Groups</i> parameter in the 
+MIDI configuration.  Select the <i>MIDI Control</i> configuration dialog,
+and look for the <i>Max Track Groups</i> field.  Use the selector to 
+specify how many track groups you want.  This will reduce the
+number of times you have to use the <i>Track Group</i> function to cycle
+through the group assignments.  If you set <i>Max Track Groups</i>
+to 1, groups will behave the same as <ref>Focus Lock</ref>.</p>
+
+<p>If you are using scripts and you want to assign a particular group
+you can use the <i>TrackGroup</i> statement with a numeric argument.
+For example:</p>
+
+<example>
+    !name Set Group 3
+    TrackGroup 3
+</example>
+
+<p>There have also been some extensions to the scripting language to
+make it easier to loop over all the tracks in a group or all tracks
+with a certain quality.  The following symbols may be used after the
+<i>for</i> statement> to loop over tracks in a specific state.</p>
+
+<glossary>
+<gi><dt>group1</dt>
+<dd>Loop over all tracks in group 1</dd>
+</gi>
+<gi><dt>group2</dt>
+<dd>Loop over all tracks in group 2</dd>
+</gi>
+<gi><dt>group3</dt>
+<dd>Loop over all tracks in group 3</dd>
+</gi>
+<gi><dt>group4</dt>
+<dd>Loop over all tracks in group 4</dd>
+</gi>
+<gi><dt>focused</dt>
+<dd>Loop over all tracks with focus lock on</dd>
+</gi>
+<gi><dt>muted</dt>
+<dd>Loop over all tracks whose loop is muted</dd>
+</gi>
+<gi><dt>playing</dt>
+<dd>Loop over all tracks whose loop is playing (not muted)</dd>
+</gi>
+</glossary>
+
+</section> <!-- Track Groups -->
+
+<section><title>Track Binding Scope</title>
+
+<p>Each track has a <i>binding scope</i>, which means that you can
+bind MIDI events to functions and controls that will operate only
+within that track.  Binding scopes were described earlier in the
+<ref>MIDI Control</ref> section.</p>
+
+<p>To make a track specific binding bring up the <i>MIDI Control</i>
+dialog, locate the pulldown menu labeled <i>Scope</i> and select
+one of the numbered track names.  You may now make MIDI bindings
+to functions and controls as usual.</p>
+
+<p>A common application of track binding is to assign a unique MIDI
+continuous controller number to the Output Level control of each
+track.  This allows you to use a MIDI controller with lots of knobs as
+a "mixer" to balance the levels of each track.</p>
+
+<p>Another useful application is to bind a MIDI event to a function
+that will be performed in only one track.  This can be done for any
+function, but is especially useful with these:</p>
+
+<ul>
+<li>Focus Lock</li>
+<li>Mute</li>
+<li>Solo</li>
+<li>Retrigger</li>
+<li>Reverse</li>
+<li>Speed</li>
+</ul>
+
+<p>Forcing a function to run in only one track has been done in 
+previous releases of Mobius using scripts and the "for" statement.</p>
+
+<pre>
+   for 4
+      Mute
+   next
+</pre>
+
+<p>For simple track targeting like this you now no longer need to use
+scripts, you can simply make a binding to the Mute function in the
+"Track 4" scope.</p>
+
+</section> <!-- Track Binding Scope -->
+
+<section><title>Group Binding Scope</title>
+
+<p>Like track binding scopes, there is also a binding scope defined
+for each of the track groups.  To make a group specific binding bring
+up the <i>MIDI Control</i> dialog, locate the pulldown menu labeled
+<i>Scope</i> and select one of the numbered group names.  You may now
+make MIDI bindings to functions and controls as usual.</p>
+
+<p>When a function or control in a group scope is triggered, 
+it will be performed for all tracks currently in that group.</p>
+
+<p>The group control for <i>Output Level</i> behaves differently than
+other control bindings.  The output level of the tracks in the group
+will be changed relative to their current output level, rather than
+all set to the same value.  This allows you to set up a mix of several
+tracks with different output levels, then adjust the overall output
+level of the group "bus" without changing the mix of track levels.
+For example, assume track 1 and 2 are in the same group and track 1
+has output level 127 and track 2 has output level 64.  If you reduce
+the group output level from 127 to 97, the effective level for track 1
+will be 97 and the effective level for track 2 will be 34.</p>
+
+</section> <!-- Group Binding Scope -->
+
+</section> <!-- Controlling Tracks -->
+
+<section><title>Controlling Feedback</title>
+
+<p>Feedback controls the level of the audio content copied from
+one layer into the next.  Feedback can operate in two styles
+which have different uses:</p>
+
+<ol>
+<li>Continuous</li>
+<li>One Time</li>
+</ol>
+
+<p>With <i>Continuous</i> feedback, the feedback level is constantly
+being used to adjust the level of the audio from the current layer
+being copied into the next layer.  This can be used to create 
+volume swells or to "sculpt" the layer.  This is how feedback
+on the EDP behaves.</p>
+
+<p>With <i>One Time</i> feedback, the feedback level is only used
+when the loop reaches the end point and a new layer is created.  The
+current feedback level at the end point is applied to the entire layer.
+The only advantage to this mode is that if you bump the feedback
+pedal by accident, you have until the end of the loop is reached
+to move it to the correct position.</p>
+
+<p>Currently, the implementation of these feedback modes is dependent
+to another important mode, the <i>Layer Flattening</i> mode.</p>
+
+<p>Mobius provides two ways to combine the audio content of the layers
+into the loop that you hear being played.</p>
+
+<ol>
+<li>Flattening</li>
+<li>Dynamic Merging</li>
+</ol>
+
+<p>When <i>flattening</i> the full content of a layer is copied
+into the next layer as it is being recorded.  When the recording
+of a layer completes, everything necessary to play the layer is
+contained in one large block of audio.</p>
+
+<p>When <i>dynamic merging</i> the content of a layer is not copied
+into the next layer, instead the next layer references the content
+from the previous layer.  We then continually combine the contents of
+a layer with the layers it references as the layer plays.</p>
+
+<p>The main advantage of dynamic merging is that we may require less
+memory if you tend not to overdub over the entire layer.  For example,
+if you have a loop 10 seconds long, but only overdub 2 seconds worth
+of new material, the new layer will only require memory for 2 seconds.
+With flattening, each new layer requires memory for the full 10 seconds
+whether or not there was any actual new recording during those seconds.</p>
+
+<p>Another interesting consequence of dynamic flattening is that
+when you save a project, you can create audio files containing only
+the new content overdubbed into each layer.  These files can then 
+be remixed to create variants of the loop.</p>
+
+<p>There are two big disadvantages of dynamic flattening.  First, 
+if you create many layers, the overhead of constantly merging the content 
+from all the layers can require too much computer power which can 
+result in missed audio interrupts which sound like "clicks".  Second,
+continuous feedback is not available in this mode because we are
+not copying the content from one layer into the next.  Only one
+level of feedback can be applied to all of the content referenced
+in the previous layer.</p>
+
+<p>Choosing between layer flattening and dynamic merging is done
+with the <i>No Layer Flattening</i> preset parameter.  When this
+parameter is checked, we will perform dynamic merging.</p>
+
+<p>Most people will prefer to use layer flattening.  There is however
+one interesting performance technique that is provided by dynamic
+merging.  If you set the <i>MaxUndo</i> parameter to a non-zero value,
+Mobius will operate like a delay line with a fixed number of repeats.
+For example, set MaxUndo to 4, drop feedback slightly and record a
+loop.  With feedback reduced, we will create a new layer on each
+repeat.  But the MaxUndo parameter restricts us to keeping only the
+most recent 4 layers.  Once the first layer plays 4 times, it will
+no longer be heard, it has "fallen off the edge" of the layer list.
+This can also be used to reduce the "wall of sound" effect
+when doing continuous overdubs.  Material in older layers will be
+removed each time a new layer is created, letting the loop evolve
+without waiting for a gradual feedback decay.</p>
+
+</section> <!-- Controlling Feedback -->
+
+<section><title>Rate Shifting</title>
+
+<p>The <i>rate shifting</i> feature allows you to adjust the playback
+and recording rate of the loop so that both the perceived pitch and
+tempo of the loop change.  This is similar to the <i>Half Speed</i>
+function except that you are not limited to a single rate shift of 1
+octave down.</p>
+
+<p>Rate shifting may be controlled in several ways using these
+functions.</p>
+
+<ul>
+<li>Rate Up</li>
+<li>Rate Down</li>
+<li>Rate Next</li>
+<li>Rate Prev</li>
+<li>Rate Normal</li>
+<li>Rate Shift</li>
+</ul>
+
+<p>The <i>Rate Up</i> and <i>Rate Down</i> functions move the rate up
+or down by one semitone relative to the current rate.</p>
+
+<p>The <i>Rate Next</i> and <i>Rate Prev</i> functions select rates
+defined in the <i>Rate Sequence</i> preset parameter.  A rate sequence
+is a space delimited list of numbers which represent positive or
+negative rate changes in semitone increments.  For example a rate of
+"1" is one semitone above normal, a rate of "-7" is 7 semitones below
+normal (or a perfect fifth lower).  The rate sequence "wraps" on the
+edges so if you are on the last rate in the sequence, <i>Rate Next</i>
+will move to first rate in the sequence.</p>
+
+<p>The <i>Rate Normal</i> function returns the rate to normal, no
+matter how it was shifted.</p>
+
+<p>Perhaps the most useful function is <i>Rate Shift</i>.  This allows
+you to use a keyboard controller to instantly access a large range of
+rates spread over several octaves.  You normally bind a MIDI note
+event to the <i>Rate Shift</i> function, this becomes the <i>rate
+center note</i>.  When you press the rate center note, the rate
+returns to normal.  Where it gets interesting is that the notes above
+and below the center note are automatically assigned to semitone rate
+shifts relative to the center note.  Notes below the center note lower
+the rate, notes above raise the rate.  This allows you to "play" the
+loop chromatically, similar to using a sampler.</p>
+
+<p>Note that Mobius will attempt to bind rate shift functions in a 4
+octave range on either side of the center note.  For best results, it
+is recommended that the center note use a MIDI channel that is not
+being used for any other functions.  If a rate shift note is already
+assigned to another Mobius function, the previous function will have
+priority.  To avoid these conflicts use a different channel.</p>
+
+<p>When the rate is shifted, the playback of the loop will be affected
+by the setting of the <i>Rate Shift Retrigger</i> preset parameter.
+If this parameter is checked, then the loop will be retriggered
+whenever the rate is shifted.  This makes it behave like a sampler.
+If the parameter is not checked, the rate is simply shifted without
+retriggering.</p>
+
+</section> <!-- Rate Shifting -->
+
+<section><title>Pitch Shifting</title>
+
+<p>NOTE: Pitch Shifting is provided in release 1.24 as a "technology
+preview".  There are still bugs in it and I do not consider it ready
+for real use.  Still you may find it interesting to get a sense for
+what will eventually be provided.</p>
+
+<p>Pitch shifting is very similar to <ref>Rate Shifting</ref> except
+that the pitch is changed without changing the tempo of the loop.  In
+all other respects the functions and parameters used to control pitch
+shifting are identical to those for rate shifting.</p>
+
+<p>Pitch shifting may be controlled in several ways using these
+functions.</p>
+ 
+<ul>
+<li>Pitch Up</li>
+<li>Pitch Down</li>
+<li>Pitch Next</li>
+<li>Pitch Prev</li>
+<li>Pitch Normal</li>
+<li>Pitch Shift</li>
+</ul>
+
+<p>The <i>Pitch Up</i> and <i>Pitch Down</i> functions move the pitch up
+or down by one semitone relative to the current pitch.</p>
+
+<p>The <i>Pitch Next</i> and <i>Pitch Prev</i> functions select pitches
+defined in the <i>Pitch Sequence</i> preset parameter.  The Pitch Sequence
+the same as the Rate Sequence described in <ref>Rate Shifting</ref>.</p>
+
+<p>The <i>Pitch Normal</i> function returns the rate to normal, no
+matter how it was shifted.</p>
+
+<p>Finally <i>Pitch Shift</i> allows you to use a keyboard controller
+to instantly access a large range of pitches spread over several octaves.
+The Pitch Shift function is bound to a MIDI note in the same way
+as the Rate Shift function.  See <ref>Rate Shifting</ref> for more information
+on how the notes are selected, and the issues this can cause.</p>
+
+<p>When the pitch is shifted, the playback of the loop will be affected
+by the setting of the <i>Pitch Shift Retrigger</i> preset parameter.
+If this parameter is checked, then the loop will be retriggered
+whenever the pitch is shifted.  If the parameter is not checked, the pitch
+is simply shifted without retriggering.</p>
+
+</section> <!-- Pitch Shifting -->
+
+<section><title>Bounce Recording</title>
+
+<p>The <ref>Bounce Record</ref> function allows you to capture the
+output of several tracks, mix them together, and copy the result into
+an empty track.  This is similar to the <i>bounce down</i> mixing
+technique used with a multi track recorder.</p>
+
+<p>When the Bounce Record function is first called, it begins
+capturing the output of any track that is currently playing.  The
+track output is mixed together "post fader" so the Output Level
+control of each track may be used to control the track mix 
+in the recording.</p>
+
+<p>When Bounce Record is called a second time, the captured and mixed
+track output is copied to the first empty track (from the left).  The
+source tracks are then immediately muted, and the new track immediately
+begins playing.  This new track contains a single loop with the
+captured output from the other tracks.  This loop can then be
+manipulated as usual.</p>
+
+<p>Any number of bounce recordings can be made, but you must have at
+least one empty track.  If there are no empty tracks when the
+second Bounce Record is called, the recording is thrown away.</p>
+
+<p>Note that bounce recording is a special kind of "global mode" that
+is not related to any particular track or loop.  While you are bounce
+recording, you can be manipulating tracks and loops in any way,
+including recording new loops, multiplying, overdubbing, triggering,
+and rate shifting.  Mobius is recording the entire process.</p>
+
+<p>Bounce recording can be especially useful with the Retrigger, Rate
+Shift and Pitch Shift functions.  Once a loop is created, you can
+play a chord progression using Rate Shift or Pitch Shift, record the
+result of that performance, and bounce this into a new track to serve
+as a background loop.</p>
+
+<p>The timing of the bouce recording may be controlled with the
+<i>Bounce Quantize</i> parameter.  Bounce quantization is not affected
+by the <i>Quantize</i> parameter that is used with other functions.
+This is because bounce quantization is almost always set to <i>Loop</i>
+or <i>Cycle</i>, but you may not wish to use this same quantization
+for the functions that build the loop.</p>
+
+</section> <!-- Bounce Recording -->
+
+<section><title>Synchronization</title>
+
+<p>Mobius supports a number of synchronization options that allow you
+to create loops that stay in sync with drum machines and sequencers.
+There are three styles of synchronization available.</p>
+
+<ul>
+<li><b>Master</b> - Mobius is the sync master and sends MIDI clocks
+to other devices</li>
+<li><b>Slave</b> - Mobius is a sync slave and receives clocks from
+another device</li>
+<li><b>Peer</b> - One Mobius track is the sync master for other
+Mobius tracks (EDP calls this <i>brother sync</i>)</li>
+</ul>
+
+<p>The style of synchronization is determined by setting the <i>Sync
+Mode</i> and <i>Track Sync Mode</i> parameters in the preset.  The
+following sync modes are available.</p>
+
+<glossary>
+<gi><dt>Off</dt>
+<dd>No synchronization is performed.</dd>
+</gi>
+<gi><dt>Out</dt>
+<dd>Mobius is the sync master and sends MIDI clocks.  MIDI Start, Stop, and
+Continue messages are sent automatically.</dd>
+</gi>
+<gi><dt>Out User Start</dt>
+<dd>Mobius is the sync master and sends MIDI clocks.  MIDI Start 
+messages must be sent manually. </dd>
+</gi>
+<gi><dt>In</dt>
+<dd>Mobius is a sync slave and receives MIDI clocks.  The start
+and end of the loop are determined by the <i>Quantize</i> and
+<i>8thsPerCycle</i> parameter.</dd>
+</gi>
+<gi><dt>MIDI Beat</dt>
+<dd>Mobius is a sync slave and receives MIDI clocks.  The start
+and end of the loop are quantized to a MIDI beat.</dd>
+</gi>
+<gi><dt>MIDI Bar</dt>
+<dd>Mobius is a sync slave and receives MIDI clocks.  The start
+and end of the loop are quantized to a MIDI bar as determined
+by the <i>8thsPerCycle</i> parameter.  This is the same as
+<i>In</i> except that the <i>Quantize</i> parameter does not have
+to be set.</dd>
+</gi>
+<gi><dt>Host Beat</dt>
+<dd>Mobius is a sync slave and receives beats from the VST host.
+The start and end of the loop are quantized to a beat as defined
+by he VST host.</dd>
+</gi>
+<gi><dt>Host Bar</dt>
+<dd>Mobius is a sync slave and receives beats from the VST host.
+The start and end of the loop are quantized to a bar as defined
+by he VST host.</dd>
+</gi>
+</glossary>
+
+<p>The <i>Track Sync Mode</i> parameter is valid only when <i>Sync Mode</i>
+is <i>Out</i> or <i>Out User Start</i>.  See <ref>Track Synchronization</ref>
+for details.</p>
+
+<!--
+<section><title>Sync Pulses</title>
+
+</section>
+-->
+
+<section><title>Drift Retrigger</title>
+
+<p>Like the EDP, Mobius maintains synchronization with an external
+clock by periodically comparing the current playback position with the
+position we are supposed to have according to the clock.  If the
+positions are not the same, a <i>drift</i> has occurred.  When the
+amount of drift exceeds a certain threshold, the loop will be
+automatically retriggered to make the playback position match the
+clock.  This is called <i>drift retrigger</i>.</p>
+
+<p>Depending on the contents of the loop, drift retrigger may produce
+a soft audible "bump" due to the sudden change in playback position.
+Cross fading is performed to make this transition smoother so it will
+not sound like an unpleasant "click".</p>
+
+<p>The global parameter <i>Resync Drift Frames</i> sets the number of
+frames Mobius will allow a loop to drift out of alignment before
+retriggering.  It is common for a slight drift to correct itself
+over time, so this parameter should not be set too low or we will
+retrigger too often.  A value slightly greater than the ASIO buffer 
+size is recommended.  The default value is 256.</p>
+
+</section>
+
+<section><title>Sync=Out</title>
+
+<p><i>Out</i> sync behaves like the EDP.  MIDI clocks are sent as
+soon as the loop length is established.  MIDI <i>Start Song</i>
+and <i>Stop Song</i> messages are sent automatically.</p>
+
+<p>The tempo of the MIDI clocks is determined by the length of the
+loop and the value of the <i>8thsPerCycle</i> parameter.  When using
+external synchronization, you should think of the value of
+<i>8thsPerCycle</i> as being the number of "beats" in a bar.  Most of
+the time a beat will correspond to a quarter note.  So if you are
+trying to synchronize with a 4/4 drum pattern that is 4 beats long,
+set <i>8thsPerCycle</i> to 4 (or a multiple of 4).</p>
+
+<p>The tempo is determined by this formula:</p>
+
+<example>
+    tempo = beats * (60 / loop seconds)
+</example>
+
+<p>For example, if you create a loop 2 seconds long, and
+<i>8thsPerCycle</i> is 4, then the tempo will be <b>4 * (60 / 2) = 120</b></p>.
+
+<p>The tempo range can be constrained by the <i>Minimum Sync Tempo</i>
+and <i>Maximum Sync Tempo</i> preset parameters.  If the tempo
+produced by this formula is less than the minimum sync tempo, it will
+be doubled until it exceeds the minimum tempo.  Similarly, if the
+tempo is greater than the maximum sync tempo, it will be halved until
+it is less.</p>
+
+<p>A MIDI <i>Start Song</i> message is sent after the following functions:</p>
+
+<ul>
+<li>Record End (with Record or any alternate ending)</li>
+<li>Unrounded Multiply</li>
+<li>Unrounded Insert</li>
+<li>Start Point</li>
+<li>Unmute when MuteMode=Start (retrigger)</li>
+<li>Mute then Undo when MuteMode=Continuous (retrigger)</li>
+<li>Loop Switch when SamplerStyle is Start, Once, or Attack</li>
+<li>ReAlign (at the local loop start point)</li>
+<li>Mute ReAlign</li>
+<li>Mute/Multiply (same as ReAlign)</li>
+<li>MIDI Start Song (EDP calls this QuantMIDIStartSong)</li>
+<li>Mute + MIDI Start Song (EDP calls this MuteQuantMIDIStartSong)</li>
+</ul>
+
+<p>A MIDI <i>Stop Song</i> message is sent after the following functions:</p>
+
+<ul>
+<li>Reset</li>
+<li>General Reset</li>
+<li>Global Reset</li>
+<li>Record Start</li>
+<li>Mute when MuteMode=Start</li>
+</ul>
+
+<section><title>Speed Sync Adjust</title>
+
+<p>The new Mobius parameter <i>Speed Sync Adjust</i> controls
+how output MIDI clocks are generated when switching to half speed.</p>
+
+<ul>
+<li><b>Tempo</b> - Clock rate is cut in half, like the EDP</li>
+<li><b>Resize</b> - Clock rate stays the same, loop pulse count is
+doubled to prevent it from retriggering in the middle</li>
+<li><b>Continue</b> - Both clock rate and pulse count stay the same,
+causing the loop to be retriggered at its midpoint</li>
+</ul>
+
+</section> <!-- Speed Sync Adjust -->
+
+<section><title>Unrounded Sync Adjust</title>
+
+<p>The new Mobius parameter <i>Unrounded Sync Adjust</i> controls how
+synchronization is performed after an unrounded operation like
+<i>Insert</i> or <i>Multiply</i> that may change the cycle length.  The
+possible values are:</p>
+
+<glossary>
+<gi><dt>No Changes</dt>
+<dd>No change to either the tempo or pulse count.  The loop will 
+continue counting sync pulses and retrigger the loop.  If the new
+loop is longer than the previous loop, it will be retriggered before
+it plays to completion.  If the new loop is shorter than the
+previous loop, the loop will play to completion, then play a portion
+of the front of the loop again before retriggering.</dd>
+</gi>
+<gi><dt>Change Tempo</dt>
+<dd>The tempo of the outbound MIDI clocks is changed to match the
+number of pulses in the new loop.  This is perhaps the most musically
+useful mode.</dd>
+</gi>
+<gi><dt>Change Pulses</dt>
+<dd>The tempo of the outbound MIDI clocks is not changed, but the
+pulse count is adjusted to match the tempo.  The loop will not
+retrigger in the middle as is the case with <i>No Changes</i>, but
+it may not sound in sync with the external device.</dd>
+</gi>
+</glossary>
+
+</section> <!-- Unrounded Sync Adjust -->
+
+<section><title>Controlling Host Tempo</title>
+
+<p>Some VST hosts may allow Mobius to behave as a sync master,
+defining the tempo based on the length of the recorded loop.  This is
+sometimes referred to as "first loop capability".  For this to work,
+you need two things:</p>
+
+<ol>
+<li>A VST host capable of slaving to MIDI clocks</li>
+<li>A MIDI loop back device</li>
+</ol>
+
+<p>This configuration works reasonably well with <i>Ableton Live</i>.
+I have not had much success with <i>Sonar</i> due to the way their
+"audio engine" turns on and off.  You cannot do this with <i>FL Studio</i>
+because it does not allow slave sync when running
+standalone.  Supposedly <i>FL Studio</i> allows external sync when
+running as a VST plugin but I have not had the opportunity to test
+that.</p>
+
+<p>For a loop back device on the PC, use <i>MIDI Yoke</i> at
+<b>www.midiox.com/myoke.htm</b>.  I do not recommend the older
+<i>Hubi's Loopback Device</i> as it does not run well on Windows XP.
+Select one of the MIDI Yoke output devices in the <i>MIDI
+Devices...</i> dialog.  Then configure the VST host to receive MIDI
+sync from the MIDI Yoke input device with the same name as the Mobius
+output device.</p>
+
+<p>The <i>Plugin Opens MIDI Out</i> global parameter must be set
+when controlling host tempo since the Mobius plugin must be able to
+open the MIDI output device.</p>
+
+</section> <!-- Controlling Host Tempo -->
+
+</section> <!-- Sync=Out -->
+
+<section><title>Sync=Out User Start</title>
+
+<p><i>Out User Start</i> mode behaves like the EDP.  MIDI clocks are sent as
+soon as the loop length is established but MIDI <i>Start Song</i>
+and <i>Stop Song</i> messages must be sent manually.  The tempo
+is determined in the same way as <ref>Sync=Out</ref>.</p>
+
+<p>A MIDI <i>Start Song</i> message is sent when the loop reaches
+its start point after the following functions:</p>
+
+<ul>
+<li>MIDI Start Song (EDP calls this QuantMidiStartSong)</li>
+<li>Mute + MIDI Start Song (EDP calls this MuteQuantMidiStartSong)</li>
+<li>ReAlign</li>
+<li>Mute ReAlign</li>
+<li>Mute/Multiply (same as ReAlign)</li>
+</ul>
+
+<p>A MIDI <i>Stop Song</i> message is sent immediately 
+after the following functions:</p>
+
+<ul>
+<li>Reset</li>
+<li>General Reset</li>
+<li>Global Reset</li>
+<li>Record Start</li>
+<li>Mute when MuteMode=Start</li>
+</ul>
+
+</section> <!-- Sync=OutUserStart -->
+
+<section><title>Sync=In</title>
+
+<p>Sync mode <i>In</i> behaves as it does on the EDP.  The length of a
+cycle is predefined by the tempo of the incoming MIDI clocks and the
+8thsPerCycle parameter.  The 8thsPerCycle specifies the number of MIDI
+beats in the cycle, where a MIDI beat is always 24 MIDI
+clocks.  The length of the cycle may be calculated with this
+formula:</p>
+
+<example>
+   cycleSeconds =  60 / (tempo / 8thsPerCycle)
+</example>
+
+<p>For a tempo of 120 and an 8thsPerCycle of 4, the cycle length will
+be 2 seconds.  The end of the initial record will always be rounded
+up to a multiple of this number of seconds.  If you record more than
+the number of cycle seconds, the loop will contain more than one  cycle.</p>
+
+<p>The beginning of the recording is determined by the <i>Quantize</i>
+parameter.  When Quantize=Off, the recording will begin on the next MIDI
+clock.  When Quantize=SubCycle, the recording will begin on the next
+MIDI beat (24 clock boundary).  When Quantize=Cycle or Loop, the  recording
+begins on the next MIDI bar, where a bar contains the number of MIDI
+beats specified by 8thsPerCycle.</p>
+
+<p>This mode is not available when Mobius is running as a VST plugin.
+Use <ref>Sync=Host Bar</ref> or <ref>Sync=Host Beat</ref> instead.</p>
+
+</section>
+
+<section><title>Sync=MIDI Bar</title>
+
+<p>This is functionally the same as Sync=In when Quantize=Cycle.  The
+recording is always quantized to the start of a MIDI bar, and ends
+on a MIDI bar.  The length of the bar is determined by 8thsPerCycle
+but Quantize does not have to be set.  This allows you to begin  modifying
+the new loop using whatever Quantize parameter you desire without
+having to change presets.</p>
+
+<p>This mode is not available when Mobius is running as a VST plugin.
+Use <ref>Sync=Host Bar</ref> instead.</p>
+
+</section>
+
+<section><title>Sync=MIDI Beat</title>
+
+<p>In this mode the start and end of the recording are simply
+quantized to a MIDI beat boundary and is not affected by
+the tempo, the Quantize parameter, or the 8thsPerCycle parameter.  This
+is similar to what the EDP calls <i>beat sync</i> except that beats
+are defined by MIDI clocks rather than analog pulses.</p>
+
+<p>This mode is not available when Mobius is running as a VST plugin.
+Use <ref>Sync=Host Beat</ref> instead.</p>
+
+</section>
+
+<section><title>Sync=Host Beat</title>
+
+<p>In this mode the start and end of the recording are quantized to a
+beat as defined by the VST host.  This is similar to <i>MIDI Beat</i>
+except that MIDI clocks are not used.</p>
+
+<p>This mode is only available when Mobius is running as a VST plugin.</p>
+
+</section>
+
+<section><title>Sync=Host Bar</title>
+
+<p>In this mode the start and end of the recording are quantized
+to a bar boundary as defined by the VST host.  Unlike <i>MIDI Bar</i>
+the length of the bar is unrelated to the <i>8thsPerCycle</i> parameter.
+The bar length is set in the host and cannot be controlled by Mobius.</p>
+
+<p>This mode is only available when Mobius is running as a VST plugin.</p>
+
+</section>
+
+<section><title>Track Synchronization</title>
+
+<p>What Mobius calls <i>Track Synchronization</i> is similar to
+what the EDP calls <i>Brother Sync</i>.  It provides a way to 
+synchronize the start and end of a new recording with a loop
+playing in another track.  With the EDP, brother sync is enabled
+by connecting cables between two or more devices.  In Mobius,
+track synchronization must be enabled with the <i>Track Sync Mode</i>
+preset parameter.</p>
+
+<p>Track sync is only available when the <i>Sync</i> parameter
+is set to <i>Out</i> or <i>Out User Start</i>.  If you are using
+one of the input sync modes, you must synchronize tracks from
+the same external master clock, or by using the <i>Track Copy</i> 
+parameter combined with one of the track selection functions.</p>
+
+<p>When track sync is enabled, the first track that records a loop
+becomes the <i>track sync master</i> and all other tracks will
+synchronize to the master track.  Any track may become the track sync
+master.  If a track that was the sync master is reset, the next track
+to finish recording a new loop becomes the sync master.</p>
+
+<p>Once the track sync master has been selected, all other tracks
+that have track sync enabled will quantize the start and end times
+of the first recording to the master track.  Recording of the slave
+track will not begin until the master track reaches a point determined
+by the <i>Track Sync Mode</i> parameter.  The possible values
+for this parameter are:</p>
+
+<glossary>
+<gi><dt>Off</dt>
+<dd>Track sync is not enabled, the recording will not be quantized.</dd>
+</gi>
+<gi><dt>Sub Cycle</dt>
+<dd>The recording will begin or end at the next subcycle of the master track.</dd>
+</gi>
+<gi><dt>Cycle</dt>
+<dd>The recording will begin or end at the next cycle of the master track.</dd>
+</gi>
+<gi><dt>Loop</dt>
+<dd>The recording will begin or end at the next loop start point 
+of the master track.  This is what the EDP does.</dd>
+</gi>
+</glossary>
+
+<p><i>Track Sync Mode</i> will also affect the processing of the <i>ReAlign</i>
+function.  If ReAlign is performed in a track that is a track sync
+slave, the realign will happen when the master track reaches its loop
+start point.  ReAlign always happens at the master loop start point, even
+if <i>Track Sync Mode</i> is <i>Sub Cycle</i> or <i>Cycle</i>.</p>
+
+<p>In track sync modes <i>Cycle</i> and <i>Loop</i> the cycle length
+of the new loop will be the same as the master loop, and the new loop may
+end up with more than one cycle.  As you pass the master loop cycle start
+point during recording you will see the cycle counter incrementing.</p>
+
+<p>Track sync mode <i>Sub Cycle</i> is more complicated.  After ending
+a recording, if the new loop length is an even multiple of the master
+loop cycle length, the cycle lengths will be the same and the new loop
+may contain more than one cycle.  If the new loop length is not an
+even multiple of the master cycle, the new loop will be reorganized
+to have only one cycle.</p>
+
+<p><i>Sub Cycle</i> track sync is a bit like Sync=MIDIBeat or
+Sync=HostBeat.  It can be used to create a loop whose rhythm stays in
+sync with the master track, but by allowing the cycle sizes to differ
+the new loop will continually shift in and out of phase with
+the master loop.</p>
+
+</section> <!-- Track Synchronization -->
+
+<section><title>Missing Synchronization Features</title>
+
+<section><title>Auto Start Point</title>
+
+<p>Mobius does not currently support what the EDP calls <i>Auto Start
+Point</i>. When any form of synchronization is on, Mobius will
+periodically retrigger the loop so that it stays in sync with the MIDI
+clock.  This "drift retriggering" is disabled when <i>Overdub</i> or
+another recording mode is active.  If retriggering were allowed during
+recording, it could cause gaps in the recording which you would hear
+as clicks.</p>
+
+<p>If drift retrigger is disabled and an overdub is left on for several
+iterations of the loop, the loop can go out of alignment with the MIDI clocks.
+What <i>Auto Start Point</i> does is automatically set the start point
+of the loop rather than retriggering it, but only if the feedback level
+is low enough that the old content of the loop will be inaudible.</p>
+
+<p>Currently in Mobius, if you leave overdub on, the loop will gradually
+go out of sync with the external device.  This may be corrected by leaving
+overdub and performing a <i>ReAlign</i>.</p>
+
+</section> <!-- Auto Start Point -->
+
+<section><title>MIDI Sync Indicators</title>
+
+<p>The EDP will send MIDI note messages at various synchronization 
+points such as the loop start point, global MIDI start point, cycle
+start point, and sub-cycle start point.  Mobius does not.</p>
+
+</section> <!-- MIDI Sync Indicators -->
+
+<section><title>Stop Sync</title>
+
+<p>On the EDP, pressing overdub when the track is reset and Sync=In
+toggles reception of incoming sync.  It also toggles adherence to the
+tempo specified by TempoSelect.  I'm assuming a side effect of this
+is that you lose the ability to "arm" overdub mode during reset.</p>
+
+<p>Mobius does not yet support this feature, though I don't really
+like losing the ability to control overdub in reset.  Common functions
+like Multiply and Insert don't do anything in reset mode, I would
+rather use those.  I will probably add a preset parameter that lets
+you choose which function will trigger Stop Sync.  The same
+is true for the use of the Undo and Overdub functions to control
+<ref>Tempo Select</ref>.</p>
+
+</section> <!-- Stop Sync -->
+
+<section><title>Tempo Select</title>
+
+<p>On the EDP, pressing Undo while in reset mode when Sync=Out
+activates <i>Tempo Select</i> mode.  While in Tempo Select mode, the
+Overdub function changes behavior and cancels Tempo Select rather than
+arming Overdub mode.</p>
+
+<p>Mobius does not support this feature, and like <ref>Stop Sync</ref> it
+seems that functionality is actually taken away which I don't like.  Perhaps
+the same parameter used to select the <ref>Stop Sync</ref> trigger
+function could be used for Tempo Select as well.</p>
+
+</section> <!-- Tempo Select -->
+
+</section> <!-- Missing Features -->
+
+<section><title>Synchronization Bugs</title>
+
+<p>The primary problem Mobius has with synchronization is in handling
+alignment when switching among loops and layers that have a different
+cycle length.  You can usually get the loop back in sync with the device,
+but it may take an extra use of the ReAlign function or a premature
+drift retrigger may be performed.  If you avoid operations such as
+unrounded multiply that redefine the cycle length, you may not notice
+these bugs.</p>
+
+<p>Some of the known bugs include:</p>
+
+<ul>
+<li>The <i>SamplePlay</i> function can cause an unrecoverable
+dealignment in some sync modes.</li>
+<li>The <i>Sampler Style</i> parameter values <i>Once</i> 
+and <i>Attack</i> can confuse the sync pulse counter resulting in 
+incorrect drift retriggers.</li>
+<li><i>MIDI Song Position</i> is not recognized when realigning
+to an device while Sync=In.</li>
+<li><i>ReAlign</i> after a dealignment from an unrounded operation 
+doesn't always work.  Sometimes this causes a premature drift retrigger, 
+after which the loop should be in sync.</li>
+<li>Switching between loops and layers that have a different cycle length
+can confuse the pulse counter and cause unnecessary drift retriggers.</li>
+<li>Leaving mute when <i>Mute Mode</i> is <i>Pause</i> can cause a dealign
+because a MIDI Song Position is not sent to the external device.</li>
+</ul>
+
+</section> <!-- Bugs -->
+
+</section> <!-- Synchronization -->
+
+<section><title>Interface Modes</title>
+
+<p>Mobius provides support for Interface Modes except <i>Delay</i>.
+But note that for modes such as <i>Replace</i> and <i>Flip</i> to work
+as documented, you must have <i>continuous feedback</i> enabled.  
+Continuous feedback is normally enabled, but it may be disabled
+with the <i>No Layer Flattening</i> preset parameter.  If the interface
+modes are not behaving as you expect, make sure this parameter
+is not checked.</p>
+
+<p>One of the things EDP interface modes do is specify what is
+controlled by the feedback knob on the front panel and by an
+expression pedal plugged into a jack on the back panel.  For example,
+in the default <i>Loop</i> mode both the knob and the expression pedal
+control feedback.  But in <i>In</i> mode, feedback is controlled only
+by the knob and the expression pedal controls input level.</p>
+
+<p>Mobius obviously does not have a jack on the back panel, so some of
+the text in the EDP manual will not apply to Mobius.  You can
+accomplish the same things, but in slightly different ways.</p>
+
+<p>Mobius supports a complete set of MIDI continuous controller
+bindings for direct control of these track controls:</p>
+
+<ul>
+<li>Input Level</li>
+<li>Output Level</li>
+<li>Feedback</li>
+<li>Secondary Feedback</li>
+<li>Pan</li>
+</ul>
+
+<p>Binding a MIDI controller to the <i>Feedback</i> control is similar
+to plugging an expression pedal into the back of the EDP.  Binding a MIDI
+controller to <i>Secondary Feedback</i> is similar to turning the feedback
+knob on the front panel of the EDP.  Depending on Interface Mode
+the MIDI controller bound to <i>Feedback</i> may actually be routed
+to a different control such as <i>Input Level</i>.</p>
+
+<p><b>NOTE:</b> The controller mapping described here only applies to
+MIDI continuous controller bindings.  The knobs displayed in the UI
+always perform the function indicated by their label.  In other words
+the knob labeled <i>Feedback</i> <b>always</b> controls feedback,
+regardless of the interface mode.</p>
+
+<p>If you have a MIDI control surface with lots of knobs, or a lot of
+MIDI foot pedals, you may not need some of the controller mapping
+features provided by simple interface modes <i>In</i> and <i>Out</i>.</p>
+
+<p>The following sections will describe each of the interface modes
+in detail.</p>
+
+<section><title>InterfaceMode=Loop</title>
+
+<p>This is the same as the EDP except that there is only one way to
+control feedback, with a MIDI continuous controller bound to the
+<i>Feedback</i> track control.  The <i>Secondary Feedback</i>
+control is ignored in this mode.</p>
+
+</section> <!-- InterfaceMode=Loop -->
+
+<section><title>InterfaceMode=In</title>
+
+<p>The MIDI controller bound to the <i>Feedback</i> control will
+instead control the <i>Input Level</i> control and feedback must be
+controlled with the MIDI controller bound to <i>Secondary
+Feedback</i>.</p>
+
+</section> <!-- InterfaceMode=In -->
+
+<section><title>InterfaceMode=Out</title>
+
+<p>The MIDI controller bound to the <i>Feedback</i> control will
+instead control the <i>Output Level</i> control and feedback must be
+controlled with the MIDI controller bound to <i>Secondary
+Feedback</i>.</p>
+
+</section> <!-- InterfaceMode=Out -->
+
+<section><title>InterfaceMode=Stutter</title>
+
+<p>Essentially the same as <i>Loop</i> mode except that the
+<i>Insert</i> function will perform a <i>Stutter</i> rather than an
+Insert.  Stutter is sometimes referred to as "single cycle multiply".
+While in Stutter mode, repetitions of the next cycle will be
+continually inserted into the loop, and you may overdub new material
+on top of the stuttered cycles.</p>
+
+<p>Mobius also supports <i>Stutter</i> and <i>SUSStutter</i> functions that
+you may use any time without needing to change interface modes.</p>
+
+<p>If SwitchQuant is on during Stutter mode and you trigger a new
+loop followed by an <i>Insert</i>, the EDP will perform a stutter
+into the next loop.  Mobius does not currently support this.</p>
+
+<p>The <i>Secondary Feedback</i> control is supposed to be active
+during <i>Substitute</i> mode allowing you to overdub rather than
+completely replace the previous material.  This is not currently
+supported.</p>
+
+</section> <!-- InterfaceMode=Stutter -->
+
+<section><title>InterfaceMode=Expert</title>
+
+<p>This mode requires that the <i>No Layer Flattening</i> preset
+parameter not be checked.</p>
+
+<p>The <i>Feedback</i> track control determines feedback while the
+loop is playing, and the <i>Secondary Feedback</i> control
+determines feedback during <i>Overdub</i>, <i>Multiply</i>, and
+<i>Substitute</i> modes.  There is no mapping of controllers so you
+must either have two MIDI controllers bound to these track controls or use
+the knobs in the UI.</p>
+
+<p>The EDP docs indicate that in <i>Sample Play</i> mode, feedback is
+always 100% and the feedback controller controls output level instead.
+Mobius does not support this.</p>
+
+</section> <!-- InterfaceMode=Expert -->
+
+<section><title>InterfaceMode=Flip</title>
+
+<p>This mode requires that the <i>No Layer Flattening</i> preset
+parameter not be checked.</p>
+
+<p>The MIDI controller bound to <i>Feedback</i> controls both
+<i>Feedback</i> and <i>Input Level</i> at the same time, but the
+feedback range is reversed.  At toe up, feedback is 100% and input
+level is 0%, making it function similar to a "hold" pedal.</p>
+
+<p>During <i>Overdub</i> mode, feedback is determined by the
+<i>Secondary Feedback</i> control.  Unlike the EDP however, the
+feedback range is not reversed.  Since this only controls one thing,
+I didn't see much value in reversing the range but if someone feels
+strongly about this I can change it.</p>
+
+<p>Like <ref>InterfaceMode=Stutter</ref>, the <i>Insert</i> function
+will perform a <i>Stutter</i> rather than an Insert.</p>
+
+<p>I'm not sure if NextLoop+Insert is also supposed to perform a
+stutter, currently it does not.</p>
+
+<p>When in <i>Mute</i> you are supposed to be able to continue recording
+silently.  Mobius does not support this.</p>
+
+</section> <!-- InterfaceMode=Flip -->
+
+<section><title>InterfaceMode=Replace</title>
+
+<p>This mode requires that the <i>No Layer Flattening</i> preset
+parameter not be checked.</p>
+
+<p>The MIDI controller bound to <i>Feedback</i> controls
+both <i>Feedback Level</i> and <i>Output Level</i> at the same time.</p>
+
+</section> <!-- InterfaceMode=Replace -->
+
+<section><title>InterfaceMode=Delay</title>
+
+<p>This is not currently supported.</p>
+
+<p>During <i>Delay</i> mode, the controller bound to the <i>Feedback</i>
+control will control <i>Input Level</i> instead and feedback must
+be controlled with <i>Secondary Feedback</i>.</p>
+
+<p>In this case I don't like the reassignment of the controllers.
+Since Mobius UI knobs are much more difficult to use than hardware
+knobs, most users will want to have another MIDI controller assigned
+to Secondary Feedback.  If you have to have two controllers, then you
+may as well just assign them to Feedback and Input Level and not
+bother with Secondary Feedback.  This can be changed with the
+<i>Pedal Mode</i> parameter set in the <i>MIDI Control...</i> dialog.
+This parameter may have these values:</p>
+
+<ul>
+<li><b>Variable</b> - Like the EDP, MIDI controllers may change
+behavior when InterfaceMode=Delay</li>
+<li><b>Fixed</b> - MIDI controllers do not change behavior</li>
+</ul>
+
+</section> <!-- InterfaceMode=Delay -->
+
+</section> <!-- Interface Modes -->
+
+<section><title>Advanced Features</title>
+
+<section><title>Latency Calibration</title>
+
+<p>This section is mostly irrelevant if you are using ASIO devices,
+though you may find it useful to understand latency issues.</p>
+
+<p>Most of my testing has been done using MME drivers, specifically
+because they introduce high latency.  Systems that synchronize
+recorded audio with what is being played must perform latency
+compensation.  ASIO tends to hide errors in latency compensation, MME
+makes them painfully obvious.</p>
+
+<p>Because looping is to a large degree delayed playback of previously
+recorded material, latency is actually much less of an issue than in
+an application like a virtual instrument.  Latency is noticeable
+whenever an abrupt change in playback occurs, such as ending the
+initial recording, and unquantized functions such as loop switch,
+loop trigger, and unrounded multiply.  If you are quantizing
+functions, you may not often hear the effects of latency
+compensation.</p>
+
+<p>When you make an abrupt change, say a loop switch, Mobius will
+already have buffered a few thousand frames from the current loop.
+We can start buffering frames from the next loop, but they will be
+delayed a few hundred milliseconds while we play the frames that are already
+in the buffer.  What output latency compensation does is begin buffering
+the next loop not from the first frame, but at an offset equal
+to the number of frames from the old loop that are already buffered.
+The bad effect is that a small portion of the front of the next loop
+will be skipped.  The good effect is that when the next loop finally
+becomes audible, it will be at its proper playback position, the
+same position it would be in if there were zero latency.  This is important
+if you are playing rhythmically and want the rhythm to be maintained
+during the switch.  Without this there would be a few milliseconds
+of "extra time" inserted whenever you switch that is likely to 
+annoy your drummer.</p>
+
+<p>When you are quantizing, Mobius is usually able to anticipate
+where the change in output buffering needs to occur so that the
+switch occurs seamlessly without loss.  This early buffering
+of the next loop can cause an audible glitch if you cancel the switch
+(or change the target loop) very close to the point where the switch
+is scheduled.  If we have already started buffering the next loop,
+a few milliseconds of it will still be heard before hearing the
+correct loop.  In practice this should be a relatively rare problem as
+most people don't change their mind about which loop to trigger
+100 milliseconds before the trigger is to be performed.</p>
+
+<p>Latency compensation must also be performed to ensure
+that overdubs are aligned properly with the audio that was
+being heard during the overdub.  Without compensation the overdub
+may sound slightly ahead of or slightly behind where it should be.</p>
+
+<p>Mobius uses information returned by the device to estimate the
+amount of latency compensation to be performed.  This can usually be
+calculated with reasonable accuracy by knowing the number and size of
+the buffers used by the audio device driver.  But there are other
+factors besides buffer size that contribute to latency, so sometimes
+the estimate is not correct and requires manual adjustment.</p>
+
+<p>At the bottom of the <i>Audio Devices...</i> dialog, there are two
+fields labeled <i>Override Input Latency Frames</i> and <i>Override
+Output Latency Frames</i>.  After you select a device and reopen the
+dialog, the default latency adjustment values are shown to the right
+of these fields.  If you enter a number into either field, it will
+override the default value.</p>
+
+<p>The easiest way to determine what these values should be is to
+perform a calibration.  Click the <i>Calibrate Latency</i> button and another
+dialog will popup with information about the calibration process.  In
+order to calibrate, you must physically connect the left or right
+output channel of the sound card to the left input channel of the same
+card.  For most cards this can be done with a cable that has mini-plugs
+on both ends.  If the sound card output is being sent to a mixer, you
+probably have a way to connect the output to the input in the mixer.
+This is called a <i>loop back connection</i>.</p>
+
+<p>Once you have made a loop back connection, click the <i>Start</i>
+button on the calibration dialog.  If you are monitoring the sound
+card's output, you will hear a series of clicks.  If the loop back
+connection is not correct, after about 10 seconds a message dialog
+will popup saying that calibration timed out waiting for an input
+signal.  If this happens check your connections and try the
+calibration again.  If the calibration was successful, a
+message dialog will pop up displaying the total measured latency, and
+the recommended values for input and output latency frames.  Click the
+<i>Accept</i> button to copy these values into the latency fields of
+the Audio Devices dialog, or click <i>Cancel</i> to keep the current
+values.</p>
+
+<p>If you want to tweak the latency values manually, start by
+increasing the values for both latencies by 10 until it sounds right.
+You normally shouldn't have to add more than a few hundred frames.  If
+it is still way out of alignment, stop adding to the input latency and
+start making more radical adjustments to the output latency, up or
+down in increments of 500.  If that is required, submit a bug report
+with information about your computer and sound card.</p>
+
+<p>To get a better understanding of what these values mean, you can
+think that at any moment in time Mobius is receiving sound that was
+performed a few milliseconds in the past, and is playing sound that
+will be heard a few milliseconds in the future.  Input latency is the
+number of frames it takes a sound to "get into" Mobius.  If you set
+input latency too low, you will be recording sound that was performed
+<i>before</i> the time you triggered the record function.  If you
+set input latency too high, you will lose some of the sound immediately
+after you triggered the record function.  It is more critical that
+input latency be correct because miscalibration can result in unwanted
+sound or loss of sound at the record start point.  If an overdub sounds
+like it has the right content but isn't aligned properly, then adjust
+output latency not input latency.</p>
+
+<p>If you set output latency too low, overdubs will sound like they
+are playing too late.  If output latency is too high, overdubs will
+sound like they are playing too early.  Deliberately adjusting output
+latency too low can actually be useful to compensate for
+<i>monitoring latency</i>.  If you perform live using monitor speakers
+some distance away, it will take a noticeable amount of time for the
+sound to travel from the speakers to your ears. If you are overdubbing
+to this sound, it may not be aligned properly on playback.  Raising
+output latency can help bring the overdubs back into alignment.</p>
+
+</section>
+
+<section><title>Samples</title>
+
+<p>Samples are a feature I developed to for unit testing.
+These are probably not very useful for performance but who knows.  Let
+me know if you discover a technique!</p>
+
+<p>A sample is just an audio <b>.wav</b> file you can bind to buttons, 
+keys, or MIDI events.  The function names are <i>Sample Trigger 1</i>, 
+<i>Sample Trigger 2</i> etc.  Up to 8 samples may be loaded.</p>
+
+<p>When triggered, a sample plays from beginning to end without
+interruption and then stops.  If you trigger it again before the last
+sample playback finishes, we will start another overlapping playback
+of the sample.  Sample playback is independent of whatever you are
+doing with tracks, the sample output will be merged with the track
+output.</p>
+
+<p>So far pretty boring, but what makes samples interesting for
+testing is that while the sample is playing, the output is fed into
+the audio INPUT of the tracks.  So if the tracks are recording, they
+will record the samples you are playing, then loop them.  I use
+this so I can get audio content into the loops using just
+the keyboard, without having to stop and reach for an instrument.</p>
+
+<p>To configure samples pull down the <i>Configuration</i> menu and
+select the <i>Samples...</i> item.  To add a new sample, click the Add
+button.  Use the file explorer to select a <b>.wav</b> file.  The sample will
+be added to the list in the center of the dialog.  To delete a sample,
+select it in the list and click the Delete button.  The order the
+samples appear in the list determines which function they are bound
+to, the first sample will be bound to <i>Sample Trigger 1</i> etc.  If
+you want to change the function bindings, you can select a sample and
+use the <i>Move Up</i> and <i>Move Down</i> buttons to reorder the
+list.</p>
+
+</section> <!-- Samples -->
+
+<section><title>Scripts</title>
+
+<p>Scripts can be used to automate complex sequences of Mobius functions
+or to temporarily override parameter values when performing functions.
+Scripts are a complicated topic described fully in a different document.</p>
+
+<p>Any number of scripts may be loaded.  Scripts are run by binding
+script trigger functions to buttons, keys, or MIDI events.  To
+configure scripts, pull down the <i>Configuration</i> menu and select
+the <i>Scripts...</i> item.  The script dialog appears.</p>
+
+<p>To add a new script, click the Add button.  Use the file explorer
+to select a Mobius script file, normally with the ".mos" extension.
+The script will be added to the script list in the center of the
+dialog.  To delete a script, select it in the list and click the
+Delete button.  After adding a script, its name will appear
+in the function lists for the MIDI Control, Buttons, and Keyboard dialogs.</p>
+
+</section> <!-- Scripts -->
+
+<section><title>XML Files</title>
+
+<p>All configuration data you specify under the <i>Configuration</i>
+menu are stored in XML files.   If you understand how
+the files are structured, you may edit them in any text editor
+as an alternative to using the Mobius configuration dialogs.  Perhaps
+more interesting is that you can copy these files to create
+a backup of the current configuration, or to email your configuration
+to someone else.  There are two configuration files:</p>
+
+<ul>
+<li><b>ui.xml</b> - configuration related to the user interface</li>
+<li><b>mobius.xml</b> - configuration related to the non-UI
+portions of the looping engine</li>
+</ul>
+
+<p>Configuration of the UI and the engine are in separate files so
+that the engine can in theory be embedded in other UIs with different
+configuration mechanisms.  If you are interested in writing a "skin"
+for Mobius, contact me and I'll provide information on the Mobius
+engine API.</p>
+
+<p>I'm not going to provide exhaustive documentation on the XML files
+right now, but if you're comfortable with HTML you should be able to
+figure them out.  The element and attribute names generally
+match those you would see in the UI dialog boxes, though spaces are
+removed and a capitalization style known as "camel case" is used.</p>
+
+<p>A project file is also an XML file.  I'll provide a little more 
+information on these, because I find it useful to be able to define
+the contents of a project in a text editor rather than loading loops
+one at a time into Mobius, then saving the project.  This example
+shows the basic structure of a project file:</p>
+
+<example>
+&lt;Project>
+  &lt;Track preset='Basic Looping' active='true' outputLevel='100'>
+    &lt;Loop>
+      &lt;Layer cycles='1' audio='test.wav'/>
+    &lt;/Loop>
+    &lt;Loop active='true'>
+      &lt;Layer cycles='2' audio='samples/gcloop.wav' protected='true'/>
+    &lt;/Loop>
+  &lt;/Track>
+&lt;/Project>    
+</example>
+
+<p>There is a single root element named <b>Project</b> that contains
+one or more <b>Track</b> elements.  tracks are loaded into
+Mobius from left to right. Each Track element may contain
+one or more <b>Loop</b> elements.  You can have any number 
+of Loop elements, but if you have more than the value
+of the <i>Loop Count</i> parameter in the current preset, the extra
+loop elements will be ignored.</p>
+
+<p>A Loop element may have zero or more <b>Layer</b> elements.  The
+first layer element is the layer, which is what you will hear when the
+loop is played for the first time.  Other layers represent the history
+of the loop, these will be played only if you use the <i>Undo</i>
+function to step backward through the layer history.  A Loop with
+no layer elements represents a loop in Reset mode.</p>
+
+<p>The <b>Track</b> element may have the following attributes:</p>
+
+<glossary>
+<gi><dt>preset</dt>
+<dd>Defines the selected preset for this track.  Each track may have a
+different preset, if no preset is selected the default preset specified in the
+<b>mobius.xml</b> configuration file will be used.</dd>
+</gi>
+<gi><dt>active</dt>
+<dd>Set to <b>true</b> to indicate that this is the active track.  
+There should be only one track marked active, if no tracks are marked
+active Mobius will automatically activate the first one.</dd>
+</gi>
+<gi><dt>outputLevel</dt>
+<dd>Determines the initial value for the output level knob in each track.  
+If not specified, the output level will default to 127 (the highest).</dd>
+</gi>
+<gi><dt>feedbackLevel</dt>
+<dd>Determines the initial value for the feedback knob in each track.  
+If not specified, feedback will default to 127 (the highest).</dd>
+</gi>
+</glossary>
+
+<p>The <b>Loop</b> element may have the following attributes:</p>
+
+<glossary>
+<gi><dt>active</dt>
+<dd>Set to <b>true</b> to indicate that this is the active track.  
+There should be only one track marked active, if no tracks are marked
+active Mobius will automatically activate the first one.</dd>
+</gi>
+<gi><dt>frame</dt>
+<dd>The playback position.  If not specified playback starts
+from frame 0 (the beginning of the loop).</dd>
+</gi>
+</glossary>
+
+<p>The <b>Layer</b> element may have the following attributes:</p>
+
+<glossary>
+<gi><dt>cycles</dt>
+<dd>The number of cycles in the layer.  Although the entire
+layer content is stored in one wave file, it can be logically
+broken up into more than one cycle.</dd>
+</gi>
+<gi><dt>audio</dt>
+<dd>Specifies a file system path to a wave file.</dd>
+</gi>
+<gi><dt>protected</dt>
+<dd>Marks the wave file as being protected.  Protected files will
+not be overwritten or deleted when you save the project.</dd>
+</gi>
+<gi><dt>id</dt>
+<dd>A unique numeric identifier for this layer.  You will see these
+in projects saved by Mobius, but you don't need to specify them
+when writing a project by hand.  They are used with <i>Segment</i>
+elements to build complex layers that reference content from other
+layers.</dd>
+</gi>
+</glossary>
+
+<p>In projects saved by Mobius with the <i>Save Layers</i> option, you
+may also see <b>Segment</b> elements. Segments are used to reference a
+portion of the audio in a layer without actually copying the audio.  When
+you use multiply for example, the layer will contain one segment
+for each multiplied cycle, that references the same backing layer.  This
+then is combined with any new content overdubbed during the multiply
+in real time.  You don't really need to understand any of this, though
+it does provide some insight into how Mobius manages memory.  Basically,
+we always try to avoid copying previously recorded audio because
+audio buffers are large and take time to copy.  Instead, audio buffers
+are referenced through a hierarchy of segments that are "flattened"
+in real time to produce the audio you actually hear.</p>
+
+</section> <!-- XML Files -->
+
+<section><title>External EDP Control</title>
+
+<p>It is possible to use Mobius to send MIDI messages to an EDP
+hardware device.  Any function performed with a key, button, or MIDI
+message can be redirected to the EDP instead of Mobius, or sent to
+both Mobius and the EDP at the same time.  This is something I use
+during testing to compare how Mobius and the EDP respond to functions.
+This probably has limited practical use, but I would be curious to
+know if you find one.</p>
+
+<p>To use this feature you must first select a <i>MIDI Through</i>
+device.  This must be a MIDI device to which the EDP is connected.
+See the <ref>MIDI Control</ref> section for more on seleting a through 
+device.</p>
+
+<p>Next, pull down the <i>Configuration</i> menu and select the
+<i>External EDP</i> item.  A dialog appears with the following
+parameters.</p>
+
+<glossary>
+<gi>
+<dt>MIDI Control</dt>
+<dd>Controls which device will be responsive to functions initiated
+by buttons, keys, or MIDI events.  A value of <i>Mobius</i>
+means that only the Mobius program will receive functions, <i>EDP</i>
+means that only the external EDP will receive functions, and 
+a value of <i>Both</i> means, astonishingly, that both devices will
+receive functions.</dd>
+</gi>
+<gi>
+<dt>Channel</dt>
+<dd>The channel on which the EDP receives MIDI messages.</dd>
+</gi>
+<gi>
+<dt>Base Note</dt>
+<dd>The first note or controller to which the EDP will respond.
+This is what the EDP calls the <i>Source#</i> parameter.
+</dd>
+</gi>
+<gi>
+<dt>Controllers</dt>
+<dd>When checked, the EDP responds to MIDI continuous controller
+events, otherwise the EDP responds to MIDI key events.  This
+is what the EDP calls the <i>ControlSource</i> parameter.</dd>
+</gi>
+</glossary>
+
+<p>When triggering functions with MIDI messages, Mobius will
+automatically translate the trigger message into the
+message the EDP needs according to the <i>Base Note</i> and 
+<i>Controllers</i> parameters.  That means you don't have to 
+program a foot controller or control surface to send
+contiguous note or controller messages that the EDP requires.
+Mobius will convert random messages into contiguous note
+or controller messages for you.</p>
+
+</section> <!-- External EDP Control -->
+
+<section><title>Trace</title>
+
+<p>If you really want to gain a deep understanding of what Mobius is
+doing, you can enable trace messages.  This is not for the faint of
+heart, but I encourage anyone comfortable with the DOS shell to enable
+trace and run Mobius from the command line.  When Mobius recovers from
+an unusual situation, it prints a trace message to the
+shell window.  Knowing these messages really helps me diagnose and fix bugs.
+Trace is lost if you launch Mobius from the start menu or a desktop
+icon, you can only see trace if you launch Mobius from a DOS
+shell.</p>
+
+<p>To launch Mobius from the shell, <b>cd</b> to the installation
+directory which is usually <b>c:\Program Files\Mobius</b>, then
+type <b>mobius</b>.  The Mobius window will be displayed and the shell
+window will remain suspended until the Mobius window is closed.  Trace
+messages will be printed to the shell window as Mobius runs.</p>
+
+<p>There are three levels of tracing that may be enabled:</p>
+
+<ol>
+<li>Errors</li>
+<li>Major operations</li>
+<li>Minor operations</li>
+</ol>
+
+<p>Level 1 messages are the most interesting because they are only
+displayed when something unexpected happens.  A level 1 message
+will be displayed with the prefix "ERROR:".  If you see any of these
+please try to capture them and send them to me in an email describing
+approximately what you were doing.</p>
+
+<p>Level 2 messages are displayed during normal operation and provide
+insight on what is happening in the looping engine. These aren't
+errors, so I don't need to know about them unless they can provide
+context around a level 1 error message.</p>
+
+<p>Level 3 messages are also not errors, but they are printed during
+every audio interrupt.  This means that there will be <b>thousands</b>
+of them and they will slow down operations, causing audible glitches.
+There is rarely any need to enable this level of trace.</p>
+
+<p>To enable trace you will need to edit the <b>mobius.xml</b> file in
+a text editor.  Notepad will suffice, though if you're at this level
+you probably have something better.  Look at the first <b>MobiusConfig</b>
+element and locate the attribute <b>tracePrintLevel</b>.  The default level
+should already be 1, so you need to change this only if you want to 
+see level 2 messages.  To set the level, change the number in quotes
+after the <b>=</b>, for example <b>tracePrintLevel='2'</b>.</p>
+
+<p>You may also notice the <b>traceDebugLevel</b> attribute.  This
+controls the level of trace sent to what Windows calls the "debug
+output stream".  If you know what this is, and have a debug output
+stream viewer such as <b>dbwin32</b> you can use this instead of
+sending trace to the shell window.  Using the debug output stream incurs
+a little less overhead and you do not have to launch Mobius from
+the shell in order to see the trace messages.</p>
+
+</section>
+
+</section> <!-- Advanced Features -->
+
+<section><title>Menu Reference</title>
+
+<section><title>File Menu</title>
+
+<section><title>Open Project</title>
+
+<p>Loads a project from the file system.  See the <ref>Saving and Loading</ref>
+section for more details.</p>
+
+</section>
+
+<section><title>Open Loop</title>
+
+<p>Loads a single loop from the file system.  The current loop will
+be reset before loading.  After the loop has been read, Mobius will
+enter <i>Mute</i> mode. See <ref>Saving and Loading</ref>.</p>
+
+</section>
+
+<section><title>Save Project</title>
+
+<p>Saves a project to the file system.  See the <ref>Saving and Loading</ref>
+section for more details.</p>
+
+</section>
+
+<section><title>Save Project Template</title>
+
+<p>Saves the current track configuration to a project without saving any
+of the audio content.  See the <ref>Saving and Loading</ref>
+section for more details.</p>
+
+</section>
+
+<section><title>Save Loop</title>
+
+<p>Saves the current loop to the file system.  A dialog will be
+displayed allowing you to specify the location of the file.  The loop
+is stored in a standard <b>.wav</b> file.  
+See the <ref>Saving and Loading</ref> section.</p>
+
+</section>
+
+<section><title>Save Quick</title>
+
+<p>Saves the current loop to the file system without prompting you for
+a location.  The location will be determined by the global parameter
+<i>Quick Save File</i>, specified in the <ref>Global Parameters</ref>
+dialog.</p>
+
+<p>The actual name of the file will be the name specified in 
+the global parameter, plus an integer to make the name unique.  See
+the <ref>Saving and Loading</ref> section.</p>
+
+</section>
+
+<section><title>Exit</title>
+
+<p>Halts Mobius and closes the window.  All track content will be lost.</p>
+
+</section>
+
+</section> <!-- File Menu -->
+
+<section><title>Presets Menu</title>
+
+<p>A dynamic menu whose items will have the same names as the currently
+configured presets.  Selecting a menu item will activate that preset.
+See the <ref>Using Presets</ref> section for more information on presets.</p>
+
+</section> <!-- Presets -->
+
+<section><title>Configuration Menu</title>
+
+<section><title>Presets</title>
+
+<p>Displays a dialog for editing presets.  See the <ref>Using Presets</ref>
+section for more information.</p>
+
+</section>
+
+<section><title>Track Setups</title>
+
+<p>Displays a dialog for changing the initial settings for
+all tracks.</p>
+
+</section>
+
+<section><title>MIDI Control</title>
+
+<p>Displays a dialog to specify how Mobius responds to MIDI
+events.  See the <ref>MIDI Control</ref> section for more information.</p>
+
+</section>
+
+<section><title>Keyboard Control</title>
+
+<p>Displays a dialog to specify how Mobius responds
+to the computer keyboard.  See the <ref>Using The Keyboard</ref>
+section for more information.</p>
+
+</section>
+
+<section><title>Buttons</title>
+
+<p>Displays a dialog to specify which function buttons
+are displayed at the top of the window. See the <ref>Using Buttons</ref>
+section for more information.</p>
+
+</section>
+
+<section><title>Scripts</title>
+
+<p>Displays a dialog to specify the names of files
+containing Mobius scripts to be bound to buttons, keys, or MIDI events.
+See the <ref>Scripts</ref> section for more information.</p>
+
+</section>
+
+<section><title>Samples</title>
+
+<p>Displays a dialog to specify the names of files
+containing audio samples be bound to buttons, keys, or MIDI events.
+See the <ref>Samples</ref> section for more information.</p>
+
+</section>
+
+<section><title>MIDI Devices</title>
+
+<p>Displays a dialog to specify the MIDI input and output devices.
+There are two sets of devices, one used when Mobius runs as a
+standalone application, and one when it runs as a VST plugin.</p>
+
+</section>
+
+<section><title>Audio Devices</title>
+
+<p>Displays a dialog to specify the audio input and output devices.
+See the <ref>Getting Started</ref> section for more information.</p>
+
+</section>
+
+<section><title>Global Parameters </title>
+
+<p>Displays a dialog to specify miscellaneous parameters that affect
+the operation of Mobius. See the <ref>Global Parameters</ref> section
+for more information.</p>
+
+</section> <!-- Global Parameters -->
+
+<section><title>Display Components</title>
+
+<p>Displays a dialog to specify which loop status components are
+displayed in the UI.  See the <ref>Configuring the Status Area</ref>
+for more information.</p>
+
+</section>
+
+<section><title>Palette</title>
+
+<p>Displays a dialog to specify the colors used in the Mobius window.
+To change a color, click on the colored box.  A standard color
+selection dialog will appear, select a color and click Ok.  When
+you are finished selecting colors for the various display components
+click Ok on the palette dialog and the color selections will be applied.</p>
+
+</section>
+
+<section><title>External EDP</title>
+
+<p>Displays a dialog to specify parameters necessary to control an EDP
+hardware device.  See <ref>External EDP Control</ref> for more information.</p>
+
+</section>
+
+</section> <!-- Configuration -->
+
+<section><title>Help Menu</title>
+
+<section><title>Key Bindings</title>
+
+<p>Displays a dialog that summarizes the functions that are bound
+to computer keyboard keys.  This is a <i>non modal</i> dialog, meaning
+that you can leave it open and still interact with the 
+main Mobius window.</p>
+
+</section>
+
+<section><title>MIDI Bindings</title>
+
+<p>Displays a dialog that summarizes the functions that are bound
+to MIDI events.  This is a <i>non modal</i> dialog, meaning
+that you can leave it open and still interact with the 
+main Mobius window.</p>
+
+</section>
+
+<section><title>About</title>
+
+<p>The ubiquitous about dialog.  Nothing really interesting here
+besides the version number which you should include when
+reporting problems.</p>
+
+</section>
+
+</section> <!-- Help -->
+
+</section> <!-- Menu Reference -->
+
+<section><title>The Future</title>
+
+<p>Mobius is still under active development and I welcome any feature
+requests.  Apart from bug fixes, the expected order of development will 
+probably be:</p>
+
+<ul>
+<li>Pitch Shifting, Time Stretching, and Variable Playback Rate</li>
+<li>Loop Windowing</li>
+<li>Script enhancements</li>
+<li>MAC Port</li>
+</ul>
+
+<!--
+<p>I enjoy loop windowing on the EDP but
+find it hard to control, and I especially dislike not being able to
+undo after an unrounded multiply.  I'm considering the following
+functions:</p>
+
+<glossary>
+<gi><dt>LoopWindowBack</dt>
+<dd>Move the loop window back one cycle.</dd>
+</gi>
+<gi><dt>LoopWindowForward</dt>
+<dd>Move the loop window forward one cycle.</dd>
+</gi>
+<gi><dt>LoopWindowShiftBack</dt>
+<dd>Shift the loop window back in time a configurable number of
+milliseconds.  Useful when the loop window doesn't quite land
+where you want it.</dd>
+</gi>
+<gi><dt>LoopWindowShiftForward</dt>
+<dd>Shift the loop window forward in time a configurable number of
+milliseconds.</dd>
+</gi>
+<gi><dt>LoopWindowNudgeLeft</dt>
+<dd>Shift the start of the loop window back in time a few 
+milliseconds, keeping the end of the loop window constant.</dd>
+</gi>
+<gi><dt>LoopWindowNudgeRight</dt>
+<dd>Shift the end of the loop window forward in time a few milliseconds,
+keeping the start of the loop window constant.</dd>
+</gi>
+</glossary>
+
+<p>Each of these functions can be controlled using the pitch bend wheel.
+As the wheel is moved above the center point, the window is
+moved, shifted, or nudged forward.  As the wheel is moved below the
+center point, the window is moved, shifted, or nudged backward.  When
+the wheel returns to the center point, a new change in either direction
+may be performed.</p>
+
+<p>This allows you to "fine tune" the loop window edges to contain 
+exactly the content you want.  I admit that the unpredictability of
+EDP loop windowing is part of its charm.  But there have been many times
+where I like where I land, except I want an extra beat at the
+beginning or end.  I will also try to have some graphical representation
+of the loop window so you can see approximately where you are in the
+layer history.</p>
+-->
+
+</section> <!-- The Future -->
+
+<section><title>Acknowledgments</title>
+
+<p><i>Echoplex Digital Pro</i> and <i>EDP</i> are trademarks
+of the Gibson Guitar Corporation.</p>
+
+<p><i>Loop IV</i> is a trademark of Aurisis Research, LLC</p>
+
+<p><i>Live</i> is a trademark of Ableton.</p>
+
+<p><i>Bidule</i> is a trademark of Plogue Art et Technologie Inc.
+and is available at www.plogue.com</p>
+
+<p><i>Chainer</i> is available at www.xlutop.com</p>
+
+<p><i>Audio Mulch</i> is available at www.audiomulch.com</p>
+
+<p><i>EnergyXT</i> is available at www.xt-hq.com</p>
+
+</section>
+
+</document>
+
+

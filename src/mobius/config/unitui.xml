@@ -1,0 +1,105 @@
+<UIConfig x='296' y='175' width='1026' height='698' refreshInterval='100' messageDuration='2'>
+  <Locations>
+    <Location name='AudioMeter' x='385' y='146'/>
+    <Location name='Mode' x='616' y='138'/>
+    <Location name='LoopMeter' x='376' y='163'/>
+    <Location name='Counter' x='374' y='97'/>
+    <Location name='Beaters' x='616' y='163'/>
+    <Location name='LoopBars' x='784' y='135' disabled='true'/>
+    <Location name='LayerBars' x='4' y='8'/>
+    <Location name='Parameters' x='124' y='47'/>
+    <Location name='MinorModes' x='373' y='72'/>
+    <Location name='SyncStatus' x='372' y='48'/>
+    <Location name='TrackControls' x='4' y='46'/>
+    <Location name='Messages' x='376' y='294'/>
+  </Locations>
+  <InstantParameters>
+    <Parameter name='8thsPerCycle'/>
+    <Parameter name='quantize'/>
+    <Parameter name='switchQuant'/>
+  </InstantParameters>
+  <TrackControls>
+    <Component name='input'/>
+    <Component name='output'/>
+    <Component name='feedback'/>
+    <Component name='altFeedback'/>
+    <Component name='pan'/>
+  </TrackControls>
+  <TrackStripControls>
+    <Component name='number'/>
+    <Component name='loopRadar'/>
+    <Component name='loopStatus'/>
+    <Component name='output'/>
+    <Component name='outputMeter'/>
+  </TrackStripControls>
+  <Buttons>
+    <Button function='Reset'/>
+    <Button function='GlobalReset'/>
+    <Button function='Record'/>
+    <Button function='Overdub'/>
+    <Button function='Undo'/>
+    <Button function='Redo'/>
+    <Button function='Mute'/>
+    <Button function='Multiply'/>
+    <Button function='InstantMultiply2'/>
+    <Button function='Replace'/>
+    <Button function='Speed'/>
+    <Button function='Reverse'/>
+    <Button function='SUSReverse'/>
+    <Button function='Shuffle'/>
+    <Button function='NextLoop'/>
+    <Button function='Expression Tests'/>
+    <Button function='Function Tests'/>
+    <Button function='In Sync Tests'/>
+    <Button function='Jump Tests'/>
+    <Button function='Mute Tests'/>
+    <Button function='Speed Tests'/>
+    <Button function='Out Sync Tests'/>
+    <Button function='All Unit Tests'/>
+    <Button function='Flattening Unit Tests'/>
+    <Button function='Reverse Flattening Unit Tests'/>
+    <Button function='Segment Unit Tests'/>
+    <Button function='Reverse Segment Unit Tests'/>
+    <Button function='Event Tests'/>
+  </Buttons>
+  <Palette>
+    <PaletteColor name='background' key='600' rgb='0'/>
+    <PaletteColor name='button' key='601' rgb='16744576'/>
+    <PaletteColor name='buttonText' key='602' rgb='16777215'/>
+    <PaletteColor name='bar' key='603' rgb='32896'/>
+    <PaletteColor name='activeBar' key='604' rgb='65535'/>
+    <PaletteColor name='meter' key='605' rgb='45056'/>
+    <PaletteColor name='slowMeter' key='606' rgb='12632256'/>
+    <PaletteColor name='recordingMeter' key='607' rgb='7605236'/>
+    <PaletteColor name='muteMeter' key='614' rgb='16711680'/>
+    <PaletteColor name='event' key='608' rgb='16777215'/>
+    <PaletteColor name='alertBackground' key='609' rgb='12615680'/>
+    <PaletteColor name='alertText' key='610' rgb='16777088'/>
+    <PaletteColor name='blink' key='611' rgb='8421631'/>
+    <PaletteColor name='paramName' key='612' rgb='6185314'/>
+    <PaletteColor name='paramValue' key='613' rgb='65535'/>
+    <PaletteColor name='group1' key='615' rgb='33023'/>
+    <PaletteColor name='group2' key='616' rgb='8388863'/>
+    <PaletteColor name='group3' key='617' rgb='16776960'/>
+    <PaletteColor name='group4' key='618' rgb='65535'/>
+    <PaletteColor name='checkpointBar' key='619' rgb='16777215'/>
+    <PaletteColor name='tickCycle' key='620' rgb='16777215'/>
+    <PaletteColor name='tickSubcycle' key='621' rgb='16777215'/>
+    <PaletteColor name='tickCue' key='622' rgb='16777215'/>
+  </Palette>
+  <FontConfig>
+    <FontBinding name='mode' size='20'/>
+    <FontBinding name='loopMeter' size='12'/>
+    <FontBinding name='loopCounterSmall' size='30'/>
+    <FontBinding name='loopCounterBig' size='40'/>
+    <FontBinding name='layerList' size='8'/>
+    <FontBinding name='message' size='18'/>
+    <FontBinding name='minorModes' size='12'/>
+    <FontBinding name='sync' size='12'/>
+    <FontBinding name='button' size='14'/>
+    <FontBinding name='parameter' size='14'/>
+    <FontBinding name='knob' size='12'/>
+    <FontBinding name='trackGroup' style='1' size='12'/>
+    <FontBinding name='drag' size='10'/>
+  </FontConfig>
+</UIConfig>

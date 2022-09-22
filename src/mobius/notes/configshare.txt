@@ -1,0 +1,102 @@
+
+----------------------------------------------------------------------
+Configuration Sharing
+----------------------------------------------------------------------
+
+Mobius.MobiusConfig
+  - this is the master configuration accessible to the UI and anything
+    outside the interrupt
+
+Mobius.ThreadConfig
+  - a copy of MobiusConfig currently in use within the interrupt
+
+
+Mobius.getConfiguration
+  - read only
+
+Mobius.getEditConfiguration
+  - copy of the master configuration
+
+Mobius.setConfiguration
+  - should be a copy of the master
+
+MobiusConfig/Preset Access
+
+   Interrupt Thread: 
+     Track and Loop currently keeping their own private clone, 
+     if we had a stable MobiusConfig that could only be used in the interrupt
+     then we could share it.  
+
+     When MobiusConfig needs to be changed a clone is made and swapped
+     in on the next interrupt.
+
+     Scripts use this config.
+
+   Function Invocation, Parameter setting, MIDI/Key/OSC Thread:
+     Mobius maintains the master MobiusConfig for use "outside the interrupt".
+     When a change is made this needs to be swapped in during a quiet
+     period when no bindings are being processed.
+
+     This one is hard because we either need to serialize every
+     function invocation which feels bad, or we need to keep some sort
+     of reference count so we know when to free the old config.  !!
+
+   Editing:
+     Always return an independent copy.  When assimilating changes,
+     assimilate back into the master object or replace the master object?
+     Since it's awkward to have lots of little setPartialConfiguration
+     methods let the whole thing come in but try to do smart diffing.
+
+   UI Refresh Thread:
+     getState returns a TrackState that has a pointer directly to the
+     Preset being maintained by the Track.  This is the "interrupt" object.
+   
+     Need to either clone it, or return a pointer to another copy that is
+     safe for the UI refresh thread to use.  
+
+     This one I don't like because to be safe we should always return
+     a copy like we do for editing, but copying is expensive 10 
+     times a second.
+
+     Could maintain a third copy just for the refresh thread.  This
+     is replaced similar to how we replace the interrupt structure, 
+     a pending one gets installed and on the next call to getState we delete
+     the old one and start using the new one.  For this to work though there
+     must not be concurrent calls to getState().
+
+     Or just return the parameters we need?  Hmm no, ParameterEditor needs
+     everything from the TrackState preset for display.
+    
+Really just three contexts:
+
+    Interrupt
+    UI Refresh
+    Trigger/Bindings
+
+For Triggers though there can be a different thread for each type:
+
+    MIDI
+    Keyboard
+    OSC
+    Host (actually only during the interrupt thread?)
+    UI Button/Parameter Editor
+      (probably same thread UI event thread as Keyboard)
+
+
+Putting a reference count on the MobiusConfig itself is awkward, there
+are also other things in Mobius that may need to be considered
+thread safe state, though not as much.
+
+Could put triggers on a queue and execute them in the interrupt?
+Maybe not the interrupt thread but a special external event thread.
+Could be MobiusThread with a wakeup?   
+
+ALTERNATE...
+
+Don't do structure swapping, instead do incremental edit merging...
+Works for atomic values but not for object lists like Presets
+
+----------------------------------------------------------------------
+
+
+   

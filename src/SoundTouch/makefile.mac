@@ -1,0 +1,46 @@
+# Copyright (C) 2005-2008 Jeffrey S. Larson.  All rights reserved.
+
+######################################################################
+#
+# targets
+#
+######################################################################
+
+default: lib
+
+DEFINES = -DFLOAT_SAMPLES=1
+
+include ../make/common.osx
+
+######################################################################
+#
+# soundtouch.lib
+#
+# Not supposed to be static linking this, but it's such a pain in the
+# ass for VST plugins.  Will provide object modules and link instructions
+# on the web site instead.
+#
+######################################################################
+
+ST_OFILES = cpu_detect_x86_gcc.o mmx_optimized.o sse_optimized.o \
+	FIFOSampleBuffer.o AAFilter.o FIRFilter.o \
+	RateTransposer.o TDStretch.o SoundTouch.o
+
+libsoundtouch.a: $(ST_OFILES)
+	 libtool -static -o libsoundtouch.a $(ST_OFILES)
+
+lib: libsoundtouch.a
+
+######################################################################
+#
+# General
+#
+######################################################################
+
+.PHONY: clean
+clean: commonclean
+
+######################################################################
+######################################################################
+######################################################################
+

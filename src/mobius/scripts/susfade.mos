@@ -1,0 +1,29 @@
+!name SUS Fade
+
+Variable CancelFadeOut
+Variable CancelFadeIn
+
+# fade to zero from wherever we are now
+Message Fade Out
+set CancelFadeOut false
+set CancelFadeIn true
+
+while output > 0 && !CancelFadeOut
+  set output output - 1
+  Wait msec 50
+next
+
+end
+
+Label endSustain
+
+Message Fade In
+set CancelFadeIn false
+set CancelFadeOut true
+
+while output < 110 && !CancelFadeIn
+  set output output + 1
+  Wait msec 50
+next
+
+end

@@ -1,0 +1,65 @@
+-----------------------------------------------------------------
+Sync Bugs
+-----------------------------------------------------------------
+
+* With AutoRecord, Sync=Out, can start the MIDI clocks immediately
+
+* AutoRecord, Sync=Out, RecordBeats=4, RecordBars=2
+  Getting an 8 beat loop but only one cycle.
+  !! Crash after trying to set initial cycles
+
+* Crash in interrupt handler always seems to hang now, need
+  to catch and terminate more gracefully.
+
+* Synchronizer::localStartPoint
+  - looks like it needs to be closer to doRealign in handling
+    the pending RealignEvent
+
+* QuantMidiStartPoint, MuteRealign
+  - various problems 
+  - "corrected play request by 33 frames"
+
+* Synchronizer::loopLocalStartPoint(Loop* l)
+  is this still used or do we do it all in syncPulsePlaying
+
+* InstantDivide, eventually calls Synchronizer::loopEndDivide
+  new, not sure if it works
+
+* Bounce, TrackCopyTiming, TrackCopySound
+  In theory the new track could become the OutSyncMaster and would
+  need to start sending clocks.
+
+* SlipForward, SlipBackward, Move
+  Need to recalculate the pulse or set dealign.
+
+? Should brothers retrigger when the master retriggers, or do they
+  retrigger on their own?  
+
+? The "InternalPulses" in the Loop and the "SyncPulses" in the
+  layer are confusing.  Shouldn't the pulse count always come
+  from the layer?
+  
+----------------------------------------------------------------------
+Sync Issues
+----------------------------------------------------------------------
+
+Sync=Out,Pause
+
+What is the desired behavior when you pause the master track or
+the slave tracks individually.  What about all globally?
+
+Sync=In,Start/Continue
+
+What happens when Start/StopContinue events are sent from the external
+device during Record mode?  Difficult to sync back up, will just
+get a random pulse count?
+
+Sync=Any, Record over existing loop
+
+When Record is done over a loop that is not reset, we'll close off the last
+layer and save it for undo. Do we?  This may confuse the synchronizer,
+must we reset the loop before entering Synchronize mode?
+
+Sync=Any, Threshold Record
+
+Think about how ThresholdMode interacts with SynchronizeMode

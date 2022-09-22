@@ -1,0 +1,49 @@
+
+44100	samples (frames) per second
+44.10	samples per millisecond
+.02268	milliseconds per sample
+256	frames per PortAudio user buffer
+512	frames per PortAudio host buffer
+5.805	milliseconds per user buffer
+11.61	milliseconds per host buffer
+172.27	user buffers per second
+86.13	host buffers per second (doubled in MME)
+1141	measured input latency (MME)
+9216	PortAudio buffer output latency (MME)
+
+60	beats per minute
+1	beat per second
+24	midi clocks per beat
+44100	samples per beat
+1837.5	samples per midi clock
+41.66   milliseconds per midi clock	
+7.177   buffers per midi clock
+
+@120 BPM 3.59 buffers per midi clock
+@240 BPM 1.79 buffers per midi clock
+@480 BPM .90 buffers per midi clock
+
+60 BPM, 8 beat bar = 192 midi clocks
+  - 352800 samples per bar
+  - 7998.72 msec per bar
+
+With audio buffer quantization of midi clocks, loop time will always
+be a multiple of 256.  So there will always be a potential round-down
+of 255 frames.
+
+
+1141 frames = 25.88 milliseconds, 2.23 host buffers
+
+At 64K frames per Audio buffer there will be 65536 / 44100 = 1.48 seconds
+of audio per buffer.
+
+----------------------------------------------------------------------
+
+60 BPM, 41.66 milliseconds per clock
+
+120 BPM, 20.83 mpc
+
+240 BPM, 10.41 mpc
+
+480 BPM, 5.2 mpc
+

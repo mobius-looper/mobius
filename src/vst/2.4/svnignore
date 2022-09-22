@@ -1,0 +1,5 @@
+*.lib
+*.pdb
+libvst.a
+again
+bundles

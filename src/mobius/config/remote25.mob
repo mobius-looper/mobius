@@ -1,0 +1,10 @@
+<Project>
+  <Track active='true' input='127' output='127' feedback='127' pan='64' feedbackController='70' volumeController='108' panController='5' preset='Preset 3'/>
+  <Track input='127' output='127' feedback='127' pan='64' inputPort='1' outputPort='1' feedbackController='40' volumeController='109' panController='80' preset='Preset 3'/>
+  <Track input='127' output='127' feedback='127' pan='64' inputPort='2' outputPort='2' feedbackController='41' volumeController='110' panController='82' preset='Preset 3'/>
+  <Track input='127' output='127' feedback='127' pan='64' inputPort='3' outputPort='3' feedbackController='72' volumeController='111' panController='83' preset='Preset 3'/>
+  <Track input='127' output='127' feedback='127' pan='64' inputPort='4' outputPort='4' feedbackController='44' volumeController='114' panController='85' preset='Preset 3'/>
+  <Track input='127' output='127' feedback='127' pan='64' inputPort='5' outputPort='5' feedbackController='43' volumeController='115' panController='104' preset='Preset 3'/>
+  <Track input='127' output='127' feedback='127' pan='64' inputPort='6' outputPort='6' feedbackController='107' volumeController='116' panController='106' preset='Preset 3'/>
+  <Track input='127' output='127' feedback='127' pan='64' inputPort='7' outputPort='7' feedbackController='102' volumeController='117' panController='105' preset='Preset 3'/>
+</Project>

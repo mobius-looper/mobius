@@ -1,0 +1,11 @@
+
+- Find a way to set AbstractAudioStream::mTraceDropouts from a script
+  or init file so we don't have to change code to use it.  
+
+- In the call to Pa_OpenStream in WinAudioInterface and MacAudioInterface,
+  we're passing in a fixed block size, need to allow variable sizes.
+
+- Need to stop using the "suggested latency" crap, let users pick block
+  sizes and convert this into the necessary PA calls to get that size
+
+

@@ -1,0 +1,6 @@
+!name Mute Retrigger
+Variable saveMuteMode
+set saveMuteMode $muteMode
+set muteMode start
+Mute
+set muteMode $saveMuteMode

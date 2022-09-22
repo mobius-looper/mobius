@@ -1,0 +1,13 @@
+#
+# Example controller script
+#
+# This displays the value of the MIDI continuous controller
+# as a UI message.  You must have enabled the message component to see it.
+#
+# The built-in variable midiValue is set to the controller value.
+#
+
+!name Controller Test
+!controller
+
+Message Control $midiValue

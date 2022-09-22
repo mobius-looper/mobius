@@ -1,0 +1,8 @@
+!name SUSRateUp5
+#RateUp 7
+NextTrack
+end
+Label endSustain
+#RateDown 7
+PrevTrack
+end

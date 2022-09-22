@@ -1,0 +1,403 @@
+General
+
+In some hosts, if Mobius is diabled or bypassed, the host will not send
+Mobius any blocks of audio to be processed.  Mobius performs most functions
+during audio block processing, so if it is not recieving blocks it will
+appear to freeze and not respond to MIDI commands or button clicks.  The
+commands are however queued, and when audio blocks start being received,
+all of the queued commands will be processed at once which may result
+in strange behavior.  
+
+The audio device used with Mobius is expected to use ASIO drivers,
+the buffer size may be at most 2048.  If you exceed this size Mobius
+will behave poorly.  The recommend buffer size is 512 or less.
+
+If you are not monitoring the signal being sent to Mobius through
+a side chain managed by the host, you will want to select the
+"Monitor Audio Input" global parameter in the "Global Parameters..."
+dialog.  This will allow you to hear the audio signal being sent
+to Mobius.  If you are monitoring this signal outside of Mobius, 
+be sure that the Monitor Audio Input option is not checked, otherwise
+you might hear a slight phasing effect in the input signal.
+
+
+Chainer
+
+Use the System->Settings dialog to select an ASIO audio device
+and a MIDI In device.  In the first row, select "Insert Input"
+from the row selector.  In the second row, select Effects->Mobius.
+To bring up the Mobius UI click the "1" button in the "Editor" column.
+
+Chainer does not support plugins that have than one pair of stereo pins, 
+so you cannot use the "Tracks..." dialog to assign input ports greater than 1.
+
+Chainer does not have a synchronization component so you may not use 
+any of the Mobius sync modes.
+
+EnergyXT
+
+Mobius works well withi energyXT.  In the Setup menu, select an ASIO
+device, a stereo pair of Audio Outputs, a stereo pair of Audio Inputs,
+and one or more MIDI Inputs.
+
+From an empty layout containing only "Master In" and "Master
+Out", right click to bring up the menu, move over the "VST" submenu,
+then select Mobius from the next menu.
+
+Connect the MIDI port from "Master In" (the first box) to the
+first box above the Mobius icon.  Connect any of the audio ports
+from "Master In" to Mobius input ports.
+
+Connect at least one Mobius output port to the "Master Out" icon.
+You do not need to connect the Mobius MIDI output port.
+
+The built-in master synchronizer may be used to send clock pulses to
+Mobius when the Host Beat or Host Bar sync modes are selected.
+
+
+
+Host Notes
+
+Cubase
+
+Add mobius as an audio track insert.  Make sure the insert is enbled.
+In my version of Cubase, there is a little knob with a circle and
+vertical line that must be illuminated.  To see the Mobius UI, click
+the insert edit button which for me is next to the enable button and
+contains the letter 'e'.  
+
+
+Select a MIDI track.  In the main configuration tab select the 
+desired MIDI input or "All MIDI Inputs".  Select Mobius as the output.
+Click the "Enable Record" so that it glows red.  MIDI should now pass
+through to Mobius.
+
+
+
+
+----------------------------------------------------------------------
+
+
+
+VST Sites
+  www.kvr-vst.com
+  www.vstcentral.com
+  www.smartelectronix.com
+  www.databaseaudio.com
+
+Other Sites
+
+  www.musiclab.com
+    - MIDI Connection Center 1.1
+
+----------------------------------------------------------------------
+
+Cakewalk VST Adapter
+
+  Formerly FXpansion's VST-DX Adapter
+
+DirectiXer
+
+  The other major player.  Looks like it has a nicer management interface.
+  Supports VST 2.1 virtual instruments.  $49
+  Get the demo and compare.
+
+VST/Dx Host Adapter
+
+   www.spinaudio.com
+    VST DX Wrapper Pro $40
+
+  - Separate DX plugin is created for every wrapped VST plugin
+  - Multiple wrapped plugins can be used at the same time
+  - VST plugin is displayed in a single window like a general DX plugin
+  - VST presets are mapped onto DX static presets. 
+    So you can easily select VST program through DX 
+  - The fully functional interface for editorless plugins is provided
+  - The state of wrapped VST plugin can be automatically saved
+    and restored by host application
+  - Close integration with VST SkinRack Wizard for creating control
+    interfaces for editorless plugins 
+  - Both 16bit and 24/32 input formats are supported
+
+  VST DX Wrapper Lite is free, but only allows you to wrap one thing.
+  One site indicated that this could be used only for effectds,
+  not for VSTi virtual instruments.  There are many reports that
+  not all VST's work with this wrapper.
+
+
+----------------------------------------------------------------------
+	
+Posted: Fri Aug 13, 2004 5:31 pm 	reply with quote
+http://www.krakli.co.uk/
+
+I don't use this stuff but I have seen cool looking resources on this site. Check the forum and the links page but a quick look revealed:
+http://www.otiumfx.com/
+----------------------------------------------------------------------
+
+There is a free synthedit skin available from my website http://www.simple-media.co.uk
+
+It can be found on the 'stuff' page (at the bottom in a zip file) and examples of it in use can be found in the music section in the vsti page.
+
+There is no reason why it could not be easily adapted for use in non SE projects and it includes 3 different knob sizes plus horizontal and vertical sliders and some buttons/switches.
+
+Please go and take a look, it is free for you to use as you wish.
+
+If you find it useful then please let me know what you think and I would love to see the project you use it for. 
+
+
+----------------------------------------------------------------------
+
+ Heres a couple of recomendations from The new Electronic Musician Magazoine about using multipul machines:
+
+Chainer:
+http://xlutop.com/html/chainer.html
+
+Vstack: My fave!
+http://steinberg.de/ProductPage_sb.asp?Product_ID=2130&Langue_ID=7
+
+I have been thinking of doing this as well since I like as much power in my studio as possible.......
+
+-Rik
+
+----------------------------------------------------------------------
+Beats and Bars
+----------------------------------------------------------------------
+
+AudioMulch
+
+ppqPos is a fractional beat count, barStartPos has the integer
+beat number of the first beat in the current bar, meaning the
+beat/bar numbers are 0/0, 1/0, 2/0, 3/0, 4/4, 5/4, etc.  This I believe
+is correct according to the VST spec.
+
+energyXT
+
+ppqPos is a fractional beat counter, barStartPos is the CURRENT
+beat of the buffer, e.g. 0/0, 1/1, 2/2, 3/3, etc.  This is WRONG, 
+the spec says this should be the base beat of the bar.
+
+Live is like AudioMulch.
+
+Cubase 
+
+The ppqPos is a fractional beat count.  barStartPos seems
+to have the current beat like energyXT, except there is also
+a fraction.   The barStartPos fraction is smaller than the
+ppqPos fraction, not sure what it means.
+
+There also appears to be a one beat count in where ppqPos and
+barStartPos are negative.  
+
+
+The inconsistency in barStartPos makes it very difficult to use, though
+I suppose we could try to reason about it and detect which style
+is being used.  Simpler to just maintain a beat counter and
+ignore barStartPos.
+
+
+Orion
+
+Doesn't even set barStartPos.  Timing is VERY eratic when using
+WMME drivers.  Using ASIO drivers caused it to hang regularly, 
+even when Mobius was not open.  Get a PLAY transport event
+but not STOP.  
+
+Crash in the processReplacing call with the 12 port Mobius.  
+It only appears to be passing output buffers for two pins, 
+the others are very different addresses.  Oddly too the 
+first two output buffers were identical, which suggests
+that they won't be stereo?  The first two input
+buffers were also the same as the output buffers!
+
+Live 5
+
+Seemed to basically work, but got a crash in the MobiusThread
+calling UI::MobiusTimeBoundary updating the beaters.  This was
+after deleting the Mobius window, and getting it back by clicking
+on the blue oval.  It looked like the component underlying the Beater
+was bad.
+
+Sonar
+
+----------------------------------------------------------------------
+Sending MIDI
+----------------------------------------------------------------------
+
+Hello
+
+>Seems like this was either a very difficult question, or I sent it at a
+>very inappropriate moment. So here I go again:
+
+Saldy i cant answer for Steinberg.
+
+The correct procedure has not been made clear before i think,
+but we used what sounded most logical to us when we implemented Bidule
+(and my example MIDIGain plugin source)
+
+which is 1)
+
+>1) sendVstEventsToHost is called only once per block AND deltaFrames are
+>set to the correct sample position within the block.
+
+but we do accept multiple calls to sendVstEventsToHost,
+just as long as the calls are made in ORDER of their deltaFrames.
+We just accumulate them in a std::vector<VstMidiEvent> until this plugin's
+timeslice is done, so we can give this vector's content to another module
+down the chain.
+
+Setting 0 for deltaframes _inside a plugin chain_ is not the way to go imho.
+afaik Cubase and others sets 0 deltaframes only for events that come from the MIDI Input Devices
+so that they are processed "as soon as possible", allthough that creates jitter.
+I think the best way would be to distribute MIDI events's millisecond stamps back to samples
+evenly though proper deltaframes, but thats another issue. (and that stamp is jittery as well!)
+So perhaps this is the best way to do it. Our way of managing MIDI input events in Bidule
+is pretty much like this, but since we use very small buffer sizes, and poll the device
+often, it seems like its less apparent.
+
+I would gladly hear other peoples opinion on this MIDI input driver jitter, and best way to handle it.
+
+Cheers.
+David Viens, Software developer,
+Plogue Art et Technologie Inc. Montreal.
+http://www.plogue.com
+
+
+----------------------------------------------------------------------
+Memory Allocation in an Interrupt
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+	Mailing List vst-plugins@lists.steinberg.net Message #6603 	
+
+From: Mike Berry <mikeb@nmol.com>
+Subject: Re: [vst-plugins] Re: Synchronization between UI and Processing (Was: Threads)
+Date: Sat, 16 Nov 2002 14:14:23 -0700
+To: " (VST PlugIns)" <vst-plugins@lists.steinberg.net>	
+I have been spending the last few months aggressively looking into memory allocation on Windows for the product I am working on. All of the standard flavors of memory allocation and deallocation have a critical section in them. This means that no other thread can allocate or deallocate memory during the extent of the call. In a single threaded model, no problem. The here is the problem when there is a low latency time critical thread involved:
+
+1.) During idle (called on the main UI thread of the host at normal priority), you call new.
+2.) The new call acquires the ciritcal section for memory allocation.
+3.) In the middle of this call, the time-critical audio processing thread calls process().
+4.) You call new again on the process thread.
+5.) It hits the critical section held by the UI thread, and is blocked.
+
+Now, without any OS intervention, you just locked your machine. You have a high-priority thread blocked by a low priority, but the low priority one never gets any time to run because of the high priority one.
+Windows has a special method to deal with this, called priority inversion. Every so often, all of the low priority threads get a time slice at high priority, which allows them to clear these kinds of blockages. However, priority inversion may only take place every 50 ms or more, depending on system load. This means that suddenly you have delayed the time-critical audio thread by 50 ms, which in any low latency system causes an audio dropout.
+So what are your options?
+
+1.) Never allocate memory on a time critical thread. This is the most reliable.
+2.) Buy a custom memory manager which is optimized to greatly diminish this problem (note I said diminish, not eliminate).
+3.) Have the host do a lot of buffering (bad for latency).
+4.) Write a custom memory manager which does all of its allocation once during startup for each thread separately. This approach will work, and it is similar to what you would be doing if you are splitting up a large buffer into small allocation units. Just make sure that you get the threading right, to aviod ciritcal section synchronization (it is possible) if this manager is going to be used on multiple threads.
+
+So as you can see, the issue is not the CPU load associated with memory allocation. That is going to be minor on any modern system. The issue is thread synchronization. In the fruityloops case described, you may simply be lucky because there is no other significant memory allocation going on during playback on the other threads in the host. I imagine, for instance, that they do all of their sample allocation up front. However, this is not practical in a DAW-type situation, where megs or gigs of audio need to be streamed off of disk. This simply can't all be preloaded, especially if there is video involved as well.
+
+-- Mike Berry
+mikeb@nmol.com
+http://www.nmol.com/users/mikeb
+
+	
+
+Subscribe (FEED) 	Subscribe (DIGEST) 	Subscribe (INDEX) 	Unsubscribe 	Mail to ListMaster
+
+> Now, without any OS intervention, you just locked your machine. You
+> have a high-priority thread blocked by a low priority, but the low
+> priority one never gets any time to run because of the high priority one.
+> Windows has a special method to deal with this, called priority
+> inversion. Every so often, all of the low priority threads get a time
+> slice at high priority, which allows them to clear these kinds of
+> blockages. However, priority inversion may only take place every 50 ms
+> or more, depending on system load. This means that suddenly you have
+> delayed the time-critical audio thread by 50 ms, which in any low
+> latency system causes an audio dropout.
+
+that's nonsense, 50ms is huge, & just can't happen. When your app has a GUI,
+that GUI must obviously sometimes deal with the data that the mixer thread
+deals with. You then use the same cricical sections as you'd use for a
+memory manager. Such thread lockings occur all the time in a sequencer, for
+ex when you're tweaking knobs or writing editing the automation. If it was
+locking the mixer's thread for 50ms, you'd hear clicks all the time whenever
+you tweak a knob, & it's not the case at all. What's critical is what's done
+inside the part that's locked, it's obvious that you don't lock the mixer's
+thread & then perform too lengthy operations. But you sometimes need to lock
+the mixer & perform quick operations, it in no way locks the mixer for 50ms
+if what's inside the locked section takes 1ms.
+
+In all cases, it works well in fruityloops which, as most sequencers, has a
+mixer thread that has a higher priority than the GUI's thread.
+
+----------------------------------------------------------------------
+
+	Mailing List vst-plugins@lists.steinberg.net Message #6606 	
+
+From: "VST List" <vst-list@mindcontrol.org>
+Subject: RE: [vst-plugins] Re: Synchronization between UI and Processing (Was: Threads)
+Date: Sat, 16 Nov 2002 14:58:45 -0800
+To: "VST PlugIns" <vst-plugins@lists.steinberg.net>	
+
+> that's nonsense, 50ms is huge, & just can't happen. When your app
+> has a GUI,
+> that GUI must obviously sometimes deal with the data that the mixer thread
+> deals with. You then use the same cricical sections as you'd use for a
+> memory manager. Such thread lockings occur all the time in a
+> sequencer, for
+> ex when you're tweaking knobs or writing editing the automation. If it was
+
+Interesting challenge, isn't it?
+
+The typical solution is to use various non-blocking primitives to
+funnel data from GUI to processor, and/or double-buffer your control
+value state and do an atomic exchange of "active state" pointers.
+
+Another solution, if you really do need more substantial locking, is
+to raise the priority of the GUI thread to real-time before acquiring
+the lock (in driver land, you do this by disabling interrupts before
+acquiring a spinlock :-)
+
+> locking the mixer's thread for 50ms, you'd hear clicks all the
+> time whenever
+> you tweak a knob, & it's not the case at all. What's critical is
+
+Often, you don't have a problem. Sometimes, you do. The more you
+push the system, or the more users you have, the more likely you are
+to hear about the problem. Even if you don't hear about the problem,
+because you have few users, or they don't push their system, or you
+don't have an obvious e-mail address :-) doesn't mean there isn't a
+problem if you intermix your GUI thread and processing thread freely.
+
+In the particular case described, however, the priority inversion
+isn't quite real, as long as you use blocking primitives. Thus, the
+real-time thread will actually be stopped by the scheduler, and the
+low-priority thread given time to run again, and thus release the
+critical section, and 99 times out of 100, you don't notice you have
+a priority inversion problem. If you use spinlocks, this is no longer
+the case -- a priority inversion will very likely lock up your
+machine. That's why drivers disable interrupts before acquiring
+spinlocks. Because you can't do that at application level, you should
+not be using spinlocks at application level. The runtime libraries
+don't; they use a blocking primitive. Which means that your real time
+thread may be blocked when calling malloc().
+
+> thread & then perform too lengthy operations. But you sometimes
+> need to lock
+> the mixer & perform quick operations, it in no way locks the
+> mixer for 50ms
+> if what's inside the locked section takes 1ms.
+
+What if your low-priority thread gets pre-empted while holding the
+lock? It does happen. That's why there's a whole subset of computer
+science which frets unceasingly about how to build really robust
+systems, called "systems programming" :-)
+
+And, while you may think you're an "applications programmer" or
+"module programmer" or even "technical musician," that doesn't mean
+that the requirements for robust systems programming skills go away
+when you work with these real-time critical systems. However, I
+have seen a fair number of programmers who wouldn't even know that
+these are issues they need to be aware of, much less how to avoid
+them with solid, proven designs. This experience has made me a bit
+touchy on this subject. Unfortunately, a lot of opinions expressed
+in this thread do not do a whole lot to make me feel better about
+the state of VST programming :-(
+
+Cheers,

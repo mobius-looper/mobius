@@ -1,0 +1,172 @@
+Event Scripts
+
+Scripts that run automatically when certain things occur within
+the Mobius engine.  They are not bound to triggers.
+
+Binding Methods
+
+  - ScriptConfig
+      EventBinding
+         event, script
+
+    Requires a UI
+
+  - Automatic binding
+
+    !event directive does the binding, all you need to do 
+     is register the script
+
+  
+Auto bindings are easy to set up but hard to see, will need
+a Help page to display them.  Could also make the Script config window
+into a table and show the bindings there.
+
+    path, display name, special directives
+
+    ..../foo.mos       Do Something       !sustain
+    ..../bar.mos       So Something Else  !event record
+
+Directories throw a wrench into this, hard to display in a table.
+
+I like having scripts auto bind, could do this for notes and keys too...
+
+    !bind key 43
+    !bind note 60 scope 1
+
+
+Event Trigger
+  - the point at which event scripts may be run
+  - conceptually similar to watch points?  
+
+Breakpoint
+  - less ambiguous than event trigger?  
+
+Event Scripts conflict with the internal concept of Event which
+is more like a Scheduled Action.  
+
+   - Action, something that happens in response to a trigger
+   - event scripts are really just another kind of trigger, an Action
+     will be created with a different trigger type and run internally liike
+     any other action
+
+System Trigger
+EventTrigger
+
+We have a Trigger type TriggerEvent which is currently used when dynamically
+creating an Action for EmptyTrackAction=Record, long presses, and when 
+scripts are quantized.  Mobius uses this to know if we are "in the interrupt"
+and don't need queueing or latency delay.  That can work for event scripts
+too, don't need a new trigger type.
+
+What is the concept though
+
+   System Trigger
+   Event Trigger
+
+That's generic but since the only thing we can do is run scripts it's
+vague.  
+
+   Script Point
+   Break Point
+   
+I like the term "Point" it fits with Watch Point.  Watch Points are used to
+convey changes in value, Script Points are more general they just say 
+something happened, not necessary having a value.  
+
+   Script Hook
+     Too programmery
+
+   Action Point
+     Accurate, but too generic, can only do scripts
+
+Are ScriptPoints different than WatchPoints?  WatchPoints have listeners
+which the client can register.  ScriptPoints are kind of the same but
+we manage the listeners internally.  Current WatchPoints
+
+  LoopLocation  - called frequently
+  LoopStartPoint
+  LoopCyclePoint  
+  LoopSubcyclcPoint
+
+Other than LoopLocation all of these would be ScriptPoints.  Other 
+potential ScriptPoints
+
+  MajorMode
+    - called when the major mode changes
+
+  MinorMode  
+    - called when the minor mode(s) changes
+
+  Record
+    - called when Record starts or stops, all Modal functions
+      could be scripted this way, it's slightly easier than MajorMode
+
+  TrimStart
+    - instant functions could be script points too, if the goal is
+      to adjust function behavior we would need to be able run them     
+      at various sub-points
+          invocation - adjust parameters
+          before - immediately before the function is executed
+          after - immediately after the function is executed
+
+     The invocation and before points may be different if there is
+     quantization.  
+
+Use Cases
+
+   - Send status MIDI events to an external display when modes change
+   - Send status MIDI events when "beats" happen for visual metronome
+   - Adjust preset parameters, turn off quantization before invoking
+   - Adjust other tracks after entering a new mode: Record in one track
+     sets output levels to zero in all other tracks
+   - At loop end, adjust pan, pitch, rate
+
+----------------------------------------------------------------------
+
+In the status export case, ScriptPoints and WatchPoints are the same.  
+You can send OSC or you can call a script that sends MIDI or OSC.
+
+Earlier:
+
+  I like the term "Point" it fits with Watch Point.  Watch Points are used to
+  convey changes in value, Script Points are more general they just say 
+  something happened, not necessary having a value.  
+
+Not different enough.  A WatchPoint may have a value, an on/off status, 
+or a momentary status.  See WatchBehavior.
+
+Fine vs Coarse.  Fine WatchPoints are called in the audio interrupt, either
+as things happen or are queued until the end.  Coarse watch points run in 
+MobiusThread every 1/10 second.  They can do more expensive things, though
+anything from a script that is expensive is redirected to the MobiusThread
+anyway.  
+
+PlugPoint might be interesting because you can "plug" behavior.  But there
+is no difference between what we're currently using for OSC and what we
+need for event scripts.  
+
+For MIDI would be nice to have a "decay" where the listener is called
+twice, once when something happens and another a 1/10 or so after.  In OSC
+we're doing this timing in the OscHandler but for scripts that send MIDI
+we don't have the same level of machienry.
+
+Once we have decay though we will have to deal with overflows.  Particularly
+for things like subcycle events that can happen faster than they decay.  
+Loop location is another.  
+
+Script syntax:
+
+   !listen loopEnd
+   !watch modeChange
+   !wait recordStart
+   !catch subcycle
+
+We're using "listen" and "watch" inconsistently.  Why can you "listen"
+on a WatchPoint?  Wouldn't you "watch" it?
+
+In Java you have Events and EventListeners.  Throw/catch make sense
+but talking about "ThrowPoints" or "SystemThrows" is awkward and 
+we're not abandoning control.  
+
+
+

@@ -1,0 +1,691 @@
+[/Users/jeff/dev/mobius/src/mobius] mac auval
+auval -v aumf mobi Zmob
+
+  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+         AU Validation Tool
+         Version: 1.2.1b3 
+          Copyright 2003-2007, Apple, Inc. All Rights Reserved.
+
+         Specify -h (-help) for command options
+  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+--------------------------------------------------
+VALIDATING AUDIO UNIT: 'aumf' - 'mobi' - 'Zmob'
+--------------------------------------------------
+Manufacturer String: Zone Mobius
+AudioUnit name: Mobius
+Component Info: Zone Mobius: Mobius
+Component Version: 1.0.0 (0x10000)
+Component's Bundle Version: 1.0.0
+
+* * PASS
+--------------------------------------------------
+TESTING OPEN TIMES:
+COLD:
+AUMobius::AUMobius
+MobiusPlugin::MobiusPlugin
+Reading engine configuration file: /Library/Application Support/Mobius/mobius.xml
+MobiusPlugin::MobiusPlugin finished
+AUMobius::declaring parameters
+AUMobius::declareParameters 8 Input Level 0.000000
+AUMobius::declareParameters 9 Output Level 0.000000
+AUMobius::declareParameters 10 Feedback 0.000000
+AUMobius::declareParameters 11 Secondary Feedback 0.000000
+AUMobius::declareParameters 12 Pan 0.000000
+AUMobius::declareParameters 5 Selected Track 0.000000
+AUMobius::declareParameters 6 Quantize Mode 0.000000
+AUMobius::declareParameters 7 Switch Quantize 0.000000
+AUMobius::declareParameters 13 8ths Per Cycle 0.000000
+AUMobius::AUMobius finished
+Time to open AudioUnit:         68.828 ms
+WARM:
+AUMobius::AUMobius
+MobiusPlugin::MobiusPlugin
+0 0: Mobius::MobiusReading engine configuration file: /Library/Application Support/Mobius/mobius.xml
+0 0: Mobius: Loading configuration from /Library/Application Support/Mobius/mobius.xml
+MobiusPlugin::MobiusPlugin finished
+AUMobius::declaring parameters
+AUMobius::declareParameters 8 Input Level 0.000000
+AUMobius::declareParameters 9 Output Level 0.000000
+AUMobius::declareParameters 10 Feedback 0.000000
+AUMobius::declareParameters 11 Secondary Feedback 0.000000
+AUMobius::declareParameters 12 Pan 0.000000
+AUMobius::declareParameters 5 Selected Track 0.000000
+AUMobius::declareParameters 6 Quantize Mode 0.000000
+AUMobius::declareParameters 7 Switch Quantize 0.000000
+AUMobius::declareParameters 13 8ths Per Cycle 0.000000
+AUMobius::AUMobius finished
+Time to open AudioUnit:         5.644  ms
+AUMobius::Version
+FIRST TIME:
+AUMobius::Initialize
+0 0: Creating object pools
+0 0: Replacing trace listener with MobiusThread
+AUMobius::initParameter exporting 8 Input Level 127.000000
+AUMobius::GetParameterInfo 8
+AUMobius::initParameter exporting 9 Output Level 127.000000
+AUMobius::GetParameterInfo 9
+AUMobius::initParameter exporting 10 Feedback 127.000000
+AUMobius::GetParameterInfo 10
+AUMobius::initParameter exporting 11 Secondary Feedback 127.000000
+AUMobius::GetParameterInfo 11
+AUMobius::initParameter exporting 12 Pan 64.000000
+AUMobius::GetParameterInfo 12
+AUMobius::initParameter exporting 5 Selected Track 1.000000
+AUMobius::GetParameterInfo 5
+AUMobius::initParameter exporting 6 Quantize Mode 1.000000
+AUMobius::GetParameterInfo 6
+AUMobius::initParameter exporting 7 Switch Quantize 4.000000
+AUMobius::GetParameterInfo 7
+AUMobius::initParameter exporting 13 8ths Per Cycle 4.000000
+AUMobius::GetParameterInfo 13
+Time for initialization:        105.980 ms
+AUMobius::~AUMobius 0x812800
+MobiusPlugin::~MobiusPlugin 0x127620
+0 0: Flushing object pools
+*** Object Pools ***
+Event
+  0 objects on the allocation list, allocation ring has 0 of 64
+  0 objects on the free list, free ring has 0 of 64
+MobiusPlugin::~MobiusPlugin finished
+AUMobius::~AUMobius finished
+
+* * PASS
+--------------------------------------------------
+VERIFYING DEFAULT SCOPE FORMATS:
+Input Scope Bus Configuration:
+ Default Bus Count:8
+    Format Bus 0: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 1: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 2: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 3: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 4: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 5: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 6: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 7: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+
+Output Scope Bus Configuration:
+ Default Bus Count:8
+    Format Bus 0: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 1: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 2: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 3: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 4: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 5: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 6: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+    Format Bus 7: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+
+* * PASS
+--------------------------------------------------
+VERIFYING REQUIRED PROPERTIES:
+  VERIFYING PROPERTY: Sample Rate
+    PASS
+  VERIFYING PROPERTY: Stream Format
+    PASS
+  VERIFYING PROPERTY: Maximum Frames Per Slice
+    PASS
+  VERIFYING PROPERTY: Last Render Error
+    PASS
+
+* * PASS
+--------------------------------------------------
+VERIFYING RECOMMENDED PROPERTIES:
+  VERIFYING PROPERTY: Latency
+    PASS
+  VERIFYING PROPERTY: Tail Time
+AUMobius::SupportsTail
+AUMobius::SupportsTail
+AUMobius::SupportsTail
+AUMobius::SupportsTail
+AUMobius::SupportsTail
+    PASS
+  VERIFYING PROPERTY: Bypass Effect
+    PASS
+
+* * PASS
+--------------------------------------------------
+VERIFYING OPTIONAL PROPERTIES:
+  VERIFYING PROPERTY Supported Number of Channels
+    PASS
+  VERIFYING PROPERTY Host Callbacks
+    PASS
+
+* * PASS
+--------------------------------------------------
+VERIFYING SPECIAL PROPERTIES:
+
+VERIFYING CUSTOM UI
+AUMobius::GetNumCustomUIComponents
+AUMobius::GetNumCustomUIComponents
+AUMobius::GetUIComponentDescs
+Carbon View Components Available: 1
+  auvw mobi Zmob  -  AUMobius View
+    PASS
+
+Cocoa Views Available: 0
+
+VERIFYING CLASS INFO
+    PASS
+
+TESTING HOST CALLBACKS
+    PASS
+
+* * PASS
+--------------------------------------------------
+PUBLISHED PARAMETER INFO:
+
+# # # 9 Global Scope Parameters:
+AUMobius::GetParameterInfo 5
+AUMobius::GetParameterInfo 5
+AUMobius::GetParameterInfo 5
+AUMobius::GetParameterInfo 6
+AUMobius::GetParameterInfo 6
+AUMobius::GetParameterInfo 6
+AUMobius::GetParameterInfo 7
+AUMobius::GetParameterInfo 7
+AUMobius::GetParameterInfo 7
+AUMobius::GetParameterInfo 8
+AUMobius::GetParameterInfo 8
+AUMobius::GetParameterInfo 8
+AUMobius::GetParameterInfo 9
+AUMobius::GetParameterInfo 9
+AUMobius::GetParameterInfo 9
+AUMobius::GetParameterInfo 10
+AUMobius::GetParameterInfo 10
+AUMobius::GetParameterInfo 10
+AUMobius::GetParameterInfo 11
+AUMobius::GetParameterInfo 11
+AUMobius::GetParameterInfo 11
+AUMobius::GetParameterInfo 12
+AUMobius::GetParameterInfo 12
+AUMobius::GetParameterInfo 12
+AUMobius::GetParameterInfo 13
+AUMobius::GetParameterInfo 13
+AUMobius::GetParameterInfo 13
+Parameter ID:5
+Name: Selected Track
+Parameter Type: Indexed
+Values: Minimum = 1.000000, Default = 0.000000, Maximum = 8.000000
+Flags: Readable, Writable 
+WARNING: use -strict_DefP flag
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* Parameter's Published defaultvalue does not fall with [min, max] range  *
+* This will fail using -strict option. Will fail in future auval version  *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+AUMobius::GetParameterValueStrings 5
+AUMobius::GetParameterValueStrings 5
+Parameter has Value Strings
+Num Strings = 8
+Value: 1,  String: 1
+Value: 2,  String: 2
+Value: 3,  String: 3
+Value: 4,  String: 4
+Value: 5,  String: 5
+Value: 6,  String: 6
+Value: 7,  String: 7
+Value: 8,  String: 8
+  -parameter PASS
+
+Parameter ID:6
+Name: Quantize Mode
+Parameter Type: Indexed
+Values: Minimum = 0.000000, Default = 0.000000, Maximum = 3.000000
+Flags: Readable, Writable 
+AUMobius::GetParameterValueStrings 6
+AUMobius::GetParameterValueStrings 6
+Parameter has Value Strings
+Num Strings = 4
+Value: 0,  String: Off
+Value: 1,  String: Cycle
+Value: 2,  String: Subcycle
+Value: 3,  String: Loop
+  -parameter PASS
+
+Parameter ID:7
+Name: Switch Quantize
+Parameter Type: Indexed
+Values: Minimum = 0.000000, Default = 0.000000, Maximum = 7.000000
+Flags: Readable, Writable 
+AUMobius::GetParameterValueStrings 7
+AUMobius::GetParameterValueStrings 7
+Parameter has Value Strings
+Num Strings = 8
+Value: 0,  String: Off
+Value: 1,  String: Confirm
+Value: 2,  String: Cycle
+Value: 3,  String: Confirm Cycle
+Value: 4,  String: Loop
+Value: 5,  String: Confirm Loop
+Value: 6,  String: Subcycle
+Value: 7,  String: Confirm Subcycle
+  -parameter PASS
+
+Parameter ID:8
+Name: Input Level
+Parameter Type: MIDI Controller
+Values: Minimum = 0.000000, Default = 0.000000, Maximum = 127.000000
+Flags: Readable, Writable 
+  -parameter PASS
+
+Parameter ID:9
+Name: Output Level
+Parameter Type: MIDI Controller
+Values: Minimum = 0.000000, Default = 0.000000, Maximum = 127.000000
+Flags: Readable, Writable 
+  -parameter PASS
+
+Parameter ID:10
+Name: Feedback
+Parameter Type: MIDI Controller
+Values: Minimum = 0.000000, Default = 0.000000, Maximum = 127.000000
+Flags: Readable, Writable 
+  -parameter PASS
+
+Parameter ID:11
+Name: Secondary Feedback
+Parameter Type: MIDI Controller
+Values: Minimum = 0.000000, Default = 0.000000, Maximum = 127.000000
+Flags: Readable, Writable 
+  -parameter PASS
+
+Parameter ID:12
+Name: Pan
+Parameter Type: MIDI Controller
+Values: Minimum = 0.000000, Default = 0.000000, Maximum = 127.000000
+Flags: Readable, Writable 
+  -parameter PASS
+
+Parameter ID:13
+Name: 8ths Per Cycle
+Parameter Type: MIDI Controller
+Values: Minimum = 1.000000, Default = 0.000000, Maximum = 128.000000
+Flags: Readable, Writable 
+WARNING: use -strict_DefP flag
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* Parameter's Published defaultvalue does not fall with [min, max] range  *
+* This will fail using -strict option. Will fail in future auval version  *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+  -parameter PASS
+
+Testing that parameters retain value across reset and initialization
+AUMobius::Initialize
+0 0: Creating object pools
+0 0: Replacing trace listener with MobiusThread
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+  PASS
+
+* * PASS
+--------------------------------------------------
+FORMAT TESTS:
+
+Reported Channel Capabilities (explicit):
+      [2, 2]  
+
+Input/Output Channel Handling:
+1-1   1-2   1-4   1-5   1-6   1-7   1-8   2-2   2-4   2-5   2-6   2-7   2-8   4-4   4-5   5-5   6-6   7-7   8-8
+                                          X                                                                       
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+
+* * PASS
+--------------------------------------------------
+RENDER TESTS:
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.262695
+AUMobius::initParameter importing 9 Output Level 10.045898
+AUMobius::initParameter importing 10 Feedback 31.625977
+AUMobius::initParameter importing 11 Secondary Feedback 9.177734
+AUMobius::initParameter importing 12 Pan 29.269531
+AUMobius::initParameter importing 5 Selected Track 3.454102
+AUMobius::initParameter importing 6 Quantize Mode 2.830078
+AUMobius::initParameter importing 7 Switch Quantize 0.717773
+AUMobius::initParameter importing 13 8ths Per Cycle 101.334961
+Input Format: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+Output Format: AudioStreamBasicDescription:  2 ch,  44100 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+Render Test at 512 frames
+AUMobius::exportParameter 8 Input Level 14.000000
+AUMobius::GetParameterInfo 8
+AUMobius::exportParameter 9 Output Level 10.000000
+AUMobius::GetParameterInfo 9
+0 0: Mobius: Receiving interrupts, input latency 289 output 282
+AUMobius::exportParameter 10 Feedback 31.000000
+AUMobius::GetParameterInfo 10
+AUMobius::exportParameter 11 Secondary Feedback 9.000000
+AUMobius::GetParameterInfo 11
+AUMobius::exportParameter 12 Pan 29.000000
+AUMobius::GetParameterInfo 12
+AUMobius::exportParameter 5 Selected Track 3.000000
+AUMobius::GetParameterInfo 5
+AUMobius::exportParameter 6 Quantize Mode 2.000000
+AUMobius::GetParameterInfo 6
+AUMobius::exportParameter 7 Switch Quantize 0.000000
+AUMobius::GetParameterInfo 7
+AUMobius::exportParameter 13 8ths Per Cycle 4.000000
+AUMobius::GetParameterInfo 13
+Slicing Render Test at 64 frames
+  PASS
+
+Render Test at 64 frames, sample rate: 22050 Hz
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.000000
+AUMobius::initParameter importing 9 Output Level 10.000000
+AUMobius::initParameter importing 10 Feedback 31.000000
+AUMobius::initParameter importing 11 Secondary Feedback 9.000000
+AUMobius::initParameter importing 12 Pan 29.000000
+AUMobius::initParameter importing 5 Selected Track 3.000000
+AUMobius::initParameter importing 6 Quantize Mode 2.000000
+AUMobius::initParameter importing 13 8ths Per Cycle 4.000000
+Render Test at 137 frames, sample rate: 96000 Hz
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.000000
+AUMobius::initParameter importing 9 Output Level 10.000000
+AUMobius::initParameter importing 10 Feedback 31.000000
+AUMobius::initParameter importing 11 Secondary Feedback 9.000000
+AUMobius::initParameter importing 12 Pan 29.000000
+AUMobius::initParameter importing 5 Selected Track 3.000000
+AUMobius::initParameter importing 6 Quantize Mode 2.000000
+AUMobius::initParameter importing 13 8ths Per Cycle 4.000000
+Render Test at 4096 frames, sample rate: 44100 Hz
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.000000
+AUMobius::initParameter importing 9 Output Level 10.000000
+AUMobius::initParameter importing 10 Feedback 31.000000
+AUMobius::initParameter importing 11 Secondary Feedback 9.000000
+AUMobius::initParameter importing 12 Pan 29.000000
+AUMobius::initParameter importing 5 Selected Track 3.000000
+AUMobius::initParameter importing 6 Quantize Mode 2.000000
+AUMobius::initParameter importing 13 8ths Per Cycle 4.000000
+Render Test at 4096 frames, sample rate: 192000 Hz
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.000000
+AUMobius::initParameter importing 9 Output Level 10.000000
+AUMobius::initParameter importing 10 Feedback 31.000000
+AUMobius::initParameter importing 11 Secondary Feedback 9.000000
+AUMobius::initParameter importing 12 Pan 29.000000
+AUMobius::initParameter importing 5 Selected Track 3.000000
+AUMobius::initParameter importing 6 Quantize Mode 2.000000
+AUMobius::initParameter importing 13 8ths Per Cycle 4.000000
+Render Test at 4096 frames, sample rate: 11025 Hz
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.000000
+AUMobius::initParameter importing 9 Output Level 10.000000
+AUMobius::initParameter importing 10 Feedback 31.000000
+AUMobius::initParameter importing 11 Secondary Feedback 9.000000
+AUMobius::initParameter importing 12 Pan 29.000000
+AUMobius::initParameter importing 5 Selected Track 3.000000
+AUMobius::initParameter importing 6 Quantize Mode 2.000000
+AUMobius::initParameter importing 13 8ths Per Cycle 4.000000
+Render Test at 512 frames, sample rate: 48000 Hz
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.000000
+AUMobius::initParameter importing 9 Output Level 10.000000
+AUMobius::initParameter importing 10 Feedback 31.000000
+AUMobius::initParameter importing 11 Secondary Feedback 9.000000
+AUMobius::initParameter importing 12 Pan 29.000000
+AUMobius::initParameter importing 5 Selected Track 3.000000
+AUMobius::initParameter importing 6 Quantize Mode 2.000000
+AUMobius::initParameter importing 13 8ths Per Cycle 4.000000
+  PASS
+
+Checking connection semantics:
+AUMobius::Initialize
+AUMobius::initParameter importing 8 Input Level 14.000000
+AUMobius::initParameter importing 9 Output Level 10.000000
+AUMobius::initParameter importing 10 Feedback 31.000000
+AUMobius::initParameter importing 11 Secondary Feedback 9.000000
+AUMobius::initParameter importing 12 Pan 29.000000
+AUMobius::initParameter importing 5 Selected Track 3.000000
+AUMobius::initParameter importing 6 Quantize Mode 2.000000
+AUMobius::initParameter importing 13 8ths Per Cycle 4.000000
+Connection format:
+AudioStreamBasicDescription:  2 ch,  48000 Hz, 'lpcm' (0x00000029) 32-bit little-endian float, deinterleaved
+  PASS
+
+Checking parameter setting
+Using AudioUnitSetParameter
+AUMobius::importParameters 5 Selected Track 7.418945
+AUMobius::exportParameter 8 Input Level 127.000000
+AUMobius::GetParameterInfo 8
+AUMobius::exportParameter 9 Output Level 127.000000
+AUMobius::GetParameterInfo 9
+AUMobius::exportParameter 10 Feedback 127.000000
+AUMobius::GetParameterInfo 10
+AUMobius::exportParameter 11 Secondary Feedback 127.000000
+AUMobius::GetParameterInfo 11
+AUMobius::exportParameter 12 Pan 64.000000
+AUMobius::GetParameterInfo 12
+AUMobius::exportParameter 5 Selected Track 7.000000
+AUMobius::GetParameterInfo 5
+AUMobius::exportParameter 6 Quantize Mode 1.000000
+AUMobius::GetParameterInfo 6
+AUMobius::exportParameter 7 Switch Quantize 4.000000
+AUMobius::GetParameterInfo 7
+Using AudioUnitScheduleParameter
+AUMobius::importParameters 5 Selected Track 4.301758
+AUMobius::exportParameter 5 Selected Track 4.000000
+AUMobius::GetParameterInfo 5
+AUMobius::importParameters 5 Selected Track 5.826172
+AUMobius::exportParameter 5 Selected Track 5.000000
+AUMobius::GetParameterInfo 5
+  PASS
+
+* * PASS
+--------------------------------------------------
+AUMobius::~AUMobius 0x82ea00
+MobiusPlugin::~MobiusPlugin 0x128150
+0 0: Flushing object pools
+*** Object Pools ***
+Event
+  0 objects on the allocation list, allocation ring has 0 of 64
+  0 objects on the free list, free ring has 0 of 64
+MobiusPlugin::~MobiusPlugin finished
+AUMobius::~AUMobius finished
+AU VALIDATION SUCCEEDED.
+--------------------------------------------------
+[/Users/jeff/dev/mobius/src/mobius] 

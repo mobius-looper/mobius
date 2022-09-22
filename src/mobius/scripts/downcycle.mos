@@ -1,0 +1,4 @@
+!name Down Cycle
+!button
+
+set cycleCount cycleCount - 1

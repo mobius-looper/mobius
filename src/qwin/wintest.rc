@@ -1,0 +1,77 @@
+/*
+ * Windows test resource file.
+ * Shows how to define Qwin menus from a Windows resource.
+ */
+
+#include <windows.h>
+
+#include "wintest.h"
+
+Chef ICON Chef.ico
+Earth BITMAP Earth.bmp
+
+MainMenu MENU
+{
+  POPUP "File"
+  {
+    POPUP "Options"
+    {
+      MENUITEM "&Midi Devices", IDM_MIDI
+      MENUiTEM "&Audio Devices", IDM_AUDIO
+    }
+    MENUITEM "&Simple Dialog", IDM_DIALOG
+    MENUITEM "&Modeless Dialog", IDM_MODELESS_DIALOG
+    MENUITEM "Message &Box", IDM_MESSAGE
+    MENUITEM "&Open Dialog", IDM_OPENDIALOG
+    MENUITEM "&Save Dialog", IDM_SAVEDIALOG
+    MENUITEM "&Color Dialog", IDM_COLORDIALOG
+    MENUITEM "&Palette Dialog", IDM_PALETTEDIALOG
+  }
+  POPUP "&Help"
+  {
+    MENUITEM "&About", IDM_ABOUT
+  }
+}
+
+PopupMenu MENU
+{
+  POPUP ""
+  {
+    MENUITEM "&White\tCtrl+W", IDM_WHITE
+    MENUITEM "&Gray\tCtrl+G", IDM_GRAY
+    MENUITEM "&Black\tCtrl+B", IDM_BLACK
+  }
+}
+
+/*
+ * variants:
+ * 
+ * "A", 0				A
+ * "^A", 0				ctrl-A
+ * "A", 0, CONTROL			ctrl-A
+ * "A", 0, CONTROL, SHIFT, ALT		ctrl-alt-shift-A
+ * 
+ *  41, 0, ASCII			ascii character 41 (decimal)
+ *  VK_F9, 0, VIRTKEY			virtual key code F9
+ */
+
+KeyAccelerators ACCELERATORS
+{
+    "^W", IDM_WHITE
+    "^G", IDM_GRAY
+    "^B", IDM_BLACK
+}
+
+/*
+ * Dialog Resource Example
+ */
+
+AboutBox DIALOG 20, 20, 160, 80
+  STYLE WS_POPUP | WS_DLGFRAME
+{
+  CTEXT "About" 			-1, 0, 12, 160, 8
+  ICON "chef"				-1, 8, 8, 0, 0
+  CTEXT "QWIN Application"		-1, 0, 36, 160, 8
+  CTEXT "(c) Jeff Larson, 2004"		-1, 0, 48, 160, 8
+  DEFPUSHBUTTON "OK" IDOK, 64, 60, 32, 14, WS_GROUP
+}

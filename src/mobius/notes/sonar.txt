@@ -1,0 +1,17 @@
+----------------------------------------------------------------------
+
+Try setting up mobius in its own buss & inserting a send to that buss from the source audio channel. Assuming you get audio into mobius, select the source track, go 'Bounce To Tracks' and make sure 'Each Buss To Seperate Submix' is selected.
+
+Hit 'OK' and Sonar should create 2 new tracks - one will contain the dry audio, the other should contain the audio as processed by mobius.
+
+Another thought - cant you record the processed audio into Live by hooking up sonar's main outs to Live's inputs? Then you could save the result & import it back into Sonar. A fudge, but a better one than patching the soundcard i/o because at least it's not going through a a/d-d/a stage.
+
+I dont think this is a Sonar problem - my hunch is that mobius isnt behaving correctly within the VST wrapper. 
+
+----------------------------------------------------------------------
+
+Host I haven't tried:
+
+http://www.spinaudio.com/products.php?id=38&page=
+
+

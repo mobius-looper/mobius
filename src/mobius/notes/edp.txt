@@ -1,0 +1,336 @@
+----------------------------------------------------------------------
+Interface Mode
+----------------------------------------------------------------------
+
+We formerly implemented this but I took it out since it has always
+been confusing, seldom used, and unnecessary with scripts.
+
+Some old notes from Binding.cpp
+
+  The binding for FeedbackLevelParameter is affected by the
+  InterfaceMode preset parameter.  When InterfaceMode is Delay or In,
+  the feedback controller is implicitly bound to InputLevelParameter
+  instead.  When InterfaceMode is Out, the feedback controller is
+  implicitly bound to OutputLevelParameter.  When InterfaceMode is
+  Replace, feedback controller is bound to both FeedbackLevelParameter
+  and OutputLevelParameter simultaneously.  When InterfaceMode is Flip,
+  feedback controller is bound to both FeedbackLevelParameter and
+  InputLevelParameter simultaneously, and the feedback direction is
+  reversed.
+
+----------------------------------------------------------------------
+Interface Mode
+----------------------------------------------------------------------
+
+Comments from Replace.cpp
+
+  !! Manual suggests this is always a SUS operation when InsertMode=Replace
+  and the insert button is pressed.  But MIDI has two functions,
+  Replace and SUSReplace.
+
+Comments from InsertFunction::invoke
+
+ * Convert Insert function into another depending on insert mode.
+ * ?? Assuming that SUSRoundInsert and SUSUnroundInsert are not
+ * subject to InsertMode, they always do an INSERT_INSERT.
+ *
+ * Note that Replace has implied SUS when performed via InsertMode.
+ * Assuming Subsitute does too.
+ * 
+ * ?? if this is a SUSInsert and we're already in Insert mode,
+ * not sure how to behave, options:
+ *    1) ignore down transition, wait for up and handle
+ *       like a non-sus insert ending
+ *    2) treat down transition as an insert end then
+ *       ignore the up transition if we're not in insert
+ *    3) treat down transition as an insert alternate ending
+ *       to itself, enter insert mode again after the ending
+ * 
+ * Of these I think 1 is the easiest, when the up transition
+ * happens if we're not in insert mode, then we must have had
+ * a quantized ending so we can just ignore it.  Note that this also
+ * makes it become an unrounded insert which kind of makes sense.
+ * 
+ * 2 requires that we ignore the up transition even if we're still
+ * in insert because the end was quantized.  This means we'll have
+ * too look in the event list for an InsertEndEvent.
+
+Comments from Loop::scheduleModeEnd
+
+ * ?? If InsertMode=Sustain, it is unclear how we should process alternate
+ * endings, or even if they're allowed. You would have to release the SUS
+ * before submitting another event.
+
+
+
+----------------------------------------------------------------------
+Interface Mode
+
+Summary
+  - add Input Level controller
+  - add Feedback2 controller
+  - make sure feedback is 100% during mute, then restore
+  - Delay and Hold modes
+  - max undo layers
+  - Stutter/SUSStutter function & mode
+  - merge with feedback option for Substitute mode
+  - option for continuous feedback application
+  - soft mute for Flip mode (keep recording during mute)
+
+Loop Mode
+
+  - says input and output volume are 100% most of the time,
+    I allow input and output to be directly controlled, just
+    leave them where they are
+
+  - says feedback is always 100% in Mute mode, 
+    * need to do this, save/restore feedback setting during mute
+
+Delay Mode
+
+  - feedback controlled by knob, feedback pedal controls input
+    * need these configurations
+      - Traditional: feedback controller used for input, feedback
+         must be changed on screen
+      - Three Pedal: feedback controller does not change, a third
+         pedal may be assigned to input volume
+      - The GUI knobs are not remapped, only MIDI controllers
+
+  - set the delay time with a pair of Records
+  - says "loop input volume is always open", which here means
+    that Overdub is always being applied
+
+  - Overdub function toggles between Delay and Hold
+    - in Hold, feedback goes to 100%, input is turned off
+    * need to add a Hold mode, like Play but ignoring feedback
+    * When not in Hold, show Delay rather than Overdub
+
+  - feedback is always applied unless in Hold or Mute mode
+    ? is this really just having overdub be initially on after
+    a Record or Reset?  I suppose you could allow it to be toggled
+    in Reset like Overdub?
+
+  * need to get max undo layers working!
+
+  - Hold in Mute, setting feedback to 100% 
+    - this is just normal Mute behavior
+
+  - Hold in Multiply
+    - feedback may be controlled
+    * nothing must be recorded, have to ignore input
+    ? need Multiply/Hold mode?
+    * May be just change the secondary mode display from Overdub to 
+      Delay/Hold
+
+  - Delay(Overdub) in Multiply
+    - feedback may be controlled
+    * nothing must be recorded, have to ignore input
+
+Expert Mode
+
+  - Feedback pedal active during Play
+  - Feedback knob active during Overdub, Multiply, Substitute
+
+  * Basically different feedback levels for play & overdub
+    - would need another knob for feedback, but make it active
+      only in expert mode
+    - call it Feedback 2?
+    - don't need a new mode parameter, just bind a Feedback2 controller
+      or use the screen
+    - display Feedback2 darkened when not being used
+
+  - in SamplePlay mode, it shows the feedback pedal controlling output volume,
+    with feedback at 100%
+
+Stutter Mode
+
+  - just like Loop mode except Insert performs "single cycle multiply"
+  - after creating a multi-cycle loop, Insert inserts repetitions
+    of the NEXT cycle
+    - can overdub during the insertion
+  - undo returns to the original loop with no change in play position
+    - Insert/Undo is signaled out for the stutter behavior, which
+      you could also do with a unrounded multiply/undo, but its harder
+    - redo layers could be annoying here?
+
+  * Also add a Stutter function/mode that can be used any time
+
+  - With SwitchQuant on, pressing Next-Insert will perform the
+    stutter into the next loop
+    - normally Switch/Insert performs LoopCopyTiming, this
+      sort of does too but it keeps multiplying
+    - the stutter comes from the next cycle in the ORIGINAL loop
+    - press Insert again to keep the loop
+    - press undo to return to where you were in the previous loop
+      * I think this is different than Switch/Insert in Loop mode
+    ? will it also stutter if LoopCopy=Timing and SwitchQuant=Off
+      this seems useful, assume so
+
+  - Substitite mode is more powerful in stuffer mode
+    - Feedback pedal behaves normally
+    - During Substitute, feedback is defined by the knob rather that
+      being forced to zero, provides more a mix than a complete replace
+      * EDP seems to implement Substitute with feedback, we just
+        insert a segment
+      * will need a "merge with feedback" operation in Layer
+    - New Feedback2 knob/controller can be used for this
+      ? could also just have a nother substitute feedback knob that
+        is always available
+
+Out Mode
+
+  - same as Loop Mode, except feedback pedal controls output level
+  - not really necessary in Mobius, just bind another pedal
+  - in PedalMode=Traditional, can change the function of the feedback pedal
+    and change feedback on screen
+
+In Mode
+
+  - same as Loop Mode, except feedback pedal controls input level
+  * add another knob for track input level, available all the time
+  - in PedalMode=Traditional, change feedback pedal binding
+
+Replace Mode
+
+  - pedal controls feedback and output simultaneously
+  - you hear the reduction in feedback immediately instead of
+    on the next loop pass
+    - this seems like sort of a mistatement, what you hear is the
+      reduction of output that will resemble what you will hear
+      when feedback is applied, if you keep the pedal down, the
+      next loop will actually be lower because both feedback and
+      output reduction are being applied?
+  * to work as expected, this requires that feedback be made continuously
+    rather than applied at the end
+    - need a new mode since this will require more memory
+
+  - talks about when Overdub is on, the pedal serves as a Replace 
+    function with with smooth level control
+    - I think that means that when the pedal is up, output and feedback are
+      at zero, you can't hear the current content and it will be gone in
+      the next loop
+      * you CAN year the input though so make sure that output level
+        does not affect pass through monitoring of the input signal        
+
+Flip Mode
+
+  - feedback pedal controls both input level and feedback,
+    but feedback is reversed, at toe up, feedback is 100 and input is 0
+    - behaves like a Hold pedal
+
+  - during Overdub, pedal doesn't control feedback, but front panel
+    knob does (and is also reversed)
+    - Mobius can use Feedback2, but I don't think I want it reversed
+
+  - Insert does stutter
+
+  - Mute records loop silently
+    * for EDP this works because the input level is what determines
+      whether there will be recording, in Mute they just let input level
+      go up
+      - We will need a "soft" mute that just turns the output down,
+        but keeps overdubbing
+
+
+
+
+----------------------------------------------------------------------
+MIDI ASSIGNMENTS
+----------------------------------------------------------------------
+
+Default LoopTrig=84
+
+MIDI Commands with a Source# of 36
+
+Sync Indicators
+
+32 8thSync out
+33 LoopSync out
+34 MIDISync out
+35 CycleSync out
+
+Virtual Buttons
+
+36 Parameter
+37 empty
+38 Record
+39 Overdub
+40 Multiply
+41 Insert
+42 Mute
+43 Undo
+44 Next
+45 Replace
+46 Substitute
+47 InsertOnly
+48 Speed
+49 ToggleReverse
+
+DirectMIDI
+
+50 SUSRecord
+51 SUSOverdub
+52 SUSRoundMultiply
+53 SUSRoundInsert
+54 SUSMute
+55 ShortUndo
+56 SUSNext
+57 SUSReplace
+58 SUSSubstitute
+59 SUSToggleReverse
+60 SUSToggleSpeed
+61 Reset
+62 GeneralReset
+63 ExitParameters
+64 SUSUnroundedMultiply
+65 SUSUnroundedInsert
+66 SUSMuteRetrigger
+67 LongUndo
+68 Forward
+69 Reverse
+70 FullSpeed
+71 HalfSpeed
+72 SamplePlay
+73 ReTrigger
+74 ReAlign
+75 MuteReAlign
+76 QuantMIDIStartSong
+77 MuteQuantMIDIStartSong
+78 StartPoint
+79 QuantStartPoint
+80 BeatTriggerSample
+81 MIDIBeatSync
+
+----------------------------------------------------------------------
+Stutter
+----------------------------------------------------------------------
+
+The Mobius interpretation of Stutter comes from this section
+of the EDP manual:
+
+  SingleCycleMultiply works as follows. When you have done a Multiply
+  and have several Cycles in a loop, pressing Insert will insert
+  repetitions of the next Cycle. As the inserts are made you can overdub
+  a longer phrase over the repetitions of the Cycle. The results will be
+  inserted into the loop when you press Insert again. 
+  ...
+  This can make very interesting results when working with
+  very short Cycles, and that is why it is called StutterMode.
+
+I wasn't exactly sure what that meant, what is implemented is this:
+
+  When you press Stutter (or SUSStutter), you enter "stutter mode".  
+  In stutter mode, when you reach the end of the current cycle, a copy
+  of the current cycle is inserted at that point.  This insertion of
+  the cycle copy continues every time you reach the end of the cycle
+  until you finaly end Stutter mode.
+
+This single cycle multiply is rounded, meaning that you always insert
+exactly one cycle, and it is quantized to the end of the cycle.
+
+I haven't tried this on my EDP, but re-reading the description it looks
+like the EDP may do the insert at the moment the Insert button is
+pressed rather than waiting till the end of the cycle.
+
+
+

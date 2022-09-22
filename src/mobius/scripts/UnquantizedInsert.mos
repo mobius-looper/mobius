@@ -1,0 +1,6 @@
+!name Unquantized Insert
+Variable saveQuantize
+set saveQuantize $quantize
+set quantize off
+Insert
+set quantize $saveQuantize

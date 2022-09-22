@@ -1,0 +1,479 @@
+<!DOCTYPE document>
+<document>
+<heading>
+<title>Mobius Design</title>
+<date>June 2005</date>
+</heading>
+
+<TOC/>
+
+<section><title>Introduction</title>
+
+<p>This is a evolving document intended to describe the Mobius
+architecture and provide insight into some of the more complicated
+parts of the system.  It currently consists mostly of random
+design thoughts with no organization, but hopefully will improve
+once development slows down.</p>
+
+</section>
+
+<section><titleSynchronization</title>
+
+Sync=In
+
+With any form of input synchronization, the start and end of the loop
+is quantized to a "pulse" boundary, and the number of pulses in the
+loop is remembered.  A pulse counter is maintained as the loop plays,
+it starts at 0 and increments by 1 on each pulse.  When the counter
+reaches the number of pulses in the loop, it is reset to 0.  When the
+counter is reset to 0, we are at what the EDP calls the "global MIDI
+start point", and what Mobius calls the "external loop start point".
+
+When at the external loop start point, the loop's frame counter is
+expected to be 0, but it will usually drift over time.  When the drift
+passes a user defined threashold, the loop is retriggered from zero,
+this is called "drift retrigger".
+
+Operations like Reverse cause the external loop and internal loop
+to become dealigned.  Since they are both still the same size, 
+we can continue performing drift retrigger.  But instead of retriggering
+at 0, we retrigger at an offset equal to the amount of dealignment so
+we won't hear an audible "jump" on the first retrigger.
+
+When the number of cycles in the loop is changed through multiply or
+insert, we need to increase or reduce the number of pulses that
+will trigger the drift realign.  This can either be done by
+changing the maximum number of pulses, or factoring in the number 
+of cycles.  For example a loop with 3 cycles, recorded with 8 pulses
+in the first cycle must count to 24.  The later approach means we don't
+have to keep adjusting the maximum pulse count, but it does make
+detecting the start point require a multiply.
+
+Question: Should the first recording "lock" the number of pulses per
+cycle?  Or should each layer be allowed to have an independent
+"global" pulse count?  If locked, then a layer may play back with
+periodic retriggering.  If independent, the layer will play back as
+recorded, but will go out of alignment.  The later feels more useful.
+We certainly need to support this between different loops.  Possibly
+the layers within one loop could have a single pulse count?
+
+When undoing or redoing a layer, we always try to resume playback at a
+point corresponding to the location in the current layer.  If the
+current loop is longer, this will result in "wrapping" the frame to a
+lower frame, but usually still to a musically similar point.  Since we
+are not retriggering, if the original layer was dealigned this dealign
+must be carried over to the next layer.  Since dealign is a frame count,
+it too may be larger than the next layer and need to be wrapped.
+
+
+
+
+
+point we would be if the previous layer had continued playing 
+point proportional to where we are in the current layer.  If the current
+loop is longer, this will result in "wrapping" the frame counter to a 
+lower cycle.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+
+
+Sync Stuff
+
+
+- try to calculate a running average framesPerPulse so we can round
+  the loop up to an even number of pulse frames, clock jitter will
+  make this harder
+  - hmm, no don't try to second guess the device we'll generally
+    overshoot which will cause excessive retriggers?
+
+
+- BeatSync in the EDP can be used as a trigger for various things,
+  could have a Sync=Beat option to wait for a special MIDI event
+  rather than counting clocks.  Should allow notes here!
+
+- Sync=In, Change loop length relative to external loop
+
+Once the external loop length is established, if we perform
+an unrounded multiply or insert, undo to a layer of a different
+length, or switch to a loop of a different length, can we
+continue to perform AutoReAlign?  
+
+One mode would be to ReAlign whenever the external start point comes
+along.  If the new loop is smaller than the external loop, it will
+play several times and be truncated.  If the new loop is longer than
+the external loop, it will be truncated before playing completely.
+
+Another mode would be to assume we're hopelessly out of alignment, and
+set a flag to prevent AutoReAlign.  A ReAlign will bring them
+temporarily back into alignment, but since they'll go out again after
+one loop, continue to disable AutoReAlign.  This seems like the most
+useful to me.
+
+A third mode would be to try to precisely calculate what the dealigned
+start point should be every time the external start point is reached
+and AutoReAlign.  Maybe not that hard if we can estimate
+frames-per-pulse.  But is this overkill?  We're likely in a state
+of cacophony now anyway, so just let it drift?
+
+- Sync=Out, Unrounded Multiply
+
+Docs indiciate that StartSong is sent which suggests that we also change
+the tempo.  That makes sense, otherwise we'll dealign.  Need to prevent
+a loop from being shorter than one MIDI clock pulse.  
+
+
+----------------------------------------------------------------------
+
+External Sync
+
+EDP CONCEPTS
+
+BeatSync
+
+EDP uses a 1/4 jack, but functionally this is similar to VST beat/bar
+sync.  EDP sends MIDI clocks out, we don't need that.  Says "record
+operations will be quantized to incomming pulses".  Enters "ooo" mode
+waiting for the pulse.
+
+Mobius does not implement beat sync.  We could recognize the MIDIBeatSync
+function, but it's just as easy to tap Record twice, and if you're in
+the MIDI zone you should be using clocks.  About the only interesting
+use of beat sync is deriving the beats from an audio signal but it
+would so fundamentally different I wouldn't call it beat sync.
+
+BeatSync pulses will also function like SamplePlay while we're in
+ReAlign mode, the loop plays once from the start, repeating pulses
+can cause "stuttering".  But we can just use SamplePlay for that.
+
+
+BrotherSync
+
+Connect multiple EDPs, the first one defines the cycle time.
+Pressing Record on the secondary EDP cause it to quantize
+until the first EDP reaches the start point.  Pressing Record
+again on the secondary EDP quantizes the end of the record to the 
+next "pulse".  The spec is vague on what "pulse" means here, but
+I think it is a cycle.  
+
+The effect is similar to BeatSync but tighter when syncing EDPs
+Any brother'd EDPs can set the cycle length.  I'm not sure who
+wins if there is more than one and they have different cycle lengths.
+Even if they have the same cycle length, they may be in different
+multiples so the start points will be reached differently.  
+
+  - record start waits for startpoint, end waits for cycle
+  - record start/end both wait for cycle
+  - record start/end wait for loop
+  - record start/end wait for subcycle
+
+It's really a lot like quantize:
+
+  BrotherStartQuant=Loop|Cycle|Subcycle
+  BrotherEndQuant=Loop|Cycle|Subcycle
+
+Could simplify this with just BrotherQuant which specifies
+the start quant, end quant is always Cycle unless start
+quant is Subcycle.
+
+EDP requires that brother sync'd devices use Sync=Out.
+Mobius doesn't need to do that, allow tracks with Sync=In
+or more usefully Sync=Host to act as masters for
+brother sync too.  If a host has both Sync=Host and
+brother enabled, first look for a brother, then obey the host.
+
+After brother syncing a track, if the original track was sync'd
+by midi/host it may be retriggered to maintain alignment.  
+Would be cool if this realign knew what other tracks were
+synced from it and retriggered those too at appropriate
+relative positions.
+      
+
+Global/Local Clock
+
+Keep track of the number of clocks/beats in the original loop
+and maintain a "global" counter so we always know where
+"beat 1" is on the sequencer, regardless of where we are
+in the loop.  
+
+  - Should this be the same for all tracks?  Maybe not if
+    a track isn't brother-enabled, but I'm not sure it's useful.
+
+The following are "dealigning" functions that can shift the
+loop start point away from the global start point:
+
+  StartPoint,Retrigger,Reverse,HalfSpeed,Switch
+
+For Switch, each loop keeps it's own "local MIDI clock counter".
+After a dealigning operation, the Sync Retrigger must be disabled?
+It certainly can't realign, but if we remembered the relative
+position after the dealignment, we could still sync retrigger
+from a point other than the start point.   YES: must still retrigger
+but from the dealign point.
+
+The following functions all perform a realign of the 
+loop at the global start point:
+
+  Reset,ReAlign,MuteReAlign,Mute/Multiply
+
+The following functions perform a realign of the
+external sequencer at the loop start point:
+
+  QuantMIDIStartSong,MuteQuantMIDIStartSong
+
+For VST hosts, the two StartSong functions are still
+useful if Sync=Out.
+
+QuantMidiStartSong
+MuteQuantMidiStartSong
+
+Wait for the loop start point and send a StartSong MIDI
+message.  Used to resync external devices without changing
+the way the loop plays.
+
+This could be a mode, but it would be easier just to 
+schedule events.  That way they could be undone.
+EventStartSong, EventUnmuteStartSong, or have just
+one and remember the initiating function to see if
+we need to exit mute.
+
+QuantStartPoint
+
+Sets the loop start point to where the next global MIDI
+start point will be.  Not exactly a realign, we're changing
+the point of alignment.
+
+
+ReAlign
+MuteReAlign
+
+Brings the loop and the external device back into alignment.  Waits
+
+for the global MIDI start point and retriggers the loop from the
+beginning.  This is a new "Realign" mode.  When initiated with
+Mute/Multiply, you can get out of it with another Multiply.  Don't
+like this, have Undo work too.
+
+Must reset the "dealigned" state, so we once again start performing
+automatic drift realign.
+
+When in Realign mode, with Sync=In
+
+  - beat sync pulse retriggers the loop to play once
+  - brother sync pulse retriggers the loop 
+    (ignored if MIDI clocks being received)
+  - global midi start point retriggers the loop
+    (if MIDI clocks being received)
+  - midi start song, retriggers the loop
+    (but only if midi clocks not currently received?)
+  - local start poing ignored
+
+The qualification to the last point doesn't make sense to me.  We
+should always treat StartSong as a retrigger even if we have been
+receiving clocks?
+
+These rules mean the EDP can't combine MIDI sync and brother sync,
+which makes sense.  The ability to combine track sync and host sync
+may be confusing?  In this case, we could look for a brother and use
+it if found, otherwise fall back to global midi start point.
+
+But is this really useful?  Wouldn't it be better to pick the brother
+track, let it realign to the global midi start point, then realign the
+other brothers.  Hard to control.  Track/brother sync really seems to
+be independent of MIDI/HOST sync.
+
+Beat sync isn't relevant for Mobius.  Host sync would be handled like
+MIDI clocks.  
+
+When in Realign mode, with Sync=Out
+
+  - beat sync is ignored
+  - brother sync retriggers the loop
+  - global midi start point ignored
+  - midi start song ignored
+  - local start poing ignored
+
+This means that if we want brother to be a sync mode, we'll either
+have to have Sync=Brother imply Out, or have Brother and BrotherOut,
+and BrotherOutUserStart.  Better to leave it seperate and just ignore
+it if Sync=MIDI/HOST?
+
+Yes, the connection of a brother cable is like expliclty selecting
+a brother mode in the preset.  It needs to be seperate.
+
+When in Realign mode, with Sync=OutUserStart
+
+  - beat sync is ignored
+  - brother is ignored
+  - global midi start point ignored
+  - midi start song ignored
+  - local start point, StartSong sent, loop comes
+    out of Mute
+
+Similar to Sync=Out except that brother sync retrigger is ignored.
+This one seems more obscure to me.  We're overloading OuS for two
+different things? 
+
+  - Out: brother sync retriggers and sends StartSong
+  - OuS: local start point sends StartSong
+
+But OuS is used elsewhere as a way to indiciate that retriggering
+a loop, or closing one shouldn't send StartSong.  Confusing.
+This is actually the same as MuteQuantMIDIStartSong.  I would 
+prefer that we not overload the parameter.
+
+With the direct MIDI command MIDIMuteReAlign, it says that
+brother sync retriggers even when Sync=Ous.  So MIDIMuteReAlign
+and front panel Mute/Multiply are inconsistent.
+
+Combining Brother and MIDI Sync
+
+Brother sync'd EDPs do not need to perform a periodic retrigger
+to correct for drift, so the start points can go out of sync
+and be brought back into alignment with ReAlign.  If we
+create a brother sync'd track and the master gets a 
+drift retrigger, the two won't be in sync any more since the
+retrigger won't know to retrigger all of the tracks
+derived from the master.  UNLESS, the derived tracks are
+initialized with the same external sync state as the master
+track, so they will also be drift retriggered at the same
+time.  Will need that for TrackCopy operations anyway.
+
+
+SongPosition, Continue, Sync=In
+
+When in ReAlign mode waiting for the global MIDI start point, a
+Continue will cause the EDP to recalculate where the global MIDI start
+point should be.
+
+Spec is unclear whether SongPosition will be obeyed if the unit
+is not in ReAlign mode, I suspect not.  We could accept this
+in Play mode and maybe Mute mode but not recording modes.
+
+StartSong, StopSong, Continue, Sync=In
+
+Spec is unclear about wether the EDP obeys StartSong and StopSong.
+It should be easy enough to convert StopSong to Pause, Continue
+to (un)Pause, and StartSong to a Retrigger.  Though you may
+want to ignore StopSong, let the loop run, then retrigger
+with the sequencer on the next StartSong or Continue.
+
+StopSync
+
+Temporary disable Sync=In by pressing Overdub in Reset mode.  Works
+only "when sync is being received".  I don't like this because it
+means you can't toggle overdub in reset.  Pressing Overdub again makes
+it recognize sync, it sounds like overdub is completely disabled then
+while in StopSync mode?
+
+A ToggleSync function would be easy enough as would a script that
+just sets Sync=Off.  But you'd have to dedicate another button.
+
+SyncStartPoint
+
+Define a new global MIDI start point by pressing Undo during Reset.
+Spec says "just like switching on a MIDI clock or sending StartSong".
+This suggests that StartSong won't start the loop (unless you're
+in ReAlign), but it does reset the global start point which makes
+sense.  The "like switching on a MIDI clock" is more disturbing
+since some devices send it all the time, and we'll tap in at
+a random location.  This also seems to be unreliable since
+you're setting the start point by feel rather than locking
+onto a precise location.  But I guess even if we're off by a bit,
+we still do drift retrigger and keep us as close as we ever were.
+
+I don't especially like this since it's easy to hit Undo an extra
+time (maybe that option to prevent undoing the first layer
+and forcing you to reset?).  Would need an alert.  Nice to 
+have a global thermometer, or perhaps use a single thermometer
+but combine two colors!  Maybe easier to adjust the color
+of the border?
+
+SyncRecord
+
+When Sync=In, the start/end of the loop is adjusted to 
+a sync boundary.  It says that sync "signals" may be
+beats, brother, or MIDI clocks, though I'm not sure how
+brother sync works with Sync=In.  I guess brother is ignored
+whenever a MIDI signal is present, otherwise it behaves
+like Sync=Out? 
+
+But this isn't just quantization, it looks for two "sync points" to
+define the cycle length as a function of 8thsPerCycle and tempo.  I'm
+not sure what tempo has to do with it, can't we just count clocks.
+8thsPerCycle is used to define the cycle length, so while the Record
+end will be quantized to a cycle boundary, the loop can be multiple
+cycles.  Very similar to Multiply.  Hmm, yes tempo is only necessary 
+to display the length of the cycle in seconds before we've counted 
+down the clocks. Possible for MIDI, harder for VST, really 
+just a UI convenience.
+
+A simpler approach is just to quantize the Record to an even MIDI beat
+(24 clocks), host beat, or host bar boundary.  The resulting loop
+could be one cycle, or we could immediately divide it based on 8ths
+per cycle.
+
+Unclear how we start the loop at the global start point or
+if this simply DEFINES the global start point.
+
+  Quantize=Off
+
+  This is the "multiply over nothing" described previously.
+  Record starts immediately (though probably on a clock boundary).
+  Having the auto-cycle extension is necessary to keep in sync
+  since we're in effect defining where the "beat" starts.  Though
+  this could just set the global start point and then simple
+  beat quantization would be ok too.
+
+
+  Quantize=On
+
+  When Record is pressed it is "quantized to the next sync point"
+  but it isn't at all clear what that means.  Would need
+  to have a global start point, calculate a cycle length, and
+  determine where we currently fit within a cycle.  
+
+
+TempoSelect
+
+Basically a way to setup the loop length in advance as a function
+of tap tempo and 8thsPerCycle.  Only works in Sync=Out or Sync=OuS.
+The main feature of this mode is that you can start the drum machine
+at the same time the loop is being recorded rather than after.
+
+Entered by pressing Undo in Reset, then setting tempo with the
+Feedback knob or MIDI.  Don't like overloading Undo, also have a
+TempoSelect function.  Don't want to overload the feedback knob, get
+the Tempo from a preset parameter only, but allow it to be changed via
+MIDI without modifying the preset.  EDP Uses DataWheel CC#6.
+
+When Sync=Out|OusMIDI Clock is sent once Tempo is set, when 
+Sync=Out, StartSong sent when the recording starts.  EDP flashes
+something during this mode to give you a sense of tempo.
+
+Using Insert/Mute to fine tune tempo only changes in 3ms increments,
+but since the Mobius/EDP loop time only changes in 100ms intervals, it 
+is hard to see.  Since I don't find this very useful, change in 
+100ms increments.  Spec says you can hear the tempo change, but I
+don't see how since sending StartSong locks the tempo.  Perhaps
+lock only applies to the feedback knob but not the fine tune.
+
+Locking the tempo or what the spec calls the "SetTempo Moment"
+effectively saves the tempo into the Preset for later use.  It is not
+saved permanently though until you save the preset.
+
+
+</document>

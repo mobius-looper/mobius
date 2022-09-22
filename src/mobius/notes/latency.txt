@@ -1,0 +1,539 @@
+
+----------------------------------------------------------------------
+PortAudio v19 Latency
+----------------------------------------------------------------------
+
+Using MME device:
+
+When the stream is open PaStreamInfo has:
+
+  PortAudio reported input latency 0.232200 (10240 frames), 
+  output latency 0.232200 (10240 frames)
+
+which is pretty close to the suggested latency of 0.2.
+
+
+According to code comments, the PaStreamCallbackTimeInfo passed
+to the interupt handler is supposed to have:
+
+  The time in seconds when the first sample of the input
+  buffer was received at the audio input (inputBufferAdcTime),
+  the time in seconds when the first sample of the output buffer will
+  begin being played at the audio output (outputBufferDacTime), and
+  the time in seconds when the stream callback was called
+  (currentTime).
+
+Trace reveals:
+
+paCallback initial output time 0.225021 (9923 frames)
+paCallback 0.000000 0.000000 656113.225021
+paCallback 0.005805 0.000000 656113.230826
+paCallback 0.011610 0.000000 656113.236631
+paCallback 0.017415 0.000000 656113.242436
+paCallback 0.023220 0.000000 656113.248241
+paCallback 0.029025 0.000000 656113.254046
+paCallback 0.034830 0.000000 656113.259851
+paCallback 0.040635 0.000000 656113.265656
+...
+Average input latency 0.019853 (875)
+
+So current time is always zero, output time is out to lunch, and input
+time hovers around .02 which is 44100 * .02 = 882 frames.
+
+The fractional part of output time increases by exactly .005805 each
+interrupt, which is 256.0005 frames, or one audio buffer size.
+
+
+Switching to DirectSound:
+
+  PortAudio reported input latency 0.000000 (0 frames), 
+  output latency 0.203175 (8960 frames)
+
+paCallback initial output time 0.394445 (17395 frames)
+paCallback 0.000000 0.000000 656239.394445
+paCallback 0.005805 0.000000 656239.400250
+paCallback 0.011610 0.000000 656239.406055
+paCallback 0.017415 0.000000 656239.411860
+paCallback 0.023220 0.000000 656239.417665
+...
+Average input latency 0.022233 (980)
+
+Again the output time delta is around 256 frames.
+
+Switching back to MME:
+
+  PortAudio reported input latency 0.232200 (10240 frames), 
+  output latency 0.232200 (10240 frames)
+
+paCallback initial output time 0.345419 (15232 frames)
+paCallback 0.000000 0.000000 656324.345419
+paCallback 0.005805 0.000000 656324.351224
+...
+Average input latency 0.019853 (875)
+
+Note that the initial output time fraction is higher, 
+because the internal PA clock base seems to be n longer
+zero, it keeps running when switching devices.  So it can't
+be used as a reliable indicator of anything.
+
+
+Switching to ASIO:
+
+  PortAudio reported input latency 0.186508 (8225 frames), 
+  output latency 0.186349 (8218 frames)
+
+paCallback initial output time 0.201349 (8879 frames)
+paCallback 656562.828492 0.000000 656563.201349
+paCallback 656562.834297 0.000000 656563.207154
+paCallback 656562.840102 0.000000 656563.212959
+paCallback 656562.845907 0.000000 656563.218764
+...
+paCallback 656563.225907 0.000000 656563.598764
+Average input latency 656562.993779 (-1110343047)
+
+With ASIO, input time seems to increment like
+output time.  The delta for both is .005805.  In use, 
+playback is VERY "jerky" and about half speed which means
+we're not receiving callbacks correctly.
+
+When I changed this to suggest 0.001 for latencies, we get:
+
+  PortAudio reported input latency 0.006553 (289 frames), 
+  output latency 0.006395 (282 frames)
+
+and playback appears normal.  So clearly overspecifying the 
+number of ASIO buffers has ill effects.  
+
+Summary:
+
+PA reports for ASIO look accurate.  PA report for MME and DS
+look accurate for output.  DS input is wrong, MME input
+looks too high.
+
+PA 19 ASIO Interface
+
+Suggested latency is converted to a buffer size bounded by a min and
+max size returned by the device driver.  For the Lynx the min is 32
+the max is 8192, and the preferred is 512.  If the suggested size is
+within the min/max size, the actual size is determined with a formula
+involving "buffer granularity".  This is -1 on Lynx which causes the
+size to be the nearest power of two greater than or equal to the
+suggested size.  If granularity is 0, preferred size is used.  If
+granularity is positive, size will be the suggested size plus modulo
+based on the granularity, up to the maximum size.  One buffer is
+allocated for each channel in each direction, or 4 for stereo.
+
+This becomes the "host buffer" size, the buffer passed to the
+PA callback is still 256.
+
+With a maximum size of 8192, after initialization the ASIOGetLatencies
+call returns 8225 for input latency and 8218 for output latency.
+A delta of 26 output frames and 33 input frames.  This may be the
+device driver factoring in hardware latencies?
+
+The latencies for PA's stream info are then 0.1865 input
+and 0.1863 output.
+
+I don't see where the double buffering happens, maybe it divides
+the host buffer in half?
+
+Since there is only one buffer, the the input and output latencies
+reported should be used.
+
+With a maximum of 8192 frames in a host buffer, the maximum
+suggested milliseconds is 185, the minimum is .7 which you
+couldn't ask for.  5 mills produces a 256 frame buffer.  11
+produces a 512 frame buffer.
+
+There is a bug in the pa_asio implementation that calculates
+the buffer size.  
+
+  result = 2;
+  while( result < suggestedLatencyFrames )
+    result *= result;
+
+should be:
+
+  result = 2;
+  while( result < suggestedLatencyFrames )
+    result *= 2;
+
+without this, we go from 256 to 65536 and can never
+get to 512.  
+
+
+PA 19 MME Interface
+
+There seems to be a way to request lower latency settings
+with a PaWinMmeStreamInfo but I'm not sure how to set that.
+
+The defualt latency for 98 is .2, for NT .4.  
+
+With a suggested latency of 200 ms, we end up with 2048 frames per
+host buffer, with 6 buffers. 2048 * 6 = 12288.  12888 * (1 / 44100) =
+0.278 or 278ms, slightly higher than we asked for.  But oddly enough,
+when calculating the latency reported by PA, it uses 1- the buffer
+count, ro 2048 * 5 = 10240 which is reported as 0.23219 then
+calculated back to 10239.  Not sure why the 1- is done.
+
+So, I would expect OL to be 10239 and IL to be 2048, but there
+doesn't seem to be a way to get the host buffer size through the 
+PA interface.  Unfortuantely, different latencies don't just
+change the buffer count, they also change the size so we can't
+assume it will always be 2048.  
+
+When requesting 100ms, the buffer size is 1024, the latency
+reported by PA is 0.116 in both directions.
+
+PA 19 DirectSound
+
+Requesting 100ms.  The host buffer size will be the same as the
+requested PA buffer size.  DS reports 0 for input latency, possibly
+due to a bug in setting:
+
+  PaUtilBufferProcessor.initialFramesInTempInputBuffer
+
+which stays zero, initialFramesInTempOutputBuffer is 256.
+
+You can set the minimum latency msec with an environment variable,
+if not set, it is taken from constants selected by OS.  NT
+is 280, "WDM" (XP and 2K?) is 120, 9X is 140.  If suggested frames
+is non-zero, it is used.
+
+Number of buffers is calculated in the usual way, at 256 frames per,
+there will be 19 buffers for 100ms.  256 * 19 = 4854 * (1 / 44100) = .110.
+
+PA always reports latency based on 1- the number of buffers, or 18.
+The reason being that you you start hearing the first sample in a
+buffer before the buffer is completely consumed.
+
+So: Use reported output latency, and a function of PA buffer size
+for input latency.
+
+Calibration
+
+Calibration with V19 and MME gavei 12345 frames with an OL of 10240
+the recommended IL is then 2105.  This is 57 larger than the buffer
+size of 2048.  Note that when opening the ASIO Lynx drivers, it
+reports an extra 26 frames of input latency plus 33 frames of output
+latency.  These add to 59, which is very close to 57.  So calibration
+seems to be working.
+
+2048 is a relatively long time, 46ms, it would be nice if we could
+get the buffer size smaller.
+
+Theoretical ideal MME latency is 2048 + 26 = 2074
+and 10240 + 33 = 10273.  
+
+
+----------------------------------------------------------------------
+
+
+
+----- Original Message -----
+From: "Heiko Henkelmann" <heiko@hhenkelmann.de>
+To: <portaudio@techweb.rfa.org>
+Sent: Wednesday, April 03, 2002 4:00 PM
+Subject: [Portaudio] Synchronizing Input to Output
+
+
+>
+> Hello,
+>
+> I'm in the process of writing an audio measurement application and I'm
+> having problems to synchronize the input samples to the output
+samples. As a
+> platform I'm using WMME. Any idea how this can be done?
+
+    I also needed to sync input and output with Portaudio.  The solution
+I have adopted so far is as follows:
+1. I added a variable called past_IO_Offset to the
+internalPortAudioStream structure.
+
+2. in the file pa_win_wmme in the function WinMMPa_OutputThreadProc
+immediately below the line:
+pahsc = (PaHostSoundControl *) past->past_DeviceData;
+
+I added the following code:
+
+ if( (past->past_NumInputChannels>0) &&
+  (past->past_NumOutputChannels>0) )
+ {
+  MMTIME mmti, mmto;
+
+  mmto.wType=TIME_SAMPLES;
+  mmti.wType=TIME_SAMPLES;
+
+  waveOutGetPosition(pahsc->pahsc_HWaveOut, &mmto, sizeof(mmto));
+  waveInGetPosition(pahsc->pahsc_HWaveIn, &mmti, sizeof(mmti));
+
+  past->past_IO_Offset=mmti.u.sample-mmto.u.sample;
+ }
+ else
+ {
+  past->past_IO_Offset=0;
+ }
+
+3. To get access to this variable I modified the portaudio callback type
+to have it as a parameter like so:
+typedef int (PortAudioCallback)(
+  void *inputBuffer,
+  void *outputBuffer,
+  unsigned long framesPerBuffer,
+  PaTimestamp outTime,
+  long IO_offset,
+  void *userData );
+
+4. Finally in palib.c in the function Pa_CallConvertInt16 I changed the
+code that calls the callback to:
+ userResult = past->past_Callback(
+   inputBuffer,
+   outputBuffer,
+   past->past_FramesPerUserBuffer,
+   past->past_FrameCount,
+   past->past_IO_Offset,
+   past->past_UserData );
+
+5. The value passed to your callback plus the initial value of outTime
+is the approximate offest between the input and output streams.  To
+make use of the offset I have an initialization clause inside my
+callback like so:
+if(!g_initialized)
+{
+    total_IO_offset=outTime+IO_offset;
+    g_initialized=1;
+}
+
+
+A few notes:
+It would probably be better to make 5-10 measurements and throw out any
+outliers and then take the average result.  This is in case a context
+switch occurs between the two GetPostion calls.
+
+It would be more transparent but also more work if the buffer handling
+in portaudio was modified so that it automatically aligned the buffers
+passed to the callback by the IO_offset, then the offset would always be
+an even number of buffers long.
+
+This number is far from exact.  For instance on my sb16 with win2k WDM
+drivers it's off by about 40 samples as measured by an cross correlation
+of the output with the input when output and input are wired together.
+But with my Hercules Game Theater XP is off by around 200 samples.
+
+If your application requires sample accurate sync then you have a few
+options.  Some(but not nearly all) sound card drivers detect the
+sequence of opening both an in and out stream when performed in a
+specific order and will delay the actual start of both streams such that
+they are perfectly synced.  Another perhaps simpler solution is to get a
+sound card with Native ASIO drivers.
+
+As a fallback you could also play/record and cross correlate.  Though
+there will be some jitter in this value from run to run.  Though
+conceivably you could start it up measure the offset and then do your
+measurement all in one run.
+
+    John Stewart
+
+
+
+----------------------------------------------------------------------
+
+[Portaudio] definition of latency in a buffered audio system?
+Ross Bencina rbencina@iprimus.com.au
+Sun May 11 23:23:01 2003
+
+    * Previous message: [Portaudio] Blocking API
+    * Next message: [Portaudio] RE: definition of latency in a buffered audio system?
+    * Messages sorted by: [ date ] [ thread ] [ subject ] [ author ]
+
+Hello Everyone
+
+I'm wondering whether there is a common technical definition of latency for
+digital audio systems - specifically in buffered audio systems. From my
+point of view, audio output latency of a system is the time from when the
+computer generates a buffer of sound until that buffer is played out the
+DACs. If we assume that the DAC latency is zero and deal only with the
+buffering latency, then the latency can be computed from the number of
+buffers and the buffer period (or the buffer length and sample rate).
+
+I've uploaded a pdf with some diagrams that help explain the issue:
+http://www.audiomulch.com/~rossb/code/LatencyQuestion.pdf
+
+In the following discussion I assume that buffers are filled at the earliest
+possible time dictated by the requirement that a buffer is filled as soon as
+it becomes empty.
+
+My thinking for a while has been that the buffering latency should be
+defined as:
+
+bufferingLatency = (numberOfBuffers - 1) * bufferPeriod
+
+This corresponds to the interval marked A on figure 1.2. i.e. The latency
+from the earliest time that audio can be generated, to the earliest time
+that audio will be played back - more precisely, from the earliest time the
+first sample of a buffer can be generated to the earliest time that the
+first sample of the buffer will be played back.
+
+Another definition is:
+
+bufferingLatency = numberOfBuffers * bufferPeriod
+
+This corresponds to interval marked B in figure 1.2. i.e. to the maximum
+latency from the eariest time that the last sample of a buffer can be
+generated, to the time that sample plays back.
+
+ASIO uses a double buffered model, and I have encountered soundcard control
+panels that indicate the latency according to both of the above definitions
+(RME Digi96 uses definition A, Emagic Emi2/6 seems to use definition B).
+Obviously control panels are likely to be designed with marketing issues in
+mind, however it does point to the fact that there is some ambiguity in this
+area.
+
+Does anyone know if either of the defintions above is considered more
+standard when referring to the 'latency of a buffered system' ?
+
+Best wishes
+
+Ross.
+
+----------------------------------------------------------------------
+> PortAudio Test: output sine wave. SR = 44100, BufSize = 512
+> PortAudio on DirectSound - Latency = 12800 frames, 290 msec
+
+> Now, what does Latency mean in this context?  I assume that this
+> represents the time it takes from writing a sample to the stream and the
+> time the sound card actually produces that sample.
+
+The "Latency" number that I report is just the size of the DirectSound
+buffer. This is pretty durn close to the actual latency which is the time
+delay you described.
+
+PortAudio tries to keep the DirectSound buffer full so the latency in frames
+is roughly:
+
+    hardware_latency + size_of_ds_buffer - room_in_ds_buffer
+    latency_in_seconds = latency_in_frames / frame_rate
+
+The hardware_latency is small compared to the direct_sound latency.
+
+Note that if the software falls behind then there will be more room in the
+buffer and the perceived latency will be lower.
+
+Phil Burk
+
+----------------------------------------------------------------------
+
+Hi Max, Phil, Roger,
+
+> I have done Timestamps once before with the Tokyo engine, I¹m quite sure
+> what I really want is a minimum of latency and no jitter at all, (sample
+> point precise action ³please²). It is easy to hear a jitter of just 4-8
+> sample points on a fast snare roll, so small buffers is not an option. I
+can
+> also get an ultra precise clock from the system, e.g. by using
+> QueryPerformanceCounter on a windows computer, but I wouldn¹t help me if I
+> don¹t know what the maximum latency in the system is and where my MIDI
+> events is according to the time where the audio buffers are delivered to
+the
+> DA , when I say maximum latency I am talking about the time right after
+the
+> audio buffers are delivered to the hardware. I want the maximum latency to
+> be as small as possible.
+
+I've just been dealing with this with my integration of v19 into AudioMulch.
+I was planning to put together a new proposal for discussion _after_ I
+finished the release, but that hasn't happend yet and it looks like now is
+the time to discuss it. As Phil noted, v19 uses the callback's outTime
+parameter to pass the DAC playback time of the first sample of the output
+buffer, relative to a global time base (currently PaUtil_GetTime() which
+uses QueryPerformanceCounter() where available and timeGetTime() otherwise.)
+You can look at v19-devel source code for further details
+
+pa_win_wmme.c: (around line1740)
+waveOutGetPosition() is used to get the current playback position and this
+is used to calculate an output time for the buffer based on the current
+time, and the position of the buffer in the buffer ring.
+
+pa_asio.c: (around line 1728)
+The asio callback recieves output timestamps from the asio driver, all we do
+is add an offset which converts the asio time (relative to timeGetTime()) to
+our global time base.
+
+We intend to propose adding a similar parameter for the time that the input
+buffer was recieved at the ADC. Internally we could consider filtering
+buffer timestamps to reduce jitter.
+
+In addition we are going to need to add calls to retrieve the actual maximum
+latency provided by a stream, as this is needed to maintain constant latency
+of MIDI scheduled events.
+
+Although it's been discussed briefly in the past, none of this has been
+considered for v19 yet so I expect the final version could be significantly
+different from what's in v19-devel now.
+
+I am now successfully syncronising AudioMulch to an external MIDI clock
+signal using the mechanism in v19-devel.
+
+> I have made a simplistic drawing of the problem, if you like I can e-mail
+it
+> to you as a PDF file. Question can I send HTML e-mails to you?
+
+Please don't send HTML email to the list. I'd love to see the PDF.
+
+
+----------------------------------------------------------------------
+
+Max brings up an important problem. Since the number of frames waiting to go
+out of the DAC varies quite a lot, you can't just count frames as you
+compute them to know what time it is. Counting frames gives you a "logical"
+or "stream" time that is ahead of "real" time. I think what Max wants to do
+is timestamp incoming MIDI with "real" time, add a constant representing the
+maximum audio buffer length, and then schedule MIDI-dependent audio events
+according to "logical" time. This will give accurately timed audio events.
+
+Part of the problem may be that WinMM tends to accept data in large chunks.
+Even if you use small buffers, you'll find that after blocking for awhile,
+you are suddenly able to send many buffers in quick succession. In PortAudio
+terms, it means that you will get many callbacks in quick succession
+followed by a pause. If you are trying to use MIDI or other data, you'll
+find that the updates tend to be quantized according to these bursts of
+computation -- with priority-based scheduling, the PortAudio callbacks will
+hog the system for multiple callbacks, and only then can you receive and
+update the system with new MIDI data. (The WinMM MIDI timestamps *might* be
+accurate though.)
+
+I talked to Ross about this and I think it got some wider discussion, but I
+think everyone agreed this was not something we wanted to fix in PortAudio.
+This is not a problem under lower latency systems and even some WinMM
+drivers like those from Aardvark behave pretty nicely.
+
+If you really need this now, you could try my snd library, which uses empty
+buffer callbacks in Win32 to estimate the current output frame and it
+implements a call that tells you how many frames you should write in order
+to maintain a buffer length of L seconds, where L is the latency requested
+when you open the device. With this model, the client can compute small
+blocks of audio at a regular pace, even when WinMM is accepting data a big
+chunk at a time. However, WinMM doesn't even return empty buffers promptly,
+so the timing is not great even with the added complexity.
+
+With PortAudio, you'll have to wait for synchronous/blocking IO calls. Then
+you can schedule your own sample computation to stay a fixed amount ahead of
+the output time as estimated by Pa_StreamTime(). Some hints on synchronizing
+a real-time clock to a sample clock are given in Brandt and Dannenberg,
+``Time in Distributed Real-Time Systems,'' in Proceedings of the 1999
+International Computer Music Conference, San Francisco: International
+Computer Music Association, (1999), pp. 523-526.
+(http://www-2.cs.cmu.edu/~rbd/bib-interactiveperformance.html#synchronous99)
+.
+
+Finally, PortMidi allows you to specify an external clock for timestamping.
+If you can read a ms time from the audio stream, e.g. using Pa_StreamTime(),
+PortMidi can plug that value into the data within the MIDI data callback
+(but this could be a problem if PortAudio callbacks are not releasing the
+cpu). PortMidi will also allow you to schedule outgoing MIDI according to a
+audio-based clock, so you can get accurate, synchronized midi output. Due to
+a lot of recent cleanup and bug fixing, PortMidi is in some disarray, but
+feel free to contact me if you want to get the latest state of development.
+
+
+----------------------------------------------------------------------

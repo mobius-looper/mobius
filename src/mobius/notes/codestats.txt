@@ -1,0 +1,341 @@
+
+----------------------------------------------------------------------
+PortAudio
+----------------------------------------------------------------------
+
+Directory: portaudio19 : 10955 lines, 3971 comments, 1622 empty, 5362 statements
+----------------------------------------------------------------------
+SoundTouch
+----------------------------------------------------------------------
+
+Directory: soundtouch : 6391 lines, 2208 comments, 1203 empty, 2980 statements
+
+----------------------------------------------------------------------
+VST SDK
+----------------------------------------------------------------------
+
+Directory: vst\sdk : 16908 lines, 1626 comments, 2494 empty, 12788 statements
+
+----------------------------------------------------------------------
+UTIL
+----------------------------------------------------------------------
+
+jeff util -files
+Directory: util : 12979 lines, 4017 comments, 2126 empty, 6836 statements
+    util\AudioFile.cpp : 164 lines, 13 comments, 26 empty, 125 statements
+    util\autest.cpp : 39 lines, 4 comments, 6 empty, 29 statements
+    util\ccount.cpp : 297 lines, 25 comments, 75 empty, 197 statements
+    util\doc2html.cpp : 824 lines, 202 comments, 111 empty, 511 statements
+    util\List.cpp : 493 lines, 85 comments, 68 empty, 340 statements
+    util\List.h : 124 lines, 19 comments, 30 empty, 75 statements
+    util\MessageCatalog.cpp : 124 lines, 5 comments, 19 empty, 100 statements
+    util\MessageCatalog.h : 33 lines, 0 comments, 13 empty, 20 statements
+    util\port.h : 129 lines, 78 comments, 16 empty, 35 statements
+    util\TcpConnection.cpp : 450 lines, 202 comments, 64 empty, 184 statements
+    util\TcpConnection.h : 88 lines, 28 comments, 22 empty, 38 statements
+    util\Thread.cpp : 289 lines, 65 comments, 45 empty, 179 statements
+    util\Thread.h : 133 lines, 55 comments, 34 empty, 44 statements
+    util\Trace.cpp : 553 lines, 107 comments, 88 empty, 358 statements
+    util\Trace.h : 239 lines, 84 comments, 58 empty, 97 statements
+    util\util.cpp : 740 lines, 166 comments, 92 empty, 482 statements
+    util\util.h : 174 lines, 48 comments, 42 empty, 84 statements
+    util\vbuf.cpp : 563 lines, 288 comments, 73 empty, 202 statements
+    util\vbuf.h : 105 lines, 46 comments, 23 empty, 36 statements
+    util\WaveFile.cpp : 786 lines, 141 comments, 90 empty, 555 statements
+    util\WaveFile.h : 115 lines, 10 comments, 28 empty, 77 statements
+    util\xml.h : 12 lines, 4 comments, 3 empty, 5 statements
+    util\XmlBuffer.cpp : 359 lines, 62 comments, 55 empty, 242 statements
+    util\XmlBuffer.h : 97 lines, 32 comments, 17 empty, 48 statements
+    util\xmlp.cpp : 2038 lines, 891 comments, 281 empty, 866 statements
+    util\xmlp.h : 352 lines, 125 comments, 69 empty, 158 statements
+    util\xmltest.cpp : 252 lines, 45 comments, 43 empty, 164 statements
+    util\xom.cpp : 1930 lines, 708 comments, 299 empty, 923 statements
+    util\xom.h : 1406 lines, 452 comments, 325 empty, 629 statements
+    util\xomtest.cpp : 71 lines, 27 comments, 11 empty, 33 statements
+
+----------------------------------------------------------------------
+MIDI
+----------------------------------------------------------------------
+
+Directory: midi : 21982 lines, 7696 comments, 3698 empty, 10588 statements
+    midi\midi.h : 1537 lines, 438 comments, 359 empty, 740 statements
+    midi\midibyte.h : 129 lines, 40 comments, 21 empty, 68 statements
+    midi\midicaps.cpp : 153 lines, 18 comments, 16 empty, 119 statements
+    midi\MidiEdit.cpp : 2537 lines, 1106 comments, 382 empty, 1049 statements
+    midi\MidiEnv.cpp : 482 lines, 101 comments, 63 empty, 318 statements
+    midi\MidiEvent.cpp : 688 lines, 158 comments, 63 empty, 467 statements
+    midi\midiin.cpp : 1723 lines, 565 comments, 259 empty, 899 statements
+    midi\MidiMap.cpp : 289 lines, 34 comments, 34 empty, 221 statements
+    midi\midiout.cpp : 920 lines, 322 comments, 127 empty, 471 statements
+    midi\MidiSequence.cpp : 320 lines, 72 comments, 49 empty, 199 statements
+    midi\miditest.cpp : 239 lines, 45 comments, 55 empty, 139 statements
+    midi\midiutil.cpp : 220 lines, 98 comments, 31 empty, 91 statements
+    midi\midiutil.h : 17 lines, 4 comments, 5 empty, 8 statements
+    midi\recmerge.cpp : 656 lines, 314 comments, 93 empty, 249 statements
+    midi\recording.cpp : 576 lines, 285 comments, 95 empty, 196 statements
+    midi\seq.cpp : 1512 lines, 545 comments, 266 empty, 701 statements
+    midi\seq.h : 1092 lines, 339 comments, 205 empty, 548 statements
+    midi\seqint.cpp : 679 lines, 304 comments, 115 empty, 260 statements
+    midi\seqinternal.h : 374 lines, 130 comments, 75 empty, 169 statements
+    midi\SeqMetronome.cpp : 146 lines, 59 comments, 18 empty, 69 statements
+    midi\seqtest.cpp : 469 lines, 104 comments, 100 empty, 265 statements
+    midi\Sequencer.cpp : 2115 lines, 730 comments, 361 empty, 1024 statements
+    midi\SysexBuffer.cpp : 204 lines, 34 comments, 37 empty, 133 statements
+    midi\testseq.cpp : 469 lines, 104 comments, 100 empty, 265 statements
+    midi\timer.cpp : 1018 lines, 415 comments, 133 empty, 470 statements
+    midi\track.cpp : 1195 lines, 610 comments, 180 empty, 405 statements
+Directory: midi\save : 2223 lines, 722 comments, 456 empty, 1045 statements
+    midi\save\midi.h : 1498 lines, 430 comments, 352 empty, 716 statements
+    midi\save\timer.cpp : 725 lines, 292 comments, 104 empty, 329 statements
+
+----------------------------------------------------------------------
+Qwin
+----------------------------------------------------------------------
+
+Directory: qwin : 22740 lines, 4594 comments, 4041 empty, 14105 statements
+    qwin\Border.cpp : 166 lines, 29 comments, 29 empty, 108 statements
+    qwin\Button.cpp : 587 lines, 168 comments, 91 empty, 328 statements
+    qwin\Character.cpp : 403 lines, 47 comments, 51 empty, 305 statements
+    qwin\Checkbox.cpp : 150 lines, 25 comments, 25 empty, 100 statements
+    qwin\Color.cpp : 211 lines, 64 comments, 26 empty, 121 statements
+    qwin\ColorDialog.cpp : 105 lines, 24 comments, 19 empty, 62 statements
+    qwin\colors.cpp : 196 lines, 26 comments, 49 empty, 121 statements
+    qwin\ComboBox.cpp : 492 lines, 121 comments, 69 empty, 302 statements
+    qwin\Component.cpp : 946 lines, 185 comments, 128 empty, 633 statements
+    qwin\Container.cpp : 342 lines, 64 comments, 58 empty, 220 statements
+    qwin\Context.cpp : 525 lines, 169 comments, 87 empty, 269 statements
+    qwin\Dialog.cpp : 397 lines, 106 comments, 65 empty, 226 statements
+    qwin\Divider.cpp : 48 lines, 1 comments, 8 empty, 39 statements
+    qwin\Dragable.cpp : 266 lines, 73 comments, 39 empty, 154 statements
+    qwin\Font.cpp : 299 lines, 77 comments, 48 empty, 174 statements
+    qwin\form.cpp : 90 lines, 16 comments, 25 empty, 49 statements
+    qwin\FormPanel.cpp : 79 lines, 4 comments, 13 empty, 62 statements
+    qwin\Frame.cpp : 168 lines, 54 comments, 28 empty, 86 statements
+    qwin\Graphics.cpp : 492 lines, 141 comments, 74 empty, 277 statements
+    qwin\GroupBox.cpp : 159 lines, 32 comments, 25 empty, 102 statements
+    qwin\Key.cpp : 131 lines, 22 comments, 23 empty, 86 statements
+    qwin\Label.cpp : 117 lines, 24 comments, 22 empty, 71 statements
+    qwin\LabeledText.cpp : 60 lines, 8 comments, 11 empty, 41 statements
+    qwin\LayoutManager.cpp : 993 lines, 182 comments, 166 empty, 645 statements
+    qwin\ListBox.cpp : 610 lines, 106 comments, 78 empty, 426 statements
+    qwin\Listeners.cpp : 161 lines, 18 comments, 19 empty, 124 statements
+    qwin\Menu.cpp : 974 lines, 209 comments, 137 empty, 628 statements
+    qwin\MessageDialog.cpp : 158 lines, 18 comments, 28 empty, 112 statements
+    qwin\Mouse.cpp : 142 lines, 9 comments, 28 empty, 105 statements
+    qwin\MultiSelect.cpp : 184 lines, 18 comments, 29 empty, 137 statements
+    qwin\NumberField.cpp : 106 lines, 6 comments, 20 empty, 80 statements
+    qwin\OpenDialog.cpp : 306 lines, 55 comments, 50 empty, 201 statements
+    qwin\Palette.cpp : 496 lines, 89 comments, 71 empty, 336 statements
+    qwin\Panel.cpp : 215 lines, 47 comments, 32 empty, 136 statements
+    qwin\qkeys.h : 20 lines, 9 comments, 4 empty, 7 statements
+    qwin\qwin.h : 2780 lines, 515 comments, 768 empty, 1497 statements
+    qwin\qwinlib.h : 472 lines, 66 comments, 140 empty, 266 statements
+    qwin\RadioButton.cpp : 240 lines, 46 comments, 38 empty, 156 statements
+    qwin\Radios.cpp : 130 lines, 14 comments, 20 empty, 96 statements
+    qwin\ScrollBar.cpp : 381 lines, 87 comments, 59 empty, 235 statements
+    qwin\SimpleDialog.cpp : 262 lines, 58 comments, 36 empty, 168 statements
+    qwin\Slider.cpp : 99 lines, 7 comments, 17 empty, 75 statements
+    qwin\Static.cpp : 453 lines, 125 comments, 56 empty, 272 statements
+    qwin\StatusBar.cpp : 119 lines, 21 comments, 21 empty, 77 statements
+    qwin\TabbedPane.cpp : 301 lines, 57 comments, 47 empty, 197 statements
+    qwin\Text.cpp : 314 lines, 62 comments, 42 empty, 210 statements
+    qwin\TextArea.cpp : 197 lines, 41 comments, 35 empty, 121 statements
+    qwin\Timer.cpp : 173 lines, 29 comments, 26 empty, 118 statements
+    qwin\ToolBar.cpp : 145 lines, 21 comments, 24 empty, 100 statements
+    qwin\Tree.cpp : 143 lines, 30 comments, 23 empty, 90 statements
+    qwin\UIManager.cpp : 20 lines, 6 comments, 7 empty, 7 statements
+    qwin\UIManager.h : 452 lines, 191 comments, 113 empty, 148 statements
+    qwin\UIWindows.cpp : 576 lines, 130 comments, 82 empty, 364 statements
+    qwin\UIWindows.h : 2195 lines, 215 comments, 413 empty, 1567 statements
+    qwin\Window.cpp : 1912 lines, 507 comments, 293 empty, 1112 statements
+    qwin\wintest.cpp : 517 lines, 114 comments, 92 empty, 311 statements
+    qwin\wintest.h : 19 lines, 0 comments, 3 empty, 16 statements
+    qwin\wintest2.cpp : 46 lines, 6 comments, 11 empty, 29 statements
+
+----------------------------------------------------------------------
+Mobius
+----------------------------------------------------------------------
+
+Directory: mobius : 124023 lines, 28288 comments, 19129 empty, 76606 statements
+    mobius\AboutDialog.cpp : 41 lines, 4 comments, 9 empty, 28 statements
+    mobius\audiff.cpp : 102 lines, 2 comments, 12 empty, 88 statements
+    mobius\Audio.cpp : 1400 lines, 364 comments, 201 empty, 835 statements
+    mobius\Audio.h : 515 lines, 194 comments, 112 empty, 209 statements
+    mobius\AudioCursor.cpp : 997 lines, 244 comments, 126 empty, 627 statements
+    mobius\AudioDialog.cpp : 239 lines, 8 comments, 38 empty, 193 statements
+    mobius\AudioInterface.cpp : 1355 lines, 258 comments, 231 empty, 866 statements
+    mobius\AudioInterface.h : 420 lines, 173 comments, 94 empty, 153 statements
+    mobius\AudioMeter.cpp : 254 lines, 34 comments, 51 empty, 169 statements
+    mobius\audiotest.cpp : 20 lines, 1 comments, 3 empty, 16 statements
+    mobius\Binding.cpp : 1691 lines, 268 comments, 241 empty, 1182 statements
+    mobius\Binding.h : 511 lines, 191 comments, 105 empty, 215 statements
+    mobius\BindingCache.cpp : 3 lines, 2 comments, 1 empty, 0 statements
+    mobius\BindingDialog.cpp : 1007 lines, 137 comments, 123 empty, 747 statements
+    mobius\ButtonDialog.cpp : 93 lines, 5 comments, 18 empty, 70 statements
+    mobius\CalibrationDialog.cpp : 83 lines, 4 comments, 21 empty, 58 statements
+    mobius\CalibrationResultDialog.cpp : 60 lines, 1 comments, 16 empty, 43 statements
+    mobius\Components.cpp : 4731 lines, 763 comments, 740 empty, 3228 statements
+    mobius\Controller.cpp : 309 lines, 51 comments, 50 empty, 208 statements
+    mobius\Controller.h : 21 lines, 4 comments, 5 empty, 12 statements
+    mobius\devices.cpp : 16 lines, 4 comments, 2 empty, 10 statements
+    mobius\DisplayDialog.cpp : 237 lines, 18 comments, 40 empty, 179 statements
+    mobius\EDPDialog.cpp : 78 lines, 4 comments, 17 empty, 57 statements
+    mobius\Event.cpp : 1192 lines, 366 comments, 152 empty, 674 statements
+    mobius\Event.h : 56 lines, 4 comments, 4 empty, 48 statements
+    mobius\Expr.cpp : 1972 lines, 296 comments, 269 empty, 1407 statements
+    mobius\Expr.h : 551 lines, 144 comments, 107 empty, 300 statements
+    mobius\exprmain.cpp : 238 lines, 5 comments, 35 empty, 198 statements
+    mobius\FadeTail.cpp : 212 lines, 59 comments, 38 empty, 115 statements
+    mobius\FadeWindow.cpp : 882 lines, 360 comments, 91 empty, 431 statements
+    mobius\Function.cpp : 7175 lines, 1820 comments, 994 empty, 4361 statements
+    mobius\Function.h : 135 lines, 7 comments, 5 empty, 123 statements
+    mobius\GlobalDialog.cpp : 236 lines, 18 comments, 33 empty, 185 statements
+    mobius\init.mos : 10 lines, 0 comments, 1 empty, 9 statements
+    mobius\KeyConfigDialog.cpp : 247 lines, 20 comments, 38 empty, 189 statements
+    mobius\KeyHelpDialog.cpp : 95 lines, 6 comments, 16 empty, 73 statements
+    mobius\LatencyDialog.cpp : 94 lines, 4 comments, 21 empty, 69 statements
+    mobius\Layer.cpp : 5154 lines, 1946 comments, 573 empty, 2635 statements
+    mobius\LoadDialog.cpp : 89 lines, 33 comments, 15 empty, 41 statements
+    mobius\Loop.cpp : 9796 lines, 3780 comments, 1318 empty, 4698 statements
+    mobius\Messages.h : 731 lines, 76 comments, 93 empty, 562 statements
+    mobius\MidiControlDialog.cpp : 752 lines, 76 comments, 89 empty, 587 statements
+    mobius\MidiDialog.cpp : 181 lines, 21 comments, 33 empty, 127 statements
+    mobius\MidiHelpDialog.cpp : 105 lines, 6 comments, 18 empty, 81 statements
+    mobius\MidiInterface.cpp : 713 lines, 132 comments, 122 empty, 459 statements
+    mobius\MidiInterface.h : 144 lines, 52 comments, 35 empty, 57 statements
+    mobius\Mobius.cpp : 3250 lines, 1083 comments, 421 empty, 1746 statements
+    mobius\mobius.h : 5785 lines, 1877 comments, 1141 empty, 2767 statements
+    mobius\MobiusConfig.cpp : 1618 lines, 112 comments, 243 empty, 1263 statements
+    mobius\MobiusPools.cpp : 80 lines, 23 comments, 17 empty, 40 statements
+    mobius\MobiusThread.cpp : 868 lines, 155 comments, 121 empty, 592 statements
+    mobius\Mode.cpp : 541 lines, 105 comments, 100 empty, 336 statements
+    mobius\Mode.h : 36 lines, 4 comments, 5 empty, 27 statements
+    mobius\ObjectPool.cpp : 818 lines, 232 comments, 107 empty, 479 statements
+    mobius\ObjectPool.h : 250 lines, 69 comments, 75 empty, 106 statements
+    mobius\OldBinding.cpp : 1470 lines, 216 comments, 200 empty, 1054 statements
+    mobius\Parameter.cpp : 4520 lines, 489 comments, 735 empty, 3296 statements
+    mobius\Parameter.h : 120 lines, 9 comments, 11 empty, 100 statements
+    mobius\pitch.cpp : 134 lines, 5 comments, 19 empty, 110 statements
+    mobius\pitch1.cpp : 67 lines, 4 comments, 9 empty, 54 statements
+    mobius\pitch2.cpp : 138 lines, 9 comments, 20 empty, 109 statements
+    mobius\Plugin.cpp : 1553 lines, 484 comments, 232 empty, 837 statements
+    mobius\Plugin.h : 473 lines, 194 comments, 116 empty, 163 statements
+    mobius\Plugin2.cpp : 1475 lines, 467 comments, 224 empty, 784 statements
+    mobius\Preset.cpp : 981 lines, 60 comments, 187 empty, 734 statements
+    mobius\PresetDialog.cpp : 523 lines, 32 comments, 52 empty, 439 statements
+    mobius\Project.cpp : 1953 lines, 123 comments, 293 empty, 1537 statements
+    mobius\Project.h : 551 lines, 151 comments, 135 empty, 265 statements
+    mobius\PromptDialog.cpp : 79 lines, 12 comments, 14 empty, 53 statements
+    mobius\Record.cpp : 474 lines, 202 comments, 62 empty, 210 statements
+    mobius\Recorder.cpp : 893 lines, 177 comments, 129 empty, 587 statements
+    mobius\Recorder.h : 397 lines, 120 comments, 92 empty, 185 statements
+    mobius\Resample.cpp : 1015 lines, 174 comments, 149 empty, 692 statements
+    mobius\Resampler.cpp : 587 lines, 183 comments, 87 empty, 317 statements
+    mobius\Resampler.h : 93 lines, 26 comments, 23 empty, 44 statements
+    mobius\Sample.cpp : 864 lines, 209 comments, 119 empty, 536 statements
+    mobius\Sample.h : 315 lines, 120 comments, 71 empty, 124 statements
+    mobius\SampleDialog.cpp : 124 lines, 8 comments, 19 empty, 97 statements
+    mobius\SaveDialog.cpp : 102 lines, 18 comments, 20 empty, 64 statements
+    mobius\Script.cpp : 5065 lines, 995 comments, 758 empty, 3312 statements
+    mobius\Script.h : 1454 lines, 331 comments, 410 empty, 713 statements
+    mobius\ScriptDialog.cpp : 123 lines, 9 comments, 20 empty, 94 statements
+    mobius\Segment.cpp : 568 lines, 148 comments, 71 empty, 349 statements
+    mobius\Setup.cpp : 601 lines, 29 comments, 96 empty, 476 statements
+    mobius\SetupDialog.cpp : 561 lines, 59 comments, 88 empty, 414 statements
+    mobius\Shape.cpp : 295 lines, 85 comments, 47 empty, 163 statements
+    mobius\Shape.h : 98 lines, 7 comments, 40 empty, 51 statements
+    mobius\Stream.cpp : 2209 lines, 956 comments, 243 empty, 1010 statements
+    mobius\Synchronizer.cpp : 5789 lines, 2360 comments, 715 empty, 2714 statements
+    mobius\Synchronizer.h : 518 lines, 184 comments, 104 empty, 230 statements
+    mobius\Track.cpp : 1697 lines, 510 comments, 243 empty, 944 statements
+    mobius\TrackDialog.cpp : 237 lines, 53 comments, 42 empty, 142 statements
+    mobius\UI.cpp : 1529 lines, 283 comments, 201 empty, 1045 statements
+    mobius\ui.h : 2332 lines, 235 comments, 628 empty, 1469 statements
+    mobius\UIConfig.cpp : 1333 lines, 87 comments, 175 empty, 1071 statements
+    mobius\UIControl.cpp : 86 lines, 17 comments, 14 empty, 55 statements
+    mobius\UIControl.h : 70 lines, 22 comments, 14 empty, 34 statements
+    mobius\UIMain.cpp : 122 lines, 16 comments, 18 empty, 88 statements
+    mobius\uires.h : 44 lines, 7 comments, 5 empty, 32 statements
+    mobius\Variable.cpp : 2894 lines, 830 comments, 506 empty, 1558 statements
+    mobius\VstMobius.cpp : 2401 lines, 705 comments, 358 empty, 1338 statements
+    mobius\VstMobius.h : 522 lines, 83 comments, 112 empty, 327 statements
+    mobius\VstParameters.cpp : 16 lines, 10 comments, 2 empty, 4 statements
+    mobius\VstParameters2.cpp : 15 lines, 9 comments, 2 empty, 4 statements
+    mobius\VstPlugin.cpp : 1564 lines, 766 comments, 163 empty, 635 statements
+    mobius\XmlMobius.h : 108 lines, 9 comments, 15 empty, 84 statements
+Directory: mobius\archive : 739 lines, 101 comments, 126 empty, 512 statements
+    mobius\archive\AudioInterface18.cpp : 739 lines, 101 comments, 126 empty, 512 statements
+Directory: mobius\doc : 2 lines, 0 comments, 0 empty, 2 statements
+    mobius\doc\shit.mos : 2 lines, 0 comments, 0 empty, 2 statements
+Directory: mobius\install : 7 lines, 0 comments, 0 empty, 7 statements
+    mobius\install\init.mos : 7 lines, 0 comments, 0 empty, 7 statements
+Directory: mobius\new : 887 lines, 246 comments, 181 empty, 460 statements
+    mobius\new\Audio.h : 563 lines, 217 comments, 122 empty, 224 statements
+    mobius\new\AudioContext.cpp : 324 lines, 29 comments, 59 empty, 236 statements
+Directory: mobius\notes : 159 lines, 19 comments, 24 empty, 116 statements
+    mobius\notes\oldcode.cpp : 159 lines, 19 comments, 24 empty, 116 statements
+Directory: mobius\scripts : 637 lines, 0 comments, 114 empty, 523 statements
+    mobius\scripts\Append.mos : 5 lines, 0 comments, 0 empty, 5 statements
+    mobius\scripts\backwardsoutput.mos : 3 lines, 0 comments, 0 empty, 3 statements
+    mobius\scripts\click.mos : 21 lines, 0 comments, 5 empty, 16 statements
+    mobius\scripts\controller.mos : 13 lines, 0 comments, 2 empty, 11 statements
+    mobius\scripts\debug.mos : 5 lines, 0 comments, 1 empty, 4 statements
+    mobius\scripts\DL4RecordOverdub.mos : 15 lines, 0 comments, 3 empty, 12 statements
+    mobius\scripts\Double.mos : 6 lines, 0 comments, 0 empty, 6 statements
+    mobius\scripts\expmult.mos : 13 lines, 0 comments, 0 empty, 13 statements
+    mobius\scripts\focused.mos : 6 lines, 0 comments, 0 empty, 6 statements
+    mobius\scripts\focusnext.mos : 3 lines, 0 comments, 0 empty, 3 statements
+    mobius\scripts\focustest.mos : 8 lines, 0 comments, 2 empty, 6 statements
+    mobius\scripts\globalfade.mos : 37 lines, 0 comments, 8 empty, 29 statements
+    mobius\scripts\GlobalMute.mos : 61 lines, 0 comments, 15 empty, 46 statements
+    mobius\scripts\globalvar.mos : 11 lines, 0 comments, 2 empty, 9 statements
+    mobius\scripts\GMute.mos : 46 lines, 0 comments, 14 empty, 32 statements
+    mobius\scripts\GMuteToggle.mos : 11 lines, 0 comments, 1 empty, 10 statements
+    mobius\scripts\GReset.mos : 4 lines, 0 comments, 0 empty, 4 statements
+    mobius\scripts\GRetrigger.mos : 18 lines, 0 comments, 2 empty, 16 statements
+    mobius\scripts\longmute.mos : 9 lines, 0 comments, 2 empty, 7 statements
+    mobius\scripts\looptrig1.mos : 4 lines, 0 comments, 0 empty, 4 statements
+    mobius\scripts\message.mos : 4 lines, 0 comments, 1 empty, 3 statements
+    mobius\scripts\midivar.mos : 7 lines, 0 comments, 2 empty, 5 statements
+    mobius\scripts\movetest.mos : 3 lines, 0 comments, 1 empty, 2 statements
+    mobius\scripts\MuteRetrigger.mos : 6 lines, 0 comments, 0 empty, 6 statements
+    mobius\scripts\nextLoopExpert.mos : 8 lines, 0 comments, 0 empty, 8 statements
+    mobius\scripts\normult.mos : 13 lines, 0 comments, 0 empty, 13 statements
+    mobius\scripts\perfocus.mos : 8 lines, 0 comments, 0 empty, 8 statements
+    mobius\scripts\prompt.mos : 5 lines, 0 comments, 1 empty, 4 statements
+    mobius\scripts\rainer.mos : 49 lines, 0 comments, 12 empty, 37 statements
+    mobius\scripts\randmove.mos : 4 lines, 0 comments, 1 empty, 3 statements
+    mobius\scripts\Rec-Over-Multiply.mos : 40 lines, 0 comments, 10 empty, 30 statements
+    mobius\scripts\rec7.mos : 5 lines, 0 comments, 0 empty, 5 statements
+    mobius\scripts\RecordRetrigger.mos : 28 lines, 0 comments, 4 empty, 24 statements
+    mobius\scripts\resetrecord.mos : 7 lines, 0 comments, 0 empty, 7 statements
+    mobius\scripts\spread.mos : 15 lines, 0 comments, 5 empty, 10 statements
+    mobius\scripts\susfade.mos : 29 lines, 0 comments, 8 empty, 21 statements
+    mobius\scripts\susfocus.mos : 27 lines, 0 comments, 3 empty, 24 statements
+    mobius\scripts\susrate.mos : 8 lines, 0 comments, 0 empty, 8 statements
+    mobius\scripts\sustest.mos : 15 lines, 0 comments, 4 empty, 11 statements
+    mobius\scripts\ToggleTrack.mos : 20 lines, 0 comments, 2 empty, 18 statements
+    mobius\scripts\tograte.mos : 7 lines, 0 comments, 1 empty, 6 statements
+    mobius\scripts\tremolo.mos : 21 lines, 0 comments, 2 empty, 19 statements
+    mobius\scripts\trigmute.mos : 3 lines, 0 comments, 0 empty, 3 statements
+    mobius\scripts\UnquantizedInsert.mos : 6 lines, 0 comments, 0 empty, 6 statements
+Directory: mobius\test : 12251 lines, 0 comments, 1990 empty, 10261 statements
+    mobius\test\endmode.mos : 10 lines, 0 comments, 2 empty, 8 statements
+    mobius\test\exprtest.mos : 273 lines, 0 comments, 67 empty, 206 statements
+    mobius\test\functests.mos : 182 lines, 0 comments, 42 empty, 140 statements
+    mobius\test\insynctests.mos : 455 lines, 0 comments, 114 empty, 341 statements
+    mobius\test\jumptests.mos : 2155 lines, 0 comments, 280 empty, 1875 statements
+    mobius\test\layertests-inner.mos : 1042 lines, 0 comments, 96 empty, 946 statements
+    mobius\test\layertests.mos : 1953 lines, 0 comments, 132 empty, 1821 statements
+    mobius\test\mutetests.mos : 1124 lines, 0 comments, 172 empty, 952 statements
+    mobius\test\scripttest.mos : 55 lines, 0 comments, 20 empty, 35 statements
+    mobius\test\speedtests.mos : 301 lines, 0 comments, 38 empty, 263 statements
+    mobius\test\startmode.mos : 22 lines, 0 comments, 5 empty, 17 statements
+    mobius\test\synctests.mos : 4373 lines, 0 comments, 941 empty, 3432 statements
+    mobius\test\testdriver.mos : 31 lines, 0 comments, 10 empty, 21 statements
+    mobius\test\testdriverflat.mos : 14 lines, 0 comments, 5 empty, 9 statements
+    mobius\test\testdriverflatrev.mos : 15 lines, 0 comments, 6 empty, 9 statements
+    mobius\test\testdriverseg.mos : 13 lines, 0 comments, 4 empty, 9 statements
+    mobius\test\testdriversegrev.mos : 15 lines, 0 comments, 6 empty, 9 statements
+    mobius\test\vstsynctests.mos : 218 lines, 0 comments, 50 empty, 168 statements
+

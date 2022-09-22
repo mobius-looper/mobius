@@ -1,0 +1,70 @@
+16748: 101 -289: Function Record down
+16748: 101 -289: Loop: Add event Record(Record) 0
+16748: 101 -289: Loop: Set mode play
+16748: 101 -289: Track::doFunction beginning long press for XRecord
+16748: 101 -33: E: Record(Record) 0
+16748: 101 0: SyncLoop::startRecording mode 1 cyclePulses 0
+16748: 101 0: Sync: Record cycle pulses 0
+16748: 101 0: Loop: Set mode record
+16748: 101 0: Layer: Starting record fade in
+16748: 101 5343: Track::doFunction canceling long press for XRecord
+16748: 101 112095: Function Record down
+16748: 101 112095: Loop: prepareLoop: loop frames 112384 remaining 289
+16748: 101 112095: Layer: pending frames 289
+16748: 101 112095: Loop: Add event RecordStop(Record) 112384
+16748: 101 112095: Track::doFunction beginning long press for XRecord
+16748: 101 112351: Layer: Starting play fade in at 282
+16748: 101 112351: E: RecordStop(Record) 112384
+16748: 101 112384: SyncLoop::endRecording frames 112384 pulses 0
+16748: 101 112384: SyncLoop::endRecording pulseFrames (x100) 0
+16748: 101 112384: Sync: Assigning output sync master track 0
+16748: 101 112384: Sync: Assigning track sync master track 0
+16748: 101 112384: Sync: calcLoopTempo cycleFrames 112384 beats 4 tempo 9417 (x100)
+16748: 101 112384: Sync: initial master tempo 9417 (x100)
+16748: 101 112384: SyncLoop::initSyncMaster pulses 96 pulseFrames (x100) 117066
+16748: 101 112384: MidiTransport: tempo changed from 0 to 9417 (x100) millis/clock 26 frames/clock 1170
+16748: 101 112384: Sync: master track 0 record ending with 96 pulses tempo (x100) 9417
+16748: 101 112384: Sync:   basePulseFrames (x100) 117066 pulseFrames (x100) 117066
+16748: 101 112384: MidiTransport: Sending MIDI Start, tempo (x100) 9417
+16748: 101 0: Loop: Set mode play
+16748: 0 0: MidiState internal started receiving clocks
+16748: 101 0: Sync: Start Event
+16748: 101 0: Layer: Applying fade out before frame 112384
+16748: 0 0: MidiState internal started receiving clocks
+16748: 101 1247: MidiTransport: 27 milliseconds to get to first clock, frame 1247
+16748: 101 1247: SyncLoop:pulse: loop frame 1247 pulse frame 1170
+16748: 101 1247: SyncLoop:pulse: old drift 0 new drift 76
+16748: 101 4575: Track::doFunction canceling long press for XRecord
+16748: 101 112351: SyncLoop:pulse external start point, pulse drift -32, loop dealign 0
+16748: 101 1247: SyncLoop:pulse: loop frame 1247 pulse frame 1170
+16748: 101 1247: SyncLoop:pulse: old drift -32 new drift 76
+16748: 101 1247: Sync: incPulses: wrapped pulse frame from 11355458 to 117058 (x100)
+16748: 101 1247: Sync: Track 0 drift check point frame 1247 drift 76
+16748: 101 112351: SyncLoop:pulse external start point, pulse drift -32, loop dealign 0
+16748: 101 1247: SyncLoop:pulse: loop frame 1247 pulse frame 1170
+16748: 101 1247: SyncLoop:pulse: old drift -32 new drift 76
+16748: 101 1247: Sync: incPulses: wrapped pulse frame from 11355450 to 117050 (x100)
+16748: 101 1247: Sync: Track 0 drift check point frame 1247 drift 76
+16748: 101 112351: SyncLoop:pulse external start point, pulse drift -32, loop dealign 0
+16748: 101 1247: SyncLoop:pulse: loop frame 1247 pulse frame 1170
+16748: 101 1247: SyncLoop:pulse: old drift -32 new drift 76
+16748: 101 1247: Sync: incPulses: wrapped pulse frame from 11355442 to 117042 (x100)
+16748: 101 1247: Sync: Track 0 drift check point frame 1247 drift 76
+16748: 0 0: 3 millis between interrupts
+16748: 101 29663: Function GlobalReset down
+16748: 101 29663: Track::GeneralReset
+16748: 101 29663: Sync: Master track reset, stop clocks and send MIDI Stop
+16748: 101 29663: MidiTransport: Sending MIDI Stop and stopping clocks
+16748: 101 29663: Layer: Capture fade tail, 128 frames at 30234
+16748: 101 -289: Sync: Disabling output sync master track 0
+16748: 101 -289: Sync: Disabling track sync master track 0
+16748: 201 -289: Track::GeneralReset
+16748: 301 -289: Track::GeneralReset
+16748: 401 -289: Track::GeneralReset
+16748: 501 -289: Track::GeneralReset
+16748: 601 -289: Track::GeneralReset
+16748: 701 -289: Track::GeneralReset
+16748: 801 -289: Track::GeneralReset
+16748: 101 -289: Mobius::notifyGlobalReset
+16748: 101 -289: Sync: Stop Event
+16748: 0 0: MidiState internal stopped receiving clocks

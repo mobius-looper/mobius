@@ -1,0 +1,12 @@
+
+Questions:
+  
+  - should Preset changes be made to the entire group?
+
+  - should CC changes made using a track-specific controller
+    be made on other tracks in the group?
+
+  - similar issues with focus lock
+
+  - focus lock behaving strangely with Record when track sync is on
+

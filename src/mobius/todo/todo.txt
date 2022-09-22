@@ -1,0 +1,209 @@
+
+Script autoload as a global parameter rather than in the script.
+
+
+----------------------------------------------------------------------
+Recent Bugs
+----------------------------------------------------------------------
+
+Min/Max tempo were both 20 for awhile, detect and fix at startup.
+
+Bernhard: June 1, 2009
+  Changing Mainstage buffer size and then recording in Mobius causes crash.
+
+Bernhard: June 12
+  Can't record on more than one focused lock track, only goes to the first one.
+
+Konakka: June 12
+  Problems changing tracks with time copy and not being in sync.
+
+Berhard: June 12
+  Mono mode not active until you restart Mobius.
+
+Varius: June 19
+  Bounce only getting one track.
+
+Mac Bidule: AU and VST having the same name confuses the right click menu
+
+----------------------------------------------------------------------
+OLD NOTES
+----------------------------------------------------------------------
+
+> By the way, a common additional step for volume indicators is to not lower
+> the meter's peak display immediately when the value goes down.  Instead, use
+> a counter (or function) that lets it slowly slide down to the latest value
+> (resetting that counter every time the peak goes higher than what it is
+> currently displaying).  I've read that 300 milliseconds is (or used to be) a
+> common time for the meter to return to zero after peaking.
+
+----------------------------------------------------------------------
+
+New Features
+
+- flattening without recording, does it do anything?  seem to keep accumulating
+  layers if you do Shuffle a lot and just let it play
+  !! need something that forces flattening of a new layer even if there
+  are no overdubs
+
+- stop using stack buffers when flattening layers, there is a max of 
+  around 16 to 20 layers before you get a stack overflow on Mac
+
+- "remember" mode for mute
+
+- DL4 play once script in the files area
+ 
+- not tracking faders when moving move than one at the same time
+
+- key commands don't work in Mainstage 2
+
+- shuffle applied to the current cycle rather than the entire loop
+
+- redesign and fix Bounce
+  - options to reset source tracks
+
+- revisit quicksave, make it more obvoius where the files go
+
+* Louis' Adrenelinn configurations
+
+- Monitor Audio Input needs to be track specific 
+  - instead of global or in addition to global?
+
+- make sure Mobius can arm tracks for play and
+  start the MIDI clocks at the same time
+
+* When the layer list overflows and goes to "loss" numbers, the 
+  little red number "1" sticks around.
+
+----------------------------------------------------------------------
+
+thanx Per one thing im still trying to get to work with mobius is the
+midi sync stuff like MuteQuantMidiStartSong ,midi start song midi stop
+song when mobius is set to out user start,it does not seem to be very
+reliable specially the mute +midi start song which is equal to the
+EDPs MuteQuantMidiStartSong.If you mess around with the midi start
+stop and the press the mute +midi start song it works in the beginning
+and at one point it will get stucked and do nothing,it also behaves
+different than the EDP which you can press at anytime and it sends
+both a mute on the loop and stop on the drum machine and starts both
+at the next loops start point and i love that function,so anybody whos
+into midi sync here do a hard acid test and tell me if works reliable
+for you!  would this work better with a script and if it does can you
+guys send me one to try out?
+
+----------------------------------------------------------------------
+
+- should we allow track/midi sync master to be set in an empty track?
+
+something in the track strip to show which loops are non-empty
+
+Luis: wants a loop created with TrackCopy=Timing to be in a different
+color to indiciate that it is empty.  
+
+jerparise: Mac: MIDI in sync freezes when ending record 
+
+redo latency selection and make sure it works
+
+* fix numbers displayed on remultiply
+
+******************************************************************
+Intermittent Errors
+******************************************************************
+
+Jump Tests: Test 3 - Basic Rates
+  Thread::run caught exception
+
+  Saw this once after running several of the full suites.
+  Saw this after one of the mute tests, I think rates may have been involved.
+
+Segment Tests: Test 17-2 - Insert over Overdub
+  ERROR: Invalid trace record
+
+  Saw this in the full suite, can't reproduce...
+
+Out Sync Tests: Test 5-2
+  INFO: Sync drift -16
+  ERROR: Sync drift -476 exceeds 300
+  ...
+  Consistent drift higher than usual, doesn't fail in isolation
+
+Auto Record
+  Saw these after playing around with AutoRecord and Undo
+
+  ERROR: 101 248543: Loop: Entering Play mode without a layer!
+  ERROR: 101 248799: Loop: Record length anomoly
+  ERROR: 101 248832: Loop: Record length anomoly
+
+Load File
+  Saw this a lot after loading a loop file:
+
+  ERROR: 101 216287: WARNING: Raising priority of potential track sync master!
+
+  Project/loop load probably needs to reclaculate track sync master.
+
+----------------------------------------------------------------------
+
+After correction bugs, rapid rate shifts at the same time as
+rapid unquantized loop switches.  
+
+ERROR: 103 273: shift: no record layer
+ERROR: 101 6492: Corrected lagging play cursor
+ERROR: 101 6524: Corrected lagging play cursor
+ERROR: 101 715: Corrected lagging play cursor
+ERROR: 101 766: Corrected lagging play cursor
+ERROR: 102 53: shift: no record layer
+ERROR: 101 3123: Corrected lagging play cursor
+ERROR: 101 3161: Corrected lagging play cursor
+ERROR: 102 162: shift: no record layer
+ERROR: 101 19386: Corrected lagging play cursor
+ERROR: 101 19452: Corrected lagging play cursor
+ERROR: 101 12984: Corrected lagging play cursor
+ERROR: 101 13047: Corrected lagging play cursor
+ERROR: 101 10085: Corrected lagging play cursor
+ERROR: 101 10148: Corrected lagging play cursor
+ERROR: 103 87: shift: no record layer
+ERROR: 101 12502: Corrected lagging play cursor
+ERROR: 101 12565: Corrected lagging play cursor
+ERROR: 102 289: shift: no record layer
+
+Could be:
+
+   1) record loop, set rate
+   2) switch to empty loop, change rate
+   3) return to original loop, new rate in effect!
+   4) corrects cursor?
+
+No, getting lagging correction when switching to a rate adjusted
+loop to an empty loop.  Getting two of them.
+
+When setting a loop to a rate, switching to an empty loop, 
+changing rate, then returning to original loop, get this:
+
+  ERROR: 102 169: shift: no record layer
+
+----------------------------------------------------------------------
+Script Issues
+----------------------------------------------------------------------
+
+If you have a pair of these in a script, the second one doesn't work, 
+have to use a pair of "Wait start" instead.
+
+   Wait end
+   Wait end
+
+Consider a "Wait events" to wait for all events scheduled on the current
+frame to be processed, regardless of what they are.
+
+----------------------------------------------------------------------
+
+TODO: Replace the mReverseRecord, mDeferredFadeLeft, and mDeferredFadeRight
+flags with:
+
+  mDeferredFadeLeftIn	(entered this layer forward)
+  mDeferredFadeLeftOut  (left this layer in reverse)
+  mDeferredFadeRightIn  (entered this layer in reverse)
+  mDeferredFadeRightOut (left this layer forward)
+
+This should simplify reverse logic, and allow us to change direction
+during recording?  Direction changes would force fades though.
+
+----------------------------------------------------------------------

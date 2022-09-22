@@ -1,0 +1,252 @@
+// !$*UTF8*$!
+{
+	08FB7793FE84155DC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 1F6719B6106C7A5B0036F3B6 /* bidule */;
+		breakpoints = (
+			1F6719C8106C7B150036F3B6 /* AUMobius.cpp:451 */,
+		);
+		codeSenseManager = 1F6719B3106C7A130036F3B6 /* Code sense */;
+		executables = (
+			1F6719B6106C7A5B0036F3B6 /* bidule */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					1095,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					341,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					301,
+					60,
+					20,
+					48.16259765625,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 275544593;
+			PBXWorkspaceStateSaveDate = 275544593;
+		};
+		perUserProjectItems = {
+			1F6719CB106C88080036F3B6 /* PBXTextBookmark */ = 1F6719CB106C88080036F3B6 /* PBXTextBookmark */;
+			1F6719D0106C88080036F3B6 /* PBXTextBookmark */ = 1F6719D0106C88080036F3B6 /* PBXTextBookmark */;
+			1F6719D4106C88080036F3B6 /* PBXTextBookmark */ = 1F6719D4106C88080036F3B6 /* PBXTextBookmark */;
+			1F6719D6106C88080036F3B6 /* PBXTextBookmark */ = 1F6719D6106C88080036F3B6 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 1F6719B2106C7A130036F3B6 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	1F6719B2106C7A130036F3B6 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+	};
+	1F6719B3106C7A130036F3B6 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	1F6719B6106C7A5B0036F3B6 /* bidule */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+			"PBXLSLaunchAction-0" = {
+				PBXLSLaunchAction = 0;
+				PBXLSLaunchStartAction = 1;
+				PBXLSLaunchStdioStyle = 2;
+				PBXLSLaunchStyle = 0;
+				class = PBXLSRunLaunchConfig;
+				commandLineArgs = (
+				);
+				displayName = "Executable Runner";
+				environment = {
+				};
+				identifier = com.apple.Xcode.launch.runConfig;
+				remoteHostInfo = "";
+				startActionInfo = "";
+			};
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		launchableReference = 1F6719B7106C7A5B0036F3B6 /* Plogue Bidule */;
+		libgmallocEnabled = 0;
+		name = bidule;
+		savedGlobals = {
+		};
+		sourceDirectories = (
+		);
+		startupPath = "/Applications/Plogue Bidule 0.9690UB/Plogue Bidule.app/Contents/Resources";
+		variableFormatDictionary = {
+		};
+	};
+	1F6719B7106C7A5B0036F3B6 /* Plogue Bidule */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = "compiled.mach-o.executable";
+		name = "Plogue Bidule";
+		path = "/Applications/Plogue Bidule 0.9690UB/Plogue Bidule.app/Contents/MacOS/Plogue Bidule";
+		sourceTree = "<absolute>";
+	};
+	1F6719C6106C7B150036F3B6 /* AUMobius.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = AUMobius.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/AUMobius.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1385, 21700}}";
+			sepNavSelRange = "{43087, 0}";
+			sepNavVisRange = "{11781, 1248}";
+		};
+	};
+	1F6719C8106C7B150036F3B6 /* AUMobius.cpp:451 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1F6719C6106C7B150036F3B6 /* AUMobius.cpp */;
+		functionName = "AUMobius::RenderBus(AudioUnitRenderActionFlags& ioActionFlags, const AudioTimeStamp& inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames)";
+		hitCount = 25;
+		ignoreCount = 0;
+		lineNumber = 451;
+		location = Mobius;
+		modificationTime = 275544989.027315;
+		state = 1;
+	};
+	1F6719CB106C88080036F3B6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F6719CC106C88080036F3B6 /* AUMobius.cpp */;
+		rLen = 0;
+		rLoc = 2147483647;
+		rType = 0;
+	};
+	1F6719CC106C88080036F3B6 /* AUMobius.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = AUMobius.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/AUMobius.cpp;
+		sourceTree = "<absolute>";
+	};
+	1F6719D0106C88080036F3B6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F6719D1106C88080036F3B6 /* AUBase.cpp */;
+		name = "AUBase.cpp: 1296";
+		rLen = 0;
+		rLoc = 40056;
+		rType = 0;
+		vrLen = 967;
+		vrLoc = 39705;
+	};
+	1F6719D1106C88080036F3B6 /* AUBase.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = AUBase.cpp;
+		path = /Users/jeff/dev/mobius/src/au/CoreAudio/AudioUnits/AUPublic/AUBase/AUBase.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {954, 27468}}";
+			sepNavSelRange = "{40056, 0}";
+			sepNavVisRange = "{38576, 1329}";
+			sepNavWindowFrame = "{{15, 349}, {805, 674}}";
+		};
+	};
+	1F6719D4106C88080036F3B6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F6719D5106C88080036F3B6 /* AUMobius.cpp */;
+		name = "AUMobius.cpp: 1542";
+		rLen = 0;
+		rLoc = 43087;
+		rType = 0;
+		vrLen = 1248;
+		vrLoc = 11781;
+	};
+	1F6719D5106C88080036F3B6 /* AUMobius.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = AUMobius.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/AUMobius.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1385, 21700}}";
+			sepNavSelRange = "{43087, 0}";
+			sepNavVisRange = "{11781, 1248}";
+		};
+	};
+	1F6719D6106C88080036F3B6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1F6719D7106C88080036F3B6 /* AUBase.cpp */;
+		name = "AUBase.cpp: 1296";
+		rLen = 0;
+		rLoc = 40056;
+		rType = 0;
+		vrLen = 1329;
+		vrLoc = 38576;
+	};
+	1F6719D7106C88080036F3B6 /* AUBase.cpp */ = {
+		isa = PBXFileReference;
+		name = AUBase.cpp;
+		path = /Users/jeff/dev/mobius/src/au/CoreAudio/AudioUnits/AUPublic/AUBase/AUBase.cpp;
+		sourceTree = "<absolute>";
+	};
+}

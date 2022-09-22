@@ -1,0 +1,491 @@
+
+Sync Events Offset Into Audio Buffer
+
+    - Track Sync Pulse: subcycle, cycle, looop
+
+    - Host Sync Pulse: beat, bar
+
+    - MIDI Sync Pulse: clock, beat
+
+    - MIDI Transport: start, stop, continue
+
+
+InputStream and Loop handle the interleaving of Synchronzer events 
+with Loop events in a really awkward way.  But ultimately a call
+back to Synchronizer::syncEvent is made 
+
+MIDI Start Event
+
+  Mostly ignored, in SyncMode=Out this sets the sync loop pulse to zero
+  in the SyncState.  Comments say this would be an opportunity to retrigger
+  or so other interesting things.
+
+MIDI Stop Event
+
+  Does nothing.  Comments say this would be an opportunity to pause.
+
+MIDI Continue Event
+
+  Mostly ignored, when Sync=Midi it tries to calculate where the pulse
+  counters should be relative to the continue clock.  
+
+  Comments say this could be a place to unpause.
+
+Pulse
+
+   All pulses handled the same way.  Handling depends on the current 
+   loop state:
+ 
+     - Synchronizing: waiting for a pulse to start recording
+
+     - Recording: waiting for a pulse to stop recording
+
+     - Playing: May be waiting for external start point, Realign
+        drift adjust
+
+SyncPulseWaiting
+
+  Filters out unwanted pulses (beat vs bar).  If pulse if found
+  checks for Wait events on the pulse, then activates recording.
+
+  The pending Record event is activated.  A Loop-specific SyncState
+  is initialized containing a pulse counter and the number of pulses
+  considered to be in one cycle.  
+
+  SyncState could be moved to Track since only one loop can be recording
+  at a time.  The offset of the start of the recording from the
+  start of the sync loop would be stored per-loop though.
+
+  If SyncMode=Out, when the RecordStart event is eventually processed
+  after the latency delay, Loop calls back to Synchronizer::loopStartRecord.
+  Now SyncState is initialized since we didn't start on a pulse.  
+
+  If we were the out sync master track we make the MidiTransport
+  send a STOP event.  Should have options to defer this?
+
+SyncPulseRecording
+
+  Most of the time we increment the pulse counter in the SyncState and
+  the older one on the Loop.  
+ 
+  We then check to see if this is a relvant ending pulse based on the sync mode.
+  For MIDI clcoks we may need to wait for a bar boundary.
+
+  If we decide not to end the recording we check to see if a new
+  cycle was entered and increase the cycle counter on the Loop.
+
+  There are two ways to stop: schedule a pending RecordStop event and wait
+  for a pulse, or  schedule a RecordStop event at a specific frame.  If
+  we have a non-pending event we simply wait for it.  If we have a pending
+  event we check various beat/bar/subcycle/cycle granules to see if
+  the recording should stop on this pulse.  
+
+  If we decide to activate the pending RecordStop event, we set up a bunch
+  of pulse tracker state on both the Loop and the SyncState.
+
+  Stopping a track sync recording is much more complicated because all the
+  sync tracker state is converted from track sync pulses to MIDI sync
+  pulses.  This will all go away.
+
+
+scheduleRecordStop
+
+  Called by RecordFunction when the trigger is received to stop recording.
+  This is what decides whether to scheudle a pending event for a pulse
+  or to calculate the loop size based on tempo.
+
+loopFinishedRecord
+
+  Called by Loop when the RecordStop event is finally processed.
+  We assign sync masters if we don't already have them.  For Sync=Out
+  we calculate the tempo and start the MidiTransport.
+
+  Lots of complex logic to calculate the final pulse state, this should
+  all go away.
+
+SyncPulsePlaying
+
+  First look for pending Realign events and decide whether to activate
+  them on this pulse.
+
+  For all modes except Sync=Track we increment the pulse counter and detect
+  if we've crossed the external start point.  
+
+  If we're not doing a Realign, check for sync drift which may be quantized
+  in several ways.
+
+  Finally if we reached the external start point, look for pending
+  ScriptEvent and StartPointEvents that have been waiting for the start point.
+
+incPulses
+  
+  The old pulse and drift calculator
+
+checkDrift
+
+  Hairy function to calculate and apply drift correction.
+
+doRealign
+
+  Handles a pending Realign activation
+
+
+Loop Callbacks
+
+  Most of these are related to maintain sync pulse state which hopefully
+  will go away.  The OutSyncMaster track will need to control MidiTransport
+  some times.
+
+----------------------------------------------------------------------
+
+SyncTracker can normally fully advance at the beginning of each audio
+interrupt.  Audio interrupt buffers usually but not always contain a
+single PULSE event.
+
+It is important that Loop Events be able to reliably determine the
+sync pulse that represents the "external start point".  It is probably
+also necessary to know the number of the pulse so that beat/bar 
+determination can be done if that isn't carried in the event type.
+A "Wait beat" function would need that too.
+
+Aside from Sync=Out which is complex, the SyncTrackers for all other
+sync sources can freewheel and advance fully on each interrupt.  The
+exception is when a tracker is open and a recording starts that
+slaves to that tracker.  Normally there will only be one, but allow 
+several, this requires Track SyncState during recording.  The first
+one to finish closes the tracker.  Once a tracker is closed it freewheels
+until all tracks that slave to it are reset, then it is opened.
+
+For Sync=Out, the tracker will be effected by several loop events
+in the sync out master track:
+
+   - reset: sync may or may not end
+   - rerecord: sync probaly always ends
+   - resize: unroundedMultiply, divide, etc.
+   - rateShift
+   - loopSwitch: really just a form of resize but can also rateShift
+       if rate doesn't follow
+
+This will require patial advance or some kind of "rewind".  
+
+
+
+exception is when a recording starts and stops that will define the
+external loop length (tracker is closed).  
+
+
+
+If there is
+more than one pulse in a buffer then this will need to be recorded
+somewhere since the SyncTracker has already fully advanced through
+both pulses and we don't know which one was it.  In practice you can
+tell by looking at mPulse vs mLoopPulses and knowing the number of
+pulses in the buffer.
+
+
+
+
+----------------------------------------------------------------------
+
+
+
+It is important that Loop Events be able to reliably determine the
+sync pulse that represents the "external start point".  If there is
+more than one pulse in a buffer then this will need to be recorded
+somewhere since the SyncTracker has already fully advanced through
+both pulses and we don't know which one was it.  In practice you can
+tell by looking at mPulse vs mLoopPulses and knowing the number of
+pulses in the buffer.
+
+----------------------------------------------------------------------
+
+
+SyncTracker
+  - objects managed by Synchronizer to monitor drift with an external clock
+  - three: OutSyncTracker, MidiSyncTracker, HostSyncTracker
+  - always active though they only have an effect if tracks are listening to them
+  - the first track to record using one resets tracker drift and establishes
+    the sync loop length
+  - scripts can change the loop length: midiSyncLoopPulses, hostSyncLoopPulses,
+    hostSyncLoopPulses
+  - SetSyncLoopLength function can set a tracks sync tracker to the length 
+    of the current loop in the track
+  - when a sync tracker detects excesive drift, all tracks that are listening
+    to it are adjusted
+  - when a track does a Realign, it receives an event when the SyncTracker
+    reaches it's logical start point
+
+----------------------------------------------------------------------
+
+Track Sync Style
+  - Freewheeling
+  - Track Sync
+    - either to current master or to a specific master
+      - current master most useful
+    - can be any number of these
+  - Out Sync
+    - follows internal timer
+    - can only be one of these
+  - MIDI Sync
+    - follows incomming MIDI clocks
+      - either all input devices or a specific device
+    - can be any number of these
+  - Host Sync
+    - follows host beat/bar pulses
+    - can be any number of these
+  - OSC Sync
+    - not currently allowed, but track some kind of pulse
+
+Track Sync Style for Loops
+  - sync style applies to all loops in the track
+  - loops can be recorded with different sync styles, but only
+    one style can be in effect at a time and it will be carried
+    over on a loop switch, e.g. there is no "restore" mode for sync style
+ 
+Track Sync Style Change
+  - Freewheeling
+    - to Track Sync: start followign master track adjustments
+    - to Out Sync: virtual track may change tempo or size
+    - to MIDI Sync: track begins following virtual track adjustments,
+       it may or not be sized properly
+    - to Host Sync: track begins following virtual track adjustments
+       it may or not be sized properly
+
+Track Sync Fallback
+
+  - If a track asks for TrackSyncStyle=Out and some other track
+    is already the out sync master, it reverts to TrackSyncStyle=Track
+
+
+
+----------------------------------------------------------------------
+
+
+We don't need to resize the virtual track when switching loops, it can
+keep the size it had when it was first recorded, or just have a pre defined
+size.  The size only effects where the "external start point" is for 
+Realign.  
+
+External start point is arbitrary, you may not want to resize:
+   
+   - record loop 1, virtual loop size set at 4 bars
+   - record loop 2, 2 bars
+
+Here it doesn't really matter where the resize happens.
+
+   - record loop 1, virtual loop size set at 1 bar
+   - record loop 2, 4 bars
+
+In this case the first loop just sets the tempo and starts the
+drum machine.  The second loop is recorded by listening to the 
+drum machine that is playign a 4 bar phrase, the starts and ends
+when the drum machine pattern starts and ends.  Not only could the
+external loop size change, but also it's position.  
+
+The key issues are: 
+
+  - who gets to own the virtual loop length and position
+  - can each track or loop have different virtual loop lengths
+
+When syncing to MIDI or Host we can't know how long the external
+"pattern" is, but it normally would not need to be different
+for each loop.  Loops may be divisions or multiples of the pattern
+but the pattern length stays the same.
+
+Track Sync doesn't have this issue because we just wait for the master
+track start point, we know how big the "pattern" is.  But this assumes
+the loop was recorded at the start of the master track!  Really it should
+remember the relative offset (cycle/subcycle) within the master
+track where it was recorded?  
+   
+     - master 8 bars
+     - slave 4 bars started at master 2
+     - slave realign should happen at master 2
+         m: 123456781234567812
+         s:   1234123412341234
+
+In theory this applies to MIDI and Host sync as well.  
+Also should be storing relative offsets in the project.
+Loop switch throws a wrench into this if you record the loops
+synced rather than using loopCopy.  Would like to have only
+one relative start point per track.
+
+Pre Defined External Loop Length
+   
+   - set in preset or track setup 
+   - external loop trackers start immediately when pulses are received
+     - MIDI can reset when START is received
+     - Host should try to look at transport position
+   - the first time a loop is recorded the tracker for that sync
+     style resets drift 
+   - Host/MIDI trackers go forever
+   - realign point is always at the bar from the preset, but 
+     each track may have an offset
+
+Dynamic External Loop Length
+
+   - set by the first loop recorded with that sync style
+   - can be changed with scripts: midiSyncLoopPulses, hostSyncLoopPulses
+   - could be set with a function to treat the current loop as the 
+     external loop length
+
+External Loop Length with Out Sync
+ 
+   - defined when the first loop is recorded and OutSyncMaster set
+   - can stay the same forever, or changed with outSyncLoopPulses
+     or the SetSyncLoopLength function
+   - changing OutSyncMaster track could also do SetSyncLoopLength
+   - Once Loop1 in the OutSyncMaster track is recorded, other loops
+     in this track can follow sync pulses as if they were MIDI IN!
+     Makes it easier to record several loops without loopCopy.
+
+
+----------------------------------------------------------------------
+CLOCK HISTORY
+----------------------------------------------------------------------
+
+High Resolution System Clock
+
+  A host specific counter implemented in hardware, usually with microsecond
+  or greater resolution.  You cannot synchronize to this but you can use
+  it in timing threads to determine if the thread is early or late.
+
+MidiTimer
+
+  A host specific timer thread is creatd with near millisecond accuracy.
+  It looks like we might be able to get more accuracy for MIDI on OS X
+  by adjusting the wait time used by mach_wait_until.
+
+  Can use High Resolution System Clock to detect thread wakeup jitter, 
+  but we don't.
+
+  Automatically sends MIDI clocks out.  At 120 BPM there should be 20.83
+  milliseconds between MIDI clocks so there will be a small amount of
+  MIDI clock jitter as we round to the nearest millisecond.
+
+  Notifies a registered MidiClockListener whenever start, stop, and clock
+  events are sent.
+
+MidiInterface
+   
+   Wraps the MIDI and timer devices into a simpler fascade and provides
+   a place to register the MidiClockListener.  One of these is created by
+   either Mobius or MobiusPlugin.
+
+MidiTransport (MidiClockListener)
+
+   Our implementation of MidiClockListener that receives notification of
+   clock events from MidiTimer.  Created by Synchronizer.  Keeps track of
+   clock events and maintains an internal queue of MIDI events for 
+   consumption by Synchronizer at the start of each audio interupt.
+
+MidiQueue
+
+    Created by MidiTransport (and Synchronizer) to maintain the state
+    of a MIDI synchronization stream (e.g. started, beat clock, beat)
+    and maintains a queue of events for processing during the next interrupt.
+
+Synchronizer
+
+   Created by Mobius to manage all synchronization activities.
+   Creates and registers a MidiTransport as the MidiClockLister.
+
+   Maintains a queue of MIDI events received from the MIDI devices.
+   Indirectly through MidiTransport maintains a queue of MIDI clock events
+   sent by the MidiTimer.
+
+   Called during each audio interrupt in three phases:
+
+       interruptStart
+         Called once to prepare queues and statistics for this interrupt.
+
+       getEvent
+         Called by AudioStream once for each track.
+         Returns the next sync event that is ready for a track.
+         Sync events are things like SYNC_TYPE_START, SYNC_TYPE_STOP,
+         and SYNC_TYPE_PULSE.  MIDI clock timer notifications are converted
+         into SYNC_TYPE_PULSE events.
+
+       interruptEnd
+         Cleanup things at the end of an audio interrupt.
+
+
+    When processing SYNC_TYPE_PULSE events           
+
+
+
+     
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+old
+----------------------------------------------------------------------
+
+* Inner Sync Loop
+
+A virtual loop created to monitor drift between the sync pulses
+and the audio stream
+
+advances according to the sample rate of the master track
+
+sync loop advance is not affected by the amount of rate shift in
+the slave loops (master loop plus all track sync slaves)
+
+when the virtual loop reaches a drift retrigger threshold, the
+master track and all track sync slaves are retriggered *iff*
+none of them are recording
+  
+? is the amount of drift retrigger in the slave loops affected	
+by the rate shift in the slaves?   probably
+
+dealignment with reverse, retrigger, whatever does not affect the
+sync loop, there is no "dealign amount" maintained on each loop
+
+realign works as it does now
+   - send StartSong to retrigger the drum machine at the loop 
+     start point 
+   - or more likely, retrigger the loop at the start of the 
+     inner sync loop
+
+* Sync Out
+
+Pause, Mute and other functions that change the TEMPO need to either
+start/stop the MIDI clock, make tempo adjustments to the MIDI clock, 
+and adjust the inner sync loop.
+
+Retrigger of the master loop has an option to retrigger the 
+external loop.
+
+* Start Extension
+
+For multiply and insert mode beginnings, nothing happens but 
+drift retrigger is disabled.
+
+* End Multiply
+
+For rounded extension and reduction multiply, nothing happens, the
+cycle length stays the same.  
+
+For unrounded multiply/insert may adjust tempo and sync loop sizes
+and send Start Song if we're the out sync master.
+
+* Divide
+
+If we change the cycle length, like unrounded multiply may need 
+to adjust the tempo or the sync loop.
+
+* Insert
+
+Similar to Multiply for unrounded.
+
+
+
+
+
+
+

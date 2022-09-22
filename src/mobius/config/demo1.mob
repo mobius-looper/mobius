@@ -1,0 +1,54 @@
+<Project>
+  <Track>
+    <Loop active='true'>
+      <Layer id='0' cycles='1' buffers='2' path='C:\jlarson\src\muse\src\mobius\projects\demo1-1-1-1.wav'>
+        <Segment layer='4' offset='0' startFrame='0' frames='79872' feedback='121'/>
+      </Layer>
+    </Loop>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+  </Track>
+  <Track>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+  </Track>
+  <Track>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+  </Track>
+  <Track>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+  </Track>
+  <Track>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+  </Track>
+  <Track>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+  </Track>
+  <Track>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+  </Track>
+  <Track>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+    <Loop/>
+  </Track>
+</Project>

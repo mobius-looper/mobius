@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document>
+<document>
+<heading>
+<title>Getting Started With Mobius</title>
+<version>Version 1.32</version>
+<date>June, 2009</date>
+</heading>
+
+<section><title>Introduction</title>
+
+<table>
+<tr><td><img alt='Graphic' src='test.png'/></td>
+<td>
+<p>Some stuff about this graphic</p>
+<p>In several</p>
+<p>paragraphs</p>
+<ul>
+<li>With flair!</li>
+</ul>
+</td>
+</tr>
+</table>
+
+</section>
+</document>

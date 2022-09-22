@@ -1,0 +1,971 @@
+43984: 101 -289: Function Record down
+43984: 101 -289: Loop: Add event Record(Record) 0
+43984: 101 -289: Loop: Set mode play
+43984: 101 -289: Track::doFunction beginning long press for XRecord
+43984: 101 -33: E: Record(Record) 0
+43984: 101 0: SyncLoop::startRecording mode 1 cyclePulses 0
+43984: 101 0: Sync: Record cycle pulses 0
+43984: 101 0: Loop: Set mode record
+43984: 101 0: Layer: Starting record fade in
+43984: 101 4575: Track::doFunction canceling long press for XRecord
+43984: 101 84703: Function Record down
+43984: 101 84703: Loop: prepareLoop: loop frames 84992 remaining 289
+43984: 101 84703: Layer: pending frames 289
+43984: 101 84703: Loop: Add event RecordStop(Record) 84992
+43984: 101 84703: Track::doFunction beginning long press for XRecord
+43984: 101 84959: Layer: Starting play fade in at 282
+43984: 101 84959: E: RecordStop(Record) 84992
+43984: 101 84992: SyncLoop::endRecording frames 84992 pulses 0
+43984: 101 84992: SyncLoop::endRecording pulseFrames (x100) 0
+43984: 101 84992: Sync: Assigning output sync master track 0
+43984: 101 84992: Sync: Assigning track sync master track 0
+43984: 101 84992: Sync: calcLoopTempo cycleFrames 84992 beats 4 tempo 12452 (x100)
+43984: 101 84992: Sync: initial master tempo 12452 (x100)
+43984: 101 84992: SyncLoop::initSyncMaster pulses 96 pulseFrames (x100) 88533
+43984: 101 84992: MidiTransport: tempo changed from 6062 to 12452 (x100) millis/clock 20 frames/clock 885
+43984: 101 84992: Sync: master track 0 record ending with 96 pulses tempo (x100) 12452
+43984: 101 84992: Sync:   basePulseFrames (x100) 88533 pulseFrames (x100) 88533
+43984: 101 84992: MidiTransport: Sending MIDI Start, tempo (x100) 12452
+43984: 101 0: Loop: Set mode play
+43984: 0 0: MidiState internal started receiving clocks
+43984: 101 0: Sync: Start Event
+43984: 101 0: Layer: Applying fade out before frame 84992
+43984: 0 0: MidiState internal started receiving clocks
+43984: 101 991: MidiTransport: 21 milliseconds to get to first clock, frame 991
+43984: 101 991: SyncLoop:pulse: loop frame 991 pulse frame 885 drift 105
+43984: 101 1759: SyncLoop:pulse: loop frame 1759 pulse frame 1770 drift -11
+43984: 0 0: 3 millis between interrupts
+43984: 101 2783: SyncLoop:pulse: loop frame 2783 pulse frame 2656 drift 127
+43984: 101 3551: SyncLoop:pulse: loop frame 3551 pulse frame 3541 drift 9
+43984: 101 4575: SyncLoop:pulse: loop frame 4575 pulse frame 4426 drift 148
+43984: 101 5343: SyncLoop:pulse: loop frame 5343 pulse frame 5312 drift 31
+43984: 101 6367: SyncLoop:pulse: loop frame 6367 pulse frame 6197 drift 169
+43984: 101 6879: Track::doFunction canceling long press for XRecord
+43984: 101 7135: SyncLoop:pulse: loop frame 7135 pulse frame 7082 drift 52
+43984: 101 8159: SyncLoop:pulse: loop frame 8159 pulse frame 7968 drift 190
+43984: 101 8927: SyncLoop:pulse: loop frame 8927 pulse frame 8853 drift 73
+43984: 101 9951: SyncLoop:pulse: loop frame 9951 pulse frame 9738 drift 212
+43984: 101 10719: SyncLoop:pulse: loop frame 10719 pulse frame 10624 drift 95
+43984: 101 11743: SyncLoop:pulse: loop frame 11743 pulse frame 11509 drift 233
+43984: 101 12511: SyncLoop:pulse: loop frame 12511 pulse frame 12394 drift 116
+43984: 101 13279: SyncLoop:pulse: loop frame 13279 pulse frame 13279 drift 0
+43984: 101 14303: SyncLoop:pulse: loop frame 14303 pulse frame 14165 drift 137
+43984: 101 15071: SyncLoop:pulse: loop frame 15071 pulse frame 15050 drift 20
+43984: 101 16095: SyncLoop:pulse: loop frame 16095 pulse frame 15935 drift 159
+43984: 101 16863: SyncLoop:pulse: loop frame 16863 pulse frame 16821 drift 41
+43984: 101 17887: SyncLoop:pulse: loop frame 17887 pulse frame 17706 drift 180
+43984: 101 18655: SyncLoop:pulse: loop frame 18655 pulse frame 18592 drift 63
+43984: 101 19679: SyncLoop:pulse: loop frame 19679 pulse frame 19477 drift 201
+43984: 101 20447: SyncLoop:pulse: loop frame 20447 pulse frame 20362 drift 84
+43984: 101 21471: SyncLoop:pulse: loop frame 21471 pulse frame 21248 drift 222
+43984: 101 22239: SyncLoop:pulse: loop frame 22239 pulse frame 22133 drift 105
+43984: 101 23007: SyncLoop:pulse: loop frame 23007 pulse frame 23018 drift -11
+43984: 101 24031: SyncLoop:pulse: loop frame 24031 pulse frame 23904 drift 126
+43984: 101 24799: SyncLoop:pulse: loop frame 24799 pulse frame 24789 drift 9
+43984: 101 25823: SyncLoop:pulse: loop frame 25823 pulse frame 25674 drift 148
+43984: 101 26591: SyncLoop:pulse: loop frame 26591 pulse frame 26560 drift 30
+43984: 101 27615: SyncLoop:pulse: loop frame 27615 pulse frame 27445 drift 169
+43984: 101 28383: SyncLoop:pulse: loop frame 28383 pulse frame 28330 drift 52
+43984: 101 29407: SyncLoop:pulse: loop frame 29407 pulse frame 29216 drift 190
+43984: 101 30175: SyncLoop:pulse: loop frame 30175 pulse frame 30101 drift 73
+43984: 101 31199: SyncLoop:pulse: loop frame 31199 pulse frame 30986 drift 212
+43984: 101 31967: SyncLoop:pulse: loop frame 31967 pulse frame 31872 drift 94
+43984: 101 32735: SyncLoop:pulse: loop frame 32735 pulse frame 32757 drift -22
+43984: 101 33759: SyncLoop:pulse: loop frame 33759 pulse frame 33642 drift 116
+43984: 101 34527: SyncLoop:pulse: loop frame 34527 pulse frame 34528 drift -1
+43984: 101 35551: SyncLoop:pulse: loop frame 35551 pulse frame 35413 drift 137
+43984: 101 36319: SyncLoop:pulse: loop frame 36319 pulse frame 36298 drift 20
+43984: 101 37343: SyncLoop:pulse: loop frame 37343 pulse frame 37184 drift 158
+43984: 101 38111: SyncLoop:pulse: loop frame 38111 pulse frame 38069 drift 41
+43984: 101 39135: SyncLoop:pulse: loop frame 39135 pulse frame 38954 drift 180
+43984: 101 39903: SyncLoop:pulse: loop frame 39903 pulse frame 39840 drift 63
+43984: 101 40927: SyncLoop:pulse: loop frame 40927 pulse frame 40725 drift 201
+43984: 101 41695: SyncLoop:pulse: loop frame 41695 pulse frame 41610 drift 84
+43984: 101 42463: SyncLoop:pulse: loop frame 42463 pulse frame 42495 drift -32
+43984: 0 0: 3 millis between interrupts
+43984: 101 43487: SyncLoop:pulse: loop frame 43487 pulse frame 43381 drift 105
+43984: 101 44255: SyncLoop:pulse: loop frame 44255 pulse frame 44266 drift -11
+43984: 101 45279: SyncLoop:pulse: loop frame 45279 pulse frame 45151 drift 127
+43984: 101 46047: SyncLoop:pulse: loop frame 46047 pulse frame 46037 drift 9
+43984: 101 47071: SyncLoop:pulse: loop frame 47071 pulse frame 46922 drift 148
+43984: 101 47839: SyncLoop:pulse: loop frame 47839 pulse frame 47807 drift 31
+43984: 101 48863: SyncLoop:pulse: loop frame 48863 pulse frame 48693 drift 169
+43984: 101 49631: SyncLoop:pulse: loop frame 49631 pulse frame 49578 drift 52
+43984: 101 50655: SyncLoop:pulse: loop frame 50655 pulse frame 50463 drift 191
+43984: 101 51423: SyncLoop:pulse: loop frame 51423 pulse frame 51349 drift 73
+43984: 101 52447: SyncLoop:pulse: loop frame 52447 pulse frame 52234 drift 212
+43984: 101 53215: SyncLoop:pulse: loop frame 53215 pulse frame 53119 drift 95
+43984: 101 54239: SyncLoop:pulse: loop frame 54239 pulse frame 54005 drift 233
+43984: 101 55007: SyncLoop:pulse: loop frame 55007 pulse frame 54890 drift 116
+43984: 101 55775: SyncLoop:pulse: loop frame 55775 pulse frame 55775 drift 0
+43984: 101 56799: SyncLoop:pulse: loop frame 56799 pulse frame 56661 drift 137
+43984: 101 57567: SyncLoop:pulse: loop frame 57567 pulse frame 57546 drift 20
+43984: 101 58591: SyncLoop:pulse: loop frame 58591 pulse frame 58431 drift 159
+43984: 101 59359: SyncLoop:pulse: loop frame 59359 pulse frame 59317 drift 41
+43984: 101 60383: SyncLoop:pulse: loop frame 60383 pulse frame 60202 drift 180
+43984: 101 61151: SyncLoop:pulse: loop frame 61151 pulse frame 61087 drift 63
+43984: 101 62175: SyncLoop:pulse: loop frame 62175 pulse frame 61973 drift 201
+43984: 101 62943: SyncLoop:pulse: loop frame 62943 pulse frame 62858 drift 84
+43984: 101 63967: SyncLoop:pulse: loop frame 63967 pulse frame 63743 drift 223
+43984: 101 64735: SyncLoop:pulse: loop frame 64735 pulse frame 64629 drift 105
+43984: 101 65503: SyncLoop:pulse: loop frame 65503 pulse frame 65514 drift -11
+43984: 101 66527: SyncLoop:pulse: loop frame 66527 pulse frame 66399 drift 127
+43984: 101 67295: SyncLoop:pulse: loop frame 67295 pulse frame 67285 drift 9
+43984: 101 68319: SyncLoop:pulse: loop frame 68319 pulse frame 68170 drift 148
+43984: 101 69087: SyncLoop:pulse: loop frame 69087 pulse frame 69055 drift 31
+43984: 101 70111: SyncLoop:pulse: loop frame 70111 pulse frame 69941 drift 169
+43984: 101 70879: SyncLoop:pulse: loop frame 70879 pulse frame 70826 drift 52
+43984: 101 71903: SyncLoop:pulse: loop frame 71903 pulse frame 71711 drift 191
+43984: 101 72671: SyncLoop:pulse: loop frame 72671 pulse frame 72597 drift 73
+43984: 101 73695: SyncLoop:pulse: loop frame 73695 pulse frame 73482 drift 212
+43984: 101 74463: SyncLoop:pulse: loop frame 74463 pulse frame 74367 drift 95
+43984: 101 75231: SyncLoop:pulse: loop frame 75231 pulse frame 75253 drift -22
+43984: 101 76255: SyncLoop:pulse: loop frame 76255 pulse frame 76138 drift 116
+43984: 101 77023: SyncLoop:pulse: loop frame 77023 pulse frame 77023 drift 0
+43984: 101 78047: SyncLoop:pulse: loop frame 78047 pulse frame 77909 drift 137
+43984: 101 78815: SyncLoop:pulse: loop frame 78815 pulse frame 78794 drift 20
+43984: 101 79839: SyncLoop:pulse: loop frame 79839 pulse frame 79680 drift 159
+43984: 101 80607: SyncLoop:pulse: loop frame 80607 pulse frame 80565 drift 41
+43984: 101 81631: SyncLoop:pulse: loop frame 81631 pulse frame 81450 drift 180
+43984: 101 82399: SyncLoop:pulse: loop frame 82399 pulse frame 82336 drift 62
+43984: 101 83423: SyncLoop:pulse: loop frame 83423 pulse frame 83221 drift 201
+43984: 101 84191: SyncLoop:pulse: loop frame 84191 pulse frame 84106 drift 84
+43984: 101 223: SyncLoop:pulse: loop frame 223 pulse frame 0 drift 222
+43984: 101 223: SyncLoop:pulse external start point, pulse drift 222, loop dealign 0
+43984: 101 223: Sync: incPulses: wrapped pulse frame from 8499201 to 1 (x100)
+43984: 101 223: Sync: Track 0 drift check point frame 223 drift 222
+43984: 0 0: 9 millis between interrupts
+43984: 101 991: SyncLoop:pulse: loop frame 991 pulse frame 885 drift 105
+43984: 0 0: 3 millis between interrupts
+43984: 101 2015: SyncLoop:pulse: loop frame 2015 pulse frame 1770 drift 244
+43984: 101 2783: SyncLoop:pulse: loop frame 2783 pulse frame 2656 drift 126
+43984: 101 3551: SyncLoop:pulse: loop frame 3551 pulse frame 3541 drift 9
+43984: 101 4575: SyncLoop:pulse: loop frame 4575 pulse frame 4426 drift 148
+43984: 101 5343: SyncLoop:pulse: loop frame 5343 pulse frame 5312 drift 30
+43984: 101 6367: SyncLoop:pulse: loop frame 6367 pulse frame 6197 drift 169
+43984: 101 7135: SyncLoop:pulse: loop frame 7135 pulse frame 7082 drift 52
+43984: 101 8159: SyncLoop:pulse: loop frame 8159 pulse frame 7968 drift 190
+43984: 101 8927: SyncLoop:pulse: loop frame 8927 pulse frame 8853 drift 73
+43984: 101 9951: SyncLoop:pulse: loop frame 9951 pulse frame 9738 drift 212
+43984: 101 10719: SyncLoop:pulse: loop frame 10719 pulse frame 10624 drift 94
+43984: 101 11743: SyncLoop:pulse: loop frame 11743 pulse frame 11509 drift 233
+43984: 101 12511: SyncLoop:pulse: loop frame 12511 pulse frame 12394 drift 116
+43984: 101 13279: SyncLoop:pulse: loop frame 13279 pulse frame 13280 drift -1
+43984: 101 14303: SyncLoop:pulse: loop frame 14303 pulse frame 14165 drift 137
+43984: 101 15071: SyncLoop:pulse: loop frame 15071 pulse frame 15050 drift 20
+43984: 101 16095: SyncLoop:pulse: loop frame 16095 pulse frame 15936 drift 158
+43984: 101 16863: SyncLoop:pulse: loop frame 16863 pulse frame 16821 drift 41
+43984: 101 17887: SyncLoop:pulse: loop frame 17887 pulse frame 17706 drift 180
+43984: 101 18655: SyncLoop:pulse: loop frame 18655 pulse frame 18592 drift 62
+43984: 101 19679: SyncLoop:pulse: loop frame 19679 pulse frame 19477 drift 201
+43984: 101 20447: SyncLoop:pulse: loop frame 20447 pulse frame 20362 drift 84
+43984: 101 21471: SyncLoop:pulse: loop frame 21471 pulse frame 21248 drift 222
+43984: 101 22239: SyncLoop:pulse: loop frame 22239 pulse frame 22133 drift 105
+43984: 101 23007: SyncLoop:pulse: loop frame 23007 pulse frame 23018 drift -11
+43984: 101 24031: SyncLoop:pulse: loop frame 24031 pulse frame 23904 drift 126
+43984: 101 24799: SyncLoop:pulse: loop frame 24799 pulse frame 24789 drift 9
+43984: 101 25823: SyncLoop:pulse: loop frame 25823 pulse frame 25674 drift 148
+43984: 101 26591: SyncLoop:pulse: loop frame 26591 pulse frame 26560 drift 30
+43984: 101 27615: SyncLoop:pulse: loop frame 27615 pulse frame 27445 drift 169
+43984: 101 28383: SyncLoop:pulse: loop frame 28383 pulse frame 28330 drift 52
+43984: 101 29407: SyncLoop:pulse: loop frame 29407 pulse frame 29216 drift 190
+43984: 101 30175: SyncLoop:pulse: loop frame 30175 pulse frame 30101 drift 73
+43984: 101 30943: SyncLoop:pulse: loop frame 30943 pulse frame 30986 drift -43
+43984: 101 31967: SyncLoop:pulse: loop frame 31967 pulse frame 31872 drift 94
+43984: 101 32991: SyncLoop:pulse: loop frame 32991 pulse frame 32757 drift 233
+43984: 101 33759: SyncLoop:pulse: loop frame 33759 pulse frame 33642 drift 116
+43984: 101 34527: SyncLoop:pulse: loop frame 34527 pulse frame 34528 drift -1
+43984: 101 35551: SyncLoop:pulse: loop frame 35551 pulse frame 35413 drift 137
+43984: 101 36319: SyncLoop:pulse: loop frame 36319 pulse frame 36298 drift 20
+43984: 101 37343: SyncLoop:pulse: loop frame 37343 pulse frame 37184 drift 158
+43984: 101 38111: SyncLoop:pulse: loop frame 38111 pulse frame 38069 drift 41
+43984: 101 39135: SyncLoop:pulse: loop frame 39135 pulse frame 38954 drift 180
+43984: 101 39903: SyncLoop:pulse: loop frame 39903 pulse frame 39840 drift 62
+43984: 101 40927: SyncLoop:pulse: loop frame 40927 pulse frame 40725 drift 201
+43984: 101 41695: SyncLoop:pulse: loop frame 41695 pulse frame 41610 drift 84
+43984: 101 42719: SyncLoop:pulse: loop frame 42719 pulse frame 42496 drift 222
+43984: 101 43487: SyncLoop:pulse: loop frame 43487 pulse frame 43381 drift 105
+43984: 101 44511: SyncLoop:pulse: loop frame 44511 pulse frame 44266 drift 244
+43984: 101 45279: SyncLoop:pulse: loop frame 45279 pulse frame 45152 drift 126
+43984: 101 46303: SyncLoop:pulse: loop frame 46303 pulse frame 46037 drift 265
+43984: 101 47071: SyncLoop:pulse: loop frame 47071 pulse frame 46922 drift 148
+43984: 101 47839: SyncLoop:pulse: loop frame 47839 pulse frame 47808 drift 30
+43984: 101 48863: SyncLoop:pulse: loop frame 48863 pulse frame 48693 drift 169
+43984: 101 49631: SyncLoop:pulse: loop frame 49631 pulse frame 49578 drift 52
+43984: 101 50655: SyncLoop:pulse: loop frame 50655 pulse frame 50464 drift 191
+43984: 101 51423: SyncLoop:pulse: loop frame 51423 pulse frame 51349 drift 73
+43984: 101 52447: SyncLoop:pulse: loop frame 52447 pulse frame 52234 drift 212
+43984: 101 53215: SyncLoop:pulse: loop frame 53215 pulse frame 53119 drift 95
+43984: 101 53983: SyncLoop:pulse: loop frame 53983 pulse frame 54005 drift -22
+43984: 101 55007: SyncLoop:pulse: loop frame 55007 pulse frame 54890 drift 116
+43984: 101 56031: SyncLoop:pulse: loop frame 56031 pulse frame 55775 drift 255
+43984: 101 56799: SyncLoop:pulse: loop frame 56799 pulse frame 56661 drift 137
+43984: 101 57567: SyncLoop:pulse: loop frame 57567 pulse frame 57546 drift 20
+43984: 101 58591: SyncLoop:pulse: loop frame 58591 pulse frame 58431 drift 159
+43984: 101 59359: SyncLoop:pulse: loop frame 59359 pulse frame 59317 drift 41
+43984: 101 60383: SyncLoop:pulse: loop frame 60383 pulse frame 60202 drift 180
+43984: 101 61151: SyncLoop:pulse: loop frame 61151 pulse frame 61087 drift 63
+43984: 101 62175: SyncLoop:pulse: loop frame 62175 pulse frame 61973 drift 201
+43984: 101 62943: SyncLoop:pulse: loop frame 62943 pulse frame 62858 drift 84
+43984: 101 63711: SyncLoop:pulse: loop frame 63711 pulse frame 63743 drift -32
+43984: 101 64735: SyncLoop:pulse: loop frame 64735 pulse frame 64629 drift 105
+43984: 101 65503: SyncLoop:pulse: loop frame 65503 pulse frame 65514 drift -11
+43984: 101 66527: SyncLoop:pulse: loop frame 66527 pulse frame 66399 drift 127
+43984: 101 67295: SyncLoop:pulse: loop frame 67295 pulse frame 67285 drift 9
+43984: 101 68319: SyncLoop:pulse: loop frame 68319 pulse frame 68170 drift 148
+43984: 101 69087: SyncLoop:pulse: loop frame 69087 pulse frame 69055 drift 31
+43984: 101 70111: SyncLoop:pulse: loop frame 70111 pulse frame 69941 drift 169
+43984: 101 70879: SyncLoop:pulse: loop frame 70879 pulse frame 70826 drift 52
+43984: 101 71903: SyncLoop:pulse: loop frame 71903 pulse frame 71711 drift 191
+43984: 101 72671: SyncLoop:pulse: loop frame 72671 pulse frame 72597 drift 73
+43984: 101 73695: SyncLoop:pulse: loop frame 73695 pulse frame 73482 drift 212
+43984: 101 74463: SyncLoop:pulse: loop frame 74463 pulse frame 74368 drift 95
+43984: 101 75231: SyncLoop:pulse: loop frame 75231 pulse frame 75253 drift -22
+43984: 101 76255: SyncLoop:pulse: loop frame 76255 pulse frame 76138 drift 116
+43984: 101 77023: SyncLoop:pulse: loop frame 77023 pulse frame 77024 drift -1
+43984: 101 78047: SyncLoop:pulse: loop frame 78047 pulse frame 77909 drift 137
+43984: 101 78815: SyncLoop:pulse: loop frame 78815 pulse frame 78794 drift 20
+43984: 101 79839: SyncLoop:pulse: loop frame 79839 pulse frame 79680 drift 158
+43984: 101 80607: SyncLoop:pulse: loop frame 80607 pulse frame 80565 drift 41
+43984: 101 81631: SyncLoop:pulse: loop frame 81631 pulse frame 81450 drift 180
+43984: 101 82399: SyncLoop:pulse: loop frame 82399 pulse frame 82336 drift 62
+43984: 101 83423: SyncLoop:pulse: loop frame 83423 pulse frame 83221 drift 201
+43984: 101 84191: SyncLoop:pulse: loop frame 84191 pulse frame 84106 drift 84
+43984: 101 223: SyncLoop:pulse: loop frame 223 pulse frame 0 drift 222
+43984: 101 223: SyncLoop:pulse external start point, pulse drift 222, loop dealign 0
+43984: 101 223: Sync: incPulses: wrapped pulse frame from 8499203 to 3 (x100)
+43984: 101 223: Sync: Track 0 drift check point frame 223 drift 222
+43984: 101 991: SyncLoop:pulse: loop frame 991 pulse frame 885 drift 105
+43984: 101 1759: SyncLoop:pulse: loop frame 1759 pulse frame 1770 drift -11
+43984: 101 2783: SyncLoop:pulse: loop frame 2783 pulse frame 2656 drift 126
+43984: 101 3551: SyncLoop:pulse: loop frame 3551 pulse frame 3541 drift 9
+43984: 101 4575: SyncLoop:pulse: loop frame 4575 pulse frame 4426 drift 148
+43984: 101 5343: SyncLoop:pulse: loop frame 5343 pulse frame 5312 drift 30
+43984: 101 6367: SyncLoop:pulse: loop frame 6367 pulse frame 6197 drift 169
+43984: 101 7135: SyncLoop:pulse: loop frame 7135 pulse frame 7082 drift 52
+43984: 101 8159: SyncLoop:pulse: loop frame 8159 pulse frame 7968 drift 190
+43984: 101 8927: SyncLoop:pulse: loop frame 8927 pulse frame 8853 drift 73
+43984: 101 9951: SyncLoop:pulse: loop frame 9951 pulse frame 9738 drift 212
+43984: 101 10719: SyncLoop:pulse: loop frame 10719 pulse frame 10624 drift 94
+43984: 101 11487: SyncLoop:pulse: loop frame 11487 pulse frame 11509 drift -22
+43984: 101 12511: SyncLoop:pulse: loop frame 12511 pulse frame 12394 drift 116
+43984: 101 13279: SyncLoop:pulse: loop frame 13279 pulse frame 13280 drift -1
+43984: 101 14303: SyncLoop:pulse: loop frame 14303 pulse frame 14165 drift 137
+43984: 101 15071: SyncLoop:pulse: loop frame 15071 pulse frame 15050 drift 20
+43984: 101 16095: SyncLoop:pulse: loop frame 16095 pulse frame 15936 drift 158
+43984: 101 16863: SyncLoop:pulse: loop frame 16863 pulse frame 16821 drift 41
+43984: 101 17887: SyncLoop:pulse: loop frame 17887 pulse frame 17706 drift 180
+43984: 101 18655: SyncLoop:pulse: loop frame 18655 pulse frame 18592 drift 62
+43984: 101 19679: SyncLoop:pulse: loop frame 19679 pulse frame 19477 drift 201
+43984: 101 20447: SyncLoop:pulse: loop frame 20447 pulse frame 20362 drift 84
+43984: 101 21215: SyncLoop:pulse: loop frame 21215 pulse frame 21248 drift -33
+43984: 101 22239: SyncLoop:pulse: loop frame 22239 pulse frame 22133 drift 105
+43984: 101 23007: SyncLoop:pulse: loop frame 23007 pulse frame 23018 drift -11
+43984: 101 24031: SyncLoop:pulse: loop frame 24031 pulse frame 23904 drift 126
+43984: 101 24799: SyncLoop:pulse: loop frame 24799 pulse frame 24789 drift 9
+43984: 101 25567: Function Speed down
+43984: 101 25567: Loop: Add event Speed(Speed) 84992
+43984: 101 25567: Loop: Add event JumpPlay( ) 84421
+43984: 101 25567: Track::doFunction beginning long press for XSpeed
+43984: 101 25823: SyncLoop:pulse: loop frame 25823 pulse frame 25674 drift 148
+43984: 101 26591: SyncLoop:pulse: loop frame 26591 pulse frame 26560 drift 30
+43984: 101 27615: SyncLoop:pulse: loop frame 27615 pulse frame 27445 drift 169
+43984: 101 28383: SyncLoop:pulse: loop frame 28383 pulse frame 28330 drift 52
+43984: 101 29407: SyncLoop:pulse: loop frame 29407 pulse frame 29216 drift 190
+43984: 101 30175: SyncLoop:pulse: loop frame 30175 pulse frame 30101 drift 73
+43984: 101 30943: Track::doFunction canceling long press for XSpeed
+43984: 101 31199: SyncLoop:pulse: loop frame 31199 pulse frame 30986 drift 212
+43984: 101 31967: SyncLoop:pulse: loop frame 31967 pulse frame 31872 drift 94
+43984: 101 32991: SyncLoop:pulse: loop frame 32991 pulse frame 32757 drift 233
+43984: 101 33759: SyncLoop:pulse: loop frame 33759 pulse frame 33642 drift 116
+43984: 101 34783: SyncLoop:pulse: loop frame 34783 pulse frame 34528 drift 254
+43984: 101 35551: SyncLoop:pulse: loop frame 35551 pulse frame 35413 drift 137
+43984: 101 36319: SyncLoop:pulse: loop frame 36319 pulse frame 36298 drift 20
+43984: 101 37343: SyncLoop:pulse: loop frame 37343 pulse frame 37184 drift 158
+43984: 101 38111: SyncLoop:pulse: loop frame 38111 pulse frame 38069 drift 41
+43984: 101 39135: SyncLoop:pulse: loop frame 39135 pulse frame 38954 drift 180
+43984: 101 39903: SyncLoop:pulse: loop frame 39903 pulse frame 39840 drift 62
+43984: 101 40927: SyncLoop:pulse: loop frame 40927 pulse frame 40725 drift 201
+43984: 101 41695: SyncLoop:pulse: loop frame 41695 pulse frame 41610 drift 84
+43984: 101 42719: SyncLoop:pulse: loop frame 42719 pulse frame 42496 drift 222
+43984: 101 43487: SyncLoop:pulse: loop frame 43487 pulse frame 43381 drift 105
+43984: 101 44511: SyncLoop:pulse: loop frame 44511 pulse frame 44266 drift 244
+43984: 101 45279: SyncLoop:pulse: loop frame 45279 pulse frame 45152 drift 126
+43984: 101 46047: SyncLoop:pulse: loop frame 46047 pulse frame 46037 drift 9
+43984: 101 47071: SyncLoop:pulse: loop frame 47071 pulse frame 46922 drift 148
+43984: 101 47839: SyncLoop:pulse: loop frame 47839 pulse frame 47808 drift 30
+43984: 101 48863: SyncLoop:pulse: loop frame 48863 pulse frame 48693 drift 169
+43984: 101 49631: SyncLoop:pulse: loop frame 49631 pulse frame 49578 drift 52
+43984: 101 50655: SyncLoop:pulse: loop frame 50655 pulse frame 50464 drift 190
+43984: 101 51423: SyncLoop:pulse: loop frame 51423 pulse frame 51349 drift 73
+43984: 101 52191: SyncLoop:pulse: loop frame 52191 pulse frame 52234 drift -43
+43984: 101 53215: SyncLoop:pulse: loop frame 53215 pulse frame 53120 drift 94
+43984: 101 54239: SyncLoop:pulse: loop frame 54239 pulse frame 54005 drift 233
+43984: 101 55007: SyncLoop:pulse: loop frame 55007 pulse frame 54890 drift 116
+43984: 101 55775: SyncLoop:pulse: loop frame 55775 pulse frame 55776 drift -1
+43984: 101 56799: SyncLoop:pulse: loop frame 56799 pulse frame 56661 drift 137
+43984: 101 57567: SyncLoop:pulse: loop frame 57567 pulse frame 57546 drift 20
+43984: 101 58591: SyncLoop:pulse: loop frame 58591 pulse frame 58432 drift 158
+43984: 101 59359: SyncLoop:pulse: loop frame 59359 pulse frame 59317 drift 41
+43984: 101 60383: SyncLoop:pulse: loop frame 60383 pulse frame 60202 drift 180
+43984: 101 61151: SyncLoop:pulse: loop frame 61151 pulse frame 61088 drift 63
+43984: 101 62175: SyncLoop:pulse: loop frame 62175 pulse frame 61973 drift 201
+43984: 101 62943: SyncLoop:pulse: loop frame 62943 pulse frame 62858 drift 84
+43984: 101 63711: SyncLoop:pulse: loop frame 63711 pulse frame 63743 drift -32
+43984: 101 64735: SyncLoop:pulse: loop frame 64735 pulse frame 64629 drift 105
+43984: 101 65503: SyncLoop:pulse: loop frame 65503 pulse frame 65514 drift -11
+43984: 101 66527: SyncLoop:pulse: loop frame 66527 pulse frame 66399 drift 127
+43984: 101 67295: SyncLoop:pulse: loop frame 67295 pulse frame 67285 drift 9
+43984: 101 68319: SyncLoop:pulse: loop frame 68319 pulse frame 68170 drift 148
+43984: 101 69087: SyncLoop:pulse: loop frame 69087 pulse frame 69056 drift 31
+43984: 101 70111: SyncLoop:pulse: loop frame 70111 pulse frame 69941 drift 169
+43984: 101 70879: SyncLoop:pulse: loop frame 70879 pulse frame 70826 drift 52
+43984: 101 71903: SyncLoop:pulse: loop frame 71903 pulse frame 71712 drift 190
+43984: 101 72671: SyncLoop:pulse: loop frame 72671 pulse frame 72597 drift 73
+43984: 101 73695: SyncLoop:pulse: loop frame 73695 pulse frame 73482 drift 212
+43984: 101 74463: SyncLoop:pulse: loop frame 74463 pulse frame 74368 drift 94
+43984: 101 75231: SyncLoop:pulse: loop frame 75231 pulse frame 75253 drift -22
+43984: 101 76255: SyncLoop:pulse: loop frame 76255 pulse frame 76138 drift 116
+43984: 101 77279: SyncLoop:pulse: loop frame 77279 pulse frame 77024 drift 254
+43984: 101 78047: SyncLoop:pulse: loop frame 78047 pulse frame 77909 drift 137
+43984: 101 78815: SyncLoop:pulse: loop frame 78815 pulse frame 78794 drift 20
+43984: 101 79839: SyncLoop:pulse: loop frame 79839 pulse frame 79680 drift 158
+43984: 101 80607: SyncLoop:pulse: loop frame 80607 pulse frame 80565 drift 41
+43984: 101 81631: SyncLoop:pulse: loop frame 81631 pulse frame 81450 drift 180
+43984: 101 82399: SyncLoop:pulse: loop frame 82399 pulse frame 82336 drift 62
+43984: 101 83423: SyncLoop:pulse: loop frame 83423 pulse frame 83221 drift 201
+43984: 101 84191: SyncLoop:pulse: loop frame 84191 pulse frame 84106 drift 84
+43984: 101 84191: E: JumpPlay 84421
+43984: 101 84421: Loop: Playback jumping from 84992 to frame 0 of layer 0 latency loss 0
+43984: 101 84959: SyncLoop:pulse: loop frame 84959 pulse frame 0 drift -33
+43984: 101 84959: SyncLoop:pulse external start point, pulse drift -33, loop dealign 0
+43984: 101 84959: Sync: incPulses: wrapped pulse frame from 8499204 to 4 (x100)
+43984: 101 84959: Sync: Track 0 drift check point frame 84959 drift -33
+43984: 101 84959: E: Speed(Speed) 84992
+43984: 101 84992: Loop: Entering half speed
+43984: 101 84992: Sync: pulseAdvance: 33 loopFrame 0 pulseFrame 33
+43984: 101 84992: Sync: calcLoopTempo rate adjusted from 12452 to 6226 (x100)
+43984: 101 84992: Sync: calcLoopTempo cycleFrames 84992 beats 4 tempo 6226 (x100)
+43984: 101 84992: Sync: adjustMasterTempo basePulseFrames remains 88533 (x100)
+43984: 101 84992: MidiTransport: tempo changed from 12452 to 6226 (x100) millis/clock 40 frames/clock 1770
+43984: 101 496: SyncLoop:pulse: loop frame 991 pulse frame 885 drift 105
+43984: 101 1392: SyncLoop:pulse: loop frame 2783 pulse frame 1770 drift 1012
+43984: 101 2288: SyncLoop:pulse: loop frame 4575 pulse frame 2656 drift 1918
+43984: 101 3184: SyncLoop:pulse: loop frame 6367 pulse frame 3541 drift 2825
+43984: 101 4080: SyncLoop:pulse: loop frame 8159 pulse frame 4426 drift 3732
+43984: 101 4976: SyncLoop:pulse: loop frame 9951 pulse frame 5312 drift 4638
+43984: 101 5744: SyncLoop:pulse: loop frame 11487 pulse frame 6197 drift 5289
+43984: 101 6640: SyncLoop:pulse: loop frame 13279 pulse frame 7082 drift 6196
+43984: 101 7536: SyncLoop:pulse: loop frame 15071 pulse frame 7968 drift 7102
+43984: 101 8432: SyncLoop:pulse: loop frame 16863 pulse frame 8853 drift 8009
+43984: 101 9328: SyncLoop:pulse: loop frame 18655 pulse frame 9738 drift 8916
+43984: 101 10224: SyncLoop:pulse: loop frame 20447 pulse frame 10624 drift 9822
+43984: 101 11120: SyncLoop:pulse: loop frame 22239 pulse frame 11509 drift 10729
+43984: 101 12016: SyncLoop:pulse: loop frame 24031 pulse frame 12394 drift 11636
+43984: 101 12912: SyncLoop:pulse: loop frame 25823 pulse frame 13280 drift 12542
+43984: 101 13808: SyncLoop:pulse: loop frame 27615 pulse frame 14165 drift 13449
+43984: 101 14704: SyncLoop:pulse: loop frame 29407 pulse frame 15050 drift 14356
+43984: 101 15600: SyncLoop:pulse: loop frame 31199 pulse frame 15936 drift 15262
+43984: 101 16496: SyncLoop:pulse: loop frame 32991 pulse frame 16821 drift 16169
+43984: 101 17264: SyncLoop:pulse: loop frame 34527 pulse frame 17706 drift 16820
+43984: 101 18160: SyncLoop:pulse: loop frame 36319 pulse frame 18592 drift 17726
+43984: 101 19056: SyncLoop:pulse: loop frame 38111 pulse frame 19477 drift 18633
+43984: 101 19952: SyncLoop:pulse: loop frame 39903 pulse frame 20362 drift 19540
+43984: 101 20848: SyncLoop:pulse: loop frame 41695 pulse frame 21248 drift 20446
+43984: 101 21744: SyncLoop:pulse: loop frame 43487 pulse frame 22133 drift 21353
+43984: 101 22640: SyncLoop:pulse: loop frame 45279 pulse frame 23018 drift 22260
+43984: 101 23536: SyncLoop:pulse: loop frame 47071 pulse frame 23904 drift 23166
+43984: 101 24432: SyncLoop:pulse: loop frame 48863 pulse frame 24789 drift 24073
+43984: 101 25328: SyncLoop:pulse: loop frame 50655 pulse frame 25674 drift 24980
+43984: 101 26224: SyncLoop:pulse: loop frame 52447 pulse frame 26560 drift 25886
+43984: 101 26992: SyncLoop:pulse: loop frame 53983 pulse frame 27445 drift 26537
+43984: 101 27888: SyncLoop:pulse: loop frame 55775 pulse frame 28330 drift 27444
+43984: 101 28784: SyncLoop:pulse: loop frame 57567 pulse frame 29216 drift 28350
+43984: 101 29680: SyncLoop:pulse: loop frame 59359 pulse frame 30101 drift 29257
+43984: 101 30576: SyncLoop:pulse: loop frame 61151 pulse frame 30986 drift 30164
+43984: 101 31472: SyncLoop:pulse: loop frame 62943 pulse frame 31872 drift 31070
+43984: 101 32368: SyncLoop:pulse: loop frame 64735 pulse frame 32757 drift 31977
+43984: 101 33264: SyncLoop:pulse: loop frame 66527 pulse frame 33642 drift 32884
+43984: 101 34160: SyncLoop:pulse: loop frame 68319 pulse frame 34528 drift 33790
+43984: 101 35056: SyncLoop:pulse: loop frame 70111 pulse frame 35413 drift 34697
+43984: 101 35952: SyncLoop:pulse: loop frame 71903 pulse frame 36298 drift 35604
+43984: 101 36848: SyncLoop:pulse: loop frame 73695 pulse frame 37184 drift 36510
+43984: 101 37744: SyncLoop:pulse: loop frame 75487 pulse frame 38069 drift 37417
+43984: 101 38512: SyncLoop:pulse: loop frame 77023 pulse frame 38954 drift 38068
+43984: 101 39408: SyncLoop:pulse: loop frame 78815 pulse frame 39840 drift 38974
+43984: 101 40304: SyncLoop:pulse: loop frame 80607 pulse frame 40725 drift 39881
+43984: 101 41200: SyncLoop:pulse: loop frame 82399 pulse frame 41610 drift 40788
+43984: 101 42096: SyncLoop:pulse: loop frame 84191 pulse frame 42496 drift 41694
+43984: 101 42992: SyncLoop:pulse: loop frame 991 pulse frame 43381 drift -42390
+43984: 101 43888: SyncLoop:pulse: loop frame 2783 pulse frame 44266 drift -41483
+43984: 101 44784: SyncLoop:pulse: loop frame 4575 pulse frame 45152 drift -40577
+43984: 101 45680: SyncLoop:pulse: loop frame 6367 pulse frame 46037 drift -39670
+43984: 101 46576: SyncLoop:pulse: loop frame 8159 pulse frame 46922 drift -38763
+43984: 101 47472: SyncLoop:pulse: loop frame 9951 pulse frame 47808 drift -37857
+43984: 101 48368: SyncLoop:pulse: loop frame 11743 pulse frame 48693 drift -36950
+43984: 101 49264: SyncLoop:pulse: loop frame 13535 pulse frame 49578 drift -36043
+43984: 101 50032: SyncLoop:pulse: loop frame 15071 pulse frame 50464 drift -35393
+43984: 101 50928: SyncLoop:pulse: loop frame 16863 pulse frame 51349 drift -34486
+43984: 101 51824: SyncLoop:pulse: loop frame 18655 pulse frame 52234 drift -33579
+43984: 101 52720: SyncLoop:pulse: loop frame 20447 pulse frame 53120 drift -32673
+43984: 101 53616: SyncLoop:pulse: loop frame 22239 pulse frame 54005 drift -31766
+43984: 101 54512: SyncLoop:pulse: loop frame 24031 pulse frame 54890 drift -30859
+43984: 101 55408: SyncLoop:pulse: loop frame 25823 pulse frame 55776 drift -29953
+43984: 101 56304: SyncLoop:pulse: loop frame 27615 pulse frame 56661 drift -29046
+43984: 101 57200: SyncLoop:pulse: loop frame 29407 pulse frame 57546 drift -28139
+43984: 101 58096: SyncLoop:pulse: loop frame 31199 pulse frame 58432 drift -27233
+43984: 101 58864: SyncLoop:pulse: loop frame 32735 pulse frame 59317 drift -26582
+43984: 101 59760: SyncLoop:pulse: loop frame 34527 pulse frame 60202 drift -25675
+43984: 101 60656: SyncLoop:pulse: loop frame 36319 pulse frame 61088 drift -24769
+43984: 101 61552: SyncLoop:pulse: loop frame 38111 pulse frame 61973 drift -23862
+43984: 101 62448: SyncLoop:pulse: loop frame 39903 pulse frame 62858 drift -22955
+43984: 101 63344: SyncLoop:pulse: loop frame 41695 pulse frame 63744 drift -22049
+43984: 101 64240: SyncLoop:pulse: loop frame 43487 pulse frame 64629 drift -21142
+43984: 101 65136: SyncLoop:pulse: loop frame 45279 pulse frame 65514 drift -20235
+43984: 101 66032: SyncLoop:pulse: loop frame 47071 pulse frame 66400 drift -19329
+43984: 101 66928: SyncLoop:pulse: loop frame 48863 pulse frame 67285 drift -18422
+43984: 101 67824: SyncLoop:pulse: loop frame 50655 pulse frame 68170 drift -17515
+43984: 101 68720: SyncLoop:pulse: loop frame 52447 pulse frame 69056 drift -16609
+43984: 101 69616: SyncLoop:pulse: loop frame 54239 pulse frame 69941 drift -15702
+43984: 101 70384: SyncLoop:pulse: loop frame 55775 pulse frame 70826 drift -15051
+43984: 101 71280: SyncLoop:pulse: loop frame 57567 pulse frame 71712 drift -14145
+43984: 101 72176: SyncLoop:pulse: loop frame 59359 pulse frame 72597 drift -13238
+43984: 101 73072: SyncLoop:pulse: loop frame 61151 pulse frame 73482 drift -12331
+43984: 101 73968: SyncLoop:pulse: loop frame 62943 pulse frame 74368 drift -11425
+43984: 101 74864: SyncLoop:pulse: loop frame 64735 pulse frame 75253 drift -10518
+43984: 101 75760: SyncLoop:pulse: loop frame 66527 pulse frame 76138 drift -9611
+43984: 101 76656: SyncLoop:pulse: loop frame 68319 pulse frame 77024 drift -8705
+43984: 101 77552: SyncLoop:pulse: loop frame 70111 pulse frame 77909 drift -7798
+43984: 101 78448: SyncLoop:pulse: loop frame 71903 pulse frame 78794 drift -6891
+43984: 101 79344: SyncLoop:pulse: loop frame 73695 pulse frame 79680 drift -5985
+43984: 101 80112: SyncLoop:pulse: loop frame 75231 pulse frame 80565 drift -5334
+43984: 101 81008: SyncLoop:pulse: loop frame 77023 pulse frame 81450 drift -4427
+43984: 101 81904: SyncLoop:pulse: loop frame 78815 pulse frame 82336 drift -3521
+43984: 101 82800: SyncLoop:pulse: loop frame 80607 pulse frame 83221 drift -2614
+43984: 101 83696: SyncLoop:pulse: loop frame 82399 pulse frame 84106 drift -1707
+43984: 101 84592: SyncLoop:pulse: loop frame 84191 pulse frame 0 drift -801
+43984: 101 84592: SyncLoop:pulse external start point, pulse drift -801, loop dealign -401
+43984: 101 84592: Sync: incPulses: wrapped pulse frame from 8499206 to 6 (x100)
+43984: 101 84592: Sync: Track 0 drift check point frame 84592 drift -400
+43984: 101 496: SyncLoop:pulse: loop frame 991 pulse frame 885 drift 105
+43984: 101 1392: SyncLoop:pulse: loop frame 2783 pulse frame 1770 drift 1012
+43984: 101 2288: SyncLoop:pulse: loop frame 4575 pulse frame 2656 drift 1918
+43984: 101 3184: SyncLoop:pulse: loop frame 6367 pulse frame 3541 drift 2825
+43984: 101 4080: SyncLoop:pulse: loop frame 8159 pulse frame 4426 drift 3732
+43984: 101 4976: SyncLoop:pulse: loop frame 9951 pulse frame 5312 drift 4638
+43984: 101 5872: SyncLoop:pulse: loop frame 11743 pulse frame 6197 drift 5545
+43984: 101 6640: SyncLoop:pulse: loop frame 13279 pulse frame 7082 drift 6196
+43984: 101 7536: SyncLoop:pulse: loop frame 15071 pulse frame 7968 drift 7102
+43984: 101 8432: SyncLoop:pulse: loop frame 16863 pulse frame 8853 drift 8009
+43984: 101 9328: SyncLoop:pulse: loop frame 18655 pulse frame 9738 drift 8916
+43984: 101 10224: SyncLoop:pulse: loop frame 20447 pulse frame 10624 drift 9822
+43984: 101 11120: SyncLoop:pulse: loop frame 22239 pulse frame 11509 drift 10729
+43984: 101 12016: SyncLoop:pulse: loop frame 24031 pulse frame 12394 drift 11636
+43984: 101 12912: SyncLoop:pulse: loop frame 25823 pulse frame 13280 drift 12542
+43984: 101 13808: SyncLoop:pulse: loop frame 27615 pulse frame 14165 drift 13449
+43984: 101 14704: SyncLoop:pulse: loop frame 29407 pulse frame 15050 drift 14356
+43984: 101 15472: SyncLoop:pulse: loop frame 30943 pulse frame 15936 drift 15006
+43984: 101 16496: SyncLoop:pulse: loop frame 32991 pulse frame 16821 drift 16169
+43984: 101 17264: SyncLoop:pulse: loop frame 34527 pulse frame 17706 drift 16820
+43984: 101 18160: SyncLoop:pulse: loop frame 36319 pulse frame 18592 drift 17726
+43984: 101 19056: SyncLoop:pulse: loop frame 38111 pulse frame 19477 drift 18633
+43984: 101 19952: SyncLoop:pulse: loop frame 39903 pulse frame 20362 drift 19540
+43984: 101 20848: SyncLoop:pulse: loop frame 41695 pulse frame 21248 drift 20446
+43984: 101 21744: SyncLoop:pulse: loop frame 43487 pulse frame 22133 drift 21353
+43984: 101 22640: SyncLoop:pulse: loop frame 45279 pulse frame 23018 drift 22260
+43984: 101 23536: SyncLoop:pulse: loop frame 47071 pulse frame 23904 drift 23166
+43984: 101 24432: SyncLoop:pulse: loop frame 48863 pulse frame 24789 drift 24073
+43984: 101 25328: SyncLoop:pulse: loop frame 50655 pulse frame 25674 drift 24980
+43984: 101 26224: SyncLoop:pulse: loop frame 52447 pulse frame 26560 drift 25886
+43984: 101 26992: SyncLoop:pulse: loop frame 53983 pulse frame 27445 drift 26537
+43984: 101 28016: SyncLoop:pulse: loop frame 56031 pulse frame 28330 drift 27700
+43984: 101 28784: SyncLoop:pulse: loop frame 57567 pulse frame 29216 drift 28350
+43984: 101 29680: SyncLoop:pulse: loop frame 59359 pulse frame 30101 drift 29257
+43984: 101 30576: SyncLoop:pulse: loop frame 61151 pulse frame 30986 drift 30164
+43984: 101 31472: SyncLoop:pulse: loop frame 62943 pulse frame 31872 drift 31070
+43984: 101 32368: SyncLoop:pulse: loop frame 64735 pulse frame 32757 drift 31977
+43984: 101 33264: SyncLoop:pulse: loop frame 66527 pulse frame 33642 drift 32884
+43984: 101 34160: SyncLoop:pulse: loop frame 68319 pulse frame 34528 drift 33790
+43984: 101 35056: SyncLoop:pulse: loop frame 70111 pulse frame 35413 drift 34697
+43984: 101 35952: SyncLoop:pulse: loop frame 71903 pulse frame 36298 drift 35604
+43984: 101 36848: SyncLoop:pulse: loop frame 73695 pulse frame 37184 drift 36510
+43984: 101 37616: SyncLoop:pulse: loop frame 75231 pulse frame 38069 drift 37161
+43984: 101 38512: SyncLoop:pulse: loop frame 77023 pulse frame 38954 drift 38068
+43984: 101 39408: SyncLoop:pulse: loop frame 78815 pulse frame 39840 drift 38974
+43984: 101 40304: SyncLoop:pulse: loop frame 80607 pulse frame 40725 drift 39881
+43984: 101 41200: SyncLoop:pulse: loop frame 82399 pulse frame 41610 drift 40788
+43984: 101 42096: SyncLoop:pulse: loop frame 84191 pulse frame 42496 drift 41694
+43984: 101 42992: SyncLoop:pulse: loop frame 991 pulse frame 43381 drift -42390
+43984: 101 43888: SyncLoop:pulse: loop frame 2783 pulse frame 44266 drift -41483
+43984: 101 44784: SyncLoop:pulse: loop frame 4575 pulse frame 45152 drift -40577
+43984: 101 45680: SyncLoop:pulse: loop frame 6367 pulse frame 46037 drift -39670
+43984: 101 46576: SyncLoop:pulse: loop frame 8159 pulse frame 46922 drift -38763
+43984: 101 47472: SyncLoop:pulse: loop frame 9951 pulse frame 47808 drift -37857
+43984: 101 48368: SyncLoop:pulse: loop frame 11743 pulse frame 48693 drift -36950
+43984: 101 49136: SyncLoop:pulse: loop frame 13279 pulse frame 49578 drift -36299
+43984: 101 50032: SyncLoop:pulse: loop frame 15071 pulse frame 50464 drift -35393
+43984: 101 50928: SyncLoop:pulse: loop frame 16863 pulse frame 51349 drift -34486
+43984: 101 51824: SyncLoop:pulse: loop frame 18655 pulse frame 52234 drift -33579
+43984: 101 52720: SyncLoop:pulse: loop frame 20447 pulse frame 53120 drift -32673
+43984: 101 53616: SyncLoop:pulse: loop frame 22239 pulse frame 54005 drift -31766
+43984: 101 54512: SyncLoop:pulse: loop frame 24031 pulse frame 54890 drift -30859
+43984: 101 55408: SyncLoop:pulse: loop frame 25823 pulse frame 55776 drift -29953
+43984: 101 56304: SyncLoop:pulse: loop frame 27615 pulse frame 56661 drift -29046
+43984: 101 57200: SyncLoop:pulse: loop frame 29407 pulse frame 57546 drift -28139
+43984: 101 58096: SyncLoop:pulse: loop frame 31199 pulse frame 58432 drift -27233
+43984: 101 58992: SyncLoop:pulse: loop frame 32991 pulse frame 59317 drift -26326
+43984: 101 59888: SyncLoop:pulse: loop frame 34783 pulse frame 60202 drift -25419
+43984: 101 60656: SyncLoop:pulse: loop frame 36319 pulse frame 61088 drift -24769
+43984: 101 61552: SyncLoop:pulse: loop frame 38111 pulse frame 61973 drift -23862
+43984: 101 62448: SyncLoop:pulse: loop frame 39903 pulse frame 62858 drift -22955
+43984: 101 63344: SyncLoop:pulse: loop frame 41695 pulse frame 63744 drift -22049
+43984: 101 64240: SyncLoop:pulse: loop frame 43487 pulse frame 64629 drift -21142
+43984: 101 65136: SyncLoop:pulse: loop frame 45279 pulse frame 65514 drift -20235
+43984: 101 66032: SyncLoop:pulse: loop frame 47071 pulse frame 66400 drift -19329
+43984: 101 66928: SyncLoop:pulse: loop frame 48863 pulse frame 67285 drift -18422
+43984: 101 67824: SyncLoop:pulse: loop frame 50655 pulse frame 68170 drift -17515
+43984: 101 68592: SyncLoop:pulse: loop frame 52191 pulse frame 69056 drift -16865
+43984: 101 69616: SyncLoop:pulse: loop frame 54239 pulse frame 69941 drift -15702
+43984: 101 70384: SyncLoop:pulse: loop frame 55775 pulse frame 70826 drift -15051
+43984: 101 71280: SyncLoop:pulse: loop frame 57567 pulse frame 71712 drift -14145
+43984: 101 72176: SyncLoop:pulse: loop frame 59359 pulse frame 72597 drift -13238
+43984: 101 73072: SyncLoop:pulse: loop frame 61151 pulse frame 73482 drift -12331
+43984: 101 73968: SyncLoop:pulse: loop frame 62943 pulse frame 74368 drift -11425
+43984: 101 74864: SyncLoop:pulse: loop frame 64735 pulse frame 75253 drift -10518
+43984: 101 75760: SyncLoop:pulse: loop frame 66527 pulse frame 76138 drift -9611
+43984: 101 76656: SyncLoop:pulse: loop frame 68319 pulse frame 77024 drift -8705
+43984: 101 77552: SyncLoop:pulse: loop frame 70111 pulse frame 77909 drift -7798
+43984: 101 78448: SyncLoop:pulse: loop frame 71903 pulse frame 78794 drift -6891
+43984: 101 79344: SyncLoop:pulse: loop frame 73695 pulse frame 79680 drift -5985
+43984: 101 80112: SyncLoop:pulse: loop frame 75231 pulse frame 80565 drift -5334
+43984: 101 81136: SyncLoop:pulse: loop frame 77279 pulse frame 81450 drift -4171
+43984: 101 81904: SyncLoop:pulse: loop frame 78815 pulse frame 82336 drift -3521
+43984: 101 82800: SyncLoop:pulse: loop frame 80607 pulse frame 83221 drift -2614
+43984: 101 83696: SyncLoop:pulse: loop frame 82399 pulse frame 84106 drift -1707
+43984: 101 84592: SyncLoop:pulse: loop frame 84191 pulse frame 0 drift -801
+43984: 101 84592: SyncLoop:pulse external start point, pulse drift -801, loop dealign -401
+43984: 101 84592: Sync: incPulses: wrapped pulse frame from 8499207 to 7 (x100)
+43984: 101 84592: Sync: Track 0 drift check point frame 84592 drift -400
+43984: 101 496: SyncLoop:pulse: loop frame 991 pulse frame 885 drift 105
+43984: 101 1392: SyncLoop:pulse: loop frame 2783 pulse frame 1770 drift 1012
+43984: 101 2288: SyncLoop:pulse: loop frame 4575 pulse frame 2656 drift 1918
+43984: 101 3184: SyncLoop:pulse: loop frame 6367 pulse frame 3541 drift 2825
+43984: 101 4080: SyncLoop:pulse: loop frame 8159 pulse frame 4426 drift 3732
+43984: 101 4976: SyncLoop:pulse: loop frame 9951 pulse frame 5312 drift 4638
+43984: 101 5744: SyncLoop:pulse: loop frame 11487 pulse frame 6197 drift 5289
+43984: 101 6640: SyncLoop:pulse: loop frame 13279 pulse frame 7082 drift 6196
+43984: 101 7536: SyncLoop:pulse: loop frame 15071 pulse frame 7968 drift 7102
+43984: 101 8432: SyncLoop:pulse: loop frame 16863 pulse frame 8853 drift 8009
+43984: 101 9200: Function Speed down
+43984: 101 9200: Loop: Add event Speed(Speed) 84992
+43984: 101 9200: Loop: Add event JumpPlay( ) 84706
+43984: 101 9200: Track::doFunction beginning long press for XSpeed
+43984: 101 9328: SyncLoop:pulse: loop frame 18655 pulse frame 9738 drift 8916
+43984: 101 10224: SyncLoop:pulse: loop frame 20447 pulse frame 10624 drift 9822
+43984: 101 11120: SyncLoop:pulse: loop frame 22239 pulse frame 11509 drift 10729
+43984: 101 11760: Track::doFunction canceling long press for XSpeed
+43984: 101 12016: SyncLoop:pulse: loop frame 24031 pulse frame 12394 drift 11636
+43984: 101 12912: SyncLoop:pulse: loop frame 25823 pulse frame 13280 drift 12542
+43984: 101 13808: SyncLoop:pulse: loop frame 27615 pulse frame 14165 drift 13449
+43984: 101 14704: SyncLoop:pulse: loop frame 29407 pulse frame 15050 drift 14356
+43984: 101 15600: SyncLoop:pulse: loop frame 31199 pulse frame 15936 drift 15262
+43984: 101 16496: SyncLoop:pulse: loop frame 32991 pulse frame 16821 drift 16169
+43984: 101 17264: SyncLoop:pulse: loop frame 34527 pulse frame 17706 drift 16820
+43984: 101 18160: SyncLoop:pulse: loop frame 36319 pulse frame 18592 drift 17726
+43984: 101 19056: SyncLoop:pulse: loop frame 38111 pulse frame 19477 drift 18633
+43984: 101 19952: SyncLoop:pulse: loop frame 39903 pulse frame 20362 drift 19540
+43984: 101 20848: SyncLoop:pulse: loop frame 41695 pulse frame 21248 drift 20446
+43984: 101 21744: SyncLoop:pulse: loop frame 43487 pulse frame 22133 drift 21353
+43984: 101 22640: SyncLoop:pulse: loop frame 45279 pulse frame 23018 drift 22260
+43984: 101 23536: SyncLoop:pulse: loop frame 47071 pulse frame 23904 drift 23166
+43984: 101 24432: SyncLoop:pulse: loop frame 48863 pulse frame 24789 drift 24073
+43984: 101 25328: SyncLoop:pulse: loop frame 50655 pulse frame 25674 drift 24980
+43984: 101 26224: SyncLoop:pulse: loop frame 52447 pulse frame 26560 drift 25886
+43984: 101 26992: SyncLoop:pulse: loop frame 53983 pulse frame 27445 drift 26537
+43984: 101 27888: SyncLoop:pulse: loop frame 55775 pulse frame 28330 drift 27444
+43984: 101 28784: SyncLoop:pulse: loop frame 57567 pulse frame 29216 drift 28350
+43984: 101 29680: SyncLoop:pulse: loop frame 59359 pulse frame 30101 drift 29257
+43984: 101 30576: SyncLoop:pulse: loop frame 61151 pulse frame 30986 drift 30164
+43984: 101 31472: SyncLoop:pulse: loop frame 62943 pulse frame 31872 drift 31070
+43984: 101 32368: SyncLoop:pulse: loop frame 64735 pulse frame 32757 drift 31977
+43984: 101 33264: SyncLoop:pulse: loop frame 66527 pulse frame 33642 drift 32884
+43984: 101 34160: SyncLoop:pulse: loop frame 68319 pulse frame 34528 drift 33790
+43984: 101 35056: SyncLoop:pulse: loop frame 70111 pulse frame 35413 drift 34697
+43984: 101 35952: SyncLoop:pulse: loop frame 71903 pulse frame 36298 drift 35604
+43984: 101 36848: SyncLoop:pulse: loop frame 73695 pulse frame 37184 drift 36510
+43984: 101 37744: SyncLoop:pulse: loop frame 75487 pulse frame 38069 drift 37417
+43984: 101 38512: SyncLoop:pulse: loop frame 77023 pulse frame 38954 drift 38068
+43984: 101 39408: SyncLoop:pulse: loop frame 78815 pulse frame 39840 drift 38974
+43984: 101 40304: SyncLoop:pulse: loop frame 80607 pulse frame 40725 drift 39881
+43984: 101 41200: SyncLoop:pulse: loop frame 82399 pulse frame 41610 drift 40788
+43984: 101 42096: SyncLoop:pulse: loop frame 84191 pulse frame 42496 drift 41694
+43984: 101 42992: SyncLoop:pulse: loop frame 991 pulse frame 43381 drift -42390
+43984: 101 43888: SyncLoop:pulse: loop frame 2783 pulse frame 44266 drift -41483
+43984: 101 44784: SyncLoop:pulse: loop frame 4575 pulse frame 45152 drift -40577
+43984: 101 45680: SyncLoop:pulse: loop frame 6367 pulse frame 46037 drift -39670
+43984: 101 46576: SyncLoop:pulse: loop frame 8159 pulse frame 46922 drift -38763
+43984: 101 47472: SyncLoop:pulse: loop frame 9951 pulse frame 47808 drift -37857
+43984: 101 48368: SyncLoop:pulse: loop frame 11743 pulse frame 48693 drift -36950
+43984: 101 49264: SyncLoop:pulse: loop frame 13535 pulse frame 49578 drift -36043
+43984: 101 50032: SyncLoop:pulse: loop frame 15071 pulse frame 50464 drift -35393
+43984: 101 50928: SyncLoop:pulse: loop frame 16863 pulse frame 51349 drift -34486
+43984: 101 51824: SyncLoop:pulse: loop frame 18655 pulse frame 52234 drift -33579
+43984: 101 52720: SyncLoop:pulse: loop frame 20447 pulse frame 53120 drift -32673
+43984: 101 53616: SyncLoop:pulse: loop frame 22239 pulse frame 54005 drift -31766
+43984: 101 54512: SyncLoop:pulse: loop frame 24031 pulse frame 54890 drift -30859
+43984: 101 55408: SyncLoop:pulse: loop frame 25823 pulse frame 55776 drift -29953
+43984: 101 56304: SyncLoop:pulse: loop frame 27615 pulse frame 56661 drift -29046
+43984: 101 57200: SyncLoop:pulse: loop frame 29407 pulse frame 57546 drift -28139
+43984: 101 58096: SyncLoop:pulse: loop frame 31199 pulse frame 58432 drift -27233
+43984: 101 58864: SyncLoop:pulse: loop frame 32735 pulse frame 59317 drift -26582
+43984: 101 59760: SyncLoop:pulse: loop frame 34527 pulse frame 60202 drift -25675
+43984: 101 60656: SyncLoop:pulse: loop frame 36319 pulse frame 61088 drift -24769
+43984: 101 61552: SyncLoop:pulse: loop frame 38111 pulse frame 61973 drift -23862
+43984: 101 62448: SyncLoop:pulse: loop frame 39903 pulse frame 62858 drift -22955
+43984: 101 63344: SyncLoop:pulse: loop frame 41695 pulse frame 63744 drift -22049
+43984: 101 64240: SyncLoop:pulse: loop frame 43487 pulse frame 64629 drift -21142
+43984: 101 65136: SyncLoop:pulse: loop frame 45279 pulse frame 65514 drift -20235
+43984: 101 66032: SyncLoop:pulse: loop frame 47071 pulse frame 66400 drift -19329
+43984: 101 66928: SyncLoop:pulse: loop frame 48863 pulse frame 67285 drift -18422
+43984: 101 67824: SyncLoop:pulse: loop frame 50655 pulse frame 68170 drift -17515
+43984: 101 68720: SyncLoop:pulse: loop frame 52447 pulse frame 69056 drift -16609
+43984: 101 69616: SyncLoop:pulse: loop frame 54239 pulse frame 69941 drift -15702
+43984: 101 70384: SyncLoop:pulse: loop frame 55775 pulse frame 70826 drift -15051
+43984: 101 71280: SyncLoop:pulse: loop frame 57567 pulse frame 71712 drift -14145
+43984: 101 72176: SyncLoop:pulse: loop frame 59359 pulse frame 72597 drift -13238
+43984: 101 73072: SyncLoop:pulse: loop frame 61151 pulse frame 73482 drift -12331
+43984: 101 73968: SyncLoop:pulse: loop frame 62943 pulse frame 74368 drift -11425
+43984: 101 74864: SyncLoop:pulse: loop frame 64735 pulse frame 75253 drift -10518
+43984: 101 75760: SyncLoop:pulse: loop frame 66527 pulse frame 76138 drift -9611
+43984: 101 76656: SyncLoop:pulse: loop frame 68319 pulse frame 77024 drift -8705
+43984: 101 77552: SyncLoop:pulse: loop frame 70111 pulse frame 77909 drift -7798
+43984: 101 78448: SyncLoop:pulse: loop frame 71903 pulse frame 78794 drift -6891
+43984: 101 79344: SyncLoop:pulse: loop frame 73695 pulse frame 79680 drift -5985
+43984: 101 80112: SyncLoop:pulse: loop frame 75231 pulse frame 80565 drift -5334
+43984: 101 81008: SyncLoop:pulse: loop frame 77023 pulse frame 81450 drift -4427
+43984: 101 81904: SyncLoop:pulse: loop frame 78815 pulse frame 82336 drift -3521
+43984: 101 82800: SyncLoop:pulse: loop frame 80607 pulse frame 83221 drift -2614
+43984: 101 83696: SyncLoop:pulse: loop frame 82399 pulse frame 84106 drift -1707
+43984: 101 84592: SyncLoop:pulse: loop frame 84191 pulse frame 0 drift -801
+43984: 101 84592: SyncLoop:pulse external start point, pulse drift -801, loop dealign -401
+43984: 101 84592: Sync: incPulses: wrapped pulse frame from 8499209 to 9 (x100)
+43984: 101 84592: Sync: Track 0 drift check point frame 84592 drift -400
+43984: 101 84592: E: JumpPlay 84706
+43984: 101 84706: Loop: Playback jumping from 84992 to frame 0 of layer 0 latency loss 0
+43984: 101 84976: E: Speed(Speed) 84992
+43984: 101 84992: Loop: Leaving half speed
+43984: 101 84992: Sync: pulseAdvance: 400 loopFrame 0 pulseFrame 400
+43984: 101 84992: Sync: calcLoopTempo cycleFrames 84992 beats 4 tempo 12452 (x100)
+43984: 101 84992: Sync: adjustMasterTempo basePulseFrames remains 88533 (x100)
+43984: 101 84992: MidiTransport: tempo changed from 6226 to 12452 (x100) millis/clock 20 frames/clock 885
+43984: 101 84992: Loop: Compensating for scheduling roundoff: mPlayFrame=572 wrappedPlayFrame=571
+43984: 101 992: SyncLoop:pulse: loop frame 991 pulse frame 885 drift 105
+43984: 101 1760: SyncLoop:pulse: loop frame 1759 pulse frame 1770 drift -11
+43984: 101 2784: SyncLoop:pulse: loop frame 2783 pulse frame 2656 drift 126
+43984: 101 3552: SyncLoop:pulse: loop frame 3551 pulse frame 3541 drift 9
+43984: 101 4576: SyncLoop:pulse: loop frame 4575 pulse frame 4426 drift 148
+43984: 101 5344: SyncLoop:pulse: loop frame 5343 pulse frame 5312 drift 30
+43984: 101 6368: SyncLoop:pulse: loop frame 6367 pulse frame 6197 drift 169
+43984: 101 7136: SyncLoop:pulse: loop frame 7135 pulse frame 7082 drift 52
+43984: 101 8160: SyncLoop:pulse: loop frame 8159 pulse frame 7968 drift 190
+43984: 101 8928: SyncLoop:pulse: loop frame 8927 pulse frame 8853 drift 73
+43984: 101 9952: SyncLoop:pulse: loop frame 9951 pulse frame 9738 drift 212
+43984: 101 10720: SyncLoop:pulse: loop frame 10719 pulse frame 10624 drift 94
+43984: 101 11744: SyncLoop:pulse: loop frame 11743 pulse frame 11509 drift 233
+43984: 101 12512: SyncLoop:pulse: loop frame 12511 pulse frame 12394 drift 116
+43984: 101 13280: SyncLoop:pulse: loop frame 13279 pulse frame 13280 drift -1
+43984: 101 14304: SyncLoop:pulse: loop frame 14303 pulse frame 14165 drift 137
+43984: 101 15072: SyncLoop:pulse: loop frame 15071 pulse frame 15050 drift 20
+43984: 101 16096: SyncLoop:pulse: loop frame 16095 pulse frame 15936 drift 158
+43984: 101 16864: SyncLoop:pulse: loop frame 16863 pulse frame 16821 drift 41
+43984: 101 17888: SyncLoop:pulse: loop frame 17887 pulse frame 17706 drift 180
+43984: 101 18656: SyncLoop:pulse: loop frame 18655 pulse frame 18592 drift 62
+43984: 101 19680: SyncLoop:pulse: loop frame 19679 pulse frame 19477 drift 201
+43984: 101 20448: SyncLoop:pulse: loop frame 20447 pulse frame 20362 drift 84
+43984: 101 21472: SyncLoop:pulse: loop frame 21471 pulse frame 21248 drift 222
+43984: 101 22240: SyncLoop:pulse: loop frame 22239 pulse frame 22133 drift 105
+43984: 101 23008: SyncLoop:pulse: loop frame 23007 pulse frame 23018 drift -11
+43984: 101 24032: SyncLoop:pulse: loop frame 24031 pulse frame 23904 drift 126
+43984: 101 24800: SyncLoop:pulse: loop frame 24799 pulse frame 24789 drift 9
+43984: 101 25824: SyncLoop:pulse: loop frame 25823 pulse frame 25674 drift 148
+43984: 101 26592: SyncLoop:pulse: loop frame 26591 pulse frame 26560 drift 30
+43984: 101 27616: SyncLoop:pulse: loop frame 27615 pulse frame 27445 drift 169
+43984: 101 28384: SyncLoop:pulse: loop frame 28383 pulse frame 28330 drift 52
+43984: 101 29408: SyncLoop:pulse: loop frame 29407 pulse frame 29216 drift 190
+43984: 101 30176: SyncLoop:pulse: loop frame 30175 pulse frame 30101 drift 73
+43984: 101 30944: SyncLoop:pulse: loop frame 30943 pulse frame 30986 drift -43
+43984: 0 0: 2 millis between interrupts
+43984: 0 0: 9 millis between interrupts
+43984: 101 31968: SyncLoop:pulse: loop frame 31967 pulse frame 31872 drift 94
+43984: 101 32992: SyncLoop:pulse: loop frame 32991 pulse frame 32757 drift 233
+43984: 101 33760: SyncLoop:pulse: loop frame 33759 pulse frame 33642 drift 116
+43984: 101 34528: SyncLoop:pulse: loop frame 34527 pulse frame 34528 drift -1
+43984: 101 35552: SyncLoop:pulse: loop frame 35551 pulse frame 35413 drift 137
+43984: 101 36320: SyncLoop:pulse: loop frame 36319 pulse frame 36298 drift 20
+43984: 101 37344: SyncLoop:pulse: loop frame 37343 pulse frame 37184 drift 158
+43984: 101 38112: SyncLoop:pulse: loop frame 38111 pulse frame 38069 drift 41
+43984: 101 39136: SyncLoop:pulse: loop frame 39135 pulse frame 38954 drift 180
+43984: 101 39904: SyncLoop:pulse: loop frame 39903 pulse frame 39840 drift 62
+43984: 101 40928: SyncLoop:pulse: loop frame 40927 pulse frame 40725 drift 201
+43984: 101 41696: SyncLoop:pulse: loop frame 41695 pulse frame 41610 drift 84
+43984: 101 42720: SyncLoop:pulse: loop frame 42719 pulse frame 42496 drift 222
+43984: 101 43488: SyncLoop:pulse: loop frame 43487 pulse frame 43381 drift 105
+43984: 101 44512: SyncLoop:pulse: loop frame 44511 pulse frame 44266 drift 244
+43984: 101 45280: SyncLoop:pulse: loop frame 45279 pulse frame 45152 drift 126
+43984: 101 46304: SyncLoop:pulse: loop frame 46303 pulse frame 46037 drift 265
+43984: 101 47072: SyncLoop:pulse: loop frame 47071 pulse frame 46922 drift 148
+43984: 101 47840: SyncLoop:pulse: loop frame 47839 pulse frame 47808 drift 30
+43984: 101 48864: SyncLoop:pulse: loop frame 48863 pulse frame 48693 drift 169
+43984: 101 49632: SyncLoop:pulse: loop frame 49631 pulse frame 49578 drift 52
+43984: 101 50656: SyncLoop:pulse: loop frame 50655 pulse frame 50464 drift 190
+43984: 101 51424: SyncLoop:pulse: loop frame 51423 pulse frame 51349 drift 73
+43984: 101 52448: SyncLoop:pulse: loop frame 52447 pulse frame 52234 drift 212
+43984: 101 53216: SyncLoop:pulse: loop frame 53215 pulse frame 53120 drift 94
+43984: 101 53984: SyncLoop:pulse: loop frame 53983 pulse frame 54005 drift -22
+43984: 101 55008: SyncLoop:pulse: loop frame 55007 pulse frame 54890 drift 116
+43984: 101 56032: SyncLoop:pulse: loop frame 56031 pulse frame 55776 drift 254
+43984: 101 56800: SyncLoop:pulse: loop frame 56799 pulse frame 56661 drift 137
+43984: 101 57568: SyncLoop:pulse: loop frame 57567 pulse frame 57546 drift 20
+43984: 101 58592: SyncLoop:pulse: loop frame 58591 pulse frame 58432 drift 158
+43984: 101 59360: SyncLoop:pulse: loop frame 59359 pulse frame 59317 drift 41
+43984: 101 60384: SyncLoop:pulse: loop frame 60383 pulse frame 60202 drift 180
+43984: 101 61152: SyncLoop:pulse: loop frame 61151 pulse frame 61088 drift 62
+43984: 101 62176: SyncLoop:pulse: loop frame 62175 pulse frame 61973 drift 201
+43984: 101 62944: SyncLoop:pulse: loop frame 62943 pulse frame 62858 drift 84
+43984: 101 63712: SyncLoop:pulse: loop frame 63711 pulse frame 63744 drift -33
+43984: 101 64736: SyncLoop:pulse: loop frame 64735 pulse frame 64629 drift 105
+43984: 101 65504: SyncLoop:pulse: loop frame 65503 pulse frame 65514 drift -11
+43984: 101 66528: SyncLoop:pulse: loop frame 66527 pulse frame 66400 drift 126
+43984: 101 67296: SyncLoop:pulse: loop frame 67295 pulse frame 67285 drift 9
+43984: 101 68320: SyncLoop:pulse: loop frame 68319 pulse frame 68170 drift 148
+43984: 101 69088: SyncLoop:pulse: loop frame 69087 pulse frame 69056 drift 30
+43984: 101 70112: SyncLoop:pulse: loop frame 70111 pulse frame 69941 drift 169
+43984: 101 70880: SyncLoop:pulse: loop frame 70879 pulse frame 70826 drift 52
+43984: 101 71904: SyncLoop:pulse: loop frame 71903 pulse frame 71712 drift 190
+43984: 101 72672: SyncLoop:pulse: loop frame 72671 pulse frame 72597 drift 73
+43984: 101 73696: SyncLoop:pulse: loop frame 73695 pulse frame 73482 drift 212
+43984: 101 74464: SyncLoop:pulse: loop frame 74463 pulse frame 74368 drift 94
+43984: 101 75232: SyncLoop:pulse: loop frame 75231 pulse frame 75253 drift -22
+43984: 101 76256: SyncLoop:pulse: loop frame 76255 pulse frame 76138 drift 116
+43984: 101 77024: SyncLoop:pulse: loop frame 77023 pulse frame 77024 drift -1
+43984: 101 78048: SyncLoop:pulse: loop frame 78047 pulse frame 77909 drift 137
+43984: 101 78816: SyncLoop:pulse: loop frame 78815 pulse frame 78794 drift 20
+43984: 101 79840: SyncLoop:pulse: loop frame 79839 pulse frame 79680 drift 158
+43984: 101 80608: SyncLoop:pulse: loop frame 80607 pulse frame 80565 drift 41
+43984: 101 81632: SyncLoop:pulse: loop frame 81631 pulse frame 81450 drift 180
+43984: 101 82400: SyncLoop:pulse: loop frame 82399 pulse frame 82336 drift 62
+43984: 101 83424: SyncLoop:pulse: loop frame 83423 pulse frame 83221 drift 201
+43984: 101 84192: SyncLoop:pulse: loop frame 84191 pulse frame 84106 drift 84
+43984: 101 224: SyncLoop:pulse: loop frame 223 pulse frame 0 drift 222
+43984: 101 224: SyncLoop:pulse external start point, pulse drift 222, loop dealign -1
+43984: 101 224: Sync: incPulses: wrapped pulse frame from 8499210 to 10 (x100)
+43984: 101 224: Sync: Track 0 drift check point frame 224 drift 223
+43984: 101 992: SyncLoop:pulse: loop frame 991 pulse frame 885 drift 105
+43984: 101 1760: SyncLoop:pulse: loop frame 1759 pulse frame 1770 drift -11
+43984: 101 2784: SyncLoop:pulse: loop frame 2783 pulse frame 2656 drift 126
+43984: 101 3552: SyncLoop:pulse: loop frame 3551 pulse frame 3541 drift 9
+43984: 101 4576: SyncLoop:pulse: loop frame 4575 pulse frame 4426 drift 148
+43984: 101 5344: SyncLoop:pulse: loop frame 5343 pulse frame 5312 drift 30
+43984: 101 6368: SyncLoop:pulse: loop frame 6367 pulse frame 6197 drift 169
+43984: 101 7136: SyncLoop:pulse: loop frame 7135 pulse frame 7082 drift 52
+43984: 101 8160: SyncLoop:pulse: loop frame 8159 pulse frame 7968 drift 190
+43984: 101 8928: SyncLoop:pulse: loop frame 8927 pulse frame 8853 drift 73
+43984: 101 9952: SyncLoop:pulse: loop frame 9951 pulse frame 9738 drift 212
+43984: 101 10720: SyncLoop:pulse: loop frame 10719 pulse frame 10624 drift 94
+43984: 101 11488: SyncLoop:pulse: loop frame 11487 pulse frame 11509 drift -22
+43984: 101 12512: SyncLoop:pulse: loop frame 12511 pulse frame 12394 drift 116
+43984: 101 13280: SyncLoop:pulse: loop frame 13279 pulse frame 13280 drift -1
+43984: 101 14304: SyncLoop:pulse: loop frame 14303 pulse frame 14165 drift 137
+43984: 101 15072: SyncLoop:pulse: loop frame 15071 pulse frame 15050 drift 20
+43984: 101 16096: SyncLoop:pulse: loop frame 16095 pulse frame 15936 drift 158
+43984: 101 16864: SyncLoop:pulse: loop frame 16863 pulse frame 16821 drift 41
+43984: 101 17888: SyncLoop:pulse: loop frame 17887 pulse frame 17706 drift 180
+43984: 101 18656: SyncLoop:pulse: loop frame 18655 pulse frame 18592 drift 62
+43984: 101 19680: SyncLoop:pulse: loop frame 19679 pulse frame 19477 drift 201
+43984: 101 20448: SyncLoop:pulse: loop frame 20447 pulse frame 20362 drift 84
+43984: 101 21472: SyncLoop:pulse: loop frame 21471 pulse frame 21248 drift 222
+43984: 101 22240: SyncLoop:pulse: loop frame 22239 pulse frame 22133 drift 105
+43984: 101 23008: SyncLoop:pulse: loop frame 23007 pulse frame 23018 drift -11
+43984: 101 24032: SyncLoop:pulse: loop frame 24031 pulse frame 23904 drift 126
+43984: 101 24800: SyncLoop:pulse: loop frame 24799 pulse frame 24789 drift 9
+43984: 101 25824: SyncLoop:pulse: loop frame 25823 pulse frame 25674 drift 148
+43984: 101 26592: SyncLoop:pulse: loop frame 26591 pulse frame 26560 drift 30
+43984: 101 27616: SyncLoop:pulse: loop frame 27615 pulse frame 27445 drift 169
+43984: 101 28384: SyncLoop:pulse: loop frame 28383 pulse frame 28330 drift 52
+43984: 101 29408: SyncLoop:pulse: loop frame 29407 pulse frame 29216 drift 190
+43984: 101 30176: SyncLoop:pulse: loop frame 30175 pulse frame 30101 drift 73
+43984: 101 31200: SyncLoop:pulse: loop frame 31199 pulse frame 30986 drift 212
+43984: 101 31968: SyncLoop:pulse: loop frame 31967 pulse frame 31872 drift 94
+43984: 101 32992: SyncLoop:pulse: loop frame 32991 pulse frame 32757 drift 233
+43984: 101 33760: SyncLoop:pulse: loop frame 33759 pulse frame 33642 drift 116
+43984: 101 34528: SyncLoop:pulse: loop frame 34527 pulse frame 34528 drift -1
+43984: 101 35552: SyncLoop:pulse: loop frame 35551 pulse frame 35413 drift 137
+43984: 101 36320: SyncLoop:pulse: loop frame 36319 pulse frame 36298 drift 20
+43984: 101 37344: SyncLoop:pulse: loop frame 37343 pulse frame 37184 drift 158
+43984: 101 38112: SyncLoop:pulse: loop frame 38111 pulse frame 38069 drift 41
+43984: 101 39136: SyncLoop:pulse: loop frame 39135 pulse frame 38954 drift 180
+43984: 101 39904: SyncLoop:pulse: loop frame 39903 pulse frame 39840 drift 62
+43984: 101 40928: SyncLoop:pulse: loop frame 40927 pulse frame 40725 drift 201
+43984: 101 41696: SyncLoop:pulse: loop frame 41695 pulse frame 41610 drift 84
+43984: 101 42720: SyncLoop:pulse: loop frame 42719 pulse frame 42496 drift 222
+43984: 101 43488: SyncLoop:pulse: loop frame 43487 pulse frame 43381 drift 105
+43984: 101 44512: SyncLoop:pulse: loop frame 44511 pulse frame 44266 drift 244
+43984: 101 45280: SyncLoop:pulse: loop frame 45279 pulse frame 45152 drift 126
+43984: 101 46048: SyncLoop:pulse: loop frame 46047 pulse frame 46037 drift 9
+43984: 101 47072: SyncLoop:pulse: loop frame 47071 pulse frame 46922 drift 148
+43984: 101 47840: SyncLoop:pulse: loop frame 47839 pulse frame 47808 drift 30
+43984: 101 48864: SyncLoop:pulse: loop frame 48863 pulse frame 48693 drift 169
+43984: 101 49632: SyncLoop:pulse: loop frame 49631 pulse frame 49578 drift 52
+43984: 101 50656: SyncLoop:pulse: loop frame 50655 pulse frame 50464 drift 190
+43984: 101 51424: SyncLoop:pulse: loop frame 51423 pulse frame 51349 drift 73
+43984: 101 52448: SyncLoop:pulse: loop frame 52447 pulse frame 52234 drift 212
+43984: 101 53216: SyncLoop:pulse: loop frame 53215 pulse frame 53120 drift 94
+43984: 101 54240: SyncLoop:pulse: loop frame 54239 pulse frame 54005 drift 233
+43984: 101 55008: SyncLoop:pulse: loop frame 55007 pulse frame 54890 drift 116
+43984: 101 55776: SyncLoop:pulse: loop frame 55775 pulse frame 55776 drift -1
+43984: 101 56800: SyncLoop:pulse: loop frame 56799 pulse frame 56661 drift 137
+43984: 101 57568: SyncLoop:pulse: loop frame 57567 pulse frame 57546 drift 20
+43984: 101 58592: SyncLoop:pulse: loop frame 58591 pulse frame 58432 drift 158
+43984: 101 59360: SyncLoop:pulse: loop frame 59359 pulse frame 59317 drift 41
+43984: 101 60384: SyncLoop:pulse: loop frame 60383 pulse frame 60202 drift 180
+43984: 101 61152: SyncLoop:pulse: loop frame 61151 pulse frame 61088 drift 62
+43984: 101 62176: SyncLoop:pulse: loop frame 62175 pulse frame 61973 drift 201
+43984: 101 62944: SyncLoop:pulse: loop frame 62943 pulse frame 62858 drift 84
+43984: 101 63968: SyncLoop:pulse: loop frame 63967 pulse frame 63744 drift 222
+43984: 101 64736: SyncLoop:pulse: loop frame 64735 pulse frame 64629 drift 105
+43984: 101 65504: SyncLoop:pulse: loop frame 65503 pulse frame 65514 drift -11
+43984: 101 66528: SyncLoop:pulse: loop frame 66527 pulse frame 66400 drift 126
+43984: 101 67296: SyncLoop:pulse: loop frame 67295 pulse frame 67285 drift 9
+43984: 101 68320: SyncLoop:pulse: loop frame 68319 pulse frame 68170 drift 148
+43984: 101 69088: SyncLoop:pulse: loop frame 69087 pulse frame 69056 drift 30
+43984: 101 70112: SyncLoop:pulse: loop frame 70111 pulse frame 69941 drift 169
+43984: 101 70880: SyncLoop:pulse: loop frame 70879 pulse frame 70826 drift 52
+43984: 101 71904: SyncLoop:pulse: loop frame 71903 pulse frame 71712 drift 190
+43984: 101 72672: SyncLoop:pulse: loop frame 72671 pulse frame 72597 drift 73
+43984: 101 73696: SyncLoop:pulse: loop frame 73695 pulse frame 73482 drift 212
+43984: 101 74464: SyncLoop:pulse: loop frame 74463 pulse frame 74368 drift 94
+43984: 101 75232: SyncLoop:pulse: loop frame 75231 pulse frame 75253 drift -22
+43984: 101 76256: SyncLoop:pulse: loop frame 76255 pulse frame 76138 drift 116
+43984: 101 77280: SyncLoop:pulse: loop frame 77279 pulse frame 77024 drift 254
+43984: 101 78048: SyncLoop:pulse: loop frame 78047 pulse frame 77909 drift 137
+43984: 101 78816: SyncLoop:pulse: loop frame 78815 pulse frame 78794 drift 20
+43984: 101 79840: SyncLoop:pulse: loop frame 79839 pulse frame 79680 drift 158
+43984: 101 80608: SyncLoop:pulse: loop frame 80607 pulse frame 80565 drift 41
+43984: 101 81632: SyncLoop:pulse: loop frame 81631 pulse frame 81450 drift 180
+43984: 101 82400: SyncLoop:pulse: loop frame 82399 pulse frame 82336 drift 62
+43984: 101 83424: SyncLoop:pulse: loop frame 83423 pulse frame 83221 drift 201
+43984: 101 84192: SyncLoop:pulse: loop frame 84191 pulse frame 84106 drift 84
+43984: 101 84960: SyncLoop:pulse: loop frame 84959 pulse frame 0 drift -33
+43984: 101 84960: SyncLoop:pulse external start point, pulse drift -33, loop dealign -1
+43984: 101 84960: Sync: incPulses: wrapped pulse frame from 8499212 to 12 (x100)
+43984: 101 84960: Sync: Track 0 drift check point frame 84960 drift -32
+43984: 101 992: SyncLoop:pulse: loop frame 991 pulse frame 885 drift 105
+43984: 101 1760: SyncLoop:pulse: loop frame 1759 pulse frame 1770 drift -11
+43984: 101 2784: SyncLoop:pulse: loop frame 2783 pulse frame 2656 drift 126
+43984: 101 3552: SyncLoop:pulse: loop frame 3551 pulse frame 3541 drift 9
+43984: 101 4576: SyncLoop:pulse: loop frame 4575 pulse frame 4426 drift 148
+43984: 101 5344: SyncLoop:pulse: loop frame 5343 pulse frame 5312 drift 30
+43984: 101 6368: SyncLoop:pulse: loop frame 6367 pulse frame 6197 drift 169
+43984: 101 7136: SyncLoop:pulse: loop frame 7135 pulse frame 7082 drift 52
+43984: 101 8160: SyncLoop:pulse: loop frame 8159 pulse frame 7968 drift 190
+43984: 101 8928: SyncLoop:pulse: loop frame 8927 pulse frame 8853 drift 73
+43984: 101 9952: SyncLoop:pulse: loop frame 9951 pulse frame 9738 drift 212
+43984: 101 10720: SyncLoop:pulse: loop frame 10719 pulse frame 10624 drift 94
+43984: 101 11488: SyncLoop:pulse: loop frame 11487 pulse frame 11509 drift -22
+43984: 101 12512: SyncLoop:pulse: loop frame 12511 pulse frame 12394 drift 116
+43984: 101 13280: SyncLoop:pulse: loop frame 13279 pulse frame 13280 drift -1
+43984: 101 14304: SyncLoop:pulse: loop frame 14303 pulse frame 14165 drift 137
+43984: 101 15072: SyncLoop:pulse: loop frame 15071 pulse frame 15050 drift 20
+43984: 101 16096: SyncLoop:pulse: loop frame 16095 pulse frame 15936 drift 158
+43984: 101 16864: SyncLoop:pulse: loop frame 16863 pulse frame 16821 drift 41
+43984: 101 17888: SyncLoop:pulse: loop frame 17887 pulse frame 17706 drift 180
+43984: 101 18656: SyncLoop:pulse: loop frame 18655 pulse frame 18592 drift 62
+43984: 101 19680: SyncLoop:pulse: loop frame 19679 pulse frame 19477 drift 201
+43984: 101 20448: SyncLoop:pulse: loop frame 20447 pulse frame 20362 drift 84
+43984: 101 21472: SyncLoop:pulse: loop frame 21471 pulse frame 21248 drift 222
+43984: 101 22240: SyncLoop:pulse: loop frame 22239 pulse frame 22133 drift 105
+43984: 101 23008: SyncLoop:pulse: loop frame 23007 pulse frame 23018 drift -11
+43984: 101 24032: SyncLoop:pulse: loop frame 24031 pulse frame 23904 drift 126
+43984: 101 24800: SyncLoop:pulse: loop frame 24799 pulse frame 24789 drift 9
+43984: 101 25824: SyncLoop:pulse: loop frame 25823 pulse frame 25674 drift 148
+43984: 101 26592: SyncLoop:pulse: loop frame 26591 pulse frame 26560 drift 30
+43984: 101 27616: SyncLoop:pulse: loop frame 27615 pulse frame 27445 drift 169
+43984: 101 28384: SyncLoop:pulse: loop frame 28383 pulse frame 28330 drift 52
+43984: 101 29408: SyncLoop:pulse: loop frame 29407 pulse frame 29216 drift 190
+43984: 101 30176: SyncLoop:pulse: loop frame 30175 pulse frame 30101 drift 73
+43984: 101 31200: SyncLoop:pulse: loop frame 31199 pulse frame 30986 drift 212
+43984: 101 31968: SyncLoop:pulse: loop frame 31967 pulse frame 31872 drift 94
+43984: 101 32992: SyncLoop:pulse: loop frame 32991 pulse frame 32757 drift 233
+43984: 101 33760: SyncLoop:pulse: loop frame 33759 pulse frame 33642 drift 116
+43984: 101 34528: SyncLoop:pulse: loop frame 34527 pulse frame 34528 drift -1
+43984: 101 35552: SyncLoop:pulse: loop frame 35551 pulse frame 35413 drift 137
+43984: 101 36320: SyncLoop:pulse: loop frame 36319 pulse frame 36298 drift 20
+43984: 101 37344: SyncLoop:pulse: loop frame 37343 pulse frame 37184 drift 158
+43984: 101 38112: SyncLoop:pulse: loop frame 38111 pulse frame 38069 drift 41
+43984: 101 39136: SyncLoop:pulse: loop frame 39135 pulse frame 38954 drift 180
+43984: 101 39904: SyncLoop:pulse: loop frame 39903 pulse frame 39840 drift 62
+43984: 101 40928: SyncLoop:pulse: loop frame 40927 pulse frame 40725 drift 201
+43984: 101 41696: SyncLoop:pulse: loop frame 41695 pulse frame 41610 drift 84
+43984: 101 42720: SyncLoop:pulse: loop frame 42719 pulse frame 42496 drift 222
+43984: 101 43488: SyncLoop:pulse: loop frame 43487 pulse frame 43381 drift 105
+43984: 101 44256: SyncLoop:pulse: loop frame 44255 pulse frame 44266 drift -11
+43984: 101 45280: SyncLoop:pulse: loop frame 45279 pulse frame 45152 drift 126
+43984: 101 46048: SyncLoop:pulse: loop frame 46047 pulse frame 46037 drift 9
+43984: 101 47072: SyncLoop:pulse: loop frame 47071 pulse frame 46922 drift 148
+43984: 101 47840: SyncLoop:pulse: loop frame 47839 pulse frame 47808 drift 30
+43984: 101 48864: SyncLoop:pulse: loop frame 48863 pulse frame 48693 drift 169
+43984: 101 49632: SyncLoop:pulse: loop frame 49631 pulse frame 49578 drift 52
+43984: 101 50656: SyncLoop:pulse: loop frame 50655 pulse frame 50464 drift 190
+43984: 101 51424: SyncLoop:pulse: loop frame 51423 pulse frame 51349 drift 73
+43984: 101 52448: SyncLoop:pulse: loop frame 52447 pulse frame 52234 drift 212
+43984: 101 53216: SyncLoop:pulse: loop frame 53215 pulse frame 53120 drift 94
+43984: 101 53984: SyncLoop:pulse: loop frame 53983 pulse frame 54005 drift -22
+43984: 101 55008: SyncLoop:pulse: loop frame 55007 pulse frame 54890 drift 116
+43984: 101 55776: SyncLoop:pulse: loop frame 55775 pulse frame 55776 drift -1
+43984: 101 56800: SyncLoop:pulse: loop frame 56799 pulse frame 56661 drift 137
+43984: 101 57568: SyncLoop:pulse: loop frame 57567 pulse frame 57546 drift 20
+43984: 101 58592: SyncLoop:pulse: loop frame 58591 pulse frame 58432 drift 158
+43984: 101 59360: SyncLoop:pulse: loop frame 59359 pulse frame 59317 drift 41
+43984: 101 60384: SyncLoop:pulse: loop frame 60383 pulse frame 60202 drift 180
+43984: 101 61152: SyncLoop:pulse: loop frame 61151 pulse frame 61088 drift 62
+43984: 101 62176: SyncLoop:pulse: loop frame 62175 pulse frame 61973 drift 201
+43984: 101 62944: SyncLoop:pulse: loop frame 62943 pulse frame 62858 drift 84
+43984: 101 63968: SyncLoop:pulse: loop frame 63967 pulse frame 63744 drift 222
+43984: 101 64736: Function GlobalReset down
+43984: 101 64736: Track::GeneralReset
+43984: 101 64736: Sync: Master track reset, stop clocks and send MIDI Stop
+43984: 101 64736: MidiTransport: Sending MIDI Stop and stopping clocks
+43984: 101 64736: Layer: Capture fade tail, 128 frames at 65307
+43984: 101 -289: Sync: Disabling output sync master track 0
+43984: 101 -289: Sync: Disabling track sync master track 0
+43984: 201 -289: Track::GeneralReset
+43984: 301 -289: Track::GeneralReset
+43984: 401 -289: Track::GeneralReset
+43984: 501 -289: Track::GeneralReset
+43984: 601 -289: Track::GeneralReset
+43984: 701 -289: Track::GeneralReset
+43984: 801 -289: Track::GeneralReset
+43984: 101 -289: SyncLoop:pulse: loop frame 64735 pulse frame 64629 drift 105
+43984: 101 -289: Mobius::notifyGlobalReset
+43984: 101 -289: Sync: Stop Event
+43984: 0 0: MidiState internal stopped receiving clocks
+43984: 0 0: Flushing object pools
+43984: 0 0: MidiTimer: deactivating millisecond timer
+43984: MidiIn: MIM_LONGDATA
+43984: WinMidiInput::processLongData: recieved 0 bytes.
+43984: MidiIn: MIM_LONGDATA
+43984: WinMidiInput::processLongData: recieved 0 bytes.
+43984: MidiIn: MIM_LONGDATA
+43984: WinMidiInput::processLongData: recieved 0 bytes.
+43984: MidiIn: MIM_LONGDATA
+43984: WinMidiInput::processLongData: recieved 0 bytes.
+43984: MidiIn: MIM_LONGDATA
+43984: WinMidiInput::processLongData: recieved 0 bytes.
+43984: MidiIn: MIM_LONGDATA
+43984: WinMidiInput::processLongData: recieved 0 bytes.
+43984: MidiIn: MIM_LONGDATA
+43984: WinMidiInput::processLongData: recieved 0 bytes.
+43984: MidiIn: MIM_LONGDATA
+43984: WinMidiInput::processLongData: recieved 0 bytes.
+43984: MidiIn: MIM_LONGDATA
+43984: WinMidiInput::processLongData: recieved 0 bytes.

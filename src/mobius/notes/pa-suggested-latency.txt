@@ -1,0 +1,133 @@
+
+----------------------------------------------------------------------
+pa_asio.cpp
+----------------------------------------------------------------------
+
+        suggestedOutputLatencyFrames = (unsigned long)((outputParameters->suggestedLatency * sampleRate)+0.5f);
+        suggestedInputLatencyFrames = (unsigned long)((inputParameters->suggestedLatency * sampleRate)+0.5f);
+
+
+    framesPerHostBuffer = SelectHostBufferSize(
+            (( suggestedInputLatencyFrames > suggestedOutputLatencyFrames )
+                    ? suggestedInputLatencyFrames : suggestedOutputLatencyFrames),
+            driverInfo );
+
+
+
+
+static unsigned long SelectHostBufferSize( unsigned long suggestedLatencyFrames,
+        PaAsioDriverInfo *driverInfo )
+{
+    unsigned long result;
+
+    if( suggestedLatencyFrames == 0 )
+    {
+        result = driverInfo->bufferPreferredSize;
+    }
+    else{
+        if( suggestedLatencyFrames <= (unsigned long)driverInfo->bufferMinSize )
+        {
+            result = driverInfo->bufferMinSize;
+        }
+        else if( suggestedLatencyFrames >= (unsigned long)driverInfo->bufferMaxSize )
+        {
+            result = driverInfo->bufferMaxSize;
+        }
+        else
+        {
+            if( driverInfo->bufferGranularity == -1 )
+            {
+                /* power-of-two */
+                result = 2;
+
+                while( result < suggestedLatencyFrames )
+                    result *= 2;
+
+                if( result < (unsigned long)driverInfo->bufferMinSize )
+                    result = driverInfo->bufferMinSize;
+
+                if( result > (unsigned long)driverInfo->bufferMaxSize )
+                    result = driverInfo->bufferMaxSize;
+            }
+            else if( driverInfo->bufferGranularity == 0 )
+            {
+                /* the documentation states that bufferGranularity should be
+                    zero when bufferMinSize, bufferMaxSize and
+                    bufferPreferredSize are the same. We assume that is the case.
+                */
+
+                result = driverInfo->bufferPreferredSize;
+            }
+            else
+            {
+                /* modulo granularity */
+
+                unsigned long remainder =
+                        suggestedLatencyFrames % driverInfo->bufferGranularity;
+
+                if( remainder == 0 )
+                {
+                    result = suggestedLatencyFrames;
+                }
+                else
+                {
+                    result = suggestedLatencyFrames
+                            + (driverInfo->bufferGranularity - remainder);
+
+                    if( result > (unsigned long)driverInfo->bufferMaxSize )
+                        result = driverInfo->bufferMaxSize;
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+----------------------------------------------------------------------
+pa_win_ds
+----------------------------------------------------------------------
+
+        suggestedInputLatencyFrames = (unsigned long)(inputParameters->suggestedLatency * sampleRate);
+        suggestedOutputLatencyFrames = (unsigned long)(outputParameters->suggestedLatency * sampleRate);
+
+    /* Get system minimum latency. */
+        minLatencyFrames = PaWinDs_GetMinLatencyFrames( sampleRate );
+
+    /* Let user override latency by passing latency parameter. */
+        userLatencyFrames = (suggestedInputLatencyFrames > suggestedOutputLatencyFrames)
+                    ? suggestedInputLatencyFrames
+                    : suggestedOutputLatencyFrames;
+        if( userLatencyFrames > 0 ) minLatencyFrames = userLatencyFrames;
+
+    /* Calculate stream->framesPerDSBuffer depending on framesPerBuffer */
+        if( framesPerBuffer == paFramesPerBufferUnspecified )
+        {
+        /* App support variable framesPerBuffer */
+            stream->framesPerDSBuffer = minLatencyFrames;
+
+            stream->streamRepresentation.streamInfo.outputLatency = (double)(minLatencyFrames - 1) / sampleRate;
+        }
+        else
+        {
+        /* Round up to number of buffers needed to guarantee that latency. */
+            int numUserBuffers = (minLatencyFrames + framesPerBuffer - 1) / framesPerBuffer;
+            if( numUserBuffers < 1 ) numUserBuffers = 1;
+            numUserBuffers += 1; /* So we have latency worth of buffers ahead of current buffer. */
+            stream->framesPerDSBuffer = framesPerBuffer * numUserBuffers;
+
+            stream->streamRepresentation.streamInfo.outputLatency = (double)(framesPerBuffer * (numUserBuffers-1)) / sampleRate;
+        }
+
+----------------------------------------------------------------------
+MME
+----------------------------------------------------------------------
+
+            SelectBufferSizeAndCount(
+                ((framesPerBuffer == paFramesPerBufferUnspecified)
+                    ? PA_MME_MIN_HOST_BUFFER_FRAMES_WHEN_UNSPECIFIED_
+                    : framesPerBuffer ) * hostInputFrameSize, /* baseBufferSize */
+                ((unsigned long)(suggestedInputLatency * sampleRate)) * hostInputFrameSize, /* suggestedLatency */
+                4, /* baseBufferCount */
+                minimumBufferCount, maximumBufferSize,
+                &hostBufferSizeBytes, &hostBufferCount );

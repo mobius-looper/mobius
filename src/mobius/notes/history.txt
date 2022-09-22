@@ -1,0 +1,281 @@
+Mon Oct 11 23:13:07 2004
+
+Old notes that are no longer relevant or accurate but may be amusing
+to archiologists.
+
+----------------------------------------------------------------------
+ENHANCEMENTS
+----------------------------------------------------------------------
+
+Mixing loops and audio
+  - load audio, let it define the loop point?
+
+Calibration
+  - connect audio out to audio in (feedback)
+    - try to allow either or both channels
+  - send an output pulse
+  - wait for input pulse
+
+
+
+
+
+
+----------------------------------------------------------------------
+State Machine
+----------------------------------------------------------------------
+
+* Variables
+
+IL - Input Latency
+OL - Output Latency
+SL - Synchronization Latency, equal to OL minus IL ?
+BS - Buffer size, the number of frames per buffer in the interrupt handler
+F  - Interrupt Frame
+IF - Input Frame
+OF - Output Frame
+LF - Loop Frame
+CF - Command Frame, the frame a command is processed
+EF - Event Frame, the frame an event is to be applied
+
+F is simply a counter that increments as the interrupt handler is
+called, it is mathmatically related to, but usually not the same
+as the relative input frame or output frame.  F does not begin
+incrementing until the Record command is received (CF).  
+
+CF is normally quantized down to a block boundary though this may
+change if we start timestamping them.  Command quantization will
+result in a maximum drift of 11.61 milliseconds, based on the size of
+the PortAudio host buffer.  This is reaching the point of audibility
+but will hopefully will not be detectable.  This won't shift
+synchronization of input and output, but it may cause slight clipping
+of the start of a recording, or unwanted audio leaking into the front
+of a recording (can it go both ways or just clip?)
+
+IF is always F - IL since the interrupt is receiving buffers for audio
+recorded in the past.
+
+IL is not necessarily an even multiple of BS, meaning that
+we may only include a portion of the first buffer in the loop.
+
+If Record Start CF is not quantized, this initial Record CF (RCF),
+must be factored into all further IF calculations, IF = F - IL - RCF
+while the loop is recording.  Once recording stops, RCF is no longer
+meaningful.  The same issue exists for OVERDUB and other commands that
+cause recording.
+
+OF is meaningless until LF is set.  This may change if we allow other
+audio tracks to play during the initial loop construction.
+
+Once LF is set, OF is usually F + OL since the interrupt fills buffers
+for playback in the future.  But we allow F to increment to LF + IL to
+make record calculations easier, so when OF > LF it must be adjusted
+down to OF - LF.
+
+* Example values
+
+BS = 100
+IL = 250
+OL = 300
+LF = 1000
+
+* Reset
+
+Audio streams are pumping, interrupts are called but not processing.
+Playback loop and edit loop are NULL. Counters are all zero.
+
+* Record Start Command (Reset)
+
+Activated with MIDI, GUI, or a countdown timer with metronome.  Assume
+commands are in realtime.
+
+The input buffer now being received was played IL frames in the past
+so it is not part of the recording.  Must wait IL frames before adding
+to the record loop.
+
+F is zero.  Enable the interrupt handler, post a RECORD_START event
+for IL.
+
+Example: F=0, EF=250
+
+
+* Record Start Wait
+
+F increments by BS.  F is less than RECORD_START EF.  Ignore input
+buffer, do not fill output buffer.
+
+* Record Start
+
+RECORD_START EF is within range of this buffer.  
+If the next event falls just outside of the frames processed by this
+interrupt, process it in this interrupt (preemptive event processing).
+
+Allocate mRecordLoop, begin accumulating audio.  Assuming no other
+events, the offset into the input buffer (IBO) will be IL - F,
+the number of frames recorded (RF) will BS - IBO.
+
+Example: F=200, IL=250, IBO=50, RF=50
+
+* Record
+
+Assuming no events, entire input buffer is recorded to IF.
+
+A buffer for OF is being requested.  Until we establish the loop frame
+(LF), there is nothing to add.
+
+If LF were known in advance, we would begin playback early when OF =
+LF - OL.  With dynamic loop lengths, we can't know this until after it
+has happened.
+
+* Record Stop
+
+The recording includes buffers that are currently being filled and
+have not been received.
+
+Set LF to F.  Note that this means that the end of the reording
+will be quanitzed to a host buffer boundary which may cause us to
+include a bit too much, or clip a little off the end.
+
+Until we shift loops, playback must now begin from the record loop.
+Since we are filling buffers that won't play until OL, we do not start
+playing from from zero, rather we begin playing at OL.  This will
+result in a slight truncation of the beginning of the loop, but only
+during the first playback.  We may need to apply a non-destructive
+fade in to avoid an audible pop.
+
+Post a RECORD_STOP event for F + IL (F continues incrementing).
+
+The usual OF calculation will overflow LF and must be adjusted.
+
+  OF = F + OL = 1000 + 300 = 1300 (OF > LF)
+  OF = OF - LF = 1300 - 1000 = 300  (OF == OL)
+
+Example: F=1000, LF=1000, EF=1200, OF=300
+
+!! this feels wrong, the difference between IL and OL needs to 
+be factored in here when determining OF ?
+
+* Record Stop Wait
+
+Waiting for the RECORD_STOP event at LF + IL.  Playback continues from
+the record loop.  OF calculations will overflow LF and must be
+adjusted.
+
+Recording continues into IF.
+
+* Record Stop
+
+The loops may now be shifted.  Playback loop is set to the record
+loop, record loop is set to a copy of itself.  Record loop points back
+to the playback loop for undo.
+
+If there are no stacked commands, disable recording.
+
+Example: F = 1200, IF = 1000, OF=500  (preemptive event processing)
+
+Set F to IL.  
+
+Logically F wrapped back to zero at 1000, but to simplify calculations
+we let it count beyond LF, so when we wrap it goes back to IL.
+
+Hmm, not sure I like this.  It doesn't make any difference but makes
+the trace output a little confusing?  Better to have both
+a negative IF adjust and an OF overflow adjust and just let F
+tick from 0 to LF ? 
+
+* Play
+
+F increments by BS, playback continues from the playback loop, 
+input buffers are ignored.
+
+* Loop Detection
+
+OF reaches LF during plaback.  Due to command quantization
+this will normally be on a buffer boundary, but do not assume so.
+
+If there has been no recording or attenuation during a loop pass,
+there is no need to shift the loops, but we won't know that for
+another OL frames since we are pre-filling buffers and a record
+event could in theory come in after this but before the audible
+end of the loop.  
+
+Begin playback from frame zero of the record loop.  The usual
+OF calculation will overflow:
+
+  OF = F + OL;
+  if (OF > OF)
+    OF = OF - LF;
+
+Post a LOOP event for LF + IL.  
+
+* Waiting for Loop
+
+Waiting for LOOP event at LF + IL.
+
+Playback continues from the record loop.  Inputs are ignored (assuming
+no events).
+
+* Loop
+
+The loops may now be shifted.  If there was no recording or
+attenuation the current record loop can be reused.  Otherwise
+playback loop is set to the record loop, record loop is set to a copy
+of itself.  Record loop points back to the playback loop for undo.
+
+Goto "Play" state.
+
+* Overdub Start
+
+Playback continues normally.
+
+The input buffer now being received was played IL frames in the past
+so it is not part of the recording.  Must wait IL frames before adding
+to the record loop.
+
+F is random.  Enable the interrupt handler, post an OVERDUB_START event
+for F + IL.
+
+Example: F=400, EF=600
+
+* Overdub Start Wait
+
+F increments by BS.  F is less than OVERDUB_START EF.  Ignore input
+buffer.  Playback continues normally.
+
+* Overdub
+
+Begin recording.  During the initial recording IF = F - IL.  Previous
+experiments set IF = F - OL because the recording was being played
+against output that was buffered OL frames ago and they need to be
+synchronized. Not sure how to reconcile this!!
+
+Perhaps OL & IL should be a function of PortAudio buffer size.
+BL = 9216, IL = 1141, OL = 8075 ?
+
+* Overdub Stop
+
+The overdub includes buffers that are currently being filled
+and have not been received.  Post a RECORD_STOP event for F + IL.
+
+* Overdub Stop wait
+
+Playback and record continue normally.
+
+* Overdub End
+
+Return to PLAY mode.
+
+* Loop Detection during Overdub
+
+OF reaches LF during plaback.  Post a LOOP event for LF + IL.
+Playback and recording continues normally.
+
+* Loop during Overdub
+
+Shift buffers.  Recording may be split among two loops if the
+loop occurs in the middle of the buffer.
+
+Set F to IL.
+
+
+

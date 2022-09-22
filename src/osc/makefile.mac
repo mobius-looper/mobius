@@ -1,0 +1,65 @@
+#
+# Makefile for the OSC interface library
+#
+# This is an abstraction built around Ross Bencina's oscpack.
+# 
+
+default: liboscpack lib osctest
+
+include ../make/common.osx
+
+INCLUDES = -I../util -I./oscpack/osc
+
+LIBUTIL = ../util/libutil.a
+
+######################################################################
+#
+# liboscpack
+#
+######################################################################
+
+liboscpack:
+	@make -C oscpack -f makefile.mac
+
+######################################################################
+#
+# libosc
+#
+######################################################################
+
+LIB_SRC = \
+	OscInterface.cpp
+
+LIB_O = $(LIB_SRC:.cpp=.o)
+
+libosc.a: $(LIB_O)
+	libtool -static -o libosc.a $(LIB_O) ./oscpack/liboscpack.a
+
+lib: libosc.a
+
+######################################################################
+#
+# osctest
+#
+######################################################################
+
+TEST_SRC = OscTest.cpp
+TEST_O = $(TEST_SRC:.cpp=.o)
+
+osctest: libosc.a $(TEST_O)
+	g++ $(LDFLAGS) -g -o osctest $(TEST_O) libosc.a $(LIBUTIL)
+
+
+######################################################################
+#
+# General
+#
+######################################################################
+
+.PHONY: clean
+clean: commonclean
+	@make -C oscpack -f makefile.mac clean
+	@-rm -f $(LIB_O)
+	@-rm -f $(TEST_O)
+	@-rm -f *.a
+	@-rm -f osctest

@@ -1,0 +1,412 @@
+// !$*UTF8*$!
+{
+	08FB7793FE84155DC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 1FCE2B671504707C00B26775 /* auvaltool */;
+		activeTarget = 1FCE2B5315046FAE00B26775 /* auval */;
+		breakpoints = (
+			1FCE2B6D1504743100B26775 /* MobiusPlugin.cpp:655 */,
+			1FCE2B761504750900B26775 /* MobiusPlugin.cpp:544 */,
+			1FCE2B7A1509C31200B26775 /* Mobius.cpp:438 */,
+			1FCE2B7D1509C36600B26775 /* Mobius.cpp:824 */,
+			1FCE2B7F1509C40D00B26775 /* Mobius.cpp:241 */,
+			1FCE2B811509C44D00B26775 /* Mobius.cpp:368 */,
+		);
+		codeSenseManager = 1FCE2B5015046F8600B26775 /* Code sense */;
+		executables = (
+			1FCE2B671504707C00B26775 /* auvaltool */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					229,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					341,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					301,
+					60,
+					20,
+					48.16259765625,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 352612221;
+			PBXWorkspaceStateSaveDate = 352612221;
+		};
+		perUserProjectItems = {
+			1FCE2B5615046FB200B26775 /* PBXTargetBookmark */ = 1FCE2B5615046FB200B26775 /* PBXTargetBookmark */;
+			1FCE2B5715046FB200B26775 /* PBXTargetBookmark */ = 1FCE2B5715046FB200B26775 /* PBXTargetBookmark */;
+			1FCE2B5E1504701800B26775 /* PBXTargetBookmark */ = 1FCE2B5E1504701800B26775 /* PBXTargetBookmark */;
+			1FCE2B611504701800B26775 /* PBXTargetBookmark */ = 1FCE2B611504701800B26775 /* PBXTargetBookmark */;
+			1FCE2B621504701800B26775 /* PBXTargetBookmark */ = 1FCE2B621504701800B26775 /* PBXTargetBookmark */;
+			1FCE2B691504708100B26775 /* PBXTargetBookmark */ = 1FCE2B691504708100B26775 /* PBXTargetBookmark */;
+			1FCE2B6A150470B100B26775 /* PBXTargetBookmark */ = 1FCE2B6A150470B100B26775 /* PBXTargetBookmark */;
+			1FCE2B6B150470D400B26775 /* PBXTargetBookmark */ = 1FCE2B6B150470D400B26775 /* PBXTargetBookmark */;
+		};
+		sourceControlManager = 1FCE2B4F15046F8600B26775 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	1FCE2B4F15046F8600B26775 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	1FCE2B5015046F8600B26775 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	1FCE2B5315046FAE00B26775 /* auval */ = {
+		activeExec = 0;
+	};
+	1FCE2B5615046FB200B26775 /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FCE2B5315046FAE00B26775 /* auval */;
+	};
+	1FCE2B5715046FB200B26775 /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FCE2B5315046FAE00B26775 /* auval */;
+		uiCtxt = {
+			TOCViewDetailVisibleRect = "{{0, 0}, {388, 199}}";
+			TOCViewExpandedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+			TOCViewMasterVisibleRect = "{{0, 0}, {151, 199}}";
+			TOCViewSelectedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+		};
+	};
+	1FCE2B5E1504701800B26775 /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FCE2B5315046FAE00B26775 /* auval */;
+		uiCtxt = {
+			TOCViewDetailVisibleRect = "{{0, 0}, {388, 199}}";
+			TOCViewExpandedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+			TOCViewMasterVisibleRect = "{{0, 0}, {151, 199}}";
+			TOCViewSelectedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+		};
+	};
+	1FCE2B611504701800B26775 /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FCE2B5315046FAE00B26775 /* auval */;
+	};
+	1FCE2B621504701800B26775 /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FCE2B5315046FAE00B26775 /* auval */;
+		uiCtxt = {
+			TOCViewDetailVisibleRect = "{{0, 0}, {605, 95}}";
+			TOCViewExpandedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+			TOCViewMasterVisibleRect = "{{0, 0}, {242, 511}}";
+			TOCViewSelectedItems = (
+				PBXBSExpertAspectModule,
+			);
+		};
+	};
+	1FCE2B671504707C00B26775 /* auvaltool */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+			YES,
+			YES,
+			YES,
+			YES,
+		);
+		argumentStrings = (
+			"-v",
+			aumf,
+			mobi,
+			Zmob,
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+			"PBXLSLaunchAction-0" = {
+				PBXLSLaunchAction = 0;
+				PBXLSLaunchStartAction = 1;
+				PBXLSLaunchStdioStyle = 2;
+				PBXLSLaunchStyle = 0;
+				class = PBXLSRunLaunchConfig;
+				commandLineArgs = (
+				);
+				displayName = "Executable Runner";
+				environment = {
+				};
+				identifier = com.apple.Xcode.launch.runConfig;
+				remoteHostInfo = "";
+				startActionInfo = "";
+			};
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		launchableReference = 1FCE2B681504707C00B26775 /* auvaltool */;
+		libgmallocEnabled = 0;
+		name = auvaltool;
+		savedGlobals = {
+		};
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+		startupPath = /Users/jeff/dev/mobius/src/mobius;
+		variableFormatDictionary = {
+		};
+	};
+	1FCE2B681504707C00B26775 /* auvaltool */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = "compiled.mach-o.executable";
+		name = auvaltool;
+		path = /usr/bin/auvaltool;
+		sourceTree = "<absolute>";
+	};
+	1FCE2B691504708100B26775 /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FCE2B5315046FAE00B26775 /* auval */;
+		uiCtxt = {
+			TOCViewDetailVisibleRect = "{{0, 0}, {388, 199}}";
+			TOCViewExpandedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+			TOCViewMasterVisibleRect = "{{0, 0}, {151, 199}}";
+			TOCViewSelectedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+		};
+	};
+	1FCE2B6A150470B100B26775 /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FCE2B5315046FAE00B26775 /* auval */;
+		uiCtxt = {
+			TOCViewDetailVisibleRect = "{{0, 0}, {388, 199}}";
+			TOCViewExpandedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+			TOCViewMasterVisibleRect = "{{0, 0}, {151, 199}}";
+			TOCViewSelectedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+		};
+	};
+	1FCE2B6B150470D400B26775 /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FCE2B5315046FAE00B26775 /* auval */;
+		uiCtxt = {
+			TOCViewDetailVisibleRect = "{{0, 0}, {388, 199}}";
+			TOCViewExpandedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+			TOCViewMasterVisibleRect = "{{0, 0}, {151, 199}}";
+			TOCViewSelectedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+		};
+	};
+	1FCE2B6D1504743100B26775 /* MobiusPlugin.cpp:655 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FCE2B6E1504743100B26775 /* MobiusPlugin.cpp */;
+		functionName = "MobiusPlugin::start()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 655;
+		location = Mobius;
+		modificationTime = 352961555.271409;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	1FCE2B6E1504743100B26775 /* MobiusPlugin.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MobiusPlugin.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/MobiusPlugin.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1071, 18239}}";
+			sepNavSelRange = "{18957, 0}";
+			sepNavVisRange = "{18703, 677}";
+		};
+	};
+	1FCE2B761504750900B26775 /* MobiusPlugin.cpp:544 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FCE2B771504750900B26775 /* MobiusPlugin.cpp */;
+		functionName = "MobiusPlugin::~MobiusPlugin()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 544;
+		location = Mobius;
+		modificationTime = 352961555.271466;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	1FCE2B771504750900B26775 /* MobiusPlugin.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MobiusPlugin.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/MobiusPlugin.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1071, 18174}}";
+			sepNavSelRange = "{18957, 0}";
+			sepNavVisRange = "{18703, 675}";
+		};
+	};
+	1FCE2B7A1509C31200B26775 /* Mobius.cpp:438 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FCE2B7B1509C31200B26775 /* Mobius.cpp */;
+		functionName = "Mobius::installScripts(ScriptConfig* config)";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 438;
+		location = Mobius;
+		modificationTime = 352961589.661297;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	1FCE2B7B1509C31200B26775 /* Mobius.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Mobius.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/Mobius.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1071, 71474}}";
+			sepNavSelRange = "{175870, 0}";
+			sepNavVisRange = "{6814, 449}";
+		};
+	};
+	1FCE2B7D1509C36600B26775 /* Mobius.cpp:824 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FCE2B7B1509C31200B26775 /* Mobius.cpp */;
+		functionName = "Mobius::~Mobius()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 824;
+		location = Mobius;
+		modificationTime = 352961555.271732;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	1FCE2B7F1509C40D00B26775 /* Mobius.cpp:241 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FCE2B7B1509C31200B26775 /* Mobius.cpp */;
+		functionName = "Mobius::Mobius(MobiusContext* context)";
+		hitCount = 2;
+		ignoreCount = 0;
+		lineNumber = 241;
+		location = Mobius;
+		modificationTime = 352961622.40704;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	1FCE2B811509C44D00B26775 /* Mobius.cpp:368 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FCE2B7B1509C31200B26775 /* Mobius.cpp */;
+		functionName = "Mobius::preparePluginBindings()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 368;
+		location = Mobius;
+		modificationTime = 352961613.900969;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+}

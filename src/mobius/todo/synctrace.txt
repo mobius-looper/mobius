@@ -1,0 +1,135 @@
+Record down
+
+56508: 101 -289: Function Record down
+56508: 101 -289: Loop: Add event Record(Record) 0
+56508: 101 -289: Loop: Set mode play
+56508: 101 -289: Track::doFunction beginning long press for XRecord
+56508: 101 -33: E: Record(Record) 0
+
+Note that the loop frame at the start of the audio block where 
+recording starts is -33 (-289 + 256 = -33).  Since all functions are quantized
+to the start of the next audio block there is a variable
+delay between "101 -289: Function Record down"
+and "56508: 101 -289: Loop: Add event Record(Record) 0".
+
+After recording starts we wait one 256 block, the next block
+contains the record start point at offset 33.
+
+56508: 101 0: SyncLoop::startRecording mode 1 cyclePulses 0
+56508: 101 0: Sync: Record cycle pulses 0
+56508: 101 0: Loop: Set mode record
+56508: 101 0: Layer: Starting record fade in
+56508: 101 5855: Track::doFunction canceling long press for XRecord
+
+Audio recording starts.  SyncLoop starts accumulating mLoopFrame.
+
+56508: 101 142047: Function Record down
+56508: 101 142047: Loop: prepareLoop: loop frames 142336 remaining 289
+56508: 101 142047: Layer: pending frames 289
+56508: 101 142047: Loop: Add event RecordStop(Record) 142336
+56508: 101 142047: Loop: Ignoring attempt to extend recording
+
+Record up.  RecordStop event scheduled for latency delay.  
+Why the hell is "Ignoring attempt..." here!!  --fixed
+
+56508: 101 142047: Track::doFunction beginning long press for XRecord
+56508: 101 142303: Layer: Starting play fade in at 282
+
+Why is there a delay in starting the preplay?
+Because the record phase for this block has already finished and the
+record frame has advanced.
+
+56508: 101 142303: E: RecordStop(Record) 142336
+56508: 101 142336: SyncLoop::endRecording frames 142336 pulses 0
+56508: 101 142336: SyncLoop::endRecording pulseFrames (x100) 0
+56508: 101 142336: Sync: Assigning output sync master track 0
+56508: 101 142336: Sync: Assigning track sync master track 0
+56508: 101 142336: SyncLoop::initSyncMaster pulses 96 pulseFrames (x100) 148266
+
+Recording stops.  SyncLoop doesn't have pulses until after the master
+track tempo has been calculated.
+
+****
+56508: 101 142336: MidiTransport: tempo changed from 0 to 7435 (x100) millis/clock 33 frames/clock 1482
+****
+
+56508: 101 142336: Sync: master track 0 record ending with 96 pulses tempo (x100) 7435
+56508: 101 142336: Sync:   basePulseFrames (x100) 148266 pulseFrames (x100) 148266
+
+Old pulse tracker has the same number of frames and pulses.
+
+56508: 101 142336: MidiTransport: Sending MIDI Start tempo (x100) 7435
+
+Tempo and Start are queued for next millisecond interrupt.
+Because UseInternalTransport is false, an MS_START and MS_CLOCK event 
+are put into the MidiTransport's queue.  
+
+56508: 101 0: Loop: Set mode play
+
+Loop begins play mode.
+
+56508: 0 0: MidiState *unnamed* started receiving clocks
+
+What the hell was that? -- fixed
+
+56508: 101 0: Sync: Start Event
+
+We found the MS_START event on our internal transport queue.
+This will then reset the external pulse count to 0 which we don't
+really need here, it will already be zero.   I don't see why
+we need to be injecting MS_START and MS_CLOCK except that it gets
+the internal MidiState initialized properly for beat counting.
+
+56508: 101 0: Layer: Applying fade out before frame 142336
+56508: 0 0: MidiState internal started receiving clocks
+56508: 101 1503: MidiTransport: 24155 milliseconds to get to first clock, frame 1503
+
+24155 is a HUGE amount of time for the first clock, supposed to be 33.
+Frame is 1503, calculated frames per pulse was 1482, delta 21.
+   -- fixed, mStartClock not initialized
+
+56508: 0 0: 3 millis between interrupts
+56508: 101 1503: SyncLoop:pulse: loop frame 1503 pulse frame 1482
+56508: 101 1503: SyncLoop:pulse: old drift 0 new drift 20
+
+And we see the initial drift.  
+There is quantization again, about equal to the original 33.
+
+
+56508: 101 7647: Track::doFunction canceling long press for XRecord
+56508: 101 223: SyncLoop:pulse external start point, pulse drift 223, loop dealign 0
+
+Pulses are leading by 223 frames.  256 - 223 = 23
+289 - 223 = 66 (33 * 2, coincidence?)
+
+56508: 101 1759: SyncLoop:pulse: loop frame 1759 pulse frame 1482
+56508: 101 1759: SyncLoop:pulse: old drift 223 new drift 276
+
+First pulse after external start point, drift increased by 53.
+
+
+56508: 101 1759: Sync: incPulses: wrapped pulse frame from 14381862 to 148262 (x100)
+56508: 101 1759: Sync: Track 0 drift check point frame 1759 drift 276
+
+56508: 101 223: SyncLoop:pulse external start point, pulse drift 223, loop dealign 0
+56508: 101 1503: SyncLoop:pulse: loop frame 1503 pulse frame 1482
+56508: 101 1503: SyncLoop:pulse: old drift 223 new drift 20
+56508: 101 1503: Sync: incPulses: wrapped pulse frame from 14381857 to 148257 (x100)
+56508: 101 1503: Sync: Track 0 drift check point frame 1503 drift 20
+56508: 101 77791: Function GlobalReset down
+56508: 101 77791: Track::GeneralReset
+56508: 101 77791: Sync: Master track reset, stop clocks and send MIDI Stop
+56508: 101 77791: MidiTransport: Sending MIDI Stop and stopping clocks
+56508: 101 77791: Layer: Capture fade tail, 128 frames at 78362
+56508: 101 -289: Sync: Disabling output sync master track 0
+56508: 101 -289: Sync: Disabling track sync master track 0
+56508: 201 -289: Track::GeneralReset
+56508: 301 -289: Track::GeneralReset
+56508: 401 -289: Track::GeneralReset
+56508: 501 -289: Track::GeneralReset
+56508: 601 -289: Track::GeneralReset
+56508: 701 -289: Track::GeneralReset
+56508: 801 -289: Track::GeneralReset
+56508: 101 -289: Mobius::notifyGlobalReset
+56508: 101 -289: Sync: Stop Event
+56508: 0 0: MidiState internal stopped receiving clocks

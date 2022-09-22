@@ -1,0 +1,27 @@
+#
+# Disable focus lock in all tracks, but remember the current focus
+# state in a track variable.  One the next call of the script, restore
+# the previous focus state.
+#
+!name Suspend Focus
+
+# global scope that says if we're in suspend focus mode
+Variable global suspendFocusMode
+
+# track variable that holds the last focus state
+Variable track saveFocus
+
+if suspendFocusMode = true
+  # restore focus
+  for all
+    set focus saveFocus
+  next
+  set suspendFocusMode false
+else
+  # suspend focus
+  for all
+    set saveFocus focus
+    set focus off
+  next
+  set suspendFocusMode true
+endif

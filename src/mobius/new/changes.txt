@@ -1,0 +1,24 @@
+
+
+ActionDispatcher
+  - factored out of Mobius
+  - is that what needs mLongFunction?
+  
+Export.h
+  friend class ActionDispatcher
+
+Function.cpp
+  some comments on long press functions, probably half done with mLongFunction
+
+Mobius.cpp
+  move action handling to ActionDispatcher
+
+Mobius.h
+  references ActionDispatcher and ScriptPackage
+
+Script.cpp/h
+  ScriptPackage
+
+Synchronizer
+  - recievew a MidiTransport
+

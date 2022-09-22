@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+        <!-- boilerplate stuff that never seems to change -->
+
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+
+	<key>CFBundleSignature</key>
+	<string>????</string>
+
+	<!-- I saw these in the docs, haven't seen them in many example code
+	<key>LSRequiresCarbon</key>
+        <true/>
+
+	<key>CSResourcesFileMapped</key>
+	<true/>
+	-->
+
+	<!-- in theory should track product release versions -->
+
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+
+	<key>CFBundleLongVersionString</key>
+	<string>Version 1.0</string>
+
+        <!-- required and must be unique -->
+	<key>CFBundleIdentifier</key>
+	<string>zonemobius.BaseAudioUnit</string>
+
+        <!-- seems to default properly if the outer directory
+             name is the same as the MacOS executable name
+	<key>CFBundleExecutable</key>
+	<string>BaseAudioUnit</string>
+        -->
+
+	<!-- doesn't seem to be necessary, defaults to directory name?
+	<key>CFBundleName</key>
+	<string>BaseAudioUnit</string>
+	-->
+
+        <!-- not sure this is relevant for AU plugins?
+	<key>CFBundleIconFile</key>
+	<string>mobius.icns</string>
+        -->
+ 
+	<!-- not sure where these would be displayed...
+	<key>CFBundleGetInfoString</key>
+	<string>Zonemobius BaseAudioUnit Example version 1.0</string>
+
+	<key>NSHumanReadableCopyright</key>
+	<string>2009 Jeffrey S. Larson</string>
+	-->
+
+</dict>
+</plist>

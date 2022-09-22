@@ -1,0 +1,249 @@
+
+Function::invoke
+  filter up transitions
+  ignore things in Threshold, Synchronize, and Reset modes
+
+  if switching
+      Confirm::invoke or scheduleSwitchStack
+  else
+      find previous event of this type
+      if prev 
+          escape quantization or ignore
+      else
+        cancel Return
+        end Record mode
+        scheduleEvent
+      endif
+   endif
+
+Function::scheduleEventDefault
+
+  EventManager::getFunctionEvent to build event but not scheduled
+  if in rounding mode
+      loop::scheduleRoundingModeEnd, gets the primary event
+  else
+      add event to list
+
+   unpause loop
+
+Loop::scheduleRoundingModeEnd
+
+  get prev ending event
+  if prev
+     if func is unrounded ending
+        if quantized
+           escape quantization
+        else
+           ignore
+     else if func is primary function 
+        increase mode end by one cycle
+     else
+        ignore
+
+     if trigger event is not switch, ignore it
+
+  else if func is unrounded ending
+
+     schedule end event, and jump play
+     ignore trigger event
+
+  else 
+
+      if not record during rounding
+         schedule RecordStopEvent
+         ! this isn't getting an Action
+      endif
+ 
+      schedule Multiply/Insert end event and jump play event
+
+      decide whether to ignore the trigger event
+      
+      if trigger event not ignored, move it until after the mode end
+  endif
+
+  if trigger event being ignored
+    if end event scheduled
+       give end event to action
+    undo trigger event
+       ! should not be undoing here since it hasn't done anything
+  else if trigger event already scheduled (won't usually be)
+    add mode end as a child of the trigger event
+    EventManager::reorderEvents to put the trigger after the mode end
+  else 
+    add mode end as a child of the trigger event
+    add trigger event to the list
+  endif
+
+I'd prefer it work this way
+
+Function::invoke
+   ignore things
+   if switching 
+       confirm or schedule
+   else if prev quantized
+      escape quant
+   else 
+      cancel return
+      end current mode
+
+      schedule primary event, pass modeEndEvent
+      primary event scheduler may decide to ignore the trigger and
+       return the modeEndEvent 
+
+Before scheduling the trigger event, end the current mode?  
+  This works if the mode needs to have control over the ending
+  location.  Some modes may not care, the want the trigger event to
+  be scheduled first and they'll adapt to it.
+
+----------------------------------------------------------------------
+
+Mode Ending Events
+
+For any function action, the action may schedule and event to end
+the current mode.  When a mode end is scheduled, the function may
+schedule another event to happen after the mode end, or it may simply
+ignore the function.  In the first case the Action needs to be cloned,
+the clone given to the internal mode end event, and the original Action
+given to the primary function event.
+
+In the second case, the Action should not be cloned, the mode end
+event must be returned in the original Action so that scripts can 
+wait on it.
+
+In a few cases no events will be scheduled and a previously scheduled
+event may be returned.  One case of this is AutoRecord which will 
+schedule a single RecordStopEvent but may extend it with repreated
+invocations of AutoRecord.  If a script wants to wait on secondary
+Invocations of AutoRecord then the Action must return the previously
+scheduled Event.  This requires a replacement of the original Action
+with the new Action.
+
+To make mode ending event scheduling easier, it must be possible to 
+give the ending event to the original action, then later if we decide
+we need another event to clone the one from the modeEnd event and
+swap them.  This means that schedulign a mode end event MUST NOT
+MODIFY THE ACTION so that it can be cloned reliably later if necessary.
+
+The general rule is that Actions should never be modified, I can't
+think of a reason to but if necessary overrides would have to go in 
+the Event.
+
+Alternately we could always clone for the Mode end event, then later
+if we decide to ignore the trigger function we can replace the action
+in the mode end with the original action and free the clone.  In the
+case where we're returning an old event we still have the problem of
+replacing the Action with the trigger Action.
+
+The cases are:
+
+  1) secondary events get Action clone, primary event gets Action
+
+  2) secondary event gets Action, primary event is not scheduled
+
+  3) old event is returned, primary event is not scheduled
+
+I'm a little worried about replacing the Action in old events, it
+can only happen in a few cases and in all other cases would be an error.
+The alternative is to not replace the Action which means that scripts
+can't wait on it.
+
+Algo 1: Always clone
+
+   case 1: clone for secondary, create primary
+   case 2: clone for secondary, replace secondary Action, free clone
+   case 3: clone for secondary, replace secondary Ation, free clone
+
+Algo 2: Defer clone
+
+   case1: create secondary, replace secondary with clone, create primary
+   case2: create secondary, ignore primary
+   case3: create secondary, replace secondary Action
+
+
+Second case requires more work?
+
+More cases:
+
+  4) old secondary event is returned
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+
+Any scheduling function can claim an action.  Either need to clone
+before scheduling, or take it away.  Taking it away means that the
+script can't wait on it.
+
+Record::scheduleModeStop
+  Called when other events are scheduled and we're in record mode.
+  Need to clone Action before calling scheduleModeStop
+
+Function::scheduleEvent
+Function::scheduleModeStop
+Function::scheduleSwitchStack
+  All of these can and should take ownership of the Action if they
+  schedule an event.
+
+When a funtion schedules more than one event, usually the first event
+is not considered the primary event.  Examples are RecordStopEvent,
+MultiplyEndEvent, and MuteOnEvent for MuteRealign.
+
+Sometimes the primary event is not scheduled.  For example if you
+end MultiplyMode with Multiply, we'll schedule the MultiplyEndEvent
+but we won't schedule another MultiplyEvent.
+
+Any time one of the three scheduling methods is called the caller needs
+to either:
+
+  - clone the Action and free it after the call if it is not owned
+
+  - don't clone the Action when calling the scheduling function
+    and transfer control to the primary event afterward
+
+The second approach works only if the internal event does not need
+the Action contents when it is executed.  Since I would like Event
+handlers to assume they can have an Action we should usually do the
+first approach.
+
+
+Synchronizer::scheduleRecordStart
+  - should take the action, but if not it will bubble up to 
+    Function::invoke
+
+
+----------------------------------------------------------------------
+
+Double Schedules
+
+LoopSwitch
+  Record->scheduleModeStop
+    Synchronizer->scheduleRecordStop
+      - needs to clone the action
+
+  loop->scheduleModeEnd
+    will leave the action on the trigger event
+
+  newEvent(MuteOn)
+    - on SUSReturn, it doesn't get an Action
+
+
+
+Synchronizer
+
+scheduleRecordStart
+  - needs to take action
+
+schedulePendingRecord
+
+scheduleRecordStop
+  - needs to clone action
+
+scheduleSyncRecordStop
+
+interruptStart
+  - for generated sync events
+

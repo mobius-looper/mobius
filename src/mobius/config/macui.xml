@@ -1,0 +1,95 @@
+<UIConfig x='171' y='82' width='981' height='826' refreshInterval='100' alertIntervals='10' messageDuration='2'>
+  <Locations>
+    <Location name='AudioMeter' x='351' y='147'/>
+    <Location name='Status' x='643' y='166'/>
+    <Location name='LoopMeter' x='343' y='164'/>
+    <Location name='Counter' x='387' y='53'/>
+    <Location name='Blinkers' x='570' y='166'/>
+    <Location name='LoopList' x='15' y='63' disabled='true'/>
+    <Location name='LayerList' x='24' y='9'/>
+    <Location name='Parameters' x='21' y='59'/>
+    <Location name='Modes' x='328' y='116'/>
+    <Location name='Sync' x='573' y='193'/>
+    <Location name='TrackControls' x='807' y='34'/>
+    <Location name='Messages' x='344' y='306'/>
+  </Locations>
+  <InstantParameters>
+    <Parameter name='8thsPerCycle'/>
+    <Parameter name='quantize'/>
+    <Parameter name='switchQuant'/>
+  </InstantParameters>
+  <TrackControls>
+    <Component name='input'/>
+    <Component name='output'/>
+    <Component name='feedback'/>
+    <Component name='altFeedback'/>
+    <Component name='pan'/>
+  </TrackControls>
+  <TrackStripControls>
+    <Component name='outputMeter'/>
+    <Component name='loopRadar'/>
+    <Component name='output'/>
+    <Component name='number'/>
+    <Component name='group'/>
+    <Component name='loopStatus'/>
+    <Component name='lock'/>
+  </TrackStripControls>
+  <Buttons>
+    <Button function='GlobalReset'/>
+    <Button function='Reset'/>
+    <Button function='Record'/>
+    <Button function='Overdub'/>
+    <Button function='Multiply'/>
+    <Button function='Reverse'/>
+    <Button function='Speed'/>
+    <Button function='InstantMultiply2'/>
+    <Button function='Undo'/>
+    <Button function='StartPoint'/>
+    <Button function='Retrigger'/>
+    <Button function='StartAudioRecording'/>
+    <Button function='SaveAudioRecording'/>
+    <Button function='Time Warp 1 Multi.mos'/>
+  </Buttons>
+  <Palette>
+    <PaletteColor name='background' key='600' rgb='0'/>
+    <PaletteColor name='button' key='601' rgb='12597874'/>
+    <PaletteColor name='buttonText' key='602' rgb='12632256'/>
+    <PaletteColor name='bar' key='603' rgb='32896'/>
+    <PaletteColor name='activeBar' key='604' rgb='65535'/>
+    <PaletteColor name='checkpointBar' key='619' rgb='8421376'/>
+    <PaletteColor name='meter' key='605' rgb='8759559'/>
+    <PaletteColor name='slowMeter' key='606' rgb='12632256'/>
+    <PaletteColor name='recordingMeter' key='607' rgb='7605236'/>
+    <PaletteColor name='muteMeter' key='614' rgb='16711680'/>
+    <PaletteColor name='event' key='608' rgb='16777215'/>
+    <PaletteColor name='alertBackground' key='609' rgb='12615680'/>
+    <PaletteColor name='alertText' key='610' rgb='16777088'/>
+    <PaletteColor name='blink' key='611' rgb='8421631'/>
+    <PaletteColor name='paramName' key='612' rgb='15459740'/>
+    <PaletteColor name='paramValue' key='613' rgb='65535'/>
+    <PaletteColor name='group1' key='615' rgb='33023'/>
+    <PaletteColor name='group2' key='616' rgb='8388863'/>
+    <PaletteColor name='group3' key='617' rgb='16776960'/>
+    <PaletteColor name='group4' key='618' rgb='65535'/>
+    <PaletteColor name='tickCycle' key='620' rgb='128'/>
+    <PaletteColor name='tickSubcycle' key='621' rgb='8421440'/>
+    <PaletteColor name='tickCue' key='622' rgb='16711680'/>
+  </Palette>
+  <FontConfig>
+    <FontBinding name='mode' size='20'/>
+    <FontBinding name='loopMeter' size='12'/>
+    <FontBinding name='loopCounterSmall' size='30'/>
+    <FontBinding name='loopCounterBig' size='40'/>
+    <FontBinding name='layerList' size='8'/>
+    <FontBinding name='message' size='18'/>
+    <FontBinding name='minorModes' size='12'/>
+    <FontBinding name='sync' size='12'/>
+    <FontBinding name='button' size='14'/>
+    <FontBinding name='parameter' size='14'/>
+    <FontBinding name='knob' size='12'/>
+    <FontBinding name='trackNumber' size='30'/>
+    <FontBinding name='trackName' size='20'/>
+    <FontBinding name='trackGroup' style='1' size='12'/>
+    <FontBinding name='loopStack' size='12'/>
+  </FontConfig>
+</UIConfig>

@@ -1,0 +1,41 @@
+
+Event Evolution
+
+Event->function
+  - identifies the Function that will provide evaluation of the event
+    - doEvent
+    - prepareJump
+    - prepareSwitch
+
+Event->type
+  - adjusts the meaning of the event for the given function
+  - usually a function schedules just one event type, but there
+    may be more than one
+    
+    - InsertEvent, InsertEndEvent
+    - MultiplyEvent, MultiplyEndEvent
+    - Record, RecordEndEvent, RecordStopEvent
+
+  - !! since we are evolving toward the Function being in control
+    over event evaluation, we have less need for EventType subclasses
+    could just have a union or a function-specific integer code
+
+
+Event->invokingFunction
+  - the function that was originally triggered that caused the event
+    to be scheduled
+  - non-null only if it is an alternate ending to the primary function
+  - change name to alternateEnding?
+
+Events should contain entire FunctionContext or at least a common
+subclass.
+
+Event/Function/MobiusMode
+
+Need to tighten the dependecy between MobiusMode and Function.  Several
+scheduling decisions depend on MobiusMode, this needs to get us back
+to a Function where the logic can be encapsulated.
+
+Currently modes are static, if we made then more dynamic like events
+they could hold state, such as SUSMute vs Mute.  May not be that interesting.
+

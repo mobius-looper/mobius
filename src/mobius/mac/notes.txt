@@ -1,0 +1,33 @@
+
+Be sure to set the version numbers propertly before making the package.
+Edit mac/bundles/component/Info.plist and mac/bundles/vst/Info.plist
+and change the version numbers.  Also edit VstMain.cpp and AUMobius.cpp
+and change the #defines with the bundle ids to match.  Failing to do this
+will cause the "window full of question marks" since the bundle directory
+with the message catalog can't be located.
+
+PackageMaker notes
+
+Build the makefile.mac target "packages".  This will create the
+mobius-packages directory.
+
+Run PackageMaker from /Developer/Applications/Utilities/PackageMaker.
+
+Open the project ...mobius/src/mobius/mac/pkgmaker/Mobius 2.pmdoc
+
+Build and run to test.  Build leaves result in mac/pkgmaker/Mobius 2.pkg.
+
+Use Yummy FTP to upload .pkg.
+
+----------------------------------------------------------------------
+Old .dmg Packaging Notes
+
+To build an installation dmg first run "make install".
+Then run "Disk Utility" from the Utilities folder.
+From the Disk Utility menu select File->New->Disk Image from Folder
+Select the "mobius-install" directory and save as an image named
+"mobius-install-<major>-<minor>" where <major> and <minor> are the
+version numbers.
+
+Use YummyFTP to upload
+

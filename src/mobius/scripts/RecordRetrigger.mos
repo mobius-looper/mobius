@@ -1,0 +1,28 @@
+!name RecordRetrigger
+Jump 1stLoop mode = Reset
+Jump 1stLoop mode = Record
+
+Variable Muted
+Variable saveSwitchQuant
+For all
+ set saveSwitchQuant $switchQuant
+ set switchQuant off
+ set Muted $mode
+ Jump MuteAgain Muted = Mute
+ Retrigger
+ Jump goon
+
+ Label MuteAgain
+ Retrigger
+ Mute
+
+ Label goon
+ set switchQuant $saveSwitchQuant
+next
+end
+
+Label 1stLoop
+Record
+Record up
+set Input 127
+end

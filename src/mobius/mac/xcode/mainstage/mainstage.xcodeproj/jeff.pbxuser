@@ -1,0 +1,309 @@
+// !$*UTF8*$!
+{
+	08FB7793FE84155DC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 1FD3A399152266020072F7AB /* mainstage */;
+		breakpoints = (
+		);
+		codeSenseManager = 1FD3A395152265B10072F7AB /* Code sense */;
+		executables = (
+			1FD3A399152266020072F7AB /* mainstage */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					229,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					341,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					301,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 354575783;
+			PBXWorkspaceStateSaveDate = 354575783;
+		};
+		perUserProjectItems = {
+			1FD3A3A7152266B50072F7AB /* PBXTargetBookmark */ = 1FD3A3A7152266B50072F7AB /* PBXTargetBookmark */;
+			1FD3A3A8152266B50072F7AB /* PBXTargetBookmark */ = 1FD3A3A8152266B50072F7AB /* PBXTargetBookmark */;
+			1FD3A3B01522676B0072F7AB /* PBXTargetBookmark */ = 1FD3A3B01522676B0072F7AB /* PBXTargetBookmark */;
+			1FD3A3BE152270040072F7AB /* PBXTextBookmark */ = 1FD3A3BE152270040072F7AB /* PBXTextBookmark */;
+			1FD3A3C0152270040072F7AB /* PBXTextBookmark */ = 1FD3A3C0152270040072F7AB /* PBXTextBookmark */;
+			1FD3A3C21522701A0072F7AB /* PBXTextBookmark */ = 1FD3A3C21522701A0072F7AB /* PBXTextBookmark */;
+			1FD3A3C81522804D0072F7AB /* PBXTextBookmark */ = 1FD3A3C81522804D0072F7AB /* PBXTextBookmark */;
+		};
+		sourceControlManager = 1FD3A394152265B10072F7AB /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	1FD3A394152265B10072F7AB /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	1FD3A395152265B10072F7AB /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	1FD3A399152266020072F7AB /* mainstage */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+			"PBXLSLaunchAction-0" = {
+				PBXLSLaunchAction = 0;
+				PBXLSLaunchStartAction = 1;
+				PBXLSLaunchStdioStyle = 2;
+				PBXLSLaunchStyle = 0;
+				class = PBXLSRunLaunchConfig;
+				commandLineArgs = (
+				);
+				displayName = "Executable Runner";
+				environment = {
+				};
+				identifier = com.apple.Xcode.launch.runConfig;
+				remoteHostInfo = "";
+				startActionInfo = "";
+			};
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		launchableReference = 1FD3A39A152266020072F7AB /* MainStage */;
+		libgmallocEnabled = 0;
+		name = mainstage;
+		savedGlobals = {
+		};
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+		startupPath = /Applications/MainStage.app/Contents/Resources;
+		variableFormatDictionary = {
+		};
+	};
+	1FD3A39A152266020072F7AB /* MainStage */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = "compiled.mach-o.executable";
+		name = MainStage;
+		path = /Applications/MainStage.app/Contents/MacOS/MainStage;
+		sourceTree = "<absolute>";
+	};
+	1FD3A3A4152266B20072F7AB /* mainstage */ = {
+		isa = PBXLegacyTarget;
+		activeExec = 0;
+		buildArgumentsString = "$(ACTION)";
+		buildConfigurationList = 1FD3A3AF152266B50072F7AB /* Build configuration list for PBXLegacyTarget "mainstage" */;
+		buildPhases = (
+		);
+		buildToolPath = /usr/bin/make;
+		dependencies = (
+		);
+		name = mainstage;
+		passBuildSettingsInEnvironment = 1;
+		productName = mainstage;
+	};
+	1FD3A3A5152266B30072F7AB /* Debug */ = {
+		isa = XCBuildConfiguration;
+		buildSettings = {
+			COPY_PHASE_STRIP = NO;
+			GCC_DYNAMIC_NO_PIC = NO;
+			GCC_OPTIMIZATION_LEVEL = 0;
+			PRODUCT_NAME = mainstage;
+		};
+		name = Debug;
+	};
+	1FD3A3A6152266B30072F7AB /* Release */ = {
+		isa = XCBuildConfiguration;
+		buildSettings = {
+			COPY_PHASE_STRIP = YES;
+			DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+			GCC_ENABLE_FIX_AND_CONTINUE = NO;
+			PRODUCT_NAME = mainstage;
+			ZERO_LINK = NO;
+		};
+		name = Release;
+	};
+	1FD3A3A7152266B50072F7AB /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FD3A3A4152266B20072F7AB /* mainstage */;
+	};
+	1FD3A3A8152266B50072F7AB /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FD3A3A4152266B20072F7AB /* mainstage */;
+		uiCtxt = {
+			TOCViewDetailVisibleRect = "{{0, 0}, {388, 199}}";
+			TOCViewExpandedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+			TOCViewMasterVisibleRect = "{{0, 0}, {151, 199}}";
+			TOCViewSelectedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+		};
+	};
+	1FD3A3AF152266B50072F7AB /* Build configuration list for PBXLegacyTarget "mainstage" */ = {
+		isa = XCConfigurationList;
+		buildConfigurations = (
+			1FD3A3A5152266B30072F7AB /* Debug */,
+			1FD3A3A6152266B30072F7AB /* Release */,
+		);
+		defaultConfigurationIsVisible = 0;
+		defaultConfigurationName = Release;
+	};
+	1FD3A3B01522676B0072F7AB /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FD3A3A4152266B20072F7AB /* mainstage */;
+		uiCtxt = {
+			TOCViewDetailVisibleRect = "{{0, 0}, {388, 199}}";
+			TOCViewExpandedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+			TOCViewMasterVisibleRect = "{{0, 0}, {151, 199}}";
+			TOCViewSelectedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+		};
+	};
+	1FD3A3BA152270010072F7AB /* MobiusPlugin.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MobiusPlugin.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/MobiusPlugin.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {827, 19240}}";
+			sepNavSelRange = "{6, 0}";
+			sepNavVisRange = "{9770, 1244}";
+		};
+	};
+	1FD3A3BE152270040072F7AB /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FD3A3BF152270040072F7AB /* MobiusPlugin.cpp */;
+		name = "MobiusPlugin.cpp: 2";
+		rLen = 0;
+		rLoc = 6;
+		rType = 0;
+		vrLen = 1244;
+		vrLoc = 9770;
+	};
+	1FD3A3BF152270040072F7AB /* MobiusPlugin.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MobiusPlugin.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/MobiusPlugin.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {827, 19227}}";
+			sepNavSelRange = "{6, 0}";
+			sepNavVisRange = "{9770, 1244}";
+		};
+	};
+	1FD3A3C0152270040072F7AB /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FD3A3BA152270010072F7AB /* MobiusPlugin.cpp */;
+		name = "MobiusPlugin.cpp: 2";
+		rLen = 0;
+		rLoc = 6;
+		rType = 0;
+		vrLen = 1244;
+		vrLoc = 9770;
+	};
+	1FD3A3C21522701A0072F7AB /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FD3A3BF152270040072F7AB /* MobiusPlugin.cpp */;
+		name = "MobiusPlugin.cpp: 2";
+		rLen = 0;
+		rLoc = 6;
+		rType = 0;
+		vrLen = 1244;
+		vrLoc = 9770;
+	};
+	1FD3A3C81522804D0072F7AB /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FD3A3C91522804D0072F7AB /* MobiusPlugin.cpp */;
+		name = "MobiusPlugin.cpp: 1480";
+		rLen = 0;
+		rLoc = 43460;
+		rType = 0;
+		vrLen = 1234;
+		vrLoc = 9957;
+	};
+	1FD3A3C91522804D0072F7AB /* MobiusPlugin.cpp */ = {
+		isa = PBXFileReference;
+		name = MobiusPlugin.cpp;
+		path = /Users/jeff/dev/mobius/src/mobius/MobiusPlugin.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {827, 19539}}";
+			sepNavSelRange = "{43531, 0}";
+			sepNavVisRange = "{9917, 1307}";
+			sepNavWindowFrame = "{{38, 317}, {886, 685}}";
+		};
+	};
+}

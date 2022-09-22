@@ -1,0 +1,19 @@
+/*
+ * Copyright (c) 2010 Jeffrey S. Larson  <jeff@circularlabs.com>
+ * All rights reserved.
+ * See the LICENSE file for the full copyright and license declaration.
+ * 
+ * ---------------------------------------------------------------------
+ * 
+ * Windows resources.
+ * Only used for icons because Qwin doesn't yet have generic icon support.
+ *
+ */
+
+#include <windows.h>
+
+//Mobius ICON mobius.ico
+//Mobius ICON mobius2.ico
+Mobius ICON win/icons/BlueSphere.ico
+//Mobius ICON Ie.ico
+

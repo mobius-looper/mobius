@@ -1,0 +1,599 @@
+
+----------------------------------------------------------------------
+
+ In my VST effect plugin, I'd like to know when a sample in
+   processReplacing
+   is the first sample of a measure (or the first sample of n
+   following beats,
+   where n is usually 4). Since processReplacing is being called even
+   when my
+   sequencer (Fruityloops, at the moment) isn't even playing, or
+   since the
+   sequencer could jump into the middle of a song anywhere, counting
+   the number
+   of samples passed into processReplacing doesn't seem to help. i'm
+   not sure
+   if samplePos in VstTimeInfo is going to help either; it seems to
+   drift in
+   and out of sync with a running sum of all the "num samples" passed
+   into
+   processReplacing.
+
+   Basically, what I'm trying to mimic is a phrase sampler that
+   automatically
+   snaps/quantizes the sample to a certain number of beats, beginning
+   exactly
+   on a beat. What's the most appropriate timing info to use for
+   this? Is it
+   even possible to do this? (Does ppqPos/cycleStartPos/cycleEndPos have
+   anything to do with it?)
+
+----------------------------------------------------------------------
+Problem: Playing flag is not moved when song position changed
+
+I've been tackling a similar problem. One way that seems to work for
+Ableton Live and VST 5 is to watch for a change in samplePos in the
+beginning of process. When you see a change playback has begun. One
+host I am developing for (Ableton Live) doesn't seem to set the
+timeInfo playing flag. I haven't noticed the samplePos drifting as you
+described but the reported samplePos when process is called first time
+*does* vary.  By calculating the number of samples in a bar using the
+time signature and sample rate I've been to be able to synchronise to
+the bar with sample accuracy.  Pauses and changes in song position are
+reflected accurately in Live and Cubase.
+
+----------------------------------------------------------------------
+
+>sorry if this has been asked a thousand times before, but a friend of
+>mine (really...) urgently needs a quick explanation of the barStartPos
+>in VstTimeInfo and I couldn't find it searching the last 12000 mails...
+
+ppqPos - barStartPos = "ppqPos relative to the start of the current bar".
+
+is that quick? :)
+
+----------------------------------------------------------------------
+>
+> what is the best way to quickly figure out what sample the
+> current one is inside a measure?
+> i.e. current relative position from the start of the measure.
+>
+> Has anyone coded this, and would you care to share that code?
+
+
+Sorry no code (I'd have to disentangle it from everything else)
+but here's my method:
+
+At the start of each process(), check if anything has changed
+(tempo, time sig, song position, transport running/stopped).
+
+If the transport has just started, or the song position has
+changed (and the transport is running) or the time signature
+has changed, read timeInfo->barStartPos and use this as the
+reference point for working out where in a bar you are.
+Cubase VST used to return wrong barStartPos values but I've
+stopped caring about work-arounds for that.
+
+Now you know the current song position in beats (ppqPos), the
+number of beats in a bar, and a reference point that is the
+start of a bar some time in the past. From that you can work
+out the position in the current bar in beats, then convert to
+samples.
+
+For each frame in process(), add beats_per_frame to ppqPos, so
+then at the start of the next process() you know if the song
+position is what you were expecting it to be.
+
+----------------------------------------------------------------------
+Detecting Play
+----------------------------------------------------------------------
+
+Ok, well it isn't life threatening but this bug in Cubase SX2 has been
+brought up on by SKoT McDonald on 11/24/2003 and was ignored! I also made a
+post a few days ago thinking it was the ppqPos but after digging deeper it
+has to do with the kVstTransport flags.
+
+Here is the problem as I see it:
+
+The kVstTransportPlaying flag is set a few process() calls late when playing
+is activated. What it means is if the transport is at 0 and you hit play,
+it rewinds a little bit (to be negative) and starts playing but without
+setting the kVstTransportPlaying to true. kVstTransportPlaying only gets
+set to true after a few process calls after ppqPos becomes greater than
+zero. So, plugins like mine that sync to the host and only lock in at the
+beginning of a bar actually miss the first bar being played. Also
+kVstTransportChanged is also set to true at the same time as
+kVstTransportPlaying (which is late!).
+
+Steinberg, please acknowledge this issue!!
+
+----------------------------------------------------------------------
+Sample/Beat Conversion
+----------------------------------------------------------------------
+
+The clock you get with getTimeInfo is high resolution, but it only tells
+you the clock time at the start of process. To get a clock time within
+process you have to count how many samples from the start you are (as
+the timeInfo clock is locked to the sample rate).
+
+All you have to do is take the ppqPos from timeInfo at the start of
+process, and increment it as you process each sample. For example, if
+the tempo is 120 and the sample rate is 44100, each sample frame should
+increment the clock position by 120.0 / (60.0 * sampleRate) which is
+.000045 beats - high enough resolution for you?
+
+----------------------------------------------------------------------
+Detecting Play
+----------------------------------------------------------------------
+
+I have found a solution using the sample pos field. I still don't know why
+the kVstTransportPlaying didn't work though. This solution also reset the
+phase upon any non linear jump in song position.
+
+    double samplePos = time_info->samplePos;
+    bool playing = samplePos != m_samplePos;
+    if (playing && !m_playing)
+    {
+      gate();
+    }
+    m_playing = playing;
+    m_samplePos = samplePos;
+
+--andy
+
+----- Original Message -----
+From: "andrew simper" <andy@vellocet.com>
+To: "VST PlugIns" <vst-plugins@lists.steinberg.net>
+Sent: Wednesday, August 07, 2002 2:14 AM
+Subject: [vst-plugins] detecting play
+
+
+> I am having trouble detecting when the user presses 'play' to start a song
+> by using the kVstTransportPlaying mechanism. m_playing gets set to false
+> initially. Does this look right?
+>
+> VstTimeInfo* time_info = getTimeInfo
+> (
+> kVstTransportChanged |
+> kVstTransportPlaying |
+> kVstTransportCycleActive
+> );
+> if (time_info != NULL)
+> {
+> bool playing = (time_info->flags | kVstTransportPlaying)>0;
+> if (playing && !m_playing)
+> {
+> // start playing trigger
+> }
+> m_playing = playing;
+> }
+>
+> It works in logic and fruity loops but not in cubase.
+>
+> Thanks,
+>
+> andy
+
+----------------------------------------------------------------------
+     > yes, but what you wish to know is where the bar starts, ppq is just
+    > the unit size. at 1 ppq, a bar will always start at 0,4,8,12 etc ppq
+    > with a 4/4 measure, and 0,3,6,9 etc with a 3/4 measure. with
+
+    My apologies, but I find this naming VERY confusing. Just call these
+    quarter notes. Calling them "ppq" means, to me, that the resolution
+    of "1" means 1 _pulse_, so the value for one quarter note would be
+    720 or so.
+
+
+the number doesn't matter, 1.0 or 720 or 480 or whatever.
+the term 'pulses per quarter' just means 'subunits within one quarter note'.
+the advantage of normalizing ppq to 1.0 is that it can be scaled to any
+other subdivision whatsoever.
+
+what is important is that VstTimeInfo holds 2 values, the ppq position
+related to the first sample within the current audio block, *plus* the
+bar start position. the latter helps to display bars+beats even if
+you have time signature changes within the project for instance.
+
+    Hmm... what if your tempo is, say, 5/8? Would "1." mean 1/8th note,
+    or "1." still mean 1/4 note? If it means 1/8th, you STILL need some
+    other external reference to Do The Right Thing (tm).
+
+
+it is called ppq pulses per *quarter*. at 1.0 ppq, a ppq is just a quarter...
+so 1/8 is 0.5 ppq and one 5/8 bar is simply 2.5 ppq. 3/8 into bar 3
+(counting from 1) gives 9.0 where the bar starts at 7.5 and so on.
+you could just as well have defined one 4/4 bar to 'be' 1.0, but that causes
+you headaches with measures other than 4/4, and ppq is an (old?) common
+term in music sequencing...
+charlie
+
+----------------------------------------------------------------------
+
+    From my understanding the ppq "units" in VSTTIMEINFO is a "normalized"
+    representation of what ever the host PPQ resolution is. It is the same as
+    using normalized floats to indicate a sample value.
+
+    If the host uses 480 ppq internally, then 1.0 normalized ppq is equivalent
+    to 480 pulses to the host, but the plug doesn't even care about this aspect.
+    If the plugin works internally at 96 or 720 ppq, then it can convert the
+    normalize ppq in vsttimeinfo into what ever it wants and be assured of its
+    internal accuracy when converting from ppq to sample pos or visa-versa. The
+    tempo and time sig information is provided by the host, so all of these
+    calculation can be made.
+
+
+exactly.
+
+    What is not clear is how the plugin can determine when time sig changes and
+    such can occur with in a sample frame.
+
+
+it can't, currently.
+
+    Is the host expected to break up
+    discontinuous timesig/tempo/cycle boundaries into chunks that are less than
+    the sample frame/block size?
+
+
+that would be one possibility, but it sounds like even more performance
+constraints.
+
+    What I really want to know is what the barStartPos is really suppose to be.
+    Nuendo is giving some very strange numbers and Cubase/CubaseSX give
+    different numbers.
+
+
+we already noted that nuendo and cubase sx have a bug (cubase5 should be
+fine). we'll fix it asap.
+the bar start pos gives you the ability to for instance display the
+bar/beat position even without knowing the time signature track
+(all time signature changes throughout the project) because you
+know a) the current position, b) the bar counter, c) where that bar
+starts, and d) the current time signature.
+
+    How about an example or two of how barStartPos is to be calculated
+    officially by the host? Define the absolute expected behavior with a few
+    simple meter (and complex meter) examples.
+
+
+but the 5/8 example (below) was supposed to do exactly that?
+
+    Also, a clear explanation of samplesToNextClock would be helpful. Again,
+    what have you actually defined a host's value for this member to be under
+    the different boundary conditions you allude to in the SDK. It is mentioned
+    that it could be negative if it addresses the "previous MIDI clock" , but
+    the SDK says "next MIDI clock" as does the name of the structure member. So
+    when does it indicate previous and when does it indicate next?
+
+
+'next' was supposed to mean 'nearest in time' which can be prior or next
+to the current position. while i admit that the term may be misleading,
+it doesn't matter because you can tell from the sign if it's prior or
+after the current position.
+
+thanks for explaining the ppq thing again...
+charlie
+
+    ----- Original Message -----
+    From: "Paul Davis" <pbd@op.net>
+    To: "VST PlugIns" <vst-plugins@lists.steinberg.net>
+    Sent: Monday, September 02, 2002 7:59 PM
+    Subject: [vst-plugins] Re: VSTTimeInfo
+
+
+        >> yes, but what you wish to know is where the bar starts, ppq is just
+        >> the unit size. at 1 ppq, a bar will always start at 0,4,8,12 etc ppq
+        >> with a 4/4 measure, and 0,3,6,9 etc with a 3/4 measure. with
+        >
+        >My apologies, but I find this naming VERY confusing. Just call these
+        >quarter notes. Calling them "ppq" means, to me, that the resolution
+        >of "1" means 1 _pulse_, so the value for one quarter note would be
+        >720 or so.
+        >
+        >Hmm... what if your tempo is, say, 5/8? Would "1." mean 1/8th note,
+        >or "1." still mean 1/4 note? If it means 1/8th, you STILL need some
+        >other external reference to Do The Right Thing (tm).
+
+        indeed. it always requires at least two pieces of information to know
+        when a given note should begin:
+
+               beats per minute
+               note value that represents 1 beat
+
+        a lot of typical western classical and pop music has a quarter note
+        representing one beat, but there is a lot of jazz with eighth notes
+        representing one beat, and much music from other parts of the world
+        where the idea of a note value doesn't really much sense at all
+        (hence, its arbitrary which western note value to use; a quarter is
+
+    > usually used).
+
+
+        to know how long it should last, you need to know the note value.
+
+        to know where the bar boundaries are requires another piece of
+        information:
+
+               beats per bar
+
+        MIDI sequencers have complicated this by adding the idea of "maximal
+        subdivision of a quarter note" ("ppq"), which is orthogonal to any of
+        the above information. it represents a new time unit which may have a
+        non-linear mapping to the passage of musical or clock time (due to
+        meter changes, etc.)
+
+        i prefer not to deal with ppq in any way other than as a limit on how
+        small i can subdivide a quarter note. measuring time in bars and beats
+        works fine for actual musicians ... from charlie's description, this
+        sounds to me like the goal of the VST time info. counting anything in
+        ppq units also means that the numbers are different if the resolution
+        of the MIDI timer changes.
+
+        --p
+
+----------------------------------------------------------------------
+>
+> From my understanding the ppq "units" in VSTTIMEINFO is a
+> "normalized" representation of what ever the host PPQ
+> resolution is.
+
+
+True, but there would be less confusion if it was just called
+"quarternotes", which is what it is.
+
+
+
+> What is not clear is how the plugin can determine when time sig
+> changes and such can occur with in a sample frame. Is the host
+> expected to break up discontinuous timesig/tempo/cycle boundaries
+> into chunks that are less than the sample frame/block size?
+
+As vstTimeInfo can't tell you if anything changes *within* blocks,
+I guess you have to assume the host will split blocks so they don't
+contain tempo or timesig changes, *or* the host doesn't care if you
+get slightly out of sync for part of a block and expects you to
+re-sync at the start of the next block. (you have to do this anyway,
+as Cubase and Cubasis (I haven't looked for this behaviour in other
+hosts) sometimes have small jumps in position, particularly when
+starting playback. I imagine it's even worse when they are following
+external sync, but it still happens during offline mixdown!)
+
+
+----------------------------------------------------------------------
+>> True, but there would be less confusion if it was just called
+>> "quarternotes", which is what it is.
+>
+>But it really isn't "quarter notes" but a normalized ppq. Calling it
+>normalized ppq would clarify the context.
+
+ppq is a ratio, not a unit of time, so as previously observed it makes
+no sense to measure temporal distance in ppq.
+
+it should be measured, if anything, in pulses (also called "ticks" in
+some systems). however, charlie stated that ppq is set to be 1.0
+pulse-per-quarter-note, which means that any unit given in "ppq"
+really *is* a measurement in quarter notes (and pulses too, by obvious
+extension).
+
+if you want to be precise "normalized pulses, where 1 pulse = 1
+quarter note" would do. but as i asked earlier, why use this
+nomenclature and unit when just plain only fractional quarter notes
+would serve an identical purpose? what does it convey that quarter
+notes do not?
+
+there is an additional problem with using ppq in this way. the actual
+MIDI temporal resolution is a function of the frequency of the timing
+source used for MIDI data delivery and timestamping. by normalizing
+ppq to be 1.0, and then using fractional values, nobody can discover
+the real temporal resolution. unless its very large, there will always
+be the occasional situation where you want to know this in order to
+figure out the best way to accomplish something. if you know that
+ppq=720, there are compromises you can make. if all you know is that
+ppq is a real, low-value number, you can't do this.
+
+or does the host publish the ppq ratio in some other way?
+
+----------------------------------------------------------------------
+> or does the host publish the ppq ratio in some other way?
+
+I don't undestand why you need to know the host internal PPQ.
+
+You can work at as high of a resolution as is possible given the current
+sample rate and sample pos. The actual host PPQ is irrelevent.
+
+How would the host PPQ being 480 vs 720 change the way you do calculations
+in the plugin?
+
+Perhaps an example of not knowing what PPQ is and how it can effect this
+temporal resolution. Perhaps a definition of "temporal resolution" would
+help.
+
+----------------------------------------------------------------------
+>How would the host PPQ being 480 vs 720 change the way you do calculations
+>in the plugin?
+
+suppose i want to schedule MIDI output at two very closely spaced
+points in time. suppose that with 1440 ppq, the two events occur on
+different pulses, but with 480 they do not (basically rounding
+error). think of it this way:
+
+ppq = 480
+beat note value = quarter
+tempo = 120 bpm
+1 pulse = beat_duration / ppq = 0.5 / 480 = 0.001 secs
+
+now change ppq to 1440, 1 pulse = 0.00035 secs.
+
+if i am going to schedule something at a given musical time of 3
+pulses past the start of bar, the 480 ppq system can only provide
+about 1msec of temporal resolution, so if the events are more closely
+spaced than that, they will necessarily end up occuring on the same
+"pulse". by contrast, with ppq = 1440 they will end up on different
+ones.
+
+now, in some situations, this won't matter - you just want the host to
+do the best it can. but in other situations, it may matter than the
+two MIDI data are delivered at the same time rather than at two
+different times as intended. you might choose to delay the scheduled
+time for the second data so that its delivery time (in pulses) is
+different from the first.
+
+and yes, i know what the resolution of the MIDI data rate is. imagine,
+if you insist, that i'm using two independent hardware ports and two
+cables. more to the point ppq is not restricted to MIDI, and if i'm
+using MIDI-over-IP or SKINI or some other related protocol, the data
+rate is not a limitation.
+
+the alternative is to schedule everything using audio frames, but
+there are several reasons why this is not always desirable.
+
+>Perhaps an example of not knowing what PPQ is and how it can effect this
+>temporal resolution. Perhaps a definition of "temporal resolution" would
+>help.
+
+my interpretation of ppq is that it defines the smallest possible
+subdivision of a quarter note.
+
+----------------------------------------------------------------------
+Overhead of getTimeInfo
+----------------------------------------------------------------------
+
+    Thats one idea i never understood from the spec.
+    Why does everyone feel it take so much overhead each time a plugin calls
+    getTimeInfo(flags)?
+
+<snip>
+
+David,
+
+it has been mentioned several times here and also (as an exception 8-) in the docs that retrieving VstTimeInfo can be very costy on cpu. I do neither know why this is nor do I know if that is still valid nor if it affects only certain fields.
+
+However, in Logic 4.8.1 / MacOS 9, PPC7400 450MHz, I measured roundabout 0.5% less cpu consumption on a single plugin instance by retrieving VstTimeInfo (ppq and bpm) only every 10th process() at a block size of 512 samples. This somewhat "convinced" me.
+
+----------------------------------------------------------------------
+    Is kVst TransportChanged supposed to be included in the timeinfo flags when
+    the tempo has changed or not ?
+
+    Frederic
+
+
+no, not tempo. only transport state flags (mainly start/stop transition,
+and cycle changed).
+charlie
+
+----------------------------------------------------------------------
+
+ I have tried getting in touch with Steinberg on this, but no answer so far. It is in regards to CubaseSX under OSX.
+
+Thanks to some good advice here, I recently fixed a problem we that had, relying on getTimeInfo and the samplePos value returned (as a member of the VstTimeInfo structure). We now check whether the transport state has changed instead of checking if the time (samplePos) has changed, which works fine.
+
+However, we also use samplePos to keep track of where in time the data we are tracking occurred, in order to place all tracked data at the correct time for later pitch detection and correction. Unfortunately, it appears that samplePos is not reliable.
+
+We can handle the case where the host simply does not support that feature, but how can we handle the fact that the value returned is simply unreliable? What we see is this: while the sampleFrames value is always coming to us as 256, the samplePos advances incorrectly. On one call to processReplacing, it does not advance at all. On the next call, it advances by 512 (twice the sampleFrames value). This causes our internal "clock" to overwrite data at one point in time, then skip ahead and process data at a later time, instead of recording the data as one continuous series. Obviously, we can hardly detect the pitch in those "missing" segments of time.
+
+I have a workaround, for the moment, that *seems* to handle the problem, PROVIDED that the samplePos either behaves correctly or else behaves as I have described. What I do is, IF the new samplePos equals the previous samplePos, THEN I set our internal "clock" to be the sum of the previous samplePos plus the previous sampleFrames (which is what the new samplePos *should* have been). If the new value is not the same as the previous one, then I simply use that new value. So far it seems to work, but I'm not sure if this is a valid solution in all cases.
+
+Anyone else use the samplePos value returned from calls to getTimeInfo in CubaseSX / OSX? Do you see the same behavior I have described? Does my workaround sound valid?
+
+Thanks for any advice...
+
+Howard Moon
+Antares Audio Technologies
+
+----------------------------------------------------------------------
+
+               We can handle the case where the host simply does not support that feature, but how can we handle the fact that the value returned is simply unreliable? What we see is this: while the sampleFrames value is always coming to us as 256, the samplePos advances incorrectly. On one call to processReplacing, it does not advance at all. On the next call, it advances by 512 (twice the sampleFrames value).
+
+
+    there is one case where this can happen, namely with AMP on (multi-processing).
+
+
+AHA! I have a dual-processor G4, so it must be related to multi-processing. If I recall correctly, that's always on in CubseSX under OSX, right? Well, I need to work around the problem somehow...I can hardly tell users to turn off AMP, can I?
+
+Does my current solution (below) sound valid for handling the issue? It seems to work, I just need to be sure that I'm not introducing some problems I haven't considered yet.
+
+
+
+
+The work-around:
+
+               I have a workaround, for the moment, that *seems* to handle the problem, PROVIDED that the samplePos either behaves correctly or else behaves as I have described. What I do is, IF the new samplePos equals the previous samplePos, THEN I set our internal "clock" to be the sum of the previous samplePos plus the previous sampleFrames (which is what the new samplePos *should* have been). If the new value is not the same as the previous one, then I simply use that new value. So far it seems to work, but I'm not sure if this is a valid solution in all cases.
+
+
+----------------------------------------------------------------------
+
+    Is there a method for determining the exact sample position that is currently
+    playing out of the speakers? I'm aware of getTimeInfo, but from what I gather, it
+    provides the samplePos relative to the last buffer slice, and not the samplePos that
+    the ASIO driver is currently outputting. Is this right?
+
+
+yes. in fact you will usually get a position ahead of time (by the amount given
+by the ASIO output latency, which can also be found in timeInfo). the position is
+related to the first sample of the block.
+
+    What I need to do is this: from within the gui, I need to be able to determine what
+    sample number is actually outputting to the audio device at any given time, accurate
+    to about 50ms or so (even with large buffers being used, such as 8192).
+
+    Is this possible?
+
+
+hmmm, there is the nanoSeconds member in the VstTimeInfo structure,
+but this is not strictly defined so it can be host dependent if or not it
+is usable or even provided. if the reference is known, you might attempt to determine
+the system time of 'now' and subtract that from the block start.
+charlie
+
+----------------------------------------------------------------------
+You are very right Jens, but …
+
+This is exactly the trick point. Let say, the host passes “n” frames to plug-in which takes “t” seconds to be played. The host sends the blocks (events and/or samples) “t” seconds ahead of the playing position (for now I am not worry about stopped situation). The plug-in must process them in less than “t” seconds, and the host will play them exactly after this time. This is at least the case on my system, and if this is always true, I can use the time of the blockSize and deltaFrame as latency to sync with the host.
+
+
+
+    From: "Jens Blomquist" <metal.aero@telia.com>
+    Reply-To: <vst-plugins@lists.steinberg.net> (VST PlugIns)
+    To: <vst-plugins@lists.steinberg.net> (VST PlugIns)
+    Subject: [vst-plugins] SV: [vst-plugins] Midi Events & Scync
+    Date: Sun, 25 Apr 2004 22:25:23 +0200
+
+
+    Fredrik,
+
+    I think you got this a bit wrong. deltaFrames is the offset, in samples,
+    from the start of the current sample block.
+
+    To be able to sync your midi output with the host you would need to know
+    the actual time when the sample block is played by the driver.
+
+    So, I think it's mission impossible (unless VstTimeInfo can be used in
+    some cool way).
+
+----------------------------------------------------------------------
+You say that the host sends the blocks t seconds ahead of the playing
+position.
+The broblem is that you should never assume that t is constant. In some
+cases it may be far from.
+The host may send 4 blocks at once, nothing for a while, 4 blocks at
+once, nothing, 3 blocks...
+Blocks size in first process call may be 256, second may be 1024, 256,
+1024, 2048...
+Well, you get the point.
+
+Only when ASIO is used you can be somewhat sure that the time may be
+constant. :)
+
+The perfect solution would be to have event buffers work like audio
+buffers. So you would have inEvents and outEvents. This way the host
+could schedule the events with sample accurate timing.
+
+- Jens
+----------------------------------------------------------------------
+
+That is why I used n and t. It doesn’t matter n = ?, since my timing will be based on the block size and not a constant number. The only problem could be whether the first block is called exactly prior to its sampling time. I think it is called this way because of programming logic.
+
+----------------------------------------------------------------------
+
+

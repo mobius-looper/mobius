@@ -1,0 +1,18 @@
+!name GRetrigger
+Variable Muted
+Variable saveSwitchQuant
+For all
+ set saveSwitchQuant $switchQuant
+ set switchQuant off
+ set Muted $mode
+ Jump MuteAgain Muted = Mute
+ Retrigger
+ Jump goon
+
+ Label MuteAgain
+ Retrigger
+ Mute
+
+ Label goon
+ set switchQuant $saveSwitchQuant
+next

@@ -1,0 +1,316 @@
+// !$*UTF8*$!
+{
+	08FB7793FE84155DC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 1FD1E02F104A170C00F0E8ED /* qwintest */;
+		activeTarget = 1FD1E026104A165300F0E8ED /* qwintest */;
+		breakpoints = (
+			1FD1E03D104AF11700F0E8ED /* Table.cpp:615 */,
+		);
+		codeSenseManager = 1FD1E020104A162C00F0E8ED /* Code sense */;
+		executables = (
+			1FD1E02F104A170C00F0E8ED /* qwintest */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					423,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					341,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					495,
+					60,
+					20,
+					48.16259765625,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 273290789;
+			PBXWorkspaceStateSaveDate = 273290789;
+		};
+		perUserProjectItems = {
+			1FD1E029104A165F00F0E8ED /* PBXTargetBookmark */ = 1FD1E029104A165F00F0E8ED /* PBXTargetBookmark */;
+			1FD1E02A104A165F00F0E8ED /* PBXTargetBookmark */ = 1FD1E02A104A165F00F0E8ED /* PBXTargetBookmark */;
+			1FD1E02C104A16AC00F0E8ED /* PBXTargetBookmark */ = 1FD1E02C104A16AC00F0E8ED /* PBXTargetBookmark */;
+			1FD1E031104A173600F0E8ED /* PBXTargetBookmark */ = 1FD1E031104A173600F0E8ED /* PBXTargetBookmark */;
+			1FD1E03E104AF13B00F0E8ED /* PBXTargetBookmark */ = 1FD1E03E104AF13B00F0E8ED /* PBXTargetBookmark */;
+			1FD1E03F104AF13B00F0E8ED /* PBXTextBookmark */ = 1FD1E03F104AF13B00F0E8ED /* PBXTextBookmark */;
+			1FD1E041104AF13B00F0E8ED /* PBXTargetBookmark */ = 1FD1E041104AF13B00F0E8ED /* PBXTargetBookmark */;
+			1FD1E042104AF13B00F0E8ED /* PBXTextBookmark */ = 1FD1E042104AF13B00F0E8ED /* PBXTextBookmark */;
+			1FD1E051104AFEB800F0E8ED /* PBXTextBookmark */ = 1FD1E051104AFEB800F0E8ED /* PBXTextBookmark */;
+			1FD1E052104B0BEF00F0E8ED /* PBXTextBookmark */ = 1FD1E052104B0BEF00F0E8ED /* PBXTextBookmark */;
+		};
+		sourceControlManager = 1FD1E01F104A162C00F0E8ED /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	1FD1E01F104A162C00F0E8ED /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+	};
+	1FD1E020104A162C00F0E8ED /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	1FD1E026104A165300F0E8ED /* qwintest */ = {
+		activeExec = 0;
+	};
+	1FD1E029104A165F00F0E8ED /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FD1E026104A165300F0E8ED /* qwintest */;
+	};
+	1FD1E02A104A165F00F0E8ED /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FD1E026104A165300F0E8ED /* qwintest */;
+		uiCtxt = {
+			TOCViewDetailVisibleRect = "{{0, 0}, {525, 393}}";
+			TOCViewExpandedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+			TOCViewMasterVisibleRect = "{{0, 0}, {208, 393}}";
+			TOCViewSelectedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+		};
+	};
+	1FD1E02C104A16AC00F0E8ED /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FD1E026104A165300F0E8ED /* qwintest */;
+		uiCtxt = {
+			TOCViewDetailVisibleRect = "{{0, 98}, {525, 393}}";
+			TOCViewExpandedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+			TOCViewMasterVisibleRect = "{{0, 0}, {208, 393}}";
+			TOCViewSelectedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+		};
+	};
+	1FD1E02F104A170C00F0E8ED /* qwintest */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+			"PBXLSLaunchAction-0" = {
+				PBXLSLaunchAction = 0;
+				PBXLSLaunchStartAction = 1;
+				PBXLSLaunchStdioStyle = 2;
+				PBXLSLaunchStyle = 0;
+				class = PBXLSRunLaunchConfig;
+				commandLineArgs = (
+				);
+				displayName = "Executable Runner";
+				environment = {
+				};
+				identifier = com.apple.Xcode.launch.runConfig;
+				remoteHostInfo = "";
+				startActionInfo = "";
+			};
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		launchableReference = 1FD1E030104A170C00F0E8ED /* MacOS */;
+		libgmallocEnabled = 0;
+		name = qwintest;
+		savedGlobals = {
+		};
+		sourceDirectories = (
+		);
+		startupPath = /Users/jeff/dev/mobius/src/qwin/bundle/qwintest.app/Contents/Resources;
+		variableFormatDictionary = {
+		};
+	};
+	1FD1E030104A170C00F0E8ED /* MacOS */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = folder;
+		name = MacOS;
+		path = /Users/jeff/dev/mobius/src/qwin/bundle/qwintest.app/Contents/MacOS;
+		sourceTree = "<absolute>";
+	};
+	1FD1E031104A173600F0E8ED /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FD1E026104A165300F0E8ED /* qwintest */;
+		uiCtxt = {
+			TOCViewDetailVisibleRect = "{{0, 98}, {525, 393}}";
+			TOCViewExpandedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+			TOCViewMasterVisibleRect = "{{0, 0}, {208, 393}}";
+			TOCViewSelectedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+		};
+	};
+	1FD1E03B104AF11700F0E8ED /* Table.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Table.cpp;
+		path = /Users/jeff/dev/mobius/src/qwin/Table.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1188, 21728}}";
+			sepNavSelRange = "{12822, 0}";
+			sepNavVisRange = "{12625, 607}";
+		};
+	};
+	1FD1E03D104AF11700F0E8ED /* Table.cpp:615 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1FD1E03B104AF11700F0E8ED /* Table.cpp */;
+		functionName = "TableHeader::getColumnWidths(Window* w)";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 615;
+		location = qwintest;
+		modificationTime = 273346840.818649;
+		state = 1;
+	};
+	1FD1E03E104AF13B00F0E8ED /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FD1E026104A165300F0E8ED /* qwintest */;
+		uiCtxt = {
+			TOCViewDetailVisibleRect = "{{0, 98}, {525, 370}}";
+			TOCViewExpandedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+			TOCViewMasterVisibleRect = "{{0, 0}, {208, 370}}";
+			TOCViewSelectedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+		};
+	};
+	1FD1E03F104AF13B00F0E8ED /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FD1E040104AF13B00F0E8ED /* Table.cpp */;
+		rLen = 0;
+		rLoc = 557;
+		rType = 1;
+	};
+	1FD1E040104AF13B00F0E8ED /* Table.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = Table.cpp;
+		path = /Users/jeff/dev/mobius/src/qwin/Table.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {713, 23842}}";
+			sepNavSelRange = "{44022, 0}";
+			sepNavVisRange = "{11691, 792}";
+		};
+	};
+	1FD1E041104AF13B00F0E8ED /* PBXTargetBookmark */ = {
+		isa = PBXTargetBookmark;
+		trg = 1FD1E026104A165300F0E8ED /* qwintest */;
+		uiCtxt = {
+			TOCViewDetailVisibleRect = "{{0, 98}, {525, 370}}";
+			TOCViewExpandedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+			TOCViewMasterVisibleRect = "{{0, 0}, {208, 370}}";
+			TOCViewSelectedItems = (
+				"com.apple.target-editor-pane.settings",
+			);
+		};
+	};
+	1FD1E042104AF13B00F0E8ED /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FD1E043104AF13B00F0E8ED /* Table.cpp */;
+		name = "Table.cpp: 1580";
+		rLen = 0;
+		rLoc = 40780;
+		rType = 0;
+		vrLen = 639;
+		vrLoc = 11552;
+	};
+	1FD1E043104AF13B00F0E8ED /* Table.cpp */ = {
+		isa = PBXFileReference;
+		name = Table.cpp;
+		path = /Users/jeff/dev/mobius/src/qwin/Table.cpp;
+		sourceTree = "<absolute>";
+	};
+	1FD1E051104AFEB800F0E8ED /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FD1E040104AF13B00F0E8ED /* Table.cpp */;
+		name = "Table.cpp: 1597";
+		rLen = 0;
+		rLoc = 41239;
+		rType = 0;
+		vrLen = 735;
+		vrLoc = 11638;
+	};
+	1FD1E052104B0BEF00F0E8ED /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FD1E040104AF13B00F0E8ED /* Table.cpp */;
+		name = "Table.cpp: 1710";
+		rLen = 0;
+		rLoc = 44022;
+		rType = 0;
+		vrLen = 792;
+		vrLoc = 11691;
+	};
+}

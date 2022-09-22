@@ -1,0 +1,4 @@
+Getting this a lot, look at default definitions
+
+LINK : warning LNK4010: invalid subsystem version number 4.0; default subsystem version assumed
+

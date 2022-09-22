@@ -1,0 +1,21 @@
+#
+# Example multi-click script test
+#
+# A counter is displayed each time the script is invoked before
+# the multi-click expiration period. 
+
+!name Multi Click Test
+
+# The defualt period is 1000 milliseconds (1 second), override to 2 seconds
+!multiclick 2000
+
+Message Starting Click Test
+end
+
+Label click
+Message Click $clickCount
+end
+
+#Label endClick
+#Message Ending Click Test
+#end

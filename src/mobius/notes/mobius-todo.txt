@@ -1,0 +1,420 @@
+This was on the laptop dated 5/31/2006
+
+I think it was an earily attempt to codify the bug list that never
+went anywhere.
+
+
+
+----------------------------------------------------------------------
+
+
+
+The Mobius List
+
+
+This file contains a list of most known bugs and feature requests that
+have been identified by Mobius users and discussed on the Yahoo group.
+
+I hope this list will serve three purposes: 
+
+  - to remind us of all the things we've discussed so we don't forget them
+  - to inform new users about the problems we've already identified
+  - to help prioritize what we should work on next
+
+I have not been able to review all of the forum posts and emails that
+I've received over the past year so I know there are some things
+missing or things that I'm not remembering correctly.  Currently the
+list contains things discussed since about January 2006.  I will be
+adding more as I review older notes.  Feel free to post corrections to
+the group or to me privately at jeff@zonemobius.com.
+
+The file is divided into these sections:
+
+  - Current Priorities
+  - Bug Reports
+  - Engine Feasures
+  - User Interface Features
+  - VST Issues
+
+I am not publishing many of the issues related to scripting since they
+are hard to describe and are only of interest to a few people.  I'll 
+publish a seperate file that goes into detail on scripting issues.
+
+----------------------------------------------------------------------
+Current Priorities
+----------------------------------------------------------------------
+
+This section contains brief descriptions of the items being worked
+on for the next few releases, in approximate order of priority.
+More information on each item can be found in the sections below.
+
+  - parallel scripts
+  - clicks during pitch shifting
+  - clicks while changing feedback at the loop point
+
+
+
+----------------------------------------------------------------------
+Bug Reports
+----------------------------------------------------------------------
+
+This section contains a list of most known reported bugs.  I may
+choose not to publish a bug if it is obscure and not likely to be seen
+by most users.  Items prefixed with "UI:" indiciate user interface bugs.
+
+- Realign with TrackSyncMode not working in scripts (Per)
+    Verify that Realign can be used in scripts to resync all brother  
+    tracks with the master.
+
+- When pumping feedback over the loop point for a layer    
+    with deferred edge fades, clicking can occur (Per).
+
+- Functions after bounce run in muted tracks (Matthias)
+    "it seems, after a bounce any new function is executed by all resetted
+     tracks"
+
+- Can decrease but not increase Loop Count (Matthias)
+    Unable to increase loop count in the isntant parameter list.
+    Internally might be reset to the value in the Preset.
+
+- Sample play gets confused if run twice before completion (Matthias)
+    "When running SamplePlay the loop plays once and then goes to mute. 
+     When running sample Play a second time before the end of the loop, 
+     a "mute" is scheduled somewhere in the middle of the loop, the loop
+     retriggers and goes to mute at the point where the mute is scheduled?"
+
+- GlobalMute after NextLoop (Matthias)
+    "after doing next loop to come from the last loop to the first, 
+     Global Mute will only work the second time you run it"
+     GlobalMute state might not be maintained properly when switching
+     among loops? 
+
+- Loop trigger functions should not take you out of Mute (Per)
+    Certainly not during the switch quantize period, may want it
+    configurable whether it unmutes after the switch is complete.
+
+- Sync=HostBar not working properly in Live (chapdabeat)
+    Record an audio clip, use that as the sync master for Mobius.
+
+- TrackCopy with TimeCopyMode=Overdub is broken (Per)
+
+- TrackCopy in scripts can target the wrong track (Matthias)
+    The "Wait last" statement may not be properly waiting for
+    the track switch to complete, so functions intended to be run
+    in the next track are run in the old track.
+
+- Tracks in both mute and half speed not in right color (Luca)
+    Sometimes tracks are displayed in the half speed color when
+    they should be in the mute color if in both modes.
+
+- UI: Mouse button release lost when drifting outside window (Ben)
+    If you hold down a button and move it outside the window, the
+    button up transition can get lost and we still think we're
+    noving a knob.  Need to set "mouse capture".
+
+- UI: Garbage line in the MIDI bindings dialog (Matthias)
+    Under some conditions, the names for the functions get corrupted
+    and display funny.  It was probably the name of a script.
+    File posted on the Yahoo group.
+
+- Selecting MIDI Config with notes (Per)
+    Two scripts bound to MIDI notes.  The scripts use "set midiConfig"
+    with the names of two configurations.  You can switch from the
+    initial configuration to the other one, but not back again. 
+    (unverified)
+
+----------------------------------------------------------------------
+Engine Features
+----------------------------------------------------------------------
+
+- Option to fully reset a track when starting a new recording (Luca)
+    Currently we keep the old layers in case you want to undo.
+
+- Option to set all track controls to 100% on a Reset (Luca)
+
+- Script Templates (Per)
+    Basically the ability to call a function indirectly as the value
+    of a variable rather than written directly into the script.  Allows
+    you to write script "templates" that are then called by other scripts
+    that pass the names of the functions to be called within the
+    control logic.
+
+- Time Slip (Per)
+    SlipForward, SlipBackward with SlipMode parameter defining
+    the amount of slip.
+
+- Scripts calling external programs or batch files (Ben)
+
+- Scripts statement for sending arbitrary MIDI events (rafko_m)
+
+- Audio Recorder needs to include all VST output ports (Per)
+    Currently including only the first set of stereo ports.
+
+- Audio Recorder needs option to include the input signal (Andrew)
+    The input signal is not currently included in the recording even
+    if you have the "monitor input" parameter set.
+
+- Audio Recorder needs option to save a different file for each track (Per)
+    Currently all tracks are merged and saved in a single file.
+
+- Full mono tracks (many)
+    Track only uses one input channel and one output channel, loop data
+    uses half the amount of memory.
+
+- Mono input tracks, true stereo panning (many)
+    A track uses one input channel, half memory, but two output channels
+    so input signal can be panned in stereo.
+
+- Record obeys focus lock (should already work, check).
+    If TrackSyncMode is on, it needs to be ignored when doing 
+    synchronized recording with focus lock or groups.
+
+- Track Mute mode (Doug, Per, others)
+    A higher level mute that is more like a mute on a mixing console
+    rather than the "musical mute" provided by mute mode.  Track mute
+    silences the track, but does not affect the looping mode, for example
+    you can be overdubbing and multiplying silently during track mute.
+
+- Instant Track Copy (Doub)
+    Function to immediately copy one track to another, leaving you in
+    the original track with the new track muted.  Similar to TrackCopy=Sound
+    but you don't have to switch tracks.  Also an option to copy, mute
+    the source track, and move to the new track maintaining the current
+    position.
+
+- Script Confirmation (Per)
+    An option on scripts (and maybe functions?) that will schedule it
+    as a pending event, then activate it immediately after the *next* 
+    function.  Sort of like Switch Confirmation.  Invoking the script again
+    can cause it to modify the eventual behavior.  The use case was to be
+    able to tap in a particular rate with up/down then trigger the
+    shift with another function.
+
+    !confirm
+      When the script is run for the first time it is held as pending  
+      and will not run until some other function comes in.  Undo
+      will cancel the pending script.  The script is run before
+      the triggering function.
+
+    !confirm after
+      The script is run after the triggering function.
+
+    The automatic variable "confirmation" will be set to the name
+    of the triggering function that could be used in conditionals.
+
+- Retro Active Bounce (Per)
+    A variant of bounce recording that copies the last x bars that were
+    played to a new track.  Similar to how Musolomo finds the start of the
+    loop by quantizing backward.
+
+- Bounce Source (Matthias?)
+    Specifies the inputs to the bounce recording as just the tracks in
+    focus or the tracks in a group rather than all audible tracks.
+    Makes it sound less obvious to the audience what is happening.
+    - BounceSource=All|Focused|Group1|Group2...
+
+- BPM Selection Range (Ben)
+
+    Overloading 8thsPerCycle to specify Sync=Out BPM is inconvenient if
+    the desired tempo doesn't match the desired quantization boundary.
+    One option is to specify a BPM range, and automatically pick the one
+    that fits best ignoring 8thsPerCycle (Ben's preference).
+    Another is to add a new beatsPerMeasure parameter that lets you
+    specify the sync beats without changing quantization.
+
+- Tempo Divisor Control (Per)
+    Ability to assign a CC to the beatsPerMeasure parameter.
+    Used to adjust the tempo of the slave device in musically
+    useful multiples.
+  
+    Also talked about a way to tie RateShift into it to make it more
+    like Time Stretch.  
+
+- Temporary Bypass Focus Lock (Per)
+    After setting up focus lock and track groups, sometimes convenient
+    to disable it temporarily to work on an independent track, then
+    put it back remembering all the previous settings.  
+
+- Smart Switch Quantize (Per)
+    If the next loop is empty, quantize is forced to Confirm, otherwise it is 
+    the configured value.  This could be made totally general or just
+    a flag like EmptySwitchConfirm=true.
+
+- Instant LoopCopy (Per)
+    With SwitchQuant=Off and LoopCopy=Timing, if you do NextLoop
+    rapidly several times, all he intermediate loops should now have an
+    empty loop of the correct size, presumably the same for LoopCopy=Sound.
+    You don't have to wait for Insert Mode to finish roudning.
+  
+- Feedback Effects Loop (Dmitry, Per, others)
+  Additional VST pins for send and return.
+  Functions:
+    FeedbackEffectToggle
+    FeedbackEffectOn
+    FeedbackEffectOff
+  Or as Per suggests, a FeedbackEffectSendLevel (and maybe a ReturnLevel)?
+  for continuous control over the amount of effect fed back.  Actually
+  a dry/wet mix level too.
+
+- Feedback Effects Loop using alternate ASIO device (Dmitry)
+  Like the extra set of VST pins, but can be used in standalone Mobius
+  with hardware effects.
+
+- Bounce Cancel (Matthias)
+  Pressing Undo during a bounce does not cancel the bounce since
+  it could be part of the performance being bounced.
+  Either need a Bounce Cancel function, a parameter that makes Undo
+  perform a cancel, or maybe a long press of something.
+
+- Bounce Undo (Matthias)
+  After the bounce has been performed, a way to undo the bounce
+  and restore the source tracks.  Requires that we save state and
+  invalidate the "undoability" after manual changes are made to the
+  source tracks.
+
+- Synchronizing playback of newly loaded loops (Ben)
+  When you load a loop, it enters a pause mute.  If another
+  track is the sync master, need a way to unpause the loop we just
+  loaded in sync with the master track.  TrackSyncMode only
+  works for recording right now.
+
+- Synchronizing playback of project tracks after loading (Ben)
+  When you load a project containing multiple tracks, all
+  tracks will be in a pause mute.  Need a way to unmute all of them
+  at once.
+  
+  Possibly addressed by a TriggerSync=true parameter that
+  means that any form of retrigger will wait for the
+  time determined by TrackSyncMode.
+
+- Global Feedback Control (dsneed)
+  An easy way not involving scripts or focus lock to control
+  the feedback for all tracks, useful for a "fade out" of whatever
+  happens to be playing.
+
+- Store current minor modes (reverse, speed, rate) in project (Matthias)
+  Treat these like track controls.
+
+- Math operators in scripts (Matthias)
+  
+- Script event handlers (Matthias)
+  Special labels called automatically when certain things happen
+  (on_function, on_leaveTrack, on_otherScript)
+
+- MakeLoop script function to create a loop of a particular size (Matthias)
+  Perhaps this should be implemented as an argument to Clear?
+
+- "Lock Playback Parameters" option as an alternative to transfer modes (Per)
+  Transfer modes remember the state of a loop when you leave it and
+  restore it when you return, but since this is defined by the preset, it
+  applies to all loops in the track.  A more flexible option would be to 
+  decide on a per-loop basis whether to remember playback modes by 
+  "locking" them before leaving the loop.  Will need a graphical indicator.
+
+- Automatic compression to help prevent input overload (Ben, Mark)
+  It's easy to overload a Mobius track with a hot signal, especially
+  when overdubbing.  
+
+- Clean up scripts directory (Jeff)
+  Weed out some of the older scripts that we don't need, and fix
+  the ones we do.  Integrate some of the really useful scripts like
+  Matthias' multi-track mute/retrigger script.
+
+- Ability to set fixed feedback levels from key and MIDI bindigns (Ben)
+  example A->track1:feedback=100%, B->track2:feedback=50%
+
+- FeedbackUp/FeedbackDown functions with configurable increments
+
+- Restore ability to have an Omni channel for bindings (Matthias)
+  
+- Ability to bind more than one MIDI event to the same function/script (Jeff)
+
+
+----------------------------------------------------------------------
+User Interface Features
+----------------------------------------------------------------------
+
+- Visual indication of input overload (Ben)
+  When an overload does occur, do something visually so the performer
+  knows they need to undo that layer before it plays and the 
+  overload distortion is heard.
+
+- configurable buttons in the track strip, usually for scripts (Ben)
+
+- Spread Sheet View (Ben, Per) 
+  Column for each track cell for each loop cell color shows status
+  (empty, overdub, speed, etc.), loop length.   Click to trigger cells.
+  MIDI triggers for direct access cells.
+
+- Controller Inc/Dec with focus (Ben)
+  The ability to select one of the controlles (feedback, pan, etc)
+  then change their value using a pair of inc/dec keys. 
+  
+- Popup message when parameters are changed with MIDI or scripts (Ben)
+  Sometimes hard to keep track of feedback levels 8thsPerCycle
+  and other things that can be changed by MIDI or scrpits.
+
+- Open to temporarily apply changes made in the Preset dialog (Ben)
+  Rather than always making the changes permanent, use the Preset 
+  dialog as an editor for all the temporary parameters. 
+
+- Mysterious problem with accidental function bindings after trying
+  to make a scoped binding. (Per)
+
+- Track Configuration Objects & Menu (Matthias)
+
+  Rather than load projects from a file, make them a more built-in
+  concept like Presets and MIDI Configurations.  Can have a pull down
+  menu to select projects, and assign program changes to them.  At
+  least to this for project templates.
+
+  Call these "Track Configurations" which contain:
+    - selected track
+    - for each track
+       - vst input and output ports
+       - initial track control values
+       - global mute and solo status
+       - focus lock and group number
+       - initial reverse, speed, rate, pitch, overdub 
+
+  There would then no longer be a default project template, you would
+  simply mark one of the Track Configuration objects as the default.
+
+  When you Reset a track, return to the defaults in the track config.
+
+- Option to keep the Mobius VST window on top always (dsneed, Matthias)
+  call setWindowPos() with the const wndTopMost
+
+- Changing instant parameter values (or any select field actually)
+  with the mouse wheel. (Matt)
+
+- Keyboard bindings should support "scopes" like MIDI bindings
+
+- Clicking in the loop list to trigger a loop (Matthias)
+
+- Clicking in the layer list to undo or redo to a specific layer (Matthias)
+
+- Display a loop list in each track strip (Matthias)
+
+----------------------------------------------------------------------
+VST Issues
+----------------------------------------------------------------------
+
+- crash in SawStudio if you delete the Mobius plugin and create it again 
+  (dsneed)
+
+- crash under FLStudio v6
+
+- doesn't work under Band-In-A-Box (fliptop2)
+
+- better behavior when trying to run more than one VST instance in a host
+  (dsneed)
+
+- Using "reinit" in Bidule, double clicking on Mobius caused error (Matthias)
+    Runtime Error: R6025 - pure virtual function call
+
+- Support for plugin synchronization in Bidule (richiehamel)
+  Bidule is one of the few hosts that allows plugins to generate
+  clocks, this is more convenient than using MIDIYoke.
+
+----------------------------------------------------------------------

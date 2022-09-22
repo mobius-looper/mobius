@@ -1,0 +1,4 @@
+!name Random Move
+
+Variable newFrame rand(0, loopFrames - 1)
+Move newFrame

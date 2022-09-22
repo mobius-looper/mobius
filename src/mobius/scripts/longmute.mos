@@ -1,0 +1,9 @@
+!name Mute/Reset
+
+Mute
+end
+
+Label sustain
+if sustainCount = 1
+  Reset
+endif

@@ -1,0 +1,213 @@
+Issues related to static data in Mobius
+
+TODO:
+
+  - copy localized parameter values
+
+  - check the construction and destriction of these carefully
+    in several hosts.  Make sure we don't undo static initializers
+    while another plugin needs them
+
+  - decide how best to deal with MidiInterface::exit
+  - decide how best to deal with AudioInterface::exit
+  - decide how best to deal with Qwin::exit
+
+----------------------------------------------------------------------
+Static Constant Object Initializers
+----------------------------------------------------------------------
+
+These can be shared but we may need a csect around them during
+initialization, especially if they have localized names.  For this to
+be a problem the host would have to create and start multiple plugins
+in different threads.  Starting multiple plugins sequentially is not a
+problem because one will fully initialize before the other.  We do
+however need to make sure that double initialization doesn't hurt
+anything.
+
+All of these now extend SystemConstant so we can track them:
+
+    Action.h: ActionOperator
+    Binding.h: Trigger
+    Binding.h: TriggerMode
+    Binding.h: Target
+    Binding.h: UIControl
+    Binding.h: UIParameter
+    Controller.h: Controller
+    Function.h: Function
+    Mode.h: MobiusMode
+    Parameter.h: Parameter
+    UITypes.h: DisplayElement
+
+Some of these have state set into them from MobiusConfig, for
+example MobiusMode tracks altFeedbackDisables and Function tracks
+several global parameters.  It seems reasonable to share these since
+the configuration comes from a file that will be shared by all 
+plugins.  The only inconsistency is that they won't all track
+the file at the same time.
+
+NOTE: There is a potential problem trying to update the config
+file at the same time.  Rare because you would have to be closing
+two config windows at the same time.
+
+NOTE: Parameter has a problem with localized values.  These will
+come from a message catalog that can be deleted.  Need to copy them!!
+
+NOTE: Check the construction and destriction of these carefully
+in several hosts.  The ones with static initializers:
+
+  Trigger* TriggerKey = new Trigger("key", "Key", true);
+
+Are constructed when the DLL is loaded for the first time, but they
+are not destructed when the plugin is deleted (in Bidule anyway).
+
+!! Many of these are defined using arrays that are initialized
+at runtime, for example:
+
+  PUBLIC void MobiusMode::initModes() {
+      ModeIndex = 0;
+      add(ResetMode);
+
+If the host instantiates two plugins in different threads these
+could try to initialize this array at the same time and conflict.
+Rare since plugins are usually instantiated sequentially, to be safest
+we would need a csect around the initialization.
+
+----------------------------------------------------------------------
+Variables
+----------------------------------------------------------------------
+
+These are also static constant objects but they never change
+and are not referenced as constants.  They do not extend
+SystemConstant.
+
+----------------------------------------------------------------------
+Random Static Data
+----------------------------------------------------------------------
+
+  AudioFade::Ramp
+    - ok but could be audio glitches if it changes while
+      another plugin is using it
+
+  Audio::WriteFormat
+    - defines the default format for writing, safe
+
+  FadeWindow.cpp
+    - several globals to track test coverage, safe
+
+  Layer.cpp:
+    - several globals to track test coverage, safe
+
+  SyncTrakcer.cpp: MidiTimerDeferredTempoChange
+    - An experiement defined in midi/MidiTimer, safe
+
+  Mobius.cpp: WinAudioCatchCallbackExceptions
+    - Used only in standalone, safe
+
+  Components: ColorDefinitions
+    - just defines color uses and defaults, safe
+
+  Script: ScriptEndStatement* Pseudo;
+    - static object, no customizations, safe
+
+  Components: Space::Dragging
+    - set when we're mouse dragging outlines in the Space
+      in theory might impact other plugin windows but that would
+      be rare and harmless
+
+----------------------------------------------------------------------
+Other Static Environments
+----------------------------------------------------------------------
+
+   MidiInterface::exit
+   AudioInterface::exit
+   Qwin::exit
+   ObjectPoolManager::exit - not used
+
+----------------------------------------------------------------------
+Qwin
+----------------------------------------------------------------------
+
+Context
+  May be some issues registering windows classes?
+  WindowsWindow: static bool ClassesRegistered;
+
+Color
+  Some constants like Black, White, etc.  Static initializers but may leak?
+
+Font
+  A global list of cached Font objects.  Not static initializers!!
+
+Border
+  A few static initialized constants: BlackLine, WhiteLine, etc.
+
+Component
+  TraceEnabled, PaintTraceEnabled, TraceLevel
+  Global debug flags, safe
+
+SimpleTimer
+	// Since we can't pass an argument through to the callback
+	// function, will have to search for Timer objects by id.
+	// I don't like this, but we normally only have one of these.
+	// !! THIS APPLIES TO WINDOWS ONLY
+	static SimpleTimer* Timers[MAX_TIMERS];
+	static int TimerCount;
+	static bool KludgeTraceTimer;
+
+   Not sure what this does but a global cache isn't good.
+
+Timer
+  UIWindows.h: static SimpleTimer* getTimer(int id);
+  Related to SimpleTimer
+
+Qwin
+  Global utility methods, 
+    static CriticalSection* QwinCsect = new CriticalSection();
+	static void csectEnter();
+	static void csectLeave();
+	static void exit(bool dump);
+
+SimpleDialog
+  // Since these are used so often, keep global copies
+  char* SimpleDialog::OkButtonText = NULL;
+  char* SimpleDialog::CancelButtonText = NULL;
+  char* SimpleDialog::HelpButtonText = NULL;
+  QwinExt.h:	static void localizeButtons(const char* ok, const char* cancel, const char* help);
+  QwinExt.h:	static void freeLocalizations();
+  QwinExt.h:	static char* OkButtonText;
+  QwinExt.h:	static char* CancelButtonText;
+  QwinExt.h:	static char* HelpButtonText;
+
+  WTF is this, just localize every time?
+  Proably not that harmful as long as we keep a COPY of the text.
+
+MacMenu
+  int MacMenuItem::MenuIdFactory = 1;
+  PUBLIC int MacMenuItem::GenMenuId()
+
+  Used to generate unique ids for mac menu items.
+  Should be thread safe, it may increment too often but it's
+  okay as long as the results for one thread are unique.
+
+Qwin::exit
+  deletes the CriticalSection
+  empties the Font cache        
+    - may need to be reference counted!  
+
+TODO:
+  - revisit Font cache, may need to reference count
+  - get rid of SimpleDialog button caches
+  - revisit SimpleTimer cache, may need to refernce count and
+    release on exit
+
+----------------------------------------------------------------------
+Midi
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+Audio
+----------------------------------------------------------------------
+
+
+
+
+

@@ -1,0 +1,107 @@
+#
+# Common definitions for OSX makefiles
+#
+# Example from the docs for building universal binaries:
+#
+#  CFLAGS="-isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386" 
+#  LDFLAGS="-Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386"
+#
+# ar options
+#
+# -s is equivalent to running ranlib to create an index
+# -r replaces all existing files in the archive, and adds new ones to the end
+# -c emits informational messages
+#
+# libtool is not preferred over ar/ranlib
+#
+#    libtool -static -o libutil.a $(LIBUTIL_O)	    
+# vs 
+#    -rm libutil.a
+#    ar -rcs libutil.a $(LIBUTIL_O)
+#
+# I've always used g++ for linking which automatically finds the C++ runtime
+#
+#	g++ $(LDFLAGS) -g -o utiltest utiltest.o -L. -lutil
+# vs
+#	ld $(LDFLAGS) -o utiltest utiltest.o -L. -lutil
+#
+
+######################################################################
+#
+# Defines
+#
+######################################################################
+
+# VST samples started using this, seems harmless
+# -mmacosx-version-min=10.4 
+#
+# AU examples have a bunch of crap we don't seem to need
+#
+# -pipe			use pipes rather than temp files
+# -Wno-trigraphs 		suppress trigraph warnings?
+# -fpascal-strings	allow Pascal string literals, not required?
+# -fasm-blocks 		enable blocks of assembly code, not required?
+# -g			debugging
+# -O0			disable optimization, this is the default
+# -fmessage-length=0      disable wrapping of error messages
+# -mtune=G4        	set instruction scheduling params for machine type
+#			not sure what this does, and I don't think we need it
+#			it is listed under PowerPC options
+# -fvisibility-inlines-hidden    not documented?
+# -mfix-and-continue 	       not documented
+# -Wmost 
+#    same as -Wall -Wno-parentheses
+# -Wno-four-char-constants 
+#    unknown
+# -Wno-unknown-pragmas 
+#   disable warnings about unknown pragmas
+#
+# Do need this for AudioUnits?
+#
+# -F/Developer/Examples/CoreAudio/AudioUnits/MultitapDelayAU/build/Development 
+#   additional directory to search for frameworks, NEED!
+
+DEVROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
+
+
+# what I used before the Xcode upgrade
+#-CFLAGS=-isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386 -mmacosx-version-min=10.4
+
+# started using this after the Xcode upgrade, 10.5 and Intel only
+#CFLAGS=-isysroot /Developer/SDKs/MacOSX10.5.sdk -arch i386 -mmacosx-version-min=10.5
+
+# started using with Xcode 5
+CFLAGS=-isysroot $(DEVROOT) -arch i386 -mmacosx-version-min=10.5
+
+# what I used before the Xcode upgrade
+#-LDFLAGS=-Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386 -mmacosx-version-min=10.4
+
+# this if you're linking with ld
+#LDFLAGS=-syslibroot /Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386
+
+# started this after the upgrade
+#LDFLAGS=-Wl,-syslibroot,/Developer/SDKs/MacOSX10.5.sdk -arch i386 -mmacosx-version-min=10.5
+
+# started using with Xcode 5
+LDFLAGS=-Wl,-syslibroot,$(DEVROOT) -arch i386 -mmacosx-version-min=10.5
+
+######################################################################
+#
+# Rules
+#
+######################################################################
+
+# INCLUDES, DEFINES, and OTHER_CFLAGS may be set in the includer
+
+%.o : %.cpp
+	g++ -g -c -DOSX $(CFLAGS) $(OTHER_CFLAGS) $(CPPFLAGS) $(DEFINES) $(INCLUDES) $< -o $@
+
+.PHONY: commonclean
+commonclean:
+	@-rm -f *.o
+	@-rm -f *.a
+	@-rm -f *.rsrc
+
+.PHONY: svnignore
+svnignore:
+	@svn propset svn:ignore -F svnignore .

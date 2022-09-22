@@ -1,0 +1,96 @@
+
+cvs tag -R rel1-40
+
+cvs user/password on mini1 ?
+
+----------------------------------------------------------------------
+CVS Tags
+
+Labeling happens when a symbolic name is associated with a set of
+revisions, one particular revision per file. Labels, also known as
+tags, are used to identify which revisions are part of a logical unit,
+say a particular version of a software project or the files that make
+a set of patches for some other project.
+
+Creating Labels
+
+CVS has two commands, cvs tag and cvs rtag for creating and
+manipulating labels. cvs tag uses a directory hierarchy in the file
+system to determine which revisions to associate with the label, while
+cvs rtag works directly on the repository.  To create a label using
+cvs tag, perform these steps:
+
+  % cd your-project-directory
+  % cvs update
+  
+And look at the output. Make sure there are no locally modified files
+or unknown files. Commit or add files as appropriate.
+
+  % cvs tag -R tag-name
+  For example, to tag the photonet-dev directory for ACS 2.5
+  % cd /web/photonet-dev
+  % cvs update
+  % cvs tag -R acs-2.5
+
+Checking Out Based on a Label
+
+  % cd someplace to check out to
+  % cvs checkout -r tag-name project-name
+
+or more concretely:
+
+  % cd /web
+  % cvs checkout -r acs-2.5 acs
+
+note You don't want to do this if there already was a /web/acs. This
+would wipe out what was already there.
+
+You can specify the -d argument to cvs checkout to have the checkout
+happen in a new directory:
+
+  % cd /web
+  % cvs checkout -d somedirectory -r acs-2.5 acs
+
+Which would check out the revisions labeled with "acs-2.5" and put
+them in a directory hierarchy rooted at /web/somedirectory Also note
+that this checks out a tree with "sticky" labels (more on this in the
+branching section), so you won't be able to check in new revisions of
+files. Usually, this isn't a big deal, since you'll be checking out
+versions of the project that was made at a well-defined moment, and
+you don't want to be changing the revisions pointed to by the labels
+willy-nilly.
+
+Manipulating Labels
+
+The main manipulation you'd be doing on a label is changing the
+revision number for a particular file. Say for instance that you
+tagged revision 1.5 of subject.tcl with a label, and then you realized
+that subject.tcl should really have been revision 1.6. To change the
+label, do this:
+
+  % cd directory-of-the-file-to-change
+  % cvs tag -F -r revision-number tag-name file-name
+
+The "-F" stands for "force" a tag. A concrete example is:
+
+  % cd /web/photonet-dev/www/bboard
+  % cvs tag -F -r 1.6 acs-2.5 subject.tcl
+
+Deleting Labels
+
+You can delete labels once you're done with them. Development labels,
+and labels for beta versions of products are usually pretty safe to
+get rid of. You'll want to hang on to labels for released versions of
+products for support and maintenance purposes.
+
+  % cvs rtag -d tag-name project-name
+
+concretely:
+
+  % cvs rtag -d acs-2.5 acs
+
+Note that cvs rtag is being used, since we're really just battering
+the repository to delete a tag rather than involve a specific set of
+files.
+
+Checking Out A Tag

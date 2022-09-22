@@ -1,0 +1,700 @@
+<html>
+<head>
+<title>Mobius and OSC</title><style type='text/css'>
+<!-- 
+div.constraint,div.issue,div.note,div.notice     { margin-left: 2em; }dt.label       { display: run-in; }li           { margin-top: 0.3em; margin-bottom: 0.3em; }p           { margin-top: 0.6em; margin-bottom: 0.6em; }.diff-chg	{ background-color: orange; }.diff-del	{ background-color: red; text-decoration: line-through;}.diff-add	{ background-color: lime; }table          { empty-cells: show; }div.exampleInner { margin-left: 1em;                       margin-top: 0em; margin-bottom: 0em}div.exampleOuter {border: 4px double gray;                  margin: 0em; padding: 0em}div.exampleInner { background-color: #d5dee3;                   border-top-width: 4px;                   border-top-style: double;                   border-top-color: #d3d3d3;                   border-bottom-width: 4px;                   border-bottom-style: double;                   border-bottom-color: #d3d3d3;                   padding: 4px; margin: 0em }div.exampleWrapper { margin: 4px }div.exampleHeader { font-weight: bold; margin: 4px}body {  padding: 2em 1em 2em 70px;  margin: 0;  font-family: sans-serif;  color: black;  background: white;  background-position: top left;  background-attachment: fixed;  background-repeat: no-repeat;}:link { color: #00C; background: transparent }:visited { color: #609; background: transparent }a:active { color: #C00; background: transparent }a:link img, a:visited img { border-style: none } /* no border on img links */a img { color: white; }        /* trick to hide the border in Netscape 4 */@media all {                   /* hide the next rule from Netscape 4 */  a img { color: inherit; }    /* undo the color change above */}th, td { /* ns 4 */  font-family: sans-serif;}h1, h2, h3, h4, h5, h6 { text-align: left }/* background should be transparent, but WebTV has a bug */h1, h2, h3 { color: #005A9C; background: white }h1 { font: 170% sans-serif }h2 { font: 140% sans-serif }h3 { font: 120% sans-serif }h4 { font: bold 100% sans-serif }h5 { font: italic 100% sans-serif }h6 { font: small-caps 100% sans-serif }.hide { display: none }div.head { margin-bottom: 1em }div.head h1 { margin-top: 2em; clear: both }div.head table { margin-left: 2em; margin-top: 2em }p.copyright { font-size: small }p.copyright small { font-size: small }@media screen {  /* hide from IE3 */a[href]:hover { background: #ffa }}dd { margin-top: 0.3em; margin-bottom: 0.6em }dt { margin-top: 0; margin-bottom: 0 } /* opera 3.50 */dt { font-weight: bold }pre, code { font-family:monospace; font-size: medium }ul.toc {  list-style: disc;		/* Mac NS has problem with 'none' */  list-style: none;}-->
+</style>
+</head>
+<body>
+<h1 class=title1>Mobius and OSC</h1>
+<h2 class=title2>August 2012</h2>
+<br>
+<h1 class=sec1>Contents</h1>
+<table>
+<tr align=left><th>1</th><td></td><td><a href='#Introduction'>Introduction</a></td>
+<tr align=left><th>2</th><td></td><td><a href='#Network Configuration'>Network Configuration</a></td>
+<tr align=left><th>3</th><td></td><td><a href='#Addresses and Arguments'>Addresses and Arguments</a></td>
+<tr align=left><th>4</th><td></td><td><a href='#Buttons and Sliders'>Buttons and Sliders</a></td>
+<tr align=left><th>5</th><td></td><td><a href='#Argument Values'>Argument Values</a></td>
+<tr align=left><th>6</th><td></td><td><a href='#scaledArguments'>Setting Parameters With Scaled OSC Arguments</a></td>
+<tr align=left><th>7</th><td></td><td><a href='#addressArguments'>Setting Parameters With Address Values</a></td>
+<tr align=left><th>8</th><td></td><td><a href='#ordinalArguments'>Setting Parameters With Ordinal Arguments</a></td>
+<tr align=left><th>9</th><td></td><td><a href='#Setting Parameters With Relative Values'>Setting Parameters With Relative Values</a></td>
+<tr align=left><th>10</th><td></td><td><a href='#Executing Functions'>Executing Functions</a></td>
+<tr align=left><th>11</th><td></td><td><a href='#Address Translation'>Address Translation</a></td>
+<tr align=left><th>12</th><td></td><td><a href='#Status Export'>Status Export</a></td>
+<tr align=left><th>12.1</th><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#Latency'>Latency</a></td>
+<tr align=left><th>13</th><td></td><td><a href='#Reloading the OSC Configuration File'>Reloading the OSC Configuration File</a></td>
+<tr align=left><th>14</th><td></td><td><a href='#TouchOSC Tips'>TouchOSC Tips</a></td>
+</table>
+<a name='Introduction'>
+<h1 class=sec1>1 Introduction</h1>
+</a>
+<p>Mobius may be controlled and monitored using the Open Sound Control
+(OSC) protocol.  This is an advanced topic intended for users that are
+already very familar with OSC, and have a hardware device
+capable of sending and receiving OSC messages.  Mobius OSC support was
+tested primarily using
+the popular <i>TouchOSC</i> application for Apple and Android mobile devices but any device
+that supports OSC should be usable.  To get the most out of OSC it is important
+that the device be programmable so that it can send addresses and
+arguments that are compatible with Mobius.  If a device sends a fixed message,
+such as the default layouts in <i>TouchOSC</i>, it is still possible to use
+it with Mobius but it will require more effort to configure.</p>
+<p>OSC support is a relatively new feature that not many people use.
+If you have problems or suggestions, please do not hesitate to 
+post on the Mobius forums.</p>
+<a name='Network Configuration'>
+<h1 class=sec1>2 Network Configuration</h1>
+</a>
+<p>To communicate with an OSC device you must set four
+parameters in the <i>Global Parameters</i> dialog under the
+<i>Advanced</i> tab.</p>
+<ul>
+<li><b>OSC Enable</b> - check to enable the OSC interface</li>
+<li><b>OSC Input Port</b> - the port number on on the computer where we will listen for OSC messages</li>
+<li><b>OSC Output Host</b> - the IP address of the OSC device where we will send messages</li>
+<li><b>OSC Output Port</b> - the port number on the OSC device where we will send messages</li>
+<li><b>OSC Trace</b> - check to enable OSC trace messages</li>
+</ul>
+<p>If you don't understand what any of that means, then we're sorry but
+you're not ready for OSC.  Post a message on the forums if you need
+assistance, but unfortunately OSC requires some knowledge
+of TCP/IP networking, and this document is not a tutorial.</p>
+<p>The <i>OSC Enable</i> defaults to false so we won't open 
+network sockets that aren't needed.  This must be checked if you
+want to use OSC.</p>
+<p>The <i>OSC Input Port</i> defaults to 7000.  There is probably not
+a need to change this, but in rare situations there may be a conflict
+with another application that wants to use this port.  Diagnosing
+port conflicts is beyond the scope of this document.  Try it and if
+it doesn't work, post to the forum.</p>
+<p>The <i>OSC Output Host</i> must be the IP address of the device
+that will be sending and receiving OSC messages.  This is not required,
+but it is desireable if you want to see controls in the OSC device match
+the current Mobius paramters.  For example, if you bind an OSC address
+to the <i>Output Level</i> parameter, we can send the device a message
+every time the output level changes due to a MIDI pedal, moving
+the UI knob, a script, or any other means of changing the parameter.
+An IP address has the form of four numbers seperated by periods, for
+home networks, the IP addres normally starts with "192.168.1" and
+ends with a number between 100 and 200.</p>
+<p>The <i>OSC Output Port</i> defaults to 9000 which is the default
+port number used by <i>TouchOSC</i>.  This must be changed if your device
+listens on a different port and you want the device to receive
+notifications when Mobius parameters change.</p>
+<p>The <i>OSC Trace</i> - checkbox enables sending trace messages
+whenever OSC messages are received or sent.  On Mac, the messages
+are sent to the system console.  On Windows, they are send
+to the debug output stream and you will need to use an application
+such as DBWIN32 to view them.  See the section
+<a href='exploring.htm#Trace'>Trace</a>
+ in the <i>Exploring Mobius</i>
+manual for more information on how to enable and view trace messages.
+The <i>Trace Debug Level</i> parameter under the <i>Advanced</i> tab
+must also be set to 2 to see OSC trace messages.</p>
+<p>If you are setting up a new device it is recommended that you
+enable trace to help diagnose problems.  Once the device and Mobius
+are working properly, disable trace to reduce clutter in the logs.</p>
+<a name='Addresses and Arguments'>
+<h1 class=sec1>3 Addresses and Arguments</h1>
+</a>
+<p>Mobius OSC messages must contain an address and usually one
+floating point argument without a type tag.  Mobius addresses always
+begin with the string <b>/mobius</b> and follow this pattern:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/trigger/scope/target/value
+</pre>
+</div></div>
+<p>The <b>/trigger</b> container is optional and is usually not included.
+It can be used to convey information about how the physical device
+is behaving, if this is different than the default Mobius expectations.
+This will be described in detail later.</p>
+<p>The <b>/scope</b> container is optional and may contain one
+of the following values.</p>
+<ul>
+<li>The word <b>global</b></li>
+<li>A track number starting with 1</li>
+<li>A group letter starting with A</li>
+</ul>
+<p>If a scope is not specified in the address it defaults to <b>global</b>.
+Here are some example addresses containing scopes, the first two are
+the same because the default scope is <i>global</i>:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/global/...
+    /mobius/...
+    /mobius/1/...
+    /mobius/A/...
+</pre>
+</div></div>
+<p>The <b>/target</b> container is not optional, it must be the name
+of a Mobius function or parameter, for example "record" or "subCycles".
+Target names must use <i>script names</i> which may be different
+than the names displayed in the user interface.  Consult the reference
+manual to find the script names that correspond to the display names.
+Often the script name is the same as the display name but with spaces
+removed, so what is displayed as "Auto Record" would be "AutoRecord"
+in the address.  Case does not matter.</p>
+<p>To change setups, presets, or binding overlays the the target
+names are "setup", "preset", or "bindings".  These are the same as
+the parameter names used to select configuration objects with plugin
+parameter bindings.  Here are some example addresses with targets:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/global/record
+    /mobious/global/preset
+    /mobius/1/quantize
+    /mobius/A/output
+</pre>
+</div></div>
+<p>The <b>/value</b> container is where things start to get complicated.
+In order to support a wide variety of devices with different
+levels of programability, values can be specified in three ways.</p>
+<ul>
+<li><b>argument</b> - the value is specified by the OSC message argument</li>
+<li><b>absolute</b> - the value is specified in the address</li>
+<li><b>relative</b> - an adjustment to the current value is specified in the address, with the amount of adjustment specified by the OSC message argument</li>
+</ul>
+<p>We will discuss ways to specify target values in more detail below,
+here are some examples:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    -- these use arguments
+
+    /mobius/global/output  0.5
+    /mobius/1/quantize  0.333
+
+    -- these are absolute
+
+    /mobius/global/preset/Default+Preset
+    /mobius/1/quantize/subcycle
+    /mobius/A/pan/center
+    /mobius/global/output/max
+
+    -- these are relative
+
+    /mobius/global/output/up  1.0
+    /mobius/8/feedback/down  5.0
+
+    /mobius/global/output/up/1
+    /mobius/8/feedback/down/5
+</pre>
+</div></div>
+<a name='Buttons and Sliders'>
+<h1 class=sec1>4 Buttons and Sliders</h1>
+</a>
+<p>Before determining the best way to specify Mobius addresses and
+arguments, we need to consider how the hardware that is sending OSC
+messages behaves.  A device typically contains a mixture of physical
+controls that behave in one of these ways:</p>
+<ul>
+<li><b>continuous</b> - a slider or rotary knob that sweeps between a range of values</li>
+<li><b>momentary</b> - a button that sends a value when it is pressed and another when it is released</li>
+<li><b>single</b> - a button that sends a value when it is pressed, but not when it is released</li>
+<li><b>toggle</b> - a variation of the single button, it sends a value when it is pressed, and a different value when it is pressed a second time</li>
+<li><b>xy</b> - a rectangular area with a "puck" that sends two values as the puck is moved</li>
+</ul>
+<p>You can set Mobius parameters using any of these control types.  
+Continuous controls are useful if you want to to sweep through
+the possible values of a parameter.  Often the track control parameters such
+as "input", "output" and "feedback" are associated with physical
+controls that resemble sliders.  Enumerated parameters such
+as "quantize" or "recordThreshold" might be assigned to rotary knobs.</p>
+<p>You can also use buttons to set parameters.  In this case the
+button will either force the parameter to a
+particular value (absolute), or raise and lower the value of 
+the parameter by some amount (relative).</p>
+<p>To execute Mobius functions you almost always use physical
+controls that have button behvaior.  It is possible to execute
+Mobius functions with sliders but this can be difficult
+to use.  When executing functions, it is important to understand
+the differemce between momentary, single and toggle buttons.</p>
+<p>Many Mobius functions are "sustainable" which means they
+can have different behavior when a button is pressed and released,
+or when a button is held down for a period of time.  If you
+wish to use any of the sustainable or long-pressable functions, 
+you must use physical buttons that behave as momentary buttons,
+sending a message both when it is pressed and released.  
+All <i>TouchOSC</i> buttons behave this way.</p>
+<p>It is posssible to use single message buttons to execute
+functions but Mobius has to be told not to expect the extra
+release message.  Otherwise sustainable functions will enter
+their long-press state because they never see the up transition
+of the button.  This is done with a special keyword in the
+address and is described below.</p>
+<p>Toggle buttons are not very useful with Mobius.  They
+are typically used for effects parameters such as chorusing
+or reverb, where you want to press once to enable the effect, then
+press again to disable the effect.  Such buttons typically send 1.0
+when they are pressed once, 0.0 when pressed again, then repeat
+the 1.0 and 0.0 pattern forever.  This behavior might be useful
+for some parameters, for example toggling quantize mode
+between "loop" and "off", but this is not recommended for executing
+functions.</p>
+<p>XY controls can be used to set Mobius parameters but we have
+not seen many interesting examples.  If you find one let us know!</p>
+<a name='Argument Values'>
+<h1 class=sec1>5 Argument Values</h1>
+</a>
+<p>The OSC devices with which we are familar send one and rarely two 
+arguments that are floating point numbers.  The argument usually
+has a default range of 0.0 to 1.0.</p>
+<p>When a slider is down, the value 0.0 is sent and as it is
+raised the value increases smoothly until it reaches 1.0 at the
+top end of the slider range.   Momentary buttons usually send
+1.0 when the button is pressed and 0.0 when the button is released.
+This is the default behavior of <i>TouchOSC</i> controls.</p>
+<p>To minimize the amount of programming for <i>TouchOSC</i>, Mobius
+will expect most arguments to be in the range of 0.0 to 1.0,
+though in some cases this can be adjusted.</p>
+<a name='scaledArguments'>
+<h1 class=sec1>6 Setting Parameters With Scaled OSC Arguments</h1>
+</a>
+<p>To set a parmaeter with OSC arguments, use an address
+path without a value container, for example.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/global/output
+</pre>
+</div></div>
+<p>One argument is expected to be sent with the message whose value
+ranges from 0.0 to 1.0.  Mobius will take the floating point range and
+scale it into an integer or "ordinal" range for the target, in this
+example the <i>output</i> parameter.  The <i>output</i> parameter has
+an ordinal range from 0 to 127, so an OSC argument of 0.0 becomes
+output level 0, 1.0 becomes 127 and 0.5 is approximately 64.  This is
+almost always done when the physical device is a slider or rotary
+knob.  This style of argument is convenient if you want to smoothly
+sweep the knob over all possible values of the parameter.</p>
+<p>It is also possible to set values with a button, but this
+is not often done with scaled OSC arguments.  To set the value of 
+a parameter you must know the floating point range of each of the
+possible parmeter values.  For example the <i>quantize</i> parameter
+has four possible values: off, subcycle, cycle, and loop.  This divides
+the floating range by four, so values from 0.0 to 0.2499999 select <i>off</i>,
+values from 0.25 to 0.4999999 select <i>subcycle</i> and so on.  It
+is inconveinent for the device programmer to calculate these values so
+instead parameters set with buttons usually use 
+<a href='#addressArguments'>address values</a> or
+<a href='#ordinalArguments'>ordinal arguments</a>.</p>
+<p>Another problem setting parameters with buttons, is that many
+devices use momentary buttons and send a message when it is pressed
+and again when it is released.  When setting Mobius parameters
+you usually want to ignore this second message.   For example,
+say we're configuring a <i>TouchOSC</i> button to set the <i>quantize</i>
+parameter to <i>loop</i>.  You set set the high value to 1.0,
+but what about the low value?  If you leave it at 0.0 the parameter
+will change twice, once when you press the button and again when
+you release since 0.0 is the value for "off".  To avoid this you
+must set the low value of the button to -1.0 or any other negative
+number.  Mobius will ignore the negative value and leave the parameter
+set to 1.0.</p>
+<a name='addressArguments'>
+<h1 class=sec1>7 Setting Parameters With Address Values</h1>
+</a>
+<p>When setting parameters with buttons, the most convenient
+approach is to include the value you want to set in the
+address rather than use the OSC argument.  For example:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/global/quantize/loop
+</pre>
+</div></div>
+<p>The <i>quantize</i> parameter value will be set to <i>loop</i> 
+whenever this message is received with a non-zero argument.  
+Since the default behavior of <i>TouchOSC</i> is to send 1.0 on button
+press and 0.0 on release, the message is processed
+when 1.0 is sent, but the message is ignored when 0.0 is sent
+so we won't try to change the parameter twice every time a button
+is pressed.</p>
+<p>This is convenient for two reasons, first you don't have to 
+worry so much about the value of the argument since most
+devices default to 0.0 to 1.0.  Second, you don't have to 
+calculate the numeric form of each parameter value, 
+instead you can reference them <b>by name</b> just as
+you would in a script.</p>
+<p>When you use this style of address you normally do not
+send it from a slider or knob.  As you sweep over the slider
+range, we will set the parameter to the same value many times
+which adds overhead and accomplishes nothing.</p>
+<p>To set the value container, consult the reference manual
+for each parameter.  If the parmaeter value is an <i>enumeration</i>
+the set of possible values are listed.  If the value is an integer
+the minimum and maxmum values will be given.  
+For example, the output level parameter range is from
+0 to 127, so these are some valid example addresses.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/global/output/0
+    /mobius/global/output/42
+    /mobius/global/output/127
+</pre>
+</div></div>
+<p>To change presets, setups or binding overlays, you reference
+the objects using the name they have in the user interface.  These
+names often contain spaces which are not allowed in OSC
+addreses.  You must substitute the plus '+' character for
+spaces in configuration object names:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/global/setup/Default+Setup
+    /mobius/1/preset/Glitch+Core
+    /mobius/bindings/Nano+Control
+</pre>
+</div></div>
+<p>There are also a few special symbols that may be used instead
+of parameter values.</p>
+<ul>
+<li><b>min</b> - set the parameter to the minimum value</li>
+<li><b>max</b> - set the parameter to the maximum value</li>
+<li><b>center</b> - set the parameter to the center value</li>
+</ul>
+<p>These symbolic values are the most useful for the track level
+parameters.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/global/output/max
+    /mobius/global/feedback/min
+    /mobius/global/pan/center
+</pre>
+</div></div>
+<a name='ordinalArguments'>
+<h1 class=sec1>8 Setting Parameters With Ordinal Arguments</h1>
+</a>
+<p>If you have an OSC device that can be programmed to send any argument
+value, you can choose to set the Mobius parameter to the value 
+of the argument using ordinal nubmers.  Ordinals are integers that
+usually have a minimum value of zero and a maximum value less than 100.
+A few have minimum values that are negative.  To set parameters
+with ordinals add the keyword <b>arg</b> to the end of the address.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/global/output/arg
+</pre>
+</div></div>
+<p>This differs from using <a href='#scaledArguments'>scaled arguments</a>
+in that the argument is not expected to be a floating value from 0.0 to 1.0.
+Instead it is expected to be an integer that fits within the range
+allowed by the target parameter.  In this example, the target is <i>output</i>
+which expects values from 0 to 127.</p>
+<p>Ordinal arguments accomplish the same thing as using 
+<a href='#addressArguments'>address arguments</a> and are a bit more
+obscure since they require ordinal parameter numbers, whereas 
+address arguments may use symbolic values.</p>
+<p>In the previous example, if the device was programmed to send
+an argument value of 100, the same effect could be achieved using
+an address argument.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/global/output/100
+</pre>
+</div></div>
+<a name='Setting Parameters With Relative Values'>
+<h1 class=sec1>9 Setting Parameters With Relative Values</h1>
+</a>
+<p>A variation on setting parameters with addresses is to 
+use the address to specify a <i>relative</i> value.  There
+are two special sumbols you can use in the value container
+to set relative values.</p>
+<ul>
+<li><b>up</b> - raise the parameter value</li>
+<li><b>down</b> - lower the parameter value</li>
+</ul>
+<p>For example:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/global/output/up
+    /mobius/1/feedback/down
+</pre>
+</div></div>
+<p>The amount to raise or lower the value is specified by
+the OSC argument.  So assuming the <i>TouchOSC</i> default of 1.0
+for button presses, the values will rise and lower by 1.  If
+you create a custom <i>TouchOSC</i> layout you can adjust the maximum
+value to achieve higher amounts of adjustment.  For example
+a button with a maximum value of 5.0 will raise or lower
+the parameter value by 5 units each press.</p>
+<p>If you do not wish to program a custom template, you
+may also specify the amount of change in the address.
+For example:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/global/output/up/5
+    /mobius/1/feedback/down/20
+</pre>
+</div></div>
+<p>This style of address can be used with any parameter, the
+value will be automatically constrained so the parameter can't
+go beyond it's minimum and maximum values.  The value of the
+OSC argument doesn't matter as long as it is possitive.  Positive
+argument values will cause the parmameter to be changed, 
+zero or negative values are ignored, 
+which is necessary for buttons that send 0.0 when they are released.</p>
+<p>Setting parameters values in the address is convenient for devices
+that have only buttons or a limited number of sliders.</p>
+<a name='Executing Functions'>
+<h1 class=sec1>10 Executing Functions</h1>
+</a>
+<p>Functions are almost always executed using a physical control
+that behaves as a button.  It is possible to execute functions
+with sliders but it takes more effort.  Wherever possible, the
+button should be programmed to send an argument of 1.0 when the
+button is pressed and 0.0 when it is released.  It doesn't really
+matter what the press value is but the release value must
+be 0.0.  If the release value is not 0.0, mobius will execute
+the function again when the button is released which is 
+not normally desired. Here are some examples of function addresses:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/global/record
+    /mobius/1/speedDown
+    /mobius/A/mute
+</pre>
+</div></div>
+<p>If the button does not send a value on release, Mobius needs
+to be told this so it won't think that the button is being
+held down.  This is important for all "sustainable" functions
+that may have different actions on press and release, or change
+behavior after a long press.  If the button will not send
+a release value the special symbol <b>/noup</b> must be added
+to the address after the <b>/mobius</b> container.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/noup/global/record
+</pre>
+</div></div>
+<p>When the <i>/noup</i> trigger qualifier is used, the value of the OSC
+argument is ignored.  Any time a message is received
+with this address the function is executed, and we will not
+wait for a release message.</p>
+<p>A few functions may take a single integer argument when used
+in scripts.  Some examples are <i>divide</i> which instantly
+divides the loop by a number, and <i>speedUp</i> which raises
+the speed of the loop by a number of semitones.  For those functions
+that recognize arguments, you may specify the argument in the address.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/global/divide/5
+    /mobius/1/speedDown/12
+</pre>
+</div></div>
+<p>There is usually no need to combine a numeric function argument with
+the <i>/noup</i> option.  Functions that take argumets are assumed to not
+be sustainble.  There may however be scripts that are sustainable
+and take an argument.  So it is best if you consistently add <i>/noup</i>
+if you know the device will not behave like a momentary button.</p>
+<a name='Address Translation'>
+<h1 class=sec1>11 Address Translation</h1>
+</a>
+<p>If your device does not support programmable addresses, or if you
+wish to use the default <i>TouchOSC</i> templates without creating custom
+templates, you can still use the device with Mobius, but it requires
+editing an XML file.  The file is named <b>osc.xml</b>.  On Windows it
+is found in the installation directory, usually <i>c:\Program Files\Mobius 2</i>.  On Mac this is found in <i>/Library/Application Support/Mobius 2</i>.</p>
+<p>You need to be comfortable with XML syntax and selecting text encodings
+to edit this file.  See 
+<a href='starting.htm#editingXml'>this section</a>
+ in the <i>Getting Started</i>
+manual for more information on the proper way to edit XML files.</p>
+<p>The default <i>osc.xml</i> file contains a single &lt;OscConfig&gt; element
+which in turn contains several &lt;OscBindingSet&gt; elements.
+An &lt;OscBindingSet&gt; contains several &lt;Binding&gt; elements.  
+Each &lt;Binding&gt; defines the translation between the incomming OSC address
+(triggerPath) and the corresponding Mobius address (targetPath).</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+&lt;OscConfig&gt;
+  &lt;OscBindingSet name="Touch OSC Simple" active='true'&gt;
+    &lt;Binding triggerType='continuous' triggerPath='/1/fader1' targetPath='/mobius/1/output'/&gt;
+    &lt;Binding triggerType='continuous' triggerPath='/1/fader2' targetPath='/mobius/2/output'/&gt;
+    &lt;Binding triggerType='continuous' triggerPath='/1/fader3' targetPath='/mobius/3/output'/&gt;
+    &lt;Binding triggerType='continuous' triggerPath='/1/fader4' targetPath='/mobius/4/output'/&gt;
+    &lt;Binding triggerType='continuous' triggerPath='/1/fader5' targetPath='/mobius/global/pan'/&gt;
+    &lt;Binding triggerType='toggle' triggerPath='/1/toggle1' targetPath='/mobius/noup/record/&gt;
+    &lt;Binding triggerType='toggle' triggerPath='/1/toggle2' targetPath='/mobius/noup/overdub/&gt;
+    &lt;Binding triggerType='toggle' triggerPath='/1/toggle3' targetPath='/mobius/noup/mute/&gt;
+    &lt;Binding triggerType='toggle' triggerPath='/1/toggle4' targetPath='/mobius/noup/reset/&gt;
+    ...
+  &lt;/OscBindingSet&gt;
+  &lt;OscBindingSet name="Touch OSC Beat Machine"&gt;
+    ...
+  &lt;/OscBindingSet&gt;
+  &lt;OscBindingSet name="Touch OSC Keys"&gt;
+    ...
+  &lt;/OscBindingSet&gt;
+  ...
+&lt;/OscConfig&gt;
+</pre>
+</div></div>
+<p>Only one OscBindingSet may be active at a time, this is indiciated
+by setting the XML attribute <i>active</i> to <i>true</i> as seen in
+the above example.  If more than one &lt;OscBindingSet&gt; set is marked
+active, the first one is chosen.  If no binding sets are active the
+first one in the &lt;OscConfig&gt; is chosen.</p>
+<p>The active binding set is consulted whenever an OSC message is
+received.  We search for a &lt;Binding&gt; whose <i>triggerPath</i>
+matches the address from the OSC message.  In the examples above,
+the <i>triggerPath</i> values are the messages sent by <i>TouchOsc</i> in
+one of it's default configurations.  If a matching &lt;Binding&gt; is
+found, the value of the <i>targetPath</i> is used to process the
+message instead of the one that was received from the
+device.  <i>targetPath</i> values conform to the Mobius address format
+described earlier in this document.</p>
+<p>The <i>triggerType</i> value tells Mobius about the behavior of the 
+physical OSC trigger and the values the OSC message argument will have.
+This is optional because Mobius can usually figure out the appropiate
+trigger type based on the targetPath and trigger options 
+such as <i>/noup</i>.  The possible values are.</p>
+<ul>
+<li><b>continuous</b> - argument sweeps from 0.0 to 1.0</li>
+<li><b>momentary</b> - argument is 1.0 when a button is pressed and 0.0 when released</li>
+<li><b>once</b> - argument is 1.0 a the button is pressed and nothing is sent when the button is released</li>
+<li><b>toggle</b> - argument is 1.0 when button is pressed once and 0.0 when pressed again</li>
+<li><b>xy</b> - a pair of arguments from 0.0 to 1.0 is sent for each coordinate in a rectangle</li>
+</ul>
+<p>For <i>TouchOSC</i>, incoming paths that contain the word "fader" or "rotary" are
+<i>continuous</i>, paths with the word "toggle" are <i>toggle</i>,
+and paths with the word "push" are <i>momentary</i>.  Mobius currently
+cannot make use of <i>xy</i> messages.</p>
+<a name='Status Export'>
+<h1 class=sec1>12 Status Export</h1>
+</a>
+<p>In addition to receiving OSC messages, Mobius may also send OSC messages so that
+the device can display the current Mobius state.  By default, any OSC
+address whose target is a parameter and whose argument is a continuous value
+from 0.0 to 1.0 will be automatically exported when the parmeter is changed.
+So if you use an address like this:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/output
+</pre>
+</div></div>
+<p>A message will be sent back to the OSC device using the same address
+whenever the output level changes.  For this to work you must configure
+the <i>OSC Output Host</i> and <i>OSC Output Port</i> in the Mobius
+<i>Global Parameters</i> window.</p>
+<p>Note that addresses that target functions, or that include
+specific values will not be exported.  For example, these
+address cannot be exported.</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+    /mobius/record
+    /mobius/output/127
+    /mobius/output/up
+    /mobius/output/arg
+</pre>
+</div></div>
+<p>In addition the automatic export of continuous parameters, there
+are a few special values that may be exported but cannot be set.
+These are called <i>Watch Points</i>.</p>
+<ul>
+<li><b>loopLocation</b> - the current playback location in the loop</li>
+<li><b>loopStart</b> - flashes at the loop start point</li>
+<li><b>loopSubcycle</b> - flashes at the loop start point</li>
+<li><b>loopCycle</b> - flashes at the loop start point</li>
+<li><b>modeRecord</b> - set when the loop is in record mode</li>
+</ul>
+<p>Watch points are still under development, if you have ideas
+about Mobius states that should be exporable as watch points please
+let us know.</p>
+<p>When a watch point is continuous such as <i>loopLocation</i>
+the value will be constantly changing.  The output value will be 
+scaled to the range 0.0 and 1.0.   For <i>TouchOSC</i> this
+can be used with fader or rotary controls.</p>
+<p>When a watch point <i>flashes</i> it indicates that the state
+is instant and does not have a time duration.  For example when the
+loop reaches the start point.  For instant watch points, an OSC
+message will be sent with value 1.0 when the state is reached, 
+and a short time later a message with value 0.0 is sent.  This 
+can be used to turn lights on the OSC device on and off.  For
+<i>TouchOSC</i> this should be used with toggle buttons.</p>
+<p>When a watch point is "modal" such as <i>modeRecord</i>
+it turns on and off for an undefined time.  A 1.0 will be
+sent when the mode is entered and 0.0 when it is exited.</p>
+<p>To export watch points, you must edit the <i>osc.xml</i> file
+and add &lt;OscWatcher&gt; elements.  These elements appear
+as immediate childrenof the &lt;OscConfig&gt; element.  For example:</p>
+<div class='exampleOuter'>
+<div class='exampleInner'>
+<pre>
+&lt;OscConfig&gt;
+  &lt;OscWatcher name='loopLocation' path='/1/fader1'/&gt;
+  &lt;OscWatcher name='loopStart' track='1' path='/1/toggle1'/&gt;
+  &lt;OscBindingSet&gt;
+     ...
+  &lt;OscBindingSet&gt;
+  ...
+&lt;OscConfig&gt;
+</pre>
+</div></div>
+<p>In this example, the loop location of the currently selected
+track will be sent to the OSC device using the address <i>/1/fader1</i>.
+In the second &lt;OscWathcer&gt;, a specific track is specified so the
+OSC device will be send a message to <i>/1/toggle1</i> only when the
+loop in track 1 reaches its start point.</p>
+<a name='Latency'>
+<h2 class=sec2>12.1 Latency</h2>
+</a>
+<p>There may be a considerable delay between the time that a Mobius
+watch point is reached and the OSC device responds to the message.
+So while watch point port export can give you a general idea
+of what is happening, it is not always suitable for making 
+time critical decisions, such as synchronization or as
+a metronome.  Mobius sends messages as fast as it can, but 
+wireless networks and mobile devices can both add
+delays that are not under the control of Mobius.</p>
+<a name='Reloading the OSC Configuration File'>
+<h1 class=sec1>13 Reloading the OSC Configuration File</h1>
+</a>
+<p>If you decide to use address mapping or define watch points
+in the OSC configuration file (osc.xml) you will need to reload it
+every time you make changes.  The file
+is loaded once when Mobius starts.  If you want to reload the file
+without restarting Mobius, open the <i>File</i> menu and select the 
+<i>Reload OSC</i> item.</p>
+<a name='TouchOSC Tips'>
+<h1 class=sec1>14 TouchOSC Tips</h1>
+</a>
+<p>The most inexpensive way to use OSC with Mobius is through the 
+<i>TouchOSC</i> application for Apple and Android mobile devices.  It is available
+<a href='http://hexler.net/software/touchosc'>here</a>
+.  <i>TouchOSC</i> provides
+a few default layouts such as <i>Beat Machine</i> and <i>Keys</i>
+but it is also fully programmable with the <i>TouchOSC Editor</i>.</p>
+<p>The default layouts the send messages such as <i>/1/fader1/</i> can be used
+but they require editing the <a href='#Address Translation'>Address Translation</a> file. For most
+people it is easier to use the <i>TouchOSC Editor</i> to send address
+that Mobius understands without mapping.</p>
+<p>For Mobius, the most useful layout object types are
+<i>Push Button</i>, <i>Fader V</i>, <i>Fader H</i>, <i>Rotary V</i>, and <i>Rotary H</i>.
+Use <i>Push Button</i> to execute functions or set specific parameter values, 
+and use <i>Fader</i> and <i>Rotary</i> to sweep through paramter values.</p>
+<p><i>Toggle Button</i> can be used but it doesn't work very well since Mobius does not
+have many concepts that behave like toggles.  You might use this to swtich between
+two parameter values, but it is not suitable for executing functions.</p>
+<p><i>XY Pad</i> and the various <i>Multi</i> types are not usable with Mobius.</p>
+<p>The read-only status types such as <i>LED</i> and <i>Battery V</i> can
+be used as the targets for <a href='#Status Export'>OscWatcher</a>s.</p>
+</body>
+</html>

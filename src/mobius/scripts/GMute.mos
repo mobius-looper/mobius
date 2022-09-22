@@ -1,0 +1,46 @@
+!name GMute
+
+Variable GlobalMuteState global
+
+Variable LastTrackMode
+
+#########
+Jump TurnMuteOff GlobalMuteState = on
+
+For all
+  set LastTrackMode $mode
+  Jump AlreadyMuted mode = mute
+  Jump AlreadyMuted mode = reset
+  Mute
+
+  Label AlreadyMuted
+Next
+
+set GlobalMuteState on
+
+end
+
+#########
+Label TurnMuteOff
+
+For all
+  Jump PreviouslyMuted LastTrackMode = reset
+  Jump SilentRetrigger LastTrackMode = mute
+  
+  Mute
+
+  Label PreviouslyMuted
+Next
+set GlobalMuteState off
+
+end
+
+#########
+
+Label SilentRetrigger
+Variable SaveSwitchQuant = $switchQuant
+set switchQuant off
+Retrigger
+Mute
+set switchQuant $SaveSwitchQuant
+Jump PreviouslyMuted

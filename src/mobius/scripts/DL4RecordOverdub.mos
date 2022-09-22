@@ -1,0 +1,16 @@
+!name Redub
+
+if mode == reset
+Record
+end
+endif
+
+if mode == mute
+Reset
+Record
+end
+endif
+
+if mode != reset
+Overdub
+endif
