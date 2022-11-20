@@ -14,26 +14,28 @@ Steps to compile on Windows 10
 Create installation package:
 
  * Install NSIS (3.x - latest)
- * cd src/install
- * make
+ * `cd src/install`
+ * `nmake`
 
 TODO:  
  * Move build outputs out of /src directory
- * Figure out how to execute make with cp/rm/mkdir posix command support
- * Figure out the installer
  * Fix .gitignore to properly ignore generated (non-source) files
  * Setup separate install target for copying outputs to Program Files
  * Investigate CMake / msbuild alternative to raw Makefiles
  * Evaluate current state of 64-bit support (Setup 64-bit compilation target)
  * Evaluate dependencies:
 	* CoreAudio SDK 1.4.3
-	* PortAudio v19 (20071207)
+	* PortAudio v19 (20071207) - https://github.com/PortAudio/portaudio/wiki/ReleaseNotes
 	* VST 2/3
 	* OSC
 	* qwin (UI?)
-	* SoundTouch 1.3.1 (Bose integration?)
+	* SoundTouch 1.3.1 - https://www.surina.net/soundtouch/download.html
  * Tests?
  * Investigate JUCE as a potential port target
+
+Done:
+ * Figure out how to execute make with cp/rm/mkdir posix command support - remove cygwin reliance from Makefiles
+ * Figure out the installer - steps added above, relies on NSIS
 
 Notes:
  * Jeff used cygwin on Windows to run emacs and a linux-like environment to execute the builds. See /src/make/.bashrc
