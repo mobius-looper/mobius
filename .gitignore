@@ -1,3 +1,11 @@
+# Common build outputs
+/src/**/*.dll
+/src/**/*.exe
+/src/**/*.ilk
+/src/**/*.lib
+/src/**/*.obj
+/src/**/*.pdb
+/src/**/*.res
 
 # /src/SoundTouch/
 /src/SoundTouch/libsoundtouch.a
@@ -14,18 +22,16 @@
 /src/audio/audiotest
 /src/audio/devices
 /src/audio/libaudio.a
+/src/audio/*.exp
 
 # /src/midi/
-/src/midi/*.pdb
 /src/midi/*.exp
-/src/midi/*.obj
-/src/midi/*.exe
 /src/midi/*.opt
-/src/midi/*.lib
 /src/midi/libmidi.a
 /src/midi/miditest
 
 # /src/mobius/
+/src/mobius/*.exp
 /src/mobius/*.rsrc
 /src/mobius/.DS_Store
 /src/mobius/libui.a
@@ -55,31 +61,20 @@
 /src/mobius/mac/xcode/mobius/build
 
 # /src/osc/
-/src/osc/*.exe
-/src/osc/*.obj
-/src/osc/*.lib
 /src/osc/libosc.a
 /src/osc/osctest
+/src/osc/*.exp
 
 # /src/osc/oscpack/
-/src/osc/oscpack/*.exe
-/src/osc/oscpack/*.obj
-/src/osc/oscpack/*.lib
 /src/osc/oscpack/liboscpack.a
 /src/osc/oscpack/oscdump
 
 # /src/qwin/
 /src/qwin/*.sln
 /src/qwin/*.suo
-/src/qwin/*.ilk
-/src/qwin/*.pdb
-/src/qwin/*.obj
-/src/qwin/*.exe
 /src/qwin/*.exp
-/src/qwin/*.res
 /src/qwin/*.RES
 /src/qwin/*.opt
-/src/qwin/*.lib
 /src/qwin/libqwin.a
 /src/qwin/mactest
 /src/qwin/qwintest
@@ -95,11 +90,7 @@
 /src/qwin/bundle/qwintest.app/Contents/Resources/*.icns
 
 # /src/util/
-/src/util/*.exe
-/src/util/*.obj
-/src/util/*.lib
 /src/util/*.exp
-/src/util/*.pdb
 /src/util/doc2html
 /src/util/threadtest
 /src/util/utiltest
@@ -107,8 +98,7 @@
 /src/util/xomtest
 
 # /src/vst/2.4/
-/src/vst/2.4/*.lib
-/src/vst/2.4/*.pdb
 /src/vst/2.4/libvst.a
 /src/vst/2.4/again
 /src/vst/2.4/bundles
+/.vs

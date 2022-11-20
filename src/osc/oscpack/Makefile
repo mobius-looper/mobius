@@ -60,10 +60,10 @@ oscdump: oscdump.exe
 ######################################################################
 
 clean: standardclean
-	@-rm -f osc/*.obj
-	@-rm -f ip/*.obj
-	@-rm -f ip/win32/*.obj
-	@-rm -f examples/*.obj
+	@-del /q "osc/*.obj" 2>nul
+	@-del /q "ip/*.obj" 2>nul
+	@-del /q "ip/win32/*.obj" 2>nul
+	@-del /q "examples/*.obj" 2>nul
 
 ######################################################################
 ######################################################################

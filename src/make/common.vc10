@@ -135,22 +135,22 @@ DLL_LFLAGS	= /FIXED:NO $(DLL_LFLAGS)
 # with rm
 
 standardclean:
-	@-rm -f *~
-	@-rm -f *.*~
-	@-rm -f *.obj
-	@-rm -f *.exe
-	@-rm -f *.bak
-	@-rm -f *.pdb
-	@-rm -f *.lib
-	@-rm -f *.exp
-	@-rm -f *.res
-	@-rm -f *.RES
-	@-rm -f *.dll
-	@-rm -f *.class
-	@-rm -f *.opt
-	@-rm -f *.mdp
-	@-rm -f *.ilk
-	@-rm -f *.manifest
+	@-del /q *~ 2>nul
+	@-del /q *.*~ 2>nul
+	@-del /q *.obj 2>nul
+	@-del /q *.exe 2>nul
+	@-del /q *.bak 2>nul
+	@-del /q *.pdb 2>nul
+	@-del /q *.lib 2>nul
+	@-del /q *.exp 2>nul
+	@-del /q *.res 2>nul
+	@-del /q *.RES 2>nul
+	@-del /q *.dll 2>nul
+	@-del /q *.class 2>nul
+	@-del /q *.opt 2>nul
+	@-del /q *.mdp 2>nul
+	@-del /q *.ilk 2>nul
+	@-del /q *.manifest 2>nul
 
 !ifndef NO_COMMON_CLEAN
 clean: standardclean
