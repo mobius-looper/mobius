@@ -2506,7 +2506,7 @@ PUBLIC void Mobius::setCustomMode(const char* s)
 {
 	strcpy(mCustomMode, "");
 	if (s != NULL) {
-		int len = strlen(s);
+		size_t len = strlen(s);
 		if (len < MAX_CUSTOM_MODE - 1) 
 		  strcpy(mCustomMode, s);
 	}
@@ -2612,7 +2612,7 @@ PRIVATE void Mobius::parseBindingScope(const char* scope, int* track, int* group
     *group = 0;
 
     if (scope != NULL) {
-        int len = strlen(scope);
+        size_t len = strlen(scope);
         if (len > 1) {
             // must be a number 
             *track = atoi(scope);
@@ -2694,7 +2694,7 @@ PRIVATE ResolvedTarget* Mobius::internTarget(Target* target,
     }
     else {
         Trace(1, "Unable to resolve Binding: unsupported target %ld\n",
-              (long)target);
+              (long long)target);
     }
 
     // must have at least the name, some we'll defer
@@ -3048,7 +3048,7 @@ PRIVATE const char* Mobius::getToken(const char* ptr, char* token)
  */
 PRIVATE void Mobius::oscUnescape(const char* src, char* dest, int max)
 {
-    int len = strlen(src);
+    size_t len = strlen(src);
     if (len > (max - 1))
       Trace(1, "oscUnescape: Token too long %s\n", src);
     else {

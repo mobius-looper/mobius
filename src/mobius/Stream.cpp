@@ -486,7 +486,7 @@ PUBLIC int Stream::getPitchTweak(int tweak)
 
 PUBLIC long Stream::deltaFrames(float* start, float* end)
 {
-	long bytes = (long)((long)end - (long)start);
+	long bytes = (long)((long long)end - (long long)start);
 	long samples = bytes / sizeof(float);
 	long frames = samples / channels;
 	return frames;

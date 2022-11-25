@@ -880,7 +880,7 @@ PUBLIC void Action::getDisplayName(char* buffer, int max)
 
             if (!arg.isNull()) {
                 AppendString(" ", buffer, max);
-                int start = strlen(buffer);
+                size_t start = strlen(buffer);
                 arg.getString(&buffer[start], max - start);
             }
         }

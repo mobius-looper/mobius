@@ -207,7 +207,7 @@ PUBLIC void WindowsRadioButton::open()
               printf("Unable to create RadioButton control\n");
             else {
                 subclassWindowProc();
-                SetWindowLong(mHandle, GWL_USERDATA, (LONG)this);
+                SetWindowLongPtr(mHandle, GWLP_USERDATA, (LONG_PTR)this);
 				mButton->initVisibility();
 				setSelected(initialValue);
             }

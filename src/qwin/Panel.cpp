@@ -200,7 +200,8 @@ PUBLIC void WindowsPanel::open()
               printf("Unable to create Panel control\n");
             else {
                 subclassWindowProc();
-				SetWindowLong(mHandle, GWL_USERDATA, (LONG)this);
+				// https://stackoverflow.com/questions/18178628/how-do-i-call-setwindowlong-in-the-64-bit-versions-of-windows
+				SetWindowLongPtr(mHandle, GWLP_USERDATA, (LONG_PTR)this);
 				mPanel->initVisibility();
 			}
         }

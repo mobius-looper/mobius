@@ -12,10 +12,10 @@ Steps to compile on Windows 10
 Create installation package:
 
  * Install NSIS (3.x - latest)
+ * Open a Developer Command Prompt
  * `cd src/install`
  * `nmake`
 
 Compile for 64-bit:
- * Update common.mak to select common.win64 make profile (Enables CPU=AMD64 architecture for WIN32.mak)
  * Start -> Launch `x64 Native Tools Command Prompt for Visual Studio 2022` (Run as Administrator)
  * Run `nmake` in the project root

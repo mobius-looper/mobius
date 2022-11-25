@@ -308,8 +308,8 @@ void WinMidiInput::stopMonitorThread(void)
 /**
  * Forward reference to our interrupt handler callback.
  */
-extern void WINAPI midi_in_callback(HMIDIIN dev, UINT msg, DWORD instance,
-									DWORD param1, DWORD param2);
+extern void WINAPI midi_in_callback(HMIDIIN dev, UINT msg, DWORD_PTR instance,
+									DWORD_PTR param1, DWORD_PTR param2);
 
 /**
  * Attempts to open the Windows port for a MidiPort.
@@ -340,8 +340,8 @@ PUBLIC int WinMidiInput::connect(void)
 
 		int rc = midiInOpen(&mNativePort,
 							mPort->getId(),
-							(DWORD)midi_in_callback,
-							(DWORD)this,
+							(DWORD_PTR)midi_in_callback,
+							(DWORD_PTR)this,
 							CALLBACK_FUNCTION | MIDI_IO_STATUS);
 
 		if (rc != MMSYSERR_NOERROR) {
@@ -574,8 +574,8 @@ PUBLIC void WinMidiInput::notifyEventsReceived()
  * igore the request, but the sub-handlers should be able to deal with it.
  *
  */
-void WINAPI midi_in_callback(HMIDIIN dev, UINT msg, DWORD instance,
-							 DWORD param1, DWORD param2)
+void WINAPI midi_in_callback(HMIDIIN dev, UINT msg, DWORD_PTR instance,
+							 DWORD_PTR param1, DWORD_PTR param2)
 {
 	WinMidiInput *in = (WinMidiInput *)instance;
 
@@ -674,7 +674,7 @@ void WINAPI midi_in_callback(HMIDIIN dev, UINT msg, DWORD instance,
  * should be ok for most things, but it can't ensure accurate interleaving.
  * 
  */
-PRIVATE void WinMidiInput::processLongData(DWORD p1, DWORD p2, bool error)
+PRIVATE void WinMidiInput::processLongData(DWORD_PTR p1, DWORD_PTR p2, bool error)
 {
 	MIDIHDR 	*hdr;
 	DWORD		len;

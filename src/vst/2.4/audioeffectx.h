@@ -11,6 +11,7 @@
 // © 2006, Steinberg Media Technologies, All Rights Reserved
 //-------------------------------------------------------------------------------------------------------
 
+
 #ifndef __audioeffectx__
 #define __audioeffectx__
 

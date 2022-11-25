@@ -199,7 +199,7 @@ WindowsHostFrame::~WindowsHostFrame()
     /*
     HWND parent = getParentWindowHandle();
     if (parent != NULL)
-      (void)SetWindowLong(parent, GWL_USERDATA, (LONG)NULL);
+      (void)SetWindowLongPtr(parent, GWLP_USERDATA, (LONG_PTR)NULL);
     */
 }
 
@@ -228,7 +228,7 @@ PUBLIC void WindowsHostFrame::open()
             // Shouldn't need this since we aren't running our 
             // WindowsProcedure in this window
             // NO! screws up Reaper
-			//(void)SetWindowLong(parent, GWL_USERDATA, (LONG)this);
+			//(void)SetWindowLongPtr(parent, GWLP_USERDATA, (LONG_PTR)this);
 
             // The parent window has bounds we could try to capture
             // but the host is supposed to give us the size we asked for,
@@ -243,7 +243,7 @@ PUBLIC void WindowsHostFrame::open()
             Color* c = mWindow->getBackground();
             WindowsColor* wc = (WindowsColor*)c->getNativeColor();
             HBRUSH current = (HBRUSH)
-                SetClassLong(parent, GCL_HBRBACKGROUND, (long)wc->getBrush());
+                SetClassLongPtr(parent, GCLP_HBRBACKGROUND, (long)wc->getBrush());
         }
 
         // this opens the embedded child window
@@ -266,7 +266,7 @@ PUBLIC void WindowsHostFrame::close()
 		HWND parent = getParentWindowHandle();
         if (parent != NULL) {
             // remove our backref
-            //(void)SetWindowLong(parent, GWL_USERDATA, (LONG)NULL);
+            //(void)SetWindowLongPtr(parent, GWLP_USERDATA, (LONG)NULL);
         }
 
         WindowsWindow::close();

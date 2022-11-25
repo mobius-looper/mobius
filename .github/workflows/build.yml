@@ -8,19 +8,27 @@ on:
 
 jobs:
   build:
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - x86
+          - amd64
     name: default
     runs-on: windows-2022
     steps:
     - uses: actions/checkout@v3
     - uses: ilammy/msvc-dev-cmd@v1
       with:
-        arch: x86
+        arch: ${{ matrix.arch }}
+    
     - name: nmake
       run: nmake
+    
     - name: uploads build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: mobius x86
+        name: mobius ${{ matrix.arch }}
         path: |
           src/mobius/mobius.exe
           src/mobius/MobiusVst2.dll

@@ -93,7 +93,7 @@ PUBLIC void XmlBuffer::addAttribute(const char *name,
 									const char *prefix, 
 									const char *value)
 {
-	int max = (value != NULL) ? strlen(value) : 0;
+	size_t max = (value != NULL) ? strlen(value) : 0;
 	int i;
 
 	if (max > 0) {
@@ -193,7 +193,7 @@ PUBLIC void XmlBuffer::addAttribute(const char* name, long value) {
  */
 PUBLIC void XmlBuffer::addContent(const char* s) {
 
-	int max = (s != NULL) ? strlen(s) : 0;
+	size_t max = (s != NULL) ? strlen(s) : 0;
 	for (int i = 0 ; i < max ; i++) {
 	    char ch = s[i];
 	    if (ch == '&')

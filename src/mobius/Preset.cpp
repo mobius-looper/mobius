@@ -288,7 +288,7 @@ const char* Preset::getSustainFunctions()
 void Preset::addSustainFunction(const char* name)
 {
     if (name != NULL && LastIndexOf(mSustainFunctions, name) < 0) {
-        int len = strlen(mSustainFunctions);
+        size_t len = strlen(mSustainFunctions);
         // one for the , and one for the terminator
         if ((len + strlen(name) + 2) < sizeof(mSustainFunctions)) {
             if (len > 0)

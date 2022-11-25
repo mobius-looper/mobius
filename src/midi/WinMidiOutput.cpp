@@ -69,8 +69,8 @@ PUBLIC void WinMidiOutput::printWarnings()
 /**
  * Interrupt handler function passed when connecting.
  */
-extern void WINAPI MidiOutInterrupt(HMIDIOUT dev, UINT msg, DWORD instance,
-									DWORD param1, DWORD param2);
+extern void WINAPI MidiOutInterrupt(HMIDIOUT dev, UINT msg, DWORD_PTR instance,
+									DWORD_PTR param1, DWORD_PTR param2);
 
 /**
  * Called after one of the Windows functions returned an error status.
@@ -120,8 +120,8 @@ PUBLIC int WinMidiOutput::connect(void)
 		// open the port, this may fail if someone else has it
 		int rc = midiOutOpen(&mNativePort,
                              mPort->getId(),
-                             (DWORD)MidiOutInterrupt,
-                             (DWORD)this,
+                             (DWORD_PTR)MidiOutInterrupt,
+                             (DWORD_PTR)this,
                              CALLBACK_FUNCTION);
 
 		if (rc != MMSYSERR_NOERROR) {
@@ -196,8 +196,8 @@ PUBLIC bool WinMidiOutput::isConnected(void)
  * Not much to do, if we're spinning waiting for a long data output
  * completion event (MOM_DONE), stop the spin so we can continue.
  */
-void WINAPI MidiOutInterrupt(HMIDIOUT dev, UINT msg, DWORD instance,
-                             DWORD param1, DWORD param2)
+void WINAPI MidiOutInterrupt(HMIDIOUT dev, UINT msg, DWORD_PTR instance,
+                             DWORD_PTR param1, DWORD_PTR param2)
 {
 	WinMidiOutput *m = (WinMidiOutput *)instance;
 
@@ -677,8 +677,8 @@ PUBLIC int WinMidiOutput::sysexRequest(const unsigned char *request,
  *                                                                          *
  ****************************************************************************/
 
-void WINAPI TestMidiOutInterrupt(HMIDIOUT dev, UINT msg, DWORD instance,
-                                 DWORD param1, DWORD param2)
+void WINAPI TestMidiOutInterrupt(HMIDIOUT dev, UINT msg, DWORD_PTR instance,
+                                 DWORD_PTR param1, DWORD_PTR param2)
 {
 	WinMidiOutput *m = (WinMidiOutput *)instance;
 
@@ -718,27 +718,27 @@ void WinMidiOutput::testOpen()
     printf("Opening first time...\n");
 	HMIDIOUT nativePort = 0;
     int rc = midiOutOpen(&nativePort, portnum,
-                         (DWORD)TestMidiOutInterrupt,
-                         (DWORD)NULL,
+                         (DWORD_PTR)TestMidiOutInterrupt,
+                         (DWORD_PTR)NULL,
                          CALLBACK_FUNCTION);
 
     if (rc != MMSYSERR_NOERROR)
       printf("WinMidiOutput::testOpen midiOutOpen 1 rc=%d\n", rc);
 
-    printf("First nativePort %d\n", (int)nativePort);
+    printf("First nativePort %d\n", (int)(ULONG_PTR)nativePort);
 
     // and again
     printf("Opening second time...\n");
 	HMIDIOUT nativePort2 = 0;
     rc = midiOutOpen(&nativePort2, portnum,
-                     (DWORD)TestMidiOutInterrupt,
-                     (DWORD)NULL,
+                     (DWORD_PTR)TestMidiOutInterrupt,
+                     (DWORD_PTR)NULL,
                      CALLBACK_FUNCTION);
 
     if (rc != MMSYSERR_NOERROR)
       printf("WinMidiOutput::testOpen midiOutOpen 2 rc=%d\n", rc);
 
-    printf("Second nativePort 2 %d\n", (int)nativePort2);
+    printf("Second nativePort 2 %d\n", (int)(ULONG_PTR)nativePort2);
     
     printf("Closing first one...\n");
 

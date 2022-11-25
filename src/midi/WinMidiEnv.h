@@ -83,7 +83,7 @@ class WinMidiInput : public MidiInput
 	void notifyEventsReceived();
 
     // interrupt handler methods
-	void processLongData(DWORD p1, DWORD p2, bool error);
+	void processLongData(DWORD_PTR p1, DWORD_PTR p2, bool error);
     void processEventsReceived();
 
 	// Application callback event accessors

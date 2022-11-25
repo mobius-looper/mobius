@@ -21,14 +21,14 @@ static LONG findDrvPath (char *clsidstr,char *dllpath,int dllpathsize)
 	HFILE			hfile;
 	BOOL			found = FALSE;
 
-	CharLowerBuff(clsidstr,strlen(clsidstr));
+	CharLower(clsidstr);
 	if ((cr = RegOpenKey(HKEY_CLASSES_ROOT,COM_CLSID,&hkEnum)) == ERROR_SUCCESS) {
 
 		index = 0;
 		while (cr == ERROR_SUCCESS && !found) {
 			cr = RegEnumKey(hkEnum,index++,(LPTSTR)databuf,512);
 			if (cr == ERROR_SUCCESS) {
-				CharLowerBuff(databuf,strlen(databuf));
+				CharLower(databuf);
 				if (!(strcmp(databuf,clsidstr))) {
 					if ((cr = RegOpenKeyEx(hkEnum,(LPCTSTR)databuf,0,KEY_READ,&hksub)) == ERROR_SUCCESS) {
 						if ((cr = RegOpenKeyEx(hksub,(LPCTSTR)INPROC_SERVER,0,KEY_READ,&hkpath)) == ERROR_SUCCESS) {

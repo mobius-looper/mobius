@@ -268,7 +268,7 @@ INTERFACE void CopyString(const char* src, char* dest, int max)
 		if (src == NULL) 
 		  strcpy(dest, "");
 		else {
-			int len = strlen(src);
+			size_t len = strlen(src);
 			int avail = max - 1;
 			if (avail > len)
 			  strcpy(dest, src);
@@ -283,8 +283,8 @@ INTERFACE void CopyString(const char* src, char* dest, int max)
 INTERFACE void AppendString(const char* src, char* dest, int max)
 {
     if (src != NULL) {
-        int current = strlen(dest);
-        int neu = strlen(src);
+		size_t current = strlen(dest);
+		size_t neu = strlen(src);
         int avail = max - 1;
         if (avail > current + neu)
           strcat(dest, src);
@@ -298,7 +298,7 @@ INTERFACE char* CopyString(const char* src, int len)
 {
 	char* copy = NULL;
 	if (src != NULL && len > 0) {
-		int srclen = strlen(src);
+		size_t srclen = strlen(src);
 		if (len <= srclen) {
 			copy = new char[len + 1];
 			if (copy != NULL) {
@@ -319,8 +319,8 @@ INTERFACE void FilterString(const char* src, const char* filter,
             CopyString(src, dest, max);
         }
         else {
-            int srclen = strlen(src);
-            int filterlen = strlen(filter);
+			size_t srclen = strlen(src);
+			size_t filterlen = strlen(filter);
             int destlast = max - 1;
             int destpsn = 0;
             char lastchar = 0;
@@ -395,8 +395,8 @@ INTERFACE bool StringEqualNoCase(const char* s1, const char* s2)
 		  equal = true;
 	}
 	else if (s2 != NULL) {
-		int len = strlen(s1);
-		int len2 = strlen(s2);
+		size_t len = strlen(s1);
+		size_t len2 = strlen(s2);
 		if (len == len2) {
 			equal = true;
 			for (int i = 0 ; i < len ; i++) {
@@ -422,8 +422,8 @@ INTERFACE bool StringEqualNoCase(const char* s1, const char* s2, int max)
 		  equal = true;
 	}
 	else if (s2 != NULL) {
-		int len = strlen(s1);
-		int len2 = strlen(s2);
+		size_t len = strlen(s1);
+		size_t len2 = strlen(s2);
         if (len >= max && len2 >= max) {
 			equal = true;
 			for (int i = 0 ; i < max ; i++) {
@@ -443,7 +443,7 @@ INTERFACE bool StringEqualNoCase(const char* s1, const char* s2, int max)
 INTERFACE void ToLower(char* src)
 {
 	if (src != NULL) {
-		int len = strlen(src);
+		size_t len = strlen(src);
 		for (int i = 0 ; i < len ; i++) {
 			if (isupper(src[i]))
 			  src[i] = tolower(src[i]);
@@ -454,7 +454,7 @@ INTERFACE void ToLower(char* src)
 INTERFACE void ToUpper(char* src)
 {
 	if (src != NULL) {
-		int len = strlen(src);
+		size_t len = strlen(src);
 		for (int i = 0 ; i < len ; i++) {
 			if (islower(src[i]))
 			  src[i] = toupper(src[i]);
@@ -482,8 +482,8 @@ INTERFACE bool EndsWith(const char* str, const char* suffix)
 {
 	bool endsWith = false;
 	if (str != NULL && suffix != NULL) {
-		int len1 = strlen(str);
-		int len2 = strlen(suffix);
+		size_t len1 = strlen(str);
+		size_t len2 = strlen(suffix);
 		if (len1 > len2)
 		  endsWith = !strcmp(suffix, &str[len1 - len2]);
 	}
@@ -494,8 +494,8 @@ INTERFACE bool EndsWithNoCase(const char* str, const char* suffix)
 {
 	bool endsWith = false;
 	if (str != NULL && suffix != NULL) {
-		int len1 = strlen(str);
-		int len2 = strlen(suffix);
+		size_t len1 = strlen(str);
+		size_t len2 = strlen(suffix);
 		if (len1 > len2)
 		  endsWith = StringEqualNoCase(suffix, &str[len1 - len2]);
 	}
@@ -513,8 +513,8 @@ INTERFACE int IndexOf(const char* str, const char* substr, int start)
 
 	// not a very smart search
 	if (str != NULL && substr != NULL) {
-		int len = strlen(str);
-		int sublen = strlen(substr);
+		size_t len = strlen(str);
+		size_t sublen = strlen(substr);
         int max = len - sublen;
         if (sublen > 0 && max >= 0) {
             for (int i = 0 ; i <= max ; i++) {
@@ -534,8 +534,8 @@ INTERFACE int LastIndexOf(const char* str, const char* substr)
 
 	// not a very smart search
 	if (str != NULL && substr != NULL) {
-		int len = strlen(str);
-		int sublen = strlen(substr);
+		size_t len = strlen(str);
+		size_t sublen = strlen(substr);
 		int psn = len - sublen;
 		if (psn >= 0) {
 			while (psn >= 0 && strncmp(&str[psn], substr, sublen))
@@ -553,7 +553,7 @@ INTERFACE bool IsInteger(const char* str)
 {
     bool is = false;
     if (str != NULL) {
-        int max = strlen(str);
+		size_t max = strlen(str);
         if (max > 0) {
             is = true;
             for (int i = 0 ; i < max && is ; i++) {
@@ -655,7 +655,7 @@ INTERFACE char* TrimString(char* src)
 		while (*start && isspace(*start)) start++;
 
 		// remove trailing whitespace
-		int last = strlen(start) - 1;
+		size_t last = strlen(start) - 1;
 		while (last >= 0 && isspace(start[last])) {
 			start[last] = '\0';
 			last--;
@@ -801,7 +801,7 @@ INTERFACE bool IsAbsolute(const char* path)
 {
     bool absolute = false;
     if (path != NULL) {
-        int len = strlen(path);
+		size_t len = strlen(path);
         if (len > 0) {
             absolute = (path[0] == '/' || 
                         path[0] == '\\' ||
@@ -823,7 +823,7 @@ INTERFACE char* ReadFile(const char* name)
 		Vbuf* vbuf = new Vbuf();
 		char cbuf[1024];
 
-		int read = fread(cbuf, 1, sizeof(cbuf) - 1, fp);
+		size_t read = fread(cbuf, 1, sizeof(cbuf) - 1, fp);
 		while (read > 0) {
 			cbuf[read] = 0;
 			vbuf->add(cbuf);
@@ -951,7 +951,7 @@ INTERFACE void MergePaths(const char* home, const char* relative,
 INTERFACE void ReplacePathFile(const char* path, const char* file,
 							   char* buffer)
 {
-	int psn = strlen(path) - 1;
+	size_t psn = strlen(path) - 1;
 	while (psn > 0 && path[psn] != '/' && path[psn] != '\\')
 	  psn--;
 
@@ -972,7 +972,7 @@ INTERFACE void ReplacePathFile(const char* path, const char* file,
  */
 INTERFACE void GetDirectoryPath(const char* path, char* buffer)
 {
-	int psn = strlen(path) - 1;
+	size_t psn = strlen(path) - 1;
 	while (psn > 0 && path[psn] != '/' && path[psn] != '\\')
 	  psn--;
 
@@ -991,7 +991,7 @@ INTERFACE void GetDirectoryPath(const char* path, char* buffer)
  */
 INTERFACE void GetLeafName(const char* path, char* buffer, bool extension)
 {
-	int last = strlen(path) - 1;
+	size_t last = strlen(path) - 1;
 	int dot = -1;
 	int psn = last;
 
