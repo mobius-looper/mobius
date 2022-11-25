@@ -62,7 +62,7 @@ APPVER=4.0
 # thing to build under VS.NET (2005 or greater)
 #APPVER=5.0
 
-!include <Win32.Mak>
+!include Win32.Mak
 
 # add -GX so we can throw exceptions
 # Note we end up with msvcrt.lib so we're NOT linking with the
