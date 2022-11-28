@@ -198,6 +198,10 @@ expr: $(EXP_EXE)
 ######################################################################
 
 PROGRAM_FILES=c:/Program Files (x86)
+!IF "$(CPU)" == "AMD64"
+PROGRAM_FILES=C:/Program Files
+!ENDIF
+
 OUTPUT_DIR=$(PROGRAM_FILES)/Mobius 2
 
 # copy the initial install config files to the installation directory
@@ -270,10 +274,11 @@ export:
 	IF NOT EXIST "$(OUTPUT_DIR)" (mkdir "$(OUTPUT_DIR)")
 	copy $(VST_DLL) "$(PROGRAM_FILES)/VstPlugins"
 	copy MobiusVst2.pdb "$(PROGRAM_FILES)/VstPlugins"
-	copy $(UI_EXE) "$(PROGRAM_FILES)/Mobius 2"
-	copy Catalog_* "$(PROGRAM_FILES)/Mobius 2"
-	copy $(VST_DLL) "$(PROGRAM_FILES)/Mobius 2"
-	copy "install\config\host.xml" "$(PROGRAM_FILES)/Mobius 2"
+	copy $(UI_EXE) "$(OUTPUT_DIR)"
+	copy Catalog_* "$(OUTPUT_DIR)"
+	copy $(VST_DLL) "$(OUTPUT_DIR)"
+	copy mobius.pdb "$(OUTPUT_DIR)"
+	copy "install\config\host.xml" "$(OUTPUT_DIR)"
 
 # have to start distributing this!!
 #msvc:
