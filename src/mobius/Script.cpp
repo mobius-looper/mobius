@@ -6537,7 +6537,7 @@ void ScriptInterpreter::expandFile(const char* value, ExValue* retval)
 			const char* dir = s->getDirectory();
 			if (dir != NULL) {
 				size_t insertlen = strlen(dir);
-                int shiftlen = insertlen;
+                size_t shiftlen = insertlen;
                 bool needslash = false;
                 if (insertlen > 0 && dir[insertlen] != '/' &&
                     dir[insertlen] != '\\') {
@@ -6576,7 +6576,7 @@ PRIVATE void ScriptInterpreter::expand(const char* value, ExValue* retval)
     size_t len = (value != NULL) ? strlen(value) : 0;
 	char* buffer = retval->getBuffer();
     char* ptr = buffer;
-    int localmax = retval->getBufferMax() - 1;
+    size_t localmax = retval->getBufferMax() - 1;
 	int psn = 0;
 
 	retval->setNull();
