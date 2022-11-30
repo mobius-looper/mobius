@@ -396,7 +396,6 @@ PUBLIC void WindowsStatic::open()
               printf("Unable to create Static control\n");
             else {
                 subclassWindowProc();
-				// Changed for 64-bit
                 SetWindowLongPtr(mHandle, GWLP_USERDATA, (LONG_PTR)this);
 
 				// native components may be created invisible in tabs

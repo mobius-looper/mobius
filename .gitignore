@@ -1,4 +1,6 @@
 # Common build outputs
+/src/**/*.a
+/src/**/*.o
 /src/**/*.dll
 /src/**/*.exe
 /src/**/*.ilk

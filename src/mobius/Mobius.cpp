@@ -2693,8 +2693,8 @@ PRIVATE ResolvedTarget* Mobius::internTarget(Target* target,
         Trace(1, "Unable to resolve Binding: UIConfig\n");
     }
     else {
-        Trace(1, "Unable to resolve Binding: unsupported target %ld\n",
-              (long long)target);
+        Trace(1, "Unable to resolve Binding: unsupported target %d\n",
+              (uintptr_t)target);
     }
 
     // must have at least the name, some we'll defer

@@ -283,8 +283,8 @@ INTERFACE void CopyString(const char* src, char* dest, int max)
 INTERFACE void AppendString(const char* src, char* dest, int max)
 {
     if (src != NULL) {
-		size_t current = strlen(dest);
-		size_t neu = strlen(src);
+        size_t current = strlen(dest);
+        size_t neu = strlen(src);
         int avail = max - 1;
         if (avail > current + neu)
           strcat(dest, src);
@@ -319,8 +319,8 @@ INTERFACE void FilterString(const char* src, const char* filter,
             CopyString(src, dest, max);
         }
         else {
-			size_t srclen = strlen(src);
-			size_t filterlen = strlen(filter);
+            size_t srclen = strlen(src);
+            size_t filterlen = strlen(filter);
             int destlast = max - 1;
             int destpsn = 0;
             char lastchar = 0;
@@ -553,7 +553,7 @@ INTERFACE bool IsInteger(const char* str)
 {
     bool is = false;
     if (str != NULL) {
-		size_t max = strlen(str);
+        size_t max = strlen(str);
         if (max > 0) {
             is = true;
             for (int i = 0 ; i < max && is ; i++) {
@@ -801,7 +801,7 @@ INTERFACE bool IsAbsolute(const char* path)
 {
     bool absolute = false;
     if (path != NULL) {
-		size_t len = strlen(path);
+        size_t len = strlen(path);
         if (len > 0) {
             absolute = (path[0] == '/' || 
                         path[0] == '\\' ||

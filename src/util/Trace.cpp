@@ -216,7 +216,7 @@ PRIVATE void SaveArgument(const char* src, char* dest)
     if (src != NULL) {
         if (strlen(src) == 0) 
           src = " ";
-        else if ((ULONG_PTR)src < 65535)
+        else if ((size_t)src < 65535)
           src = "INVALID";
         CopyString(src, dest, MAX_ARG);
     }

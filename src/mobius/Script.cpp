@@ -5584,7 +5584,7 @@ PUBLIC Action* ScriptInterpreter::getAction()
 
         // function action needs this for GlobalReset handling
         // I don't think Parameter actions do
-        mAction->id = (long long)this;
+        mAction->id = (uintptr_t)this;
     }
     return mAction;
 }
@@ -6536,7 +6536,7 @@ void ScriptInterpreter::expandFile(const char* value, ExValue* retval)
 			Script* s = getScript();
 			const char* dir = s->getDirectory();
 			if (dir != NULL) {
-				size_t insertlen = strlen(dir);
+                size_t insertlen = strlen(dir);
                 size_t shiftlen = insertlen;
                 bool needslash = false;
                 if (insertlen > 0 && dir[insertlen] != '/' &&

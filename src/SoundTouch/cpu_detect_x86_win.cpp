@@ -71,5 +71,61 @@ uint detectCPUextensions(void)
 
     if (_dwDisabledISA == 0xffffffff) return 0;
 
+#ifdef WIN64
+    // WIN64 patch from SoundTouch 1.7.0 cpu_detct_x86.cpp
+    return 0x19 & ~_dwDisabledISA;
+#else
+    _asm
+    {
+        ; check if 'cpuid' instructions is available by toggling eflags bit 21
+        ;
+        xor esi, esi; clear esi = result register
+
+            pushfd; save eflags to stack
+            pop     eax; load eax from stack(with eflags)
+            mov     ecx, eax; save the original eflags values to ecx
+            xor eax, 0x00200000; toggle bit 21
+            push    eax; store toggled eflags to stack
+            popfd; load eflags from stack
+            pushfd; save updated eflags to stack
+            pop     eax; load from stack
+            xor edx, edx; clear edx for defaulting no mmx
+            cmp     eax, ecx; compare to original eflags values
+            jz      end; jumps to 'end' if cpuid not present
+
+            ; cpuid instruction available, test for presence of mmx instructions
+            mov     eax, 1
+            cpuid
+            test    edx, 0x00800000
+            jz      end; branch if MMX not available
+
+            or esi, SUPPORT_MMX; otherwise add MMX support bit
+
+            test    edx, 0x02000000
+            jz      test3DNow; branch if SSE not available
+
+            or esi, SUPPORT_SSE; otherwise add SSE support bit
+
+            test3DNow :
+        ; test for precense of AMD extensions
+            mov     eax, 0x80000000
+            cpuid
+            cmp     eax, 0x80000000
+            jbe     end; branch if no AMD extensions detected
+
+            ; test for precense of 3DNow!extension
+            mov     eax, 0x80000001
+            cpuid
+            test    edx, 0x80000000
+            jz      end; branch if 3DNow!not detected
+
+            or esi, SUPPORT_3DNOW; otherwise add 3DNow support bit
+
+            end :
+
+        mov     res, esi
+    }
+
     return res & ~_dwDisabledISA;
+#endif
 }

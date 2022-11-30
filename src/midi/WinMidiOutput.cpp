@@ -725,7 +725,7 @@ void WinMidiOutput::testOpen()
     if (rc != MMSYSERR_NOERROR)
       printf("WinMidiOutput::testOpen midiOutOpen 1 rc=%d\n", rc);
 
-    printf("First nativePort %d\n", (int)(ULONG_PTR)nativePort);
+    printf("First nativePort %d\n", (uintptr_t)nativePort);
 
     // and again
     printf("Opening second time...\n");
@@ -738,7 +738,7 @@ void WinMidiOutput::testOpen()
     if (rc != MMSYSERR_NOERROR)
       printf("WinMidiOutput::testOpen midiOutOpen 2 rc=%d\n", rc);
 
-    printf("Second nativePort 2 %d\n", (int)(ULONG_PTR)nativePort2);
+    printf("Second nativePort 2 %d\n", (uintptr_t)nativePort2);
     
     printf("Closing first one...\n");
 

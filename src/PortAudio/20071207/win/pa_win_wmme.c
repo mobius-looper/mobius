@@ -155,10 +155,6 @@ Non-critical stuff for the future:
 #pragma comment(lib, "winmm.lib")
 #endif
 
-/*
- provided in newer platform sdks
- */
-
 /************************************************* Constants ********/
 
 #define PA_MME_USE_HIGH_DEFAULT_LATENCY_    (0)  /* For debugging glitches. */
