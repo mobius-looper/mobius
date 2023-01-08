@@ -1,0 +1,23 @@
+name: Static Analysis
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Cpp
+        uses: aminya/setup-cpp@v1
+        with:
+          cppcheck: true
+
+      - name: run cppcheck
+        run: cppcheck --enable=warning,performance,portability --language=c++ src/mobius
