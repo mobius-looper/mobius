@@ -1,0 +1,64 @@
+Subversion baseline before creating tag branches: 363
+
+Subersion Release Baselines
+
+Release 1.43 = Subversion 113
+
+Release 1.44 = Subversion 147
+
+Release 1.45 = Subversion 158
+
+Release 2.0 = Subversion 228
+
+Release 2.0 Refresher (2.0.1) = 239
+
+Release 2.1 = 263
+
+Release 2.2 = 284
+
+Release 2.3 = 314
+
+Release 2.3b, fix port selection = 318
+
+Release 2.3.1, fix CC bindings = 320
+  319 change release number in text
+  320 changes to Bindingresolver, About gets 2.3.1
+  321 conversion of Control to Parameter, not 2.3.1
+
+Release 2.4 = 336
+
+svn 337 - minor changes to text files
+svn 338 - major changes for loop windowing
+
+
+Release 2.5 = 344
+  341 About dialog
+  342 adds 2.5 release notes
+  343 adds Mac stuff
+  344 adds docs and install/makefile version changes
+
+  * 345 the "use statement, all new  
+  346 mac pmdoc stuff
+  347 float cast in OscTest, probably a Mac fix
+  348 add common.vc10, formerly using vc8
+  349 cosmetic change to Record.cpp
+  350 notes text file additions
+  351 update the RapidWeaver archives
+  352 fix installation of osc.xml, something related to 64 bit in install/makefile
+  353 cycleCount variable that can be set
+  354 recalculate cycleCount after trim and unrounded multiply
+  355 adjust some #includes
+  356 beginnings of MIDI tracks
+  357 move mLongFunction to Action, not sure why
+  358 reorganize and merge some notes text files
+  359 minor comments
+  360 remove some unnecessary includes and comments, Recorder.cpp
+  361 adjust config/unitmobius.xml <Sample> path names for new compu ter
+  362 fix several = vs == and array size errors, probably caught by the
+      mac or vc10 compiler, maybe an Xcode upgrade?
+      looks like an attempt to try 64 bit compilation on osx
+  363 make destructors virtual, other warnings probably found by the
+      new compiler, add missing enum cases for switches, 
+
+
+ 

@@ -491,7 +491,7 @@ PRIVATE void Binding::parseScope()
     mGroup = 0;
 
     if (mScope != NULL) {
-        int len = strlen(mScope);
+        size_t len = strlen(mScope);
         if (len > 1) {
             // must be a number 
             mTrack = atoi(mScope);

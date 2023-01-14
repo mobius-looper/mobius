@@ -137,7 +137,7 @@ void ThreadEvent::setArg(const char* src, char* dest)
 {
 	strcpy(dest, "");
 	if (src != NULL) {
-		int len = strlen(src) + 1;
+		size_t len = strlen(src) + 1;
 		if (len < sizeof(mArg1))
 		  strcpy(dest, src);
 		else
@@ -770,7 +770,7 @@ PRIVATE const char* MobiusThread::getRecordingPath()
 		GetDirectoryPath(qfile, buffer);
 
 		if (strlen(buffer) > 0) {
-			int last = strlen(buffer) - 1;
+			size_t last = strlen(buffer) - 1;
 			char lastchar = buffer[last];
 			if (lastchar == '/' || lastchar == '\\') {
 				// looks like a path

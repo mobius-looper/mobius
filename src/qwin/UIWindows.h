@@ -325,7 +325,7 @@ class WindowsComponent : public NativeComponent {
 	virtual void command(int code);
 	virtual void notify(int code);
 
-    virtual long messageHandler(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LONG_PTR messageHandler(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // default implementations for ComponentUI methods
 
@@ -1406,7 +1406,7 @@ class WindowsText : public WindowsComponent {
     virtual void getPreferredSize(Window* w, Dimension* d);
 
     void command(int code);
-    long messageHandler(UINT msg, WPARAM wparam, LPARAM lparam);
+    LONG_PTR messageHandler(UINT msg, WPARAM wparam, LPARAM lparam);
 
   protected:
 
@@ -2274,7 +2274,7 @@ class WindowsWindow : public WindowsComponent {
     }
 
     Graphics* getGraphics();
-	virtual long messageHandler(UINT msg, WPARAM wparam, LPARAM lparam);
+	virtual LONG_PTR messageHandler(UINT msg, WPARAM wparam, LPARAM lparam);
 
     void updateNativeBounds(Bounds* b);
 	bool isChild();
@@ -2571,7 +2571,7 @@ class WindowsDialog : public WindowsWindow {
     WindowsDialog(Dialog* d);
     ~WindowsDialog();
 
-    BOOL dialogHandler(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT dialogHandler(UINT msg, WPARAM wparam, LPARAM lparam);
     void show();
 
   protected:

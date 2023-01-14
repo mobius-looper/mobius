@@ -270,7 +270,7 @@ PUBLIC LRESULT CALLBACK WindowProcedure(HWND window, UINT msg,
 
 	// retrieve our extension
 	// supposed to use GetWindowLongPtr, but can't seem to find it
-	WindowsWindow* ui = (WindowsWindow *)GetWindowLong(window, GWL_USERDATA);
+	WindowsWindow* ui = (WindowsWindow *)GetWindowLongPtr(window, GWLP_USERDATA);
 
 	if (ui == NULL) {
 		// can see this during initialization before we set our extension
@@ -297,14 +297,14 @@ PUBLIC LRESULT CALLBACK WindowProcedure(HWND window, UINT msg,
  * This is the same as WindowProcedure but calls DefDlgProc instead
  * of DefWindowProc if the default handler has to be used.
  */
-PUBLIC LRESULT CALLBACK DialogProcedure(HWND window, UINT msg, 
+PUBLIC LRESULT CALLBACK DefaultDialogProcedure(HWND window, UINT msg, 
                                         WPARAM wparam, LPARAM lparam)
 {
 	LRESULT res = 0;
 
 	// retrieve our extension
 	// supposed to use GetWindowLongPtr, but can't seem to find it
-	WindowsWindow* ui = (WindowsWindow *)GetWindowLong(window, GWL_USERDATA);
+	WindowsWindow* ui = (WindowsWindow *)GetWindowLongPtr(window, GWLP_USERDATA);
 
 	if (ui == NULL) {
         LRESULT res = 0;

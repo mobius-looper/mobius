@@ -266,7 +266,7 @@ LRESULT CALLBACK ControlProc(HWND window, UINT msg,
 
 	// this has to be set if we end up here
 	WindowsComponent* ui = (WindowsComponent*)
-        GetWindowLong(window, GWL_USERDATA);
+        GetWindowLongPtr(window, GWLP_USERDATA);
 
 	if (ui != NULL)
       result = ui->messageHandler(msg, wparam, lparam);
@@ -283,7 +283,7 @@ void WindowsComponent::subclassWindowProc()
 {
 	if (mWindowProc == NULL && mHandle != NULL) {
 		mWindowProc = (WNDPROC)
-			SetWindowLong(mHandle, GWL_WNDPROC, (LONG)ControlProc);
+			SetWindowLongPtr(mHandle, GWLP_WNDPROC, (LONG_PTR)ControlProc);
 	}
 }
 
@@ -366,7 +366,7 @@ PUBLIC HWND WindowsComponent::getWindowHandle(Component* c)
 void WindowsComponent::detach()
 {
 	if (mHandle != NULL)
-	  SetWindowLong(mHandle, GWL_USERDATA, (LONG)NULL);
+	  SetWindowLongPtr(mHandle, GWLP_USERDATA, (LONG_PTR)NULL);
 }
 
 /**
@@ -492,7 +492,7 @@ PUBLIC void WindowsComponent::invalidate(Component* c)
 PUBLIC void WindowsComponent::close()
 {
 	if (mHandle != NULL) {
-		SetWindowLong(mHandle, GWL_USERDATA, (LONG)NULL);
+		SetWindowLongPtr(mHandle, GWLP_USERDATA, (LONG_PTR)NULL);
         // hmm, formerly when deleting Component hierarchies, we wouldn't
         // call this except for the root component, is this safe?
 		DestroyWindow(mHandle);
@@ -592,9 +592,9 @@ int WindowsComponent::getWindowStyle()
  * Not sure the best way to approach this, may need a deferred
  * delete list?
  */
-long WindowsComponent::messageHandler(UINT msg, WPARAM wparam, LPARAM lparam)
+LONG_PTR WindowsComponent::messageHandler(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    long status = 0;
+    LONG_PTR status = 0;
 	bool handled = false;
     Component* c = getComponent();
 

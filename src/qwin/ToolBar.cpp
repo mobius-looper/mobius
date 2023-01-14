@@ -148,7 +148,7 @@ PUBLIC void WindowsToolBar::open()
               printf("Unable to create ToolBar control\n");
             else {
                 subclassWindowProc();
-                SetWindowLong(mHandle, GWL_USERDATA, (LONG)this);
+                SetWindowLongPtr(mHandle, GWLP_USERDATA, (LONG_PTR)this);
             }
         }
     }

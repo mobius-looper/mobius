@@ -3,8 +3,6 @@ name: Mobius Build
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
@@ -14,14 +12,28 @@ jobs:
     - uses: actions/checkout@v3
     - uses: ilammy/msvc-dev-cmd@v1
       with:
-        arch: x86
+        arch: amd64
+    
     - name: nmake
       run: nmake
+
+    - name: install nsis
+      run: |
+        iwr -useb get.scoop.sh -outfile 'install.ps1'
+        .\install.ps1 -RunAsAdmin
+        scoop update
+        scoop bucket add extras
+        scoop install nsis
+
+    - name: create x64 installer
+      run: makensis /V4 src/installx64/mobius.nsi
+
     - name: uploads build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: mobius x86
+        name: mobius amd64
         path: |
           src/mobius/mobius.exe
           src/mobius/MobiusVst2.dll
+          src/installx64/Install Mobius 2 (64-bit).exe
         retention-days: 5

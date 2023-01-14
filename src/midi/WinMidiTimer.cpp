@@ -74,8 +74,8 @@ int MilliCounter = 0;
 bool TraceCounter = true;
 long InterruptCounter = 0;
 
-void WINAPI TimerInterrupt(UINT id, UINT msg, DWORD user, DWORD param1,
-						   DWORD param2)
+void WINAPI TimerInterrupt(UINT id, UINT msg, DWORD_PTR user, DWORD_PTR param1,
+						   DWORD_PTR param2)
 {
     bool firstTime = false;
 
@@ -245,7 +245,7 @@ PUBLIC bool WinMidiTimer::start()
 
         // start receiving interrupts
         mTimer = timeSetEvent(1, 1, (LPTIMECALLBACK)TimerInterrupt,
-                              (DWORD)this, TIME_PERIODIC);
+                              (DWORD_PTR)this, TIME_PERIODIC);
 
         if (mTimer == 0) 
           printf("ERROR: Unable to start timer!\n");

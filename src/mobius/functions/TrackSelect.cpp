@@ -413,7 +413,7 @@ Event* TrackSelectFunction::invoke(Action* action, Loop* l)
                     immediate = true;
                 }
                 else {
-                    Trace(1, "TrackSelect: unexpected mode %ld\n", (long)mode);
+                    Trace(1, "TrackSelect: unexpected mode %d\n", (uintptr_t)mode);
                     immediate = true;
                 }
 

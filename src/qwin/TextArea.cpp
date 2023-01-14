@@ -187,7 +187,7 @@ PUBLIC void WindowsTextArea::open()
               printf("Unable to create TextArea control\n");
             else {
                 subclassWindowProc();
-                SetWindowLong(mHandle, GWL_USERDATA, (LONG)this);
+                SetWindowLongPtr(mHandle, GWLP_USERDATA, (LONG_PTR)this);
 				mText->initVisibility();
 				// now set the real text
 				setText(mText->getInitialText());
