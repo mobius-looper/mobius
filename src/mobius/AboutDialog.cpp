@@ -7,7 +7,7 @@
  * 
  */
 
-#include <stdio.h>
+#include <stdio.h> 
 #include <stdlib.h>
 #include <math.h>
 
@@ -16,7 +16,7 @@
 
 #include "UI.h"
 
-#define VERSION "Möbius version 2.5"
+#define VERSION "Möbius version 2.5.1 [alpha Build 1 x86 / 2023]"
 
 PUBLIC AboutDialog::AboutDialog(Window* parent)
 {
@@ -34,6 +34,7 @@ PUBLIC AboutDialog::AboutDialog(Window* parent)
 
 	text->add(new Label(VERSION));
 	text->add(new Label("Copyright (c) 2005-2012 Jeffrey S. Larson"));
+	text->add(new Label("Build 1/23 - 13/04/2023 | ClaudioCas"));
 	text->add(new Label("All rights reserved."));
 
     // TODO: Need to credit Oli for pitch shifting, link
