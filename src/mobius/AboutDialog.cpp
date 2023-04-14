@@ -16,14 +16,16 @@
 
 #include "UI.h"
 
-#define VERSION "Möbius version 2.5.1 [alpha Build 1 x86 / 2023]"
+//#define VERSION "Mï¿½bius version 2.5.1 [alpha Build 2 x86 / 2023]"
+#define VERSION "Mobius version 2.5.1 [alpha Build 2 x86 / 2023]"
 
 PUBLIC AboutDialog::AboutDialog(Window* parent)
 {
 	setParent(parent);
 	setModal(true);
 	setIcon("Mobius");
-	setTitle("About Möbius");
+	//setTitle("About Mï¿½bius");
+	setTitle("About Mobius");
 	setInsets(20, 20, 20, 0);
 
 	Panel* root = getPanel();
@@ -34,7 +36,7 @@ PUBLIC AboutDialog::AboutDialog(Window* parent)
 
 	text->add(new Label(VERSION));
 	text->add(new Label("Copyright (c) 2005-2012 Jeffrey S. Larson"));
-	text->add(new Label("Build 1/23 - 13/04/2023 | ClaudioCas"));
+	text->add(new Label("Build 2|23 - 14/04/2023 | ClaudioCas"));
 	text->add(new Label("All rights reserved."));
 
     // TODO: Need to credit Oli for pitch shifting, link

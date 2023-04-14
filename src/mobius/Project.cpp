@@ -1653,6 +1653,10 @@ void Project::parseXml(XmlElement* e)
       bindings = e->getAttribute(ATT_MIDI_CONFIG);
 	setBindings(bindings);
 
+	//@C #002 | set Track Setup parsed from project file  14/04/2023
+	Trace(3, "[CasDebug]Project::parseXml ,setSetup(%s);", e->getAttribute(ATT_SETUP));
+	setSetup(e->getAttribute(ATT_SETUP));
+
 	for (XmlElement* child = e->getChildElement() ; child != NULL ; 
 		 child = child->getNextElement()) {
 
