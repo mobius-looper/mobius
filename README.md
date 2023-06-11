@@ -2,6 +2,7 @@
 This is my github about Mobius.
 
 # Version 2.6.0
+Not released yet! In testing...
 - Fix #001 | Reverse Loop in Load/Save Mobius Project 
 - Fix #002 | "setup" while loading Mobius Project was not set - Now the setup is set correctly 
 - Add #003 | Add new section in ui.xml
