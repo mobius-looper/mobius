@@ -521,6 +521,14 @@ void MobiusThread::processEvent()
 
 						if (!p->isError()) {
 							mMobius->loadProject(p);
+							
+							
+							// #023 SetSetup in mConfig, so update the view!
+							Setup* s = mMobius->mConfig->getSetup(p->getSetup());
+            				if (s != NULL)
+              					mMobius->setSetupInternal(s);  //#023
+							
+							Trace(3, "[script] Loaded project from %s | setSetup %s", path,p->getSetup());
 							Trace(2, "Loaded project from %s\n", path);
 						}
 						else {

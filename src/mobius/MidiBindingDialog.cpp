@@ -211,7 +211,7 @@ PUBLIC void MidiBindingDialog::closing()
  */
 PUBLIC const char* MidiBindingDialog::getDialogTitle()
 {
-	return "MIDI Bindings";
+	return "MIDI Bindings";  // #C? Menu entry is MIDI Control... change that??
 }
 
 PUBLIC const char* MidiBindingDialog::getBindingsPanelLabel()

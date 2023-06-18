@@ -258,6 +258,13 @@ PUBLIC UIConfig* UI::getUIConfig()
 PUBLIC void UI::open(Window* win, bool vst)
 {
 	uitrace("Opening UI\n");
+	
+	SleepMillis(100); // #022 c: test |wrong size menu and window at first open in VST [4k + scale w10]
+
+	//vst = true; // test... #020 - c: There is a bug - vst is always false... problaby we should use
+	//    MobiusContext* mc = mMobius->getContext();
+	//	  if (!mc->isPlugin())
+	Trace(3,"open (vst) : %s", vst ? "true" : "false" );
 
 	mWindow = win;
     Component::PaintTraceEnabled = mUIConfig->isPaintTrace();
@@ -277,6 +284,10 @@ PUBLIC void UI::open(Window* win, bool vst)
     // install the global pallete and font config
     GlobalPalette->assign(mUIConfig->getPalette());
     GlobalFontConfig->assign(mUIConfig->getFontConfig());
+	
+	//Cas: Ok I did not implement assign, not stole, not clone... I use UiDimension in 1 point, I access directly to mConfig without global obj now
+	//GlobalUiDimensions->assign(mUIConfig->getUiDimensions()); //#003 Cas: here my bug, I forgot to assign GlobalUiDimensions!
+
 
 	// if we're a VST this will already have been sized
 	if (!vst) {
@@ -292,6 +303,7 @@ PUBLIC void UI::open(Window* win, bool vst)
               win->setAutoCenter(true);
         }
 		win->setMaximized(mUIConfig->isMaximized());
+
 	}
 
 	// We're using the MobiusRefresh callback now so we don't need
@@ -435,6 +447,7 @@ PUBLIC void UI::open(Window* win, bool vst)
                 Trace(1, "VST host using sample rate of %ld!\n", (long)rate);
             }
             else {
+				Trace(1, "VST host using sample rate of %ld!\n", (long)rate);
                 printf("Mobius is starting with sample rate %d\n", rate);
                 fflush(stdout);
             }
@@ -595,7 +608,8 @@ PRIVATE void UI::buildMenus(bool vst)
 {
 	MessageCatalog* cat = mMobius->getMessageCatalog();
 
-	if (!vst && !mUIConfig->isNoMenu()) {
+	if (!vst && !mUIConfig->isNoMenu()) { // C: vst is always false...
+	//if(true){
 		mMenuBar = new MenuBar();
 		mMenuBar->addActionListener(this);
 		mMenuBar->addMenuListener(this);
@@ -631,21 +645,28 @@ PRIVATE void UI::buildMenus(bool vst)
 
 PRIVATE Menu* UI::buildFileMenu(bool vst)
 {
+
+	//#017 Reorder File Menu 
 	MessageCatalog* cat = mMobius->getMessageCatalog();
 
     Menu* menu = new Menu(cat->get(MSG_MENU_FILE));
 
-    menu->add(new MenuItem(cat->get(MSG_MENU_FILE_OPEN_LOOP),
-						   IDM_OPEN_LOOP));
-    menu->add(new MenuItem(cat->get(MSG_MENU_FILE_OPEN_PROJECT), 
-						   IDM_OPEN_PROJECT));
-    menu->add(new MenuItem(cat->get(MSG_MENU_FILE_SAVE_LOOP),
-						   IDM_SAVE_LOOP));
+	menu->add(new MenuItem(cat->get(MSG_MENU_FILE_OPEN_PROJECT), 
+							IDM_OPEN_PROJECT));
 
     menu->add(new MenuItem(cat->get(MSG_MENU_FILE_SAVE_PROJECT),
 						   IDM_SAVE_PROJECT));
 
-    // we don't need project templates any more now that we have setups
+	menu->addSeparator(); 
+
+    menu->add(new MenuItem(cat->get(MSG_MENU_FILE_OPEN_LOOP),
+						   IDM_OPEN_LOOP));
+    
+					   
+    menu->add(new MenuItem(cat->get(MSG_MENU_FILE_SAVE_LOOP),
+						   IDM_SAVE_LOOP));
+
+	// we don't need project templates any more now that we have setups
     // keep around for awhile but don't advertise
     //menu->add(new MenuItem(cat->get(MSG_MENU_FILE_SAVE_TEMPLATE),
     //IDM_SAVE_TEMPLATE));
@@ -653,14 +674,18 @@ PRIVATE Menu* UI::buildFileMenu(bool vst)
     menu->add(new MenuItem(cat->get(MSG_MENU_FILE_SAVE_QUICK),
 						   IDM_SAVE_QUICK));
 
-    menu->add(new MenuItem(cat->get(MSG_FUNC_RELOAD_SCRIPTS), 
-                           IDM_FILE_SCRIPTS));
 
-    menu->add(new MenuItem("Reload OSC", IDM_FILE_OSC));
+	//Move Reload in Configuration Menu #021
+	// menu->add(new MenuItem(cat->get(MSG_FUNC_RELOAD_SCRIPTS), 
+    //                        IDM_FILE_SCRIPTS));
+
+    // menu->add(new MenuItem("Reload OSC", IDM_FILE_OSC));
 
 	// this confuses VST, probably could be made to work but why bother
-	if (!vst)
-	  menu->add(new MenuItem(cat->get(MSG_MENU_FILE_EXIT), IDM_EXIT));
+	if (!vst){ //<--- c: here vst has not the right value (is always false)...
+		menu->addSeparator(); 
+	  	menu->add(new MenuItem(cat->get(MSG_MENU_FILE_EXIT), IDM_EXIT));
+	}
 
 	return menu;
 }
@@ -675,28 +700,52 @@ PRIVATE Menu* UI::buildConfigMenu()
 	MessageCatalog* cat = mMobius->getMessageCatalog();
     Menu* menu = new Menu(cat->get(MSG_MENU_CONFIG));
 
+	//#018 Reorder Config  Menu 
+
 	if (isShowNewStuff()) {
 		//menu->add(new MenuItem("New Key Config", IDM_KEYS));
 	}
 
-    menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_PRESETS), IDM_PRESET));
-    menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_SETUP), IDM_SETUP));
-    menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_GLOBAL), IDM_GLOBAL));
-    menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_MIDI), IDM_MIDI_CONTROL));
-    menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_KEYBOARD), IDM_KEY_CONTROL));
-	menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_PLUGIN_PARAMETERS), IDM_PLUGIN_PARAMETERS));
+    
+	//Moved to other section (c) #019/#020
+	// menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_SETUP), IDM_SETUP));
+	// menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_PRESETS), IDM_PRESET));
+    // menu->addSeparator(); 
+
+	
+	menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_MIDI), IDM_MIDI_CONTROL));
     menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_BUTTONS), IDM_BUTTONS));
+	menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_KEYBOARD), IDM_KEY_CONTROL));
+	
+	menu->addSeparator(); 
     menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_DISPLAY), IDM_DISPLAY));
     menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_PALETTE), IDM_PALETTE));
 
-    menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_SCRIPTS), IDM_SCRIPTS));
-    menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_SAMPLES), IDM_SAMPLES));
-    menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_MIDI_DEVICES), IDM_MIDI));
+	menu->addSeparator(); 
+    
+	
+	menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_SCRIPTS), IDM_SCRIPTS));
+	menu->add(new MenuItem(cat->get(MSG_FUNC_RELOAD_SCRIPTS), //#021
+                           IDM_FILE_SCRIPTS));
+	
+	menu->addSeparator(); 
+	menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_SAMPLES), IDM_SAMPLES));
+	menu->add(new MenuItem("Reload OSC", IDM_FILE_OSC));//#021
+
+    
+   
+	menu->addSeparator(); 
+
 
 	// this is meaningless and confusing when running as a plugin
     MobiusContext* mc = mMobius->getContext();
 	if (!mc->isPlugin())
 	  menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_AUDIO_DEVICES),IDM_AUDIO));
+
+    menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_GLOBAL), IDM_GLOBAL));
+    menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_PLUGIN_PARAMETERS), IDM_PLUGIN_PARAMETERS));
+	menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_MIDI_DEVICES), IDM_MIDI));
+
 
 	return menu;
 }
@@ -709,6 +758,8 @@ PRIVATE Menu* UI::buildHelpMenu()
     menu->add(new MenuItem(cat->get(MSG_MENU_HELP_KEY), IDM_HELP_KEY));
     menu->add(new MenuItem(cat->get(MSG_MENU_HELP_MIDI), IDM_HELP_MIDI));
     menu->add(new MenuItem("Refresh UI", IDM_HELP_REDRAW));
+	
+	menu->addSeparator(); 
     menu->add(new MenuItem(cat->get(MSG_MENU_HELP_ABOUT), IDM_HELP_ABOUT));
 	
 	return menu;
@@ -726,12 +777,20 @@ PRIVATE void UI::refreshPresetMenu(Menu* menu)
 		int id = PRESET_MENU_BASE;
 
 		menu->removeAll();
-	
+		
+		
+		//#019 Cas
+		MessageCatalog* cat = mMobius->getMessageCatalog();
+		menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_PRESETS), IDM_PRESET));
+    	menu->addSeparator(); 
+
+
 		MobiusConfig* config = mMobius->getConfiguration();
 		for (Preset* p = config->getPresets() ; p != NULL ; p = p->getNext())
 		  menu->add(new MenuItem(p->getName(), id++));
 	}
 }
+
 
 PRIVATE void UI::refreshSetupMenu()
 {
@@ -745,6 +804,12 @@ PRIVATE void UI::refreshSetupMenu(Menu* menu)
 		int id = SETUP_MENU_BASE;
 
 		menu->removeAll();
+
+		//#020 Menu Setups + config
+		MessageCatalog* cat = mMobius->getMessageCatalog();
+		menu->add(new MenuItem(cat->get(MSG_MENU_CONFIG_SETUP), IDM_SETUP));
+		menu->addSeparator();
+
 
 		MobiusConfig* config = mMobius->getConfiguration();
 		for (Setup* s = config->getSetups() ; s != NULL ; s = s->getNext())
@@ -766,7 +831,7 @@ PRIVATE void UI::refreshSetupMenu(Menu* menu)
  * we have to pick the LCD to assingn the listener assume that it doesn't
  * matter which menu it is, refresh all of them.
  */
-void UI::menuSelected(Menu* menu)
+void UI::menuSelected(Menu* menu)	// c: Menu is not used here as parameter... 
 {
 	MobiusConfig* config = mMobius->getConfiguration();
     
@@ -775,10 +840,16 @@ void UI::menuSelected(Menu* menu)
 	int current = mMobius->getTrackPreset();
 	int index = 0;
 
+
+
 	for (Preset* p = config->getPresets() ; p != NULL ; 
 		 p = p->getNext(), index++) {
 
 		if (p->getNumber() == current) {
+			
+			//c: offset Configure on top + separator //#019		 	
+			index = index + 2; //#019
+			
 			if (mPresets != NULL)
 			  mPresets->checkItem(index);
 			if (mPopupPresets != NULL)
@@ -790,15 +861,24 @@ void UI::menuSelected(Menu* menu)
 
 	Setup* setup = config->getCurrentSetup();
 	index = 0;
+
+
+	//Trace(3,"menuSelectedmenuSelectedmenuSelectedmenuSelectedmenuSelectedmenuSelected %ld", (long)setup->getNumber());
+
 	if (setup != NULL) {
 		for (Setup* s = config->getSetups() ; s != NULL ; 
 			 s = s->getNext(), index++) {
 
 			if (s->getNumber() == setup->getNumber()) {
-				if (mSetups != NULL)
+				
+				//c: offset Configure on top + separator //#020			 	
+				index = index + 2; //#020
+
+				if (mSetups != NULL) 
 				  mSetups->checkItem(index);
 				if (mPopupSetups != NULL)
 				  mPopupSetups->checkItem(index);
+				
 				break;
 			}
 		}
@@ -1083,8 +1163,12 @@ void UI::actionPerformed(void *c)
                 Project* p = new Project(file);
                 p->read(pool);
 
-				if (!p->isError())
-				  mMobius->loadProject(p);
+				if (!p->isError()){
+					mMobius->loadProject(p);
+
+					Trace(3, "Loaded project from UI : set current Setup %s\n ", p->getSetup()); //#023
+					mMobius->getConfiguration()->setCurrentSetup(p->getSetup());				 //#023
+				}
 				else {
 					// some errors are worse than others, might want
 					// an option to load what we can 
@@ -1380,7 +1464,7 @@ PUBLIC void UI::updateUI()
             MobiusState* state = mMobius->getState(tracknum);
             TrackState* tstate = state->track;
         
-            mTrackGrid->setSelectedIndex(tracknum);
+            mTrackGrid->setSelectedIndex(tracknum); //CurrentTrackSelected
 
             mMeter->update(tstate->inputMonitorLevel);
             mFloatingStrip->update(state);
@@ -1655,10 +1739,13 @@ void UI::writeConfig(UIConfig* config)
 	}
 }
 
+
 void UI::updateDisplayConfig()
 {
+	//#Cas 
     if (mUIConfig != NULL) {
-
+		
+		//Display Location elements
         List* locs = mUIConfig->getLocations();
         if (locs != NULL) {
             for (int i = 0 ; i < locs->size() ; i++) {
@@ -1670,7 +1757,8 @@ void UI::updateDisplayConfig()
                 }
                 else {
                     Component* c = mSpace->getComponent(el->getName());
-                    if (c == NULL) {
+                    
+					if (c == NULL) {
                         printf("WARNING: Component %s not found\n", 
                                el->getName());
                     }
@@ -1684,26 +1772,95 @@ void UI::updateDisplayConfig()
                         if (c->isButton() == NULL) {
                             //printf("Moving %s to %d %d\n", c->getName(),
                             //l->getX(), l->getY());
-                            c->setLocation(l->getX(), l->getY());
+                        	
+							//Restore Location of current Component
+							c->setLocation(l->getX(), l->getY());  
+							
+							//#012 Test Size of "Location Elements" None of them works :D
+							// c->setMinimumSize(new Dimension(500, 500)); //<<-- non va :D
+							Trace(3,"updateDisplayConfig::Locations ->  |%s|", el->getName());
+							
+							//if(el->getName() == "LoopMeter")  //<-- così no
+							if(el == LoopMeterElement)	// <--- così si  //#011
+							{
+								//Trace(3,"LoopMeter SetPreferredSize? -> x3 ");
+								//c->setPreferredSize(600, 250); //<-- need to cast to current object!!!!  
+								
+								//UiDimension* d = GlobalUiDimensions->getDimension("LoopMeter");
+								UiDimension* d = mUIConfig->getUiDimensions()->getDimension("LoopMeter");
+								if(d != NULL)
+								{
+									Trace(3,"LoopMeter::CustomDimension");
+									((LoopMeter*) c)->setPreferredSize(d->getWidth(), d->getHeight());  //#011
+								}
+							}
+							else if(el == BeatersElement)
+							{
+								UiDimension* d = mUIConfig->getUiDimensions()->getDimension("Beater");
+								if(d != NULL)
+								{
+									Trace(3,"Beater::CustomDimension");
+									((Beaters*) c)->setBeaterDiameter(d->getDiameter());  //#012
+								}
+								
+							}
+							else if(el == AudioMeterElement)  //#010
+							{
+								
+								UiDimension* d = mUIConfig->getUiDimensions()->getDimension("AudioMeter");
+								if(d != NULL)
+								{
+									Trace(3,"AudioMeter::CustomDimension");
+									((AudioMeter*)c)->setRequiredSize(new Dimension(d->getWidth(), d->getHeight()));
+									
+									if(d->getSpacing() > 0) //Range custom  #SPC
+										((AudioMeter*)c)->setRange(d->getSpacing()); //uso spacing per ora
+								}
+								
+								
+							}
+							else if(el == LayerBarsElement)   //#013 
+							{
+								UiDimension* d = mUIConfig->getUiDimensions()->getDimension("LayerBar");  //Bar without "s" Dimension of a single Bar
+								if(d != NULL)
+								{
+									Trace(3,"LayerBars::CustomDimension (of a single Bar)");
+									((LayerList*) c)->setBarWidth(d->getWidth());   	//#013
+									((LayerList*) c)->setBarHeight(d->getHeight());  	//#013
+								}
+							}
+							
+							// c->setSize(new Dimension(700, 700));
+							// c->setWidth(900);
+						
+							//c->setPreferredSize(200,200); //<-- non va :D
+							//c->setMinimumSize(new Dimension(300, 300)); <<-- non va :D
                         }
-                        c->setEnabled(!l->isDisabled());
-                        //if (l->isDisabled())
+                        
+						c->setEnabled(!l->isDisabled());
+                        
+						//if (l->isDisabled())
                         //printf("Disabling %s\n", c->getName());
                     }
                 }
             }
         }
 
+		//Buttons
 		updateButtons();
 
+		//Parameters
 		mParameters->update(mUIConfig->getParameters());
 
-        mFloatingStrip->updateConfiguration(mUIConfig->getFloatingStrip());
-        mFloatingStrip2->updateConfiguration(mUIConfig->getFloatingStrip2());
+		//Floating Strip 1
+		mFloatingStrip->updateConfiguration(mUIConfig->getFloatingStrip(), mUIConfig);  	//#004 mod 2parametr
+        
+		//Floating Strip 2
+		mFloatingStrip2->updateConfiguration(mUIConfig->getFloatingStrip2(), mUIConfig);	//#004 mod 2parametr
 
+		//Docked Track Strips
         for (int i = 0 ; i < mTrackCount ; i++)
-          mTracks[i]->updateConfiguration(mUIConfig->getDockedStrip());
-
+          mTracks[i]->updateConfiguration(mUIConfig->getDockedStrip(), mUIConfig);			//#004 mod 2parametr
 
 		// Change to the Palette colors should have been made
 		// directly to the model used by the Components, assume
@@ -1871,7 +2028,7 @@ PUBLIC UIMidiEventListener* UI::setMidiEventListener(UIMidiEventListener* l)
 	UIMidiEventListener* current = mMidiEventListener;
 	mMidiEventListener = l;
 	return current;
-}
+} 
 
 /****************************************************************************
  *                                                                          *

@@ -13,11 +13,11 @@
 ;General
 ;---------------------------------------------------------------
 
-Name "Möbius 2.4"
+Name "Möbius 2.6.0 Beta 2"
 OutFile "setup.exe"
 
 ;Default installation folder
-InstallDir "$PROGRAMFILES\Mobius 2"
+InstallDir "$PROGRAMFILES\Mobius 2.6"
   
 ;Get installation folder from registry if available
 InstallDirRegKey HKCU "Software\Circular Labs\Mobius 2" ""

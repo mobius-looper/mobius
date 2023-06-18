@@ -1656,6 +1656,9 @@ void Project::parseXml(XmlElement* e)
 	//@C #002 | set Track Setup parsed from project file  14/04/2023
 	Trace(3, "[CasDebug]Project::parseXml ,setSetup(%s);", e->getAttribute(ATT_SETUP));
 	setSetup(e->getAttribute(ATT_SETUP));
+	
+	//C BUG: setup is correctly set, but not in mobiusConfig and in Window!! 18/06/2023
+	
 
 	for (XmlElement* child = e->getChildElement() ; child != NULL ; 
 		 child = child->getNextElement()) {

@@ -104,6 +104,96 @@ extern FontConfig* GlobalFontConfig;
 /****************************************************************************/
 /****************************************************************************/
 /****************************************************************************/
+
+
+
+
+
+
+/*********    UiDimension   ************/
+
+class UiDimension {
+
+  public:
+
+    UiDimension();
+    UiDimension(XmlElement* e);
+    ~UiDimension();
+
+    void setNext(UiDimension* b);
+    UiDimension* getNext();
+
+    void setName(const char* name);
+    const char* getName();
+
+
+	  void setWidth(int i);
+    int getWidth();
+
+	  void setHeight(int i);
+    int getHeight();
+
+    void setDiameter(int i);
+    int getDiameter();
+
+    void setSpacing(int i);
+    int getSpacing();
+
+
+    void toXml(XmlBuffer* b);
+
+  private:
+
+    void init();
+    void parseXml(XmlElement* e);
+
+    UiDimension* mNext;
+    char mName[128];
+    int mWidth;
+    int mHeight;
+    int mDiameter;
+    int mSpacing;
+};
+
+
+
+/*********    UiDimensions   ************/
+
+class UiDimensions {
+  public:
+
+	static const char* ELEMENT;
+
+    UiDimensions();
+    UiDimensions(class XmlElement* e);
+    ~UiDimensions();
+
+    void addDimension(UiDimension* d);
+    UiDimension* getDimensions();
+    UiDimension* getDimension(const char* name);
+
+    void toXml(XmlBuffer* b);
+
+  private:
+
+    void init();
+    void parseXml(XmlElement* e);
+    UiDimension* mDimensions;
+};
+
+
+/**
+ * The global singleton Dimensions.
+ */
+extern UiDimensions* GlobalUiDimensions;
+
+
+
+
+
+
+
+
 QWIN_END_NAMESPACE
 #endif
 

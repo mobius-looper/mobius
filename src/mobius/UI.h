@@ -799,6 +799,8 @@ class Beater : public Tracker {
 	void setDecay(int i);
 	void setBeat(int i);
 
+    void setDiameter(int i); //#012
+
 	void beat();
 	void beat(int ticks);
     void beatOn();
@@ -1121,6 +1123,10 @@ class AudioMeter : public SpaceComponent {
 	int mValue;
 	int mLevel;
 
+	//Peak
+	int mPeakLevel; // #015
+	int mPeakWidth;
+
 };
 
 class LoopWindow : public SpaceComponent {
@@ -1154,6 +1160,7 @@ class Beaters : public SpaceComponent {
     void reset();
 	void update(class MobiusState* s);
 	void paint(Graphics* g);
+	void setBeaterDiameter(int i); //#012
 
   private:
 
@@ -1231,6 +1238,9 @@ class LayerList : public BarGraph {
     void update(class MobiusState* s);
 	bool isSpecial(int index);
 	void paint(Graphics* g);
+
+	//void setBarWidth(int i);	//#013  Expose BarList BarWidth || Già esposte per gerarchia!  LayerList deriva da BarGraph
+	//void setBarHeight(int i);	//#013 	Expose BarList BarHeight || Già esposte per gerarchia!
 
   private:
 
@@ -1349,6 +1359,8 @@ class LoopMeter : public SpaceComponent {
 	void update(class MobiusState* state);
 	void paint(Graphics* g);
 
+	void setPreferredSize(int width, int height); //#011 Custom Size LoopMeter (override SpaceComponent definition)
+
   private:
 
 	void init(bool ticks, bool markers);
@@ -1372,6 +1384,8 @@ class LoopMeter : public SpaceComponent {
     Color* mTickCycleColor;
 	Color* mTickSubcycleColor;
 	Color* mTickCueColor;
+
+	//Override setPreferredSize
 
 };
 
@@ -1486,6 +1500,9 @@ class Radar : public SpaceComponent {
 
 	void setRange(int i);
 	virtual void update(int value);
+	
+	void setDiameter(int i); //#004
+	int getDiameter(); //#004
 
 	Dimension* getPreferredSize(Window* w);
    	void paint(Graphics* g);
@@ -1639,7 +1656,10 @@ class TrackStrip : public SpaceComponent {
 	TrackStrip(class MobiusInterface* m, int trackIndex);
 	virtual ~TrackStrip();
 
-    void updateConfiguration(StringList* controls);
+    
+	//void updateConfiguration(StringList* controls);
+	void updateConfiguration(StringList* controls, UIConfig* UIConfig);  // #004
+	
 	void update(class MobiusState* state);
 	void paint(Graphics* g);
 
