@@ -5,7 +5,7 @@ You can find more information about mobius on the [Mobius official website](http
 You can keep in touch with me through the [Facebook group](https://www.facebook.com/groups/mobiuscentral).
 
 
-# Version 2.6.0 Beta 2 18/06/2023
+### Version 2.6.0 Beta 2 18/06/2023
 - Mod #017 | Reordered File Menu
 - Mod #018 | Reordered Config Menu
 - Mod #019/#020 | Moved Config Track Setups and Presets on other menu (+fix selected index + offset)
@@ -16,7 +16,7 @@ You can keep in touch with me through the [Facebook group](https://www.facebook.
 
 
 
-# Version 2.6.0 Beta 1 (internal) 11/06/2023
+### Version 2.6.0 Beta 1 (internal) 11/06/2023
 - Fix #001 | Reverse Loop in Load/Save Mobius Project 
 - Fix #002 | "setup" while loading Mobius Project was not set - Now the setup is set correctly 
 - Add #003 | Add new section in ui.xml
