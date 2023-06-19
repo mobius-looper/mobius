@@ -12,7 +12,7 @@ You can keep in touch with me through the [Facebook group](https://www.facebook.
 - Mod #020 | Moved Config Presets 
 - Fix #021 | Moved "Reload Scripts and OSC" in Configuration Menu
 - Fix #022 | Wrong menu + window size at first open? | a Thread Sleep Walkaround...
-- Mod #023 | Bug - rel#002 : the setup was corretly set in engine but not in UI, so if you saved the project after loaded, it saved wrong setup. Now fixed in LoadProject from UI menu and from Script
+- Fix #023 | Bug - rel#002 : the setup was corretly set in engine but not in UI, so if you saved the project after loaded, it saved wrong setup. Now fixed in LoadProject from UI menu and from Script
 
 
 
