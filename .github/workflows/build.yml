@@ -29,12 +29,15 @@ jobs:
     - name: create x64 installer
       run: makensis /V4 src/installx64/mobius.nsi
 
-    - name: uploads build artifacts
-      uses: actions/upload-artifact@v3
+    - name: pre-release
+      if: ${{ contains(github.ref_name, 'rc') }}
+      uses: ncipollo/release-action@v1
       with:
-        name: mobius amd64
-        path: |
-          src/mobius/mobius.exe
-          src/mobius/MobiusVst2.dll
-          src/installx64/Install Mobius 2 (64-bit).exe
-        retention-days: 5
+        prerelease: true
+        artifacts: "src/mobius/mobius.exe,src/mobius/MobiusVst2.dll,src/installx64/Install Mobius 2 (64-bit).exe"
+
+    - name: full release
+      if: ${{ ! contains(github.ref_name, 'rc') }}
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "src/mobius/mobius.exe,src/mobius/MobiusVst2.dll,src/installx64/Install Mobius 2 (64-bit).exe"
