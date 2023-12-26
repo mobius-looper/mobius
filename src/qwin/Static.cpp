@@ -294,7 +294,7 @@ PUBLIC void WindowsStatic::setBitmap(const char *name)
         }
 
 		// can you send NULL and have it taken away?
-		SendMessage(mHandle, STM_SETIMAGE, IMAGE_BITMAP, (LONG)hbitmap);
+		SendMessage(mHandle, STM_SETIMAGE, IMAGE_BITMAP, (LONG_PTR)hbitmap);
     }
 }
 
@@ -311,7 +311,7 @@ PUBLIC void WindowsStatic::setIcon(const char *name)
         }
 
         // can you send NULL and have it taken away?
-        SendMessage(mHandle, STM_SETIMAGE, IMAGE_ICON, (LONG)hicon);
+        SendMessage(mHandle, STM_SETIMAGE, IMAGE_ICON, (LONG_PTR)hicon);
     }
 }
 
@@ -396,7 +396,7 @@ PUBLIC void WindowsStatic::open()
               printf("Unable to create Static control\n");
             else {
                 subclassWindowProc();
-                SetWindowLong(mHandle, GWL_USERDATA, (LONG)this);
+                SetWindowLongPtr(mHandle, GWLP_USERDATA, (LONG_PTR)this);
 
 				// native components may be created invisible in tabs
 				mStatic->initVisibility();

@@ -1965,7 +1965,7 @@ void ExIndex::eval(ExContext* context, ExValue* value)
         else if (v.getType() == EX_STRING) {
             const char* str = v.getString();
             if (str != NULL) {
-                int len = strlen(str);
+                size_t len = strlen(str);
                 if (index < len) {
                     char buf[4];
                     buf[0] = str[index];

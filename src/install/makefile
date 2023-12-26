@@ -37,7 +37,7 @@ SCRIPTS = mobius.nsi
 
 mobius-$(MAJOR)-$(MINOR).exe : $(SCRIPTS)
 	  $(NSIS) /V4 $(SCRIPTS)
-	  mv setup.exe mobius-$(MAJOR)-$(MINOR).exe
+	  copy setup.exe mobius-$(MAJOR)-$(MINOR).exe
 
 install: mobius-$(MAJOR)-$(MINOR).exe
 

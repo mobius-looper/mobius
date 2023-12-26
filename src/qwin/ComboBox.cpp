@@ -421,7 +421,7 @@ PUBLIC void WindowsComboBox::open()
               printf("Unable to create ComboBox control\n");
             else {
                 subclassWindowProc();
-                SetWindowLong(mHandle, GWL_USERDATA, (LONG)this);
+                SetWindowLongPtr(mHandle, GWLP_USERDATA, (LONG_PTR)this);
 				mComboBox->initVisibility();
 
                 // this is only available in XP

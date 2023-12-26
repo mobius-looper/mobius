@@ -216,7 +216,7 @@ PRIVATE void SaveArgument(const char* src, char* dest)
     if (src != NULL) {
         if (strlen(src) == 0) 
           src = " ";
-        else if ((unsigned long)src < 65535)
+        else if ((size_t)src < 65535)
           src = "INVALID";
         CopyString(src, dest, MAX_ARG);
     }
@@ -362,7 +362,7 @@ PRIVATE void RenderTrace(TraceRecord* r, char* buffer)
         }
 
         // this is so easy to miss
-        int len = strlen(buffer);
+        size_t len = strlen(buffer);
         if (len > 0) {
             char last = buffer[len-1];
             if (last != '\n') {

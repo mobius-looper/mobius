@@ -263,7 +263,7 @@ PUBLIC void WindowsText::open()
               printf("Unable to create Text control\n");
             else {
                 subclassWindowProc();
-                SetWindowLong(mHandle, GWL_USERDATA, (LONG)this);
+                SetWindowLongPtr(mHandle, GWLP_USERDATA, (LONG_PTR)this);
 				mText->initVisibility();
 				// now set the real text
 				setText(mText->getInitialText());
@@ -322,7 +322,7 @@ PUBLIC void WindowsText::command(int code)
  * Overload WindowsComponentUI's messageHandler to handle some
  * extra events relevant only for text fields.
  */
-PUBLIC long WindowsText::messageHandler(UINT msg, WPARAM wparam, 
+PUBLIC LONG_PTR WindowsText::messageHandler(UINT msg, WPARAM wparam, 
                                           LPARAM lparam)
 {
 	if (msg == WM_KEYDOWN) {
