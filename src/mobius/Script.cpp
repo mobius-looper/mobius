@@ -3012,7 +3012,7 @@ PUBLIC ScriptStatement* ScriptFunctionStatement::eval(ScriptInterpreter* si)
         a->trigger = TriggerScript;
 
         // this is for GlobalReset handling
-        a->id = (long)si;
+        a->id = (uintptr_t)si;
 
         // would be nice if this were just part of the Function's
         // arglist parsing?
