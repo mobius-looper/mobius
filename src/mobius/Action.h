@@ -280,7 +280,7 @@ class Action {
      * For script triggers, this will be the address of the ScriptInterpreter.
      * This is only used for some special handling of the GlobalReset function.
 	 */
-	long id;
+	uintptr_t id;
 
 	/**
 	 * The trigger that was detected.

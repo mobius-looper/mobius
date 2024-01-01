@@ -486,7 +486,7 @@ PUBLIC OscBinding::OscBinding(MobiusInterface* m, Binding* b, Action* a)
     // action needs a unique id for up/down tracking with script targets
     // anythig will do as long as it will be the same for both down and
     // up messages
-    mAction->id = (long)this;
+    mAction->id = (uintptr_t)this;
 
     // ExportAddress is used when the trigger OSC path is different
     // than the target
