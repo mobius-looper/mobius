@@ -9,11 +9,14 @@
 
 !include "MUI.nsh"
 
+;Add AccessControl Plugin from source tree
+!addplugindir plugins
+
 ;---------------------------------------------------------------
 ;General
 ;---------------------------------------------------------------
 
-Name "Möbius 2.5 (64-bit)"
+Name "M${U+00F6}bius 2.5 (64-bit)"
 OutFile "Install Mobius 2 (64-bit).exe"
 
 ;Default installation folder
@@ -65,7 +68,7 @@ Var STARTMENU_FOLDER
 !insertmacro MUI_PAGE_DIRECTORY
 
 ; default folder is the full product name
-!define MUI_STARTMENUPAGE_DEFAULTFOLDER "Möbius 2 (64-bit)"
+!define MUI_STARTMENUPAGE_DEFAULTFOLDER "M${U+00F6}bius 2 (64-bit)"
 !insertmacro MUI_PAGE_STARTMENU "Application" $STARTMENU_FOLDER
 
 !insertmacro MUI_PAGE_INSTFILES
@@ -107,14 +110,17 @@ Section "Core Section" SecCore
 
   IfFileExists "$INSTDIR\mobius.xml" DoUi
   File ..\mobius\install\config\mobius.xml
+  AccessControl::GrantOnFile "$INSTDIR\mobius.xml" "(S-1-5-32-545)" "FullAccess"
 
   DoUi:
   IfFileExists "$INSTDIR\ui.xml" DoOsc
   File ..\mobius\install\config\ui.xml
+  AccessControl::GrantOnFile "$INSTDIR\ui.xml" "(S-1-5-32-545)" "FullAccess"
 
   DoOsc:
   IfFileExists "$INSTDIR\osc.xml" DoDocs
   File ..\mobius\install\config\osc.xml
+  AccessControl::GrantOnFile "$INSTDIR\osc.xml" "(S-1-5-32-545)" "FullAccess"
 
   DoDocs:
   ;; not yet, make them go to the web to stay current
@@ -151,7 +157,7 @@ Section "Core Section" SecCore
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
 
     CreateDirectory "$SMPROGRAMS\$STARTMENU_FOLDER"
-    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Möbius (64-bit).lnk" "$INSTDIR\mobius.exe"
+    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\M${U+00F6}bius (64-bit).lnk" "$INSTDIR\mobius.exe"
     CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Readme.lnk" "$INSTDIR\README.txt"
 
     ;CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\1 Installation Guide.lnk" "http://www.circularlabs.com/doc/v2/installation.htm"
@@ -224,7 +230,7 @@ Section "Uninstall"
 
   !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
     
-  Delete "$SMPROGRAMS\$MUI_TEMP\Möbius.lnk"
+  Delete "$SMPROGRAMS\$MUI_TEMP\M${U+00F6}bius.lnk"
   Delete "$SMPROGRAMS\$MUI_TEMP\Readme.lnk"
   Delete "$SMPROGRAMS\$MUI_TEMP\1 Installation Guide.lnk"
   Delete "$SMPROGRAMS\$MUI_TEMP\2 Getting Started.lnk"
