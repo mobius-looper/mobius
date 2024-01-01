@@ -19,3 +19,19 @@ Create installation package:
 Compile for 64-bit:
  * Start -> Launch `x64 Native Tools Command Prompt for Visual Studio 2022` (Run as Administrator)
  * Run `nmake` in the project root
+
+## Releasing
+
+Tag the repository on master with a pre-release number: `v2.x.y-rc.z`.
+A GitHub Action workflow will build a "pre-release" release and attach the artifacts.
+
+When it's time to release a new version, update the following files with the new build version:
+ * src/install/releases.txt
+ * src/installx64/releases.txt
+ * src/mobius/AboutDialog.cpp
+ * src/mobius/install/text/README.txt
+
+Tag the repository on master with the release number: `v2.x.y`.
+A GitHub Action workflow will build the release and attach the artifacts.
+
+Manually update the Release description in GitHub with the release notes.
