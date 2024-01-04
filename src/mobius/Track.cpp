@@ -1516,7 +1516,11 @@ void Track::loadProject(ProjectTrack* pt)
 	setPan(pt->getPan());
 	setFocusLock(pt->isFocusLock());
 
-	mInput->setReverse(pt->isReverse());
+    //@C Check Track isReverse #001 [first attempt, but if there is a loop in the trace, the value is then reset to false]
+    //Trace(3, "[CasDebug]:loadProject ,Input->setReverse() :  %s", (pt->isReverse() ? "true" : "false"));
+	//mInput->setReverse(pt->isReverse());
+    //@C see above the fix in the rigt place
+
 
     // TODO: pitch and speed
     /*
@@ -1559,6 +1563,11 @@ void Track::loadProject(ProjectTrack* pt)
 		if (pl->isActive())
 		  mLoop = mLoops[i];
 	}
+
+     //@C Set the mInput Track Reverse #001 | fix issue! [loadProject reset track isReverse]
+    Trace(3, "[CasDebug]:loadProject ,Input->setReverse() :  %s", (pt->isReverse() ? "true" : "false"));
+	mInput->setReverse(pt->isReverse());
+
 }
 
 /****************************************************************************

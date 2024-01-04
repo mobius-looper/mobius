@@ -164,7 +164,9 @@ class UIConfig
 	void setMaximized(bool b);
 	bool isMaximized();
 
-    // experimental, never exposed
+
+
+  // experimental, never exposed
 	void setNoMenu(bool b);
 	bool isNoMenu();
 	void setPaintTrace(bool b);
@@ -172,11 +174,25 @@ class UIConfig
 
 	void setPalette(class Palette* p);
 	class Palette* getPalette();
-    class Palette* stealPalette();
+  class Palette* stealPalette();
 
 	void setFontConfig(class FontConfig* p);
 	class FontConfig* getFontConfig();
-    class FontConfig* stealFontConfig();
+  class FontConfig* stealFontConfig();
+
+  void setUiDimensions(class UiDimensions* d);  //#003
+  class UiDimensions* getUiDimensions(); //#003
+
+  // void setRadarDiameter(int i);     //#004
+  // int getRadarDiameter();           //#004
+
+  // void setLevelMeterHeight(int i);  //#004
+  // int getLevelMeterHeight();        //#004
+
+  // void setLevelMeterWidth(int i);  //#004
+  // int getLevelMeterWidth();        //#004
+
+
 
 	List* getLocations();
 	List* stealLocations();
@@ -218,7 +234,7 @@ class UIConfig
   private:
 
     void init();
-	void deleteButtons();
+    void deleteButtons();
     void parseXml(const char* xml);
     void parseXml(class XmlElement* e);
     void checkDisplayComponents();
@@ -228,19 +244,27 @@ class UIConfig
     int mRefreshInterval;
     int mAlertIntervals;    // unused, what was this for?
     int mMessageDuration;
-	class Bounds* mBounds;
-	bool mMaximized;
-	bool mNoMenu;   // disables the window menu bar, never exposed
+    class Bounds* mBounds;
+    bool mMaximized;
+    bool mNoMenu;   // disables the window menu bar, never exposed
     bool mPaintTrace; // enables component paint trace
-	class Palette* mPalette;
-	class FontConfig* mFontConfig;
+    
+    //Moved to #003 UiDimensions
+    // int mRadarDiameter;     // #004 RadarDiameter Override
+    // int mLevelMeterHeight;  // #004 LevelMeterHeight Override
+    // int mLevelMeterWidth;   // #004 LevelMeterWidth Override
+
+    class Palette* mPalette;
+    class FontConfig* mFontConfig;
     ObjectList* mLocations;
     ObjectList* mButtons;
     KeyConfig* mKeyConfig;
-	StringList* mParameters;
-	StringList* mFloatingStrip;
-	StringList* mFloatingStrip2;
-	StringList* mDockedStrip;
+    StringList* mParameters;
+    StringList* mFloatingStrip;
+    StringList* mFloatingStrip2;
+    StringList* mDockedStrip;
+
+    class UiDimensions* mDimensions; //#003
 
 };
 

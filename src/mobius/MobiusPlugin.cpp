@@ -488,13 +488,15 @@ PUBLIC MobiusPlugin::MobiusPlugin(HostInterface* host)
     // Host replaces the audio streams
 	mcon->setAudioInterface(mHost->getAudioInterface());
 
+    
+
     // Mobius uses this to determine if it is being controlled by a plugin,
     // not elegant.  
 	mcon->setMidiInterface(mMidi);
 
     // New kludge to give Mobius a handle to the host's MIDI output port
     // need to rethink this
-    mcon->setHostMidiInterface(this);
+    mcon->setHostMidiInterface(this);     //#014 - Cas:Here set MidiInterface and also HostMidiInterface
 
 	// will read the config file but won't open devices yet
     // this is the only place that the 
@@ -827,9 +829,37 @@ void MobiusPlugin::midiEvent(int status, int channel, int data1, int data2,
  */
 MidiEvent* MobiusPlugin::getMidiEvents()
 {
+    //trace("MobiusPlugin::getMidiEvents()");
     MidiEvent* events = mMidiEvents;
-    mMidiEvents = NULL;
-    mLastMidiEvent = NULL;
+    
+    if(events != NULL)
+    {    
+        // Debug (count midi event in queue)
+        // int i = 0;
+        // for (MidiEvent* event = events ; event != NULL ; event = event->getNext()) {
+        //     i++;
+        // }
+
+        // Trace(3,"MobiusPlugin::getMidiEvents() | count : %i", i); //#014 Cas
+        
+    }
+    else
+    {
+        //Proof Bug VSTHost  #014!!
+        //MidiEvent* mevent = mMidi->newEvent(0xF0, 3, 4, 127);
+        //MidiEvent* mevent = mMidi->newEvent(0x90, 0x3C, 0x40, 127);
+        //return mevent;
+         
+        // MidiEvent* mevent = mMidi->newEvent(0x90, 0, 2, 3);
+        // MidiEvent* mevent2 = mMidi->newEvent(0x90, 1, 3, 4);
+        // mevent->setNext(mevent2);
+        // return mevent;
+
+
+    }
+
+    mMidiEvents = NULL;     //#014 Cas  || disperato riattivare
+    mLastMidiEvent = NULL;  //#014 Cas  || disperato riattivare
     return events;
 }
 
@@ -847,11 +877,25 @@ MidiEvent* MobiusPlugin::getMidiEvents()
  */
 void MobiusPlugin::send(MidiEvent* event)
 {
-    if (mLastMidiEvent != NULL)
-      mLastMidiEvent->setNext(event);
+    //#014 | Create a new object from event, someone destry it before VST send...
+    //MidiEvent* nEv =  mMidi->newEvent(event->getStatus(), event->getChannel(),event->getValue(), event->getVelocity());   BUG
+    MidiEvent* queueEvent = event->copy(); //#014b
+
+    //trace("send!--------------------------------------------------------------------------------------");
+    //Trace(3,"MobiusPlugin::send");
+    if (mLastMidiEvent != NULL)   //Se già presente l'ultimo evento, concateno next
+    {
+      //mLastMidiEvent->setNext(event);
+      mLastMidiEvent->setNext(queueEvent);
+    }
     else
-      mMidiEvents = event;
-    mLastMidiEvent = event;
+    {
+      //mMidiEvents = event;  //Altrimenti lo metto come primo della lista...
+      mMidiEvents = queueEvent;
+    }
+    //mLastMidiEvent = event; //e poi ultimo :)  [bug]  //#014b | bugfix wrong reference
+    mLastMidiEvent = queueEvent;
+    //Trace(3,"MobiusPlugin::send |%i|%i|%i|%i|",mLastMidiEvent->getStatus(), mLastMidiEvent->getChannel(),mLastMidiEvent->getValue(), mLastMidiEvent->getVelocity());
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -818,7 +818,7 @@ void ProjectLoop::parseXml(XmlElement* e)
 {
 	mActive = e->getBoolAttribute(ATT_ACTIVE);
 	mFrame = e->getIntAttribute(ATT_FRAME);
-
+	
 	for (XmlElement* child = e->getChildElement() ; child != NULL ; 
 		 child = child->getNextElement()) {
 
@@ -856,6 +856,9 @@ PUBLIC ProjectTrack::ProjectTrack(MobiusConfig* config, Project* p, Track* t)
 	mFeedback = t->getFeedback();
 	mAltFeedback = t->getAltFeedback();
 	mPan = t->getPan();
+	
+	//@C #001 Fix issue about Track reverse wrong saved and load form project 08/04/2023
+	mReverse =  t->getState()->reverse;  //@C 
 
     mSpeedOctave = t->getSpeedOctave();
     mSpeedStep = t->getSpeedStep();
@@ -891,6 +894,7 @@ PUBLIC ProjectTrack::ProjectTrack(MobiusConfig* config, Project* p, Track* t)
 		  pl->setActive(true);
 		add(pl);
 	}
+	
 }
 
 PUBLIC void ProjectTrack::init()
@@ -904,6 +908,7 @@ PUBLIC void ProjectTrack::init()
 	mFeedback = 127;
 	mAltFeedback = 127;
 	mPan = 64;
+	mReverse = false;  //@C init mReverse to false #001
     mSpeedOctave = 0;
     mSpeedStep = 0;
     mSpeedBend = 0;
@@ -1214,8 +1219,11 @@ void ProjectTrack::toXml(XmlBuffer* b, bool isTemplate)
     b->addAttribute(ATT_ALT_FEEDBACK, mAltFeedback);
     b->addAttribute(ATT_PAN, mPan);
 
+	//@C debug #001
+	Trace(3, "[CasDebug]:toXML* ATT_REVERSE! is : %s", mReverse ? "true" : "false");
     b->addAttribute(ATT_REVERSE, mReverse);
-    b->addAttribute(ATT_SPEED_OCTAVE, mSpeedOctave);
+    
+	b->addAttribute(ATT_SPEED_OCTAVE, mSpeedOctave);
     b->addAttribute(ATT_SPEED_STEP, mSpeedStep);
     b->addAttribute(ATT_SPEED_BEND, mSpeedBend);
     b->addAttribute(ATT_SPEED_TOGGLE, mSpeedToggle);
@@ -1260,6 +1268,13 @@ void ProjectTrack::parseXml(XmlElement* e)
 	setAltFeedback(e->getIntAttribute(ATT_ALT_FEEDBACK));
 	setPan(e->getIntAttribute(ATT_PAN));
 
+	//@C #001 cas : here miss some set? or the next rows of code load "reverse"?
+	Trace(3, "[CasDebug]:parseXML* ATT_REVERSE! is : %s", e->getBoolAttribute(ATT_REVERSE) ? "true" : "false");
+	setReverse(e->getBoolAttribute(ATT_REVERSE));  //08/04/2023 //@C <-- now load correctly but still save issue -> toXml mReverse is true...
+	
+
+
+	//@C read all child in xml, they can be UserVariables or Loop
 	for (XmlElement* child = e->getChildElement() ; child != NULL ; 
 		 child = child->getNextElement()) {
 
@@ -1268,7 +1283,10 @@ void ProjectTrack::parseXml(XmlElement* e)
 			mVariables = new UserVariables(child);
 		}
 		else
+		{
+			// cas: if is not a Variable Name is a loop, so load loop?
 		  add(new ProjectLoop(child));
+		}
 	}
 }
 
@@ -1634,6 +1652,13 @@ void Project::parseXml(XmlElement* e)
     if (bindings == NULL) 
       bindings = e->getAttribute(ATT_MIDI_CONFIG);
 	setBindings(bindings);
+
+	//@C #002 | set Track Setup parsed from project file  14/04/2023
+	Trace(3, "[CasDebug]Project::parseXml ,setSetup(%s);", e->getAttribute(ATT_SETUP));
+	setSetup(e->getAttribute(ATT_SETUP));
+	
+	//C BUG: setup is correctly set, but not in mobiusConfig and in Window!! 18/06/2023
+	
 
 	for (XmlElement* child = e->getChildElement() ; child != NULL ; 
 		 child = child->getNextElement()) {

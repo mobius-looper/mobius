@@ -39,6 +39,7 @@ PUBLIC Component::Component()
 	mPreferred = NULL;
 	mMinimum = NULL;
 	mMaximum = NULL;
+	mForegroundColorChanged = false; //#007
     mForeground = NULL;
     mBackground = NULL;
 	mActionListeners = NULL;
@@ -326,6 +327,8 @@ PUBLIC const char *Component::getName()
 
 PUBLIC void Component::setForeground(Color* c) 
 {
+	//trace("Component::setForeground");
+	mForegroundColorChanged = mForeground != NULL && !(mForeground == c);  // #007
 	mForeground = c;
 }
 

@@ -1,4 +1,4 @@
-<UIConfig x='0' y='125' width='1026' height='665' refreshInterval='100' messageDuration='2' noMenu='false'>
+<UIConfig x='0' y='125' width='1026' height='665' refreshInterval='100' messageDuration='2'>
   <Locations>
     <Location name='AudioMeter' x='406' y='146'/>
     <Location name='Mode' x='632' y='138'/>
@@ -82,16 +82,6 @@
     <FontBinding name='parameter' size='14'/>
     <FontBinding name='knob' size='12'/>
     <FontBinding name='trackGroup' style='1' size='12'/>
-	<FontBinding name='loopStack' size='8'/>
+    <FontBinding name='drag' size='10'/>
   </FontConfig>
-  <UiDimensions>
-    <UiDimension name='LoopMeter' width='300' height='40'/>
-    <UiDimension name='Beater' diameter='100'/>
-    <UiDimension name='AudioMeter' width='300' height='40' spacing='8192'/>
-    <UiDimension name='LayerBar' width='50' height='50'/>
-    <UiDimension name='InputLevel' diameter='100'/>
-    <UiDimension name='OutputLevel' diameter='100'/>
-    <UiDimension name='LoopRadar' diameter='200'/>
-    <UiDimension name='OutputMeter' width='400' height='50' spacing='8192'/>
-  </UiDimensions>
 </UIConfig>

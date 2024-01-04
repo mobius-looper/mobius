@@ -401,4 +401,327 @@ PUBLIC Font* FontConfig::intern(const char* name, int defaultSize)
 /****************************************************************************/
 /****************************************************************************/
 /****************************************************************************/
+
+
+
+
+
+/***************************************************************************
+ *                           UI DIMENSIONS CLASS                           *    
+ *                        (Cas)    #003 07/05/2023                         *
+ ***************************************************************************/
+
+
+
+/****************************************************************************
+ *                                                                          *
+ *                               XML CONSTANTS                              *
+ *                                                                          *
+ ****************************************************************************/
+
+const char* UiDimensions::ELEMENT = "UiDimensions";
+
+#define EL_UIDIMENSION "UiDimension"
+
+#define ATT_UI_NAME "name"
+#define ATT_UI_WIDTH "width"
+#define ATT_UI_HEIGHT "height"
+#define ATT_UI_DIAMETER "diameter"
+#define ATT_UI_SPACING "spacing"
+
+/****************************************************************************
+ *                                                                          *
+ *                               GLOBAL CONFIG                              *
+ *                                                                          *
+ ****************************************************************************/
+
+//PUBLIC UiDimensions* GlobalUiDimensions = new UiDimensions();   //<---Cas | it should be assign after with the "clone" of the mConfig ones!!
+
+
+/****************************************************************************
+ *                                                                          *
+ *                               UIDimension                                *
+ *                                                                          *
+ ****************************************************************************/
+
+
+PUBLIC UiDimension::UiDimension()
+{
+	init();
+}
+
+PUBLIC UiDimension::UiDimension(XmlElement* e)
+{
+    Trace(3, "new UiDimension::UiDimension");
+	init();
+	parseXml(e);
+
+}
+
+// PUBLIC UiDimension::UiDimension(const char* name)
+// {
+// 	init();
+// 	setName(name);
+// }
+
+PRIVATE void UiDimension::init()
+{
+    strcpy(mName, "");
+	//mName = NULL;
+	mWidth = 0;
+	mHeight = 0;
+    mDiameter = 0;
+    mSpacing = 0;
+
+    //Trace(3, "mNext = null | UiDimension::UiDimension");
+    mNext = NULL; //<--- Ma vai a dormire :D C++ del cavolo 14/05/2023, il bug dell'anno!
+}
+
+PUBLIC UiDimension::~UiDimension()
+{
+	UiDimension* el, *next = NULL;
+    for (el = mNext ; el != NULL ; el = next) {
+        next = el->mNext;
+        el->mNext = NULL;
+        delete el;
+    }
+}
+
+
+
+
+PUBLIC UiDimension* UiDimension::getNext()
+{
+    return mNext;
+}
+
+PUBLIC void UiDimension::setNext(UiDimension* c)
+{
+    mNext = c;
+}
+
+
+
+PUBLIC const char* UiDimension::getName()
+{
+	return mName;
+}
+
+PUBLIC void UiDimension::setName(const char* name)
+{
+    //Trace(3,"UiDimension::setName>%s", name);
+    CopyString(name, mName, sizeof(mName));
+}
+
+
+
+
+PUBLIC void UiDimension::setWidth(int i)
+{
+	mWidth = i;
+}
+
+PUBLIC int UiDimension::getWidth()
+{
+	return mWidth;
+}
+
+
+PUBLIC void UiDimension::setDiameter(int i)
+{
+	mDiameter = i;
+}
+
+PUBLIC int UiDimension::getDiameter()
+{
+	return mDiameter;
+}
+
+
+PUBLIC void UiDimension::setSpacing(int i)
+{
+     Trace(3, " UiDimension::setSpacing(i) : %i, i");
+	mSpacing = i;
+}
+
+PUBLIC int UiDimension::getSpacing()
+{
+	return mSpacing;
+}
+
+PUBLIC void UiDimension::setHeight(int i)
+{
+	mHeight = i;
+}
+
+PUBLIC int UiDimension::getHeight()
+{
+	return mHeight;
+}
+
+PUBLIC void UiDimension::toXml(XmlBuffer* b)
+{
+    //Trace(3, " UiDimension::toXml(XmlBuffer)! v2");
+	b->addOpenStartTag(EL_UIDIMENSION);
+	b->addAttribute(ATT_UI_NAME, mName);
+	
+    if(mWidth > 0)
+        b->addAttribute(ATT_UI_WIDTH, mWidth);
+    
+    if(mHeight > 0)
+	    b->addAttribute(ATT_UI_HEIGHT, mHeight);
+    
+    if(mDiameter > 0)
+        b->addAttribute(ATT_UI_DIAMETER, mDiameter);
+
+    if(mSpacing > 0)
+        b->addAttribute(ATT_UI_SPACING, mSpacing);
+
+    b->closeEmptyElement();
+   // Trace(3, "End UiDimension::toXml(XmlBuffer)!");
+}
+
+PUBLIC void UiDimension::parseXml(XmlElement* e)
+{
+	setName(e->getAttribute(ATT_UI_NAME));
+	setWidth(e->getIntAttribute(ATT_UI_WIDTH));
+	setHeight(e->getIntAttribute(ATT_UI_HEIGHT));
+    setDiameter(e->getIntAttribute(ATT_UI_DIAMETER));
+    setSpacing(e->getIntAttribute(ATT_UI_SPACING));
+}
+
+
+
+
+/****************************************************************************
+ *                                                                          *
+ *                               UIDimensions                               *
+ *                                                                          *
+ ****************************************************************************/
+
+
+PUBLIC UiDimensions::UiDimensions()
+{
+    mDimensions = NULL;
+}
+
+PUBLIC UiDimensions::UiDimensions(XmlElement* e)
+{
+    Trace(3, "UiDimensions::init(XmlElement)"); //c
+
+    mDimensions = NULL;
+    parseXml(e);
+}
+
+PUBLIC UiDimensions::~UiDimensions()
+{
+    delete mDimensions;
+}
+
+PUBLIC UiDimension* UiDimensions::getDimensions()
+{
+	return mDimensions;
+}
+
+
+/**
+ * Lookup a biding for a key. 
+ * Obviously not effecient if you have a lot of bindings.
+ */
+PUBLIC UiDimension* UiDimensions::getDimension(const char* name)
+{
+    Trace(3, "UiDimensions::getDimension |%s|", name); //c
+    //Trace(3, "UiDimensions::getDimension"); //c
+    UiDimension* found = NULL;
+    
+    //Trace(3, "Ciclo For"); //c debug
+    for (UiDimension* d = mDimensions ; d != NULL ; d = d->getNext()) {
+
+        //Trace(3, "current -> |%s|",d->getName());  //c debug
+        
+        if (StringEqual(name, d->getName())) { 
+            //Trace(3, "found!"); //c debug
+            found = d;
+            break;
+        }
+    }
+    
+    //Trace(3, "return UIDIm"); //c debug
+    return found;
+}
+
+/**
+ * Add a binding.
+ */
+PUBLIC void UiDimensions::addDimension(UiDimension* b)
+{
+
+    Trace(3, "UiDimensions::addBinding(XmlElement)"); //c
+
+
+	// keep them ordered
+	UiDimension *prev;
+	for (prev = mDimensions ; prev != NULL && prev->getNext() != NULL ; 
+		 prev = prev->getNext());
+
+	if (prev == NULL)
+	  mDimensions = b;
+	else
+	  prev->setNext(b);
+}
+
+PRIVATE void UiDimensions::parseXml(XmlElement* e)
+{
+    UiDimension* dimensions = NULL;
+    UiDimension* last = NULL;
+    
+    Trace(3, "UiDimensions::parseXml(XmlElement)"); //c
+
+	for (XmlElement* child = e->getChildElement() ; child != NULL ; 
+		 child = child->getNextElement()) {
+
+        Trace(3, "for"); //c
+
+		if (child->isName(EL_UIDIMENSION)) {
+            Trace(3, "UiDimensions::parseXml!");
+            UiDimension* d = new UiDimension(child);
+            if (last == NULL)
+              dimensions = d;
+            else
+              last->setNext(d);
+            last = d;
+        }
+        else {
+             Trace(3, "Unexpected Token?");
+        }
+
+    }
+
+    delete mDimensions;
+    mDimensions = dimensions;
+}
+
+PUBLIC void UiDimensions::toXml(XmlBuffer* b)
+{
+    if (mDimensions != NULL) {
+        Trace(3, "***********************************UiDimensions::toXml!");
+        b->addStartTag(ELEMENT);
+        b->incIndent();
+        
+        for (UiDimension* d = mDimensions ; d != NULL ; d = d->getNext()){
+          Trace(3, "for - UiDimensions::toXml! |%s|", d->getName());
+          d->toXml(b);
+        }
+        
+        b->decIndent();
+        b->addEndTag(ELEMENT);
+        Trace(3, "***********************************END-UiDimensions::toXml!");
+    }
+}
+
+
+
+
+
+
 QWIN_END_NAMESPACE

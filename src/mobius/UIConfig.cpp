@@ -53,6 +53,10 @@
 #define ATT_NOMENU "noMenu"
 #define ATT_PAINT_TRACE "paintTrace"
 
+// #define ATT_RADAR_DIAMETER "radarDiameter" 			//#004
+// #define ATT_LEVEL_METER_HEIGHT "levelMeterHeight" 	//#004
+// #define ATT_LEVEL_METER_WIDTH "levelMeterWidth" 	//#004
+
 #define EL_BUTTONS "Buttons"
 #define EL_BUTTON "Button"
 #define ATT_FUNCTION_NAME "function"
@@ -128,6 +132,12 @@ PUBLIC void UIConfig::init()
     mFloatingStrip = NULL;
     mFloatingStrip2 = NULL;
     mDockedStrip = NULL;
+	
+	// mRadarDiameter = 0;		//#004
+	// mLevelMeterHeight = 0;	//#004
+	// mLevelMeterWidth = 0;	//#004
+
+	mDimensions = NULL;  //#003
 }
 
 PUBLIC UIConfig::~UIConfig()
@@ -143,6 +153,8 @@ PUBLIC UIConfig::~UIConfig()
     delete mDockedStrip;
     delete mKeyConfig;
 	delete mBounds;
+
+	delete mDimensions; //#003
 }
 
 PUBLIC UIConfig* UIConfig::clone()
@@ -221,6 +233,14 @@ PUBLIC void UIConfig::setFontConfig(FontConfig* c)
 	}
 }
 
+// PUBLIC void UIConfig::setUiDimensions(UiDimensions* d)
+// {
+// 	if (d != mDimensions) {
+// 		delete mDimensions;
+// 		mDimensions = d;
+// 	}
+// }
+
 PUBLIC FontConfig* UIConfig::getFontConfig()
 {
     // unlike Palette don't create an empty one
@@ -236,6 +256,24 @@ PUBLIC FontConfig* UIConfig::stealFontConfig()
     mFontConfig = NULL;
     return c;
 }
+
+
+PUBLIC void UIConfig::setUiDimensions(class UiDimensions* d)  	//#003
+{
+	if (d != mDimensions) {
+		delete mDimensions;
+		mDimensions = d;
+	}
+}
+
+PUBLIC class UiDimensions* UIConfig::getUiDimensions() 	//#003
+{
+	return mDimensions;
+}
+
+
+
+
 
 PUBLIC List* UIConfig::getButtons()
 {
@@ -309,6 +347,8 @@ PUBLIC void UIConfig::setFloatingStrip(StringList* l)
     delete mFloatingStrip;
     mFloatingStrip = l;
 }
+
+
 
 PUBLIC StringList* UIConfig::getFloatingStrip2()
 {
@@ -410,6 +450,39 @@ PUBLIC bool UIConfig::isPaintTrace()
 	return mPaintTrace;
 }
 
+// Cas - Old implementation before #003 works UiDimensions
+// PUBLIC void UIConfig::setRadarDiameter(int i)
+// {
+// 	mRadarDiameter = i;
+// }
+
+// PUBLIC int UIConfig::getRadarDiameter()
+// {
+// 	return mRadarDiameter;
+// }
+
+// PUBLIC void UIConfig::setLevelMeterHeight(int i)
+// {
+// 	mLevelMeterHeight = i;
+// }
+
+// PUBLIC int UIConfig::getLevelMeterHeight()
+// {
+// 	return mLevelMeterHeight;
+// }
+
+
+// PUBLIC void UIConfig::setLevelMeterWidth(int i)
+// {
+// 	mLevelMeterWidth = i;
+// }
+
+// PUBLIC int UIConfig::getLevelMeterWidth()
+// {
+// 	return mLevelMeterWidth;
+// }
+
+
 void UIConfig::parseXml(const char *src) 
 {
     mError[0] = 0;
@@ -438,8 +511,12 @@ PUBLIC const char* UIConfig::getError()
     return (mError[0] != 0) ? mError : NULL;
 }
 
+//#define KNOB_DEFAULT_DIAMETER 50  //#004 Taken from Components.cpp
+
 PRIVATE void UIConfig::parseXml(XmlElement* e)
 {
+	//Trace(1,"UIConfig::parseXml(XmlElement* e)");
+
     setName(e->getAttribute(ATT_NAME));
 	mBounds = new Bounds();
 
@@ -450,12 +527,23 @@ PRIVATE void UIConfig::parseXml(XmlElement* e)
 	mMaximized = e->getBoolAttribute(ATT_MAXIMIZED);
 	mNoMenu = e->getBoolAttribute(ATT_NOMENU);
 	mPaintTrace = e->getBoolAttribute(ATT_PAINT_TRACE);
+
+	// Old Impl -> #003 UiDimensions
+	// mRadarDiameter = e->getIntAttribute(ATT_RADAR_DIAMETER, KNOB_DEFAULT_DIAMETER);		//#004
+	// mLevelMeterHeight = e->getIntAttribute(ATT_LEVEL_METER_HEIGHT, 10);					//#004
+	// mLevelMeterWidth = e->getIntAttribute(ATT_LEVEL_METER_WIDTH, 75);					//#004
+	
     setRefreshInterval(e->getIntAttribute(ATT_REFRESH, DEFAULT_REFRESH_INTERVAL));
     setAlertIntervals(e->getIntAttribute(ATT_ALERT_INTERVALS, DEFAULT_ALERT_INTERVALS));
     setMessageDuration(e->getIntAttribute(ATT_MESSAGE_DURATION, DEFAULT_MESSAGE_DURATION));
+ 
+ 	Trace(3,"=======>  [UIConfig::parseXml]");
 
 	for (XmlElement* child = e->getChildElement() ; child != NULL ; 
 		 child = child->getNextElement()) {
+
+
+		Trace(1,"(child->isName(%s))", child->getName());
 
 		if (child->isName(EL_LOCATIONS)) {
 			for (XmlElement* le = child->getChildElement() ; le != NULL ; 
@@ -476,7 +564,7 @@ PRIVATE void UIConfig::parseXml(XmlElement* e)
 				addFloatingStrip(pe->getAttribute(ATT_NAME));
 			}
 		}
-		else if (child->isName(EL_FLOATING_TRACK_STRIP2)) {
+		else if (child->isName(EL_FLOATING_TRACK_STRIP2)) { 
             StringList* controls = NULL;
 			for (XmlElement* pe = child->getChildElement() ; pe != NULL ; 
 				 pe = pe->getNextElement()) {
@@ -509,8 +597,14 @@ PRIVATE void UIConfig::parseXml(XmlElement* e)
 		else if (child->isName(FontConfig::ELEMENT)) {
             setFontConfig(new FontConfig(child));
 		}
+		else if (child->isName(UiDimensions::ELEMENT)) { //#003 Crea UiDimensionS a partire da sottoalbero xml
+            Trace(3,"->SetUiDimension");
+			setUiDimensions(new UiDimensions(child));
+		}
 	}
 
+ 	Trace(3,"<======= End [UIConfig::parseXml]");
+   
     checkDisplayComponents();
 }
 
@@ -562,8 +656,13 @@ PUBLIC char* UIConfig::toXml()
 	return xml;
 }
 
+
+
 PUBLIC void UIConfig::toXml(XmlBuffer* b)
 {
+
+	Trace(3,"=======> [UIConfig::toXml(XmlBuffer* b)]");
+
 	b->addOpenStartTag(EL_UI_CONFIG);
 
     // these won't ever have names currently
@@ -581,6 +680,10 @@ PUBLIC void UIConfig::toXml(XmlBuffer* b)
 	b->addAttribute(ATT_PAINT_TRACE, mPaintTrace);
     b->addAttribute(ATT_REFRESH, mRefreshInterval);
     b->addAttribute(ATT_MESSAGE_DURATION, mMessageDuration);
+
+	// b->addAttribute(ATT_RADAR_DIAMETER, mRadarDiameter);		//#004
+	// b->addAttribute(ATT_LEVEL_METER_HEIGHT, mLevelMeterHeight);	//#004
+	// b->addAttribute(ATT_LEVEL_METER_WIDTH, mLevelMeterWidth);	//#004
 
     // this has never been used and I'm not even sure what it was for
     //b->addAttribute(ATT_ALERT_INTERVALS, mAlertIntervals);
@@ -680,9 +783,14 @@ PUBLIC void UIConfig::toXml(XmlBuffer* b)
 	if (mFontConfig != NULL)
 	  mFontConfig->toXml(b);
 
+	 if(mDimensions != NULL)  //#003
+	 	mDimensions->toXml(b);
+
     b->decIndent();
 
 	b->addEndTag(EL_UI_CONFIG);
+
+	Trace(3,"<======= End [UIConfig::toXml(XmlBuffer* b)]");
 }
 
 PUBLIC Location* UIConfig::getLocation(const char* name)

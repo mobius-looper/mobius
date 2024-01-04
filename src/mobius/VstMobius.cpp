@@ -1391,12 +1391,18 @@ VstInt32 VstMobius::processEvents(VstEvents* events)
  */
 void VstMobius::sendMidiEvents()
 {
+	//Trace(3,"VstMobius::sendMidiEvents");  //<--- Cas #014
     MidiEvent* events = mPlugin->getMidiEvents();
     MidiEvent* next = NULL;
 
     for (MidiEvent* event = events ; event != NULL ; event = next) {
-        next = event->getNext();
+        
+		
+		next = event->getNext();
         event->setNext(NULL);
+
+		Trace(3,"VstMobius::sendVstEventsToHost ! |status %i|channel %i|key %i|velocity %i|",event->getStatus(), event->getChannel(),event->getKey(), event->getVelocity());  //<--- Cas #014
+		Trace(3,"NextEvent isNull? %s", next == NULL ? "true" : "false");
 
         // this sends them to the host one at a time, supposedly
         // it is better to send them in an array but it's awkward
@@ -1440,8 +1446,14 @@ void VstMobius::sendMidiEvents()
         ve.events[0] = (VstEvent *)&me;
         ve.reserved = 0;
 
+		
         // not sure what the return value means
-        bool rc = sendVstEventsToHost(&ve);
+        bool rc = sendVstEventsToHost(&ve);			//<--- Cas #014 Issue VstMidi Host Cantabile not working
+
+		if(rc)
+			Trace(3,"VstMobius::sendVstEventsToHost->Res=true;"); 
+		else
+			Trace(3,"VstMobius::sendVstEventsToHost->Res=false;"); 
 
         event->free();
     }

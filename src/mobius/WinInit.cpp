@@ -22,6 +22,9 @@
 #include "ObjectPool.h"
 #include "UI.h"
 
+
+#define CurrentWorkingDirectoryMode
+
 /**
  * The registry key for this version.
  */
@@ -39,6 +42,44 @@
  */
 PUBLIC void WinMobiusInit(WindowsContext* wc)
 {
+
+#ifdef CurrentWorkingDirectoryMode
+  
+
+  // Cas: 30/04/2023
+  // Path -> Current MobiusVst2.dll directory [ClaudioCas]  // #008
+  // https://stackoverflow.com/questions/6924195/get-dll-path-at-runtime
+
+  char path[MAX_PATH];
+  HMODULE hm = NULL;
+
+  if (GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+                            GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                        (LPCSTR)&WinMobiusInit, &hm) == 0)
+  {
+    int ret = GetLastError();
+    fprintf(stderr, "GetModuleHandle failed, error = %d\n", ret);
+    // Return or however you want to handle an error.
+  }
+  if (GetModuleFileName(hm, path, sizeof(path)) == 0)
+  {
+    int ret = GetLastError();
+    fprintf(stderr, "GetModuleFileName failed, error = %d\n", ret);
+    // Return or however you want to handle an error.
+  }
+
+  
+  int pos = strlen((char *)path);
+  while (pos > 0 && path[pos] != '\\') //Remove FileName (works with "exe" and "dll")
+  {
+    pos--;
+  }
+  path[pos] = '\0';
+  
+  SetRegistryCU(REGKEY, "RuntimeDirectory", path); //Debug
+  wc->setInstallationDirectory(path);
+
+#else
     // The GetRegistryCU return value is owned by the caller and
     // must be freed.
     // !! But freed how? Deleting this is causing a crash in Ableton, 
@@ -66,5 +107,7 @@ PUBLIC void WinMobiusInit(WindowsContext* wc)
             wc->setInstallationDirectory(dflt);
         }
     }
+    #endif
+
 }
 
