@@ -1,0 +1,10 @@
+Copyright (c) 2005-2012 Jeffrey S. Larson
+
+This software is provided 'as-is' without expressed or implied
+warranty of any kind.  In no event will the authors be held liable for
+damages arising from the use of this software.  Musical or otherwise.
+
+Permission is granted to use and redistribute this software in binary form,
+provided that this copyright notice is included.
+
+

@@ -1024,7 +1024,7 @@ PUBLIC ScriptStatement* ScriptEchoStatement::eval(ScriptInterpreter* si)
 
 	// add a newline so we can use it with OutputDebugStream
 	// note that the buffer has extra padding on the end for the nul
-	int len = strlen(msg);
+	size_t len = strlen(msg);
 	if (len < MAX_ARG_VALUE) {
 		msg[len] = '\n';
 		msg[len+1] = 0;
@@ -1869,7 +1869,7 @@ PUBLIC ScriptStatement* ScriptForStatement::eval(ScriptInterpreter* si)
 	}
 	else {
 		char number[MIN_ARG_VALUE];
-		int max = strlen(forspec);
+		size_t max = strlen(forspec);
 		int digits = 0;
 
 		for (int i = 0 ; i <= max ; i++) {
@@ -2982,7 +2982,7 @@ PUBLIC ScriptStatement* ScriptFunctionStatement::eval(ScriptInterpreter* si)
     }
     else {
         Trace(3, "Script %s: %s\n", si->getTraceName(), func->getName());
-
+       
         Mobius* m = si->getMobius();
         Action* a = m->newAction();
 
@@ -3012,7 +3012,7 @@ PUBLIC ScriptStatement* ScriptFunctionStatement::eval(ScriptInterpreter* si)
         a->trigger = TriggerScript;
 
         // this is for GlobalReset handling
-        a->id = (long)si;
+        a->id = (uintptr_t)si;
 
         // would be nice if this were just part of the Function's
         // arglist parsing?
@@ -3280,7 +3280,7 @@ WaitUnit ScriptWaitStatement::getWaitUnit(const char* name)
     // as "Wait frames 1000" rather than "Wait frame 1000".
     // Since the error isn't obvious catch it here.
     if (name != NULL) {
-        int last = strlen(name) - 1;
+        size_t last = strlen(name) - 1;
         if (last > 0 && name[last] == 's') {
             char buffer[128];
             strcpy(buffer, name);
@@ -4409,7 +4409,7 @@ PRIVATE void ScriptCompiler::parse(const char* filename)
 			// remember the directory, for later relative references
 			// within the script
 			// !! don't need this any more?
-            int psn = strlen(filename) - 1;
+            size_t psn = strlen(filename) - 1;
             while (psn > 0 && filename[psn] != '/' && filename[psn] != '\\')
                 psn--;
 
@@ -4476,7 +4476,7 @@ PRIVATE bool ScriptCompiler::parse(FILE* fp, Script* script)
 
 		// fix? while (*ptr && isspace(*ptr)) ptr++;
 		while (isspace(*ptr)) ptr++;
-		int len = strlen(ptr);
+		size_t len = strlen(ptr);
 
 		if (len > 0) {
 			if (ptr[0] == '!') {
@@ -4856,7 +4856,7 @@ PUBLIC char* ScriptCompiler::skipToken(char* args, const char* token)
     if (args != NULL) {
         char* ptr = args;
         while (*ptr && isspace(*ptr)) ptr++;
-        int len = strlen(token);
+        size_t len = strlen(token);
 
         if (StringEqualNoCase(args, token, len)) {
             ptr += len;
@@ -5584,7 +5584,7 @@ PUBLIC Action* ScriptInterpreter::getAction()
 
         // function action needs this for GlobalReset handling
         // I don't think Parameter actions do
-        mAction->id = (long)this;
+        mAction->id = (uintptr_t)this;
     }
     return mAction;
 }
@@ -5615,7 +5615,7 @@ PUBLIC const char* ScriptInterpreter::getTraceName()
           name = mScript->getDisplayName();
 
         sprintf(mTraceName, "%d:", mNumber);
-        int len = strlen(mTraceName);
+        size_t len = strlen(mTraceName);
 
         AppendString(name, &mTraceName[len], MAX_TRACE_NAME - len - 1);
     }
@@ -6523,7 +6523,7 @@ void ScriptInterpreter::expandFile(const char* value, ExValue* retval)
     expand(value, retval);
 	
 	char* buffer = retval->getBuffer();
-	int curlen = strlen(buffer);
+	size_t curlen = strlen(buffer);
 
     if (curlen > 0 && !IsAbsolute(buffer)) {
 		if (StartsWith(buffer, "./")) {
@@ -6536,8 +6536,8 @@ void ScriptInterpreter::expandFile(const char* value, ExValue* retval)
 			Script* s = getScript();
 			const char* dir = s->getDirectory();
 			if (dir != NULL) {
-				int insertlen = strlen(dir);
-                int shiftlen = insertlen;
+                size_t insertlen = strlen(dir);
+                size_t shiftlen = insertlen;
                 bool needslash = false;
                 if (insertlen > 0 && dir[insertlen] != '/' &&
                     dir[insertlen] != '\\') {
@@ -6573,10 +6573,10 @@ void ScriptInterpreter::expandFile(const char* value, ExValue* retval)
  */
 PRIVATE void ScriptInterpreter::expand(const char* value, ExValue* retval)
 {
-    int len = (value != NULL) ? strlen(value) : 0;
+    size_t len = (value != NULL) ? strlen(value) : 0;
 	char* buffer = retval->getBuffer();
     char* ptr = buffer;
-    int localmax = retval->getBufferMax() - 1;
+    size_t localmax = retval->getBufferMax() - 1;
 	int psn = 0;
 
 	retval->setNull();
@@ -6644,7 +6644,7 @@ PRIVATE void ScriptInterpreter::expand(const char* value, ExValue* retval)
 
             // advance the local buffer pointers after the last
             // substitution
-            int insertlen = strlen(ptr);
+            size_t insertlen = strlen(ptr);
             ptr += insertlen;
             localmax -= insertlen;
         }

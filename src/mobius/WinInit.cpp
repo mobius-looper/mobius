@@ -28,7 +28,11 @@
 /**
  * The registry key for this version.
  */
+#ifdef WIN64
+#define REGKEY "Software\\Circular Labs\\Mobius 2 (x64)"
+#else
 #define REGKEY "Software\\Circular Labs\\Mobius 2"
+#endif
 
 /**
  * Called from WinMain and VstMain.

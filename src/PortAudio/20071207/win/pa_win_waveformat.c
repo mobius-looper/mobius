@@ -75,7 +75,7 @@ void PaWin_InitializeWaveFormatEx( PaWinWaveFormat *waveFormat,
 	waveFormatEx->nSamplesPerSec = (DWORD)sampleRate;
 	waveFormatEx->nAvgBytesPerSec = waveFormatEx->nSamplesPerSec * bytesPerFrame;
 	waveFormatEx->nBlockAlign = (WORD)bytesPerFrame;
-	waveFormatEx->wBitsPerSample = bytesPerSample * 8;
+	waveFormatEx->wBitsPerSample = (WORD)bytesPerSample * 8;
 	waveFormatEx->cbSize = 0;
 }
 
@@ -93,7 +93,7 @@ void PaWin_InitializeWaveFormatExtensible( PaWinWaveFormat *waveFormat,
 	waveFormatEx->nSamplesPerSec = (DWORD)sampleRate;
 	waveFormatEx->nAvgBytesPerSec = waveFormatEx->nSamplesPerSec * bytesPerFrame;
 	waveFormatEx->nBlockAlign = (WORD)bytesPerFrame;
-	waveFormatEx->wBitsPerSample = bytesPerSample * 8;
+	waveFormatEx->wBitsPerSample = (WORD)bytesPerSample * 8;
 	waveFormatEx->cbSize = 22;
 
 	*((WORD*)&waveFormat->fields[PAWIN_INDEXOF_WVALIDBITSPERSAMPLE]) =

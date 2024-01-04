@@ -143,7 +143,7 @@ $(UI_MAIN_OBJS) : $(@:.obj=.cpp)
 mobius: $(UI_EXE)
 
 uiclean:
-	rm -f $(UI_OBJS) $(UI_MAIN_OBJS)
+	del -f $(UI_OBJS) $(UI_MAIN_OBJS)
 
 ######################################################################
 #
@@ -198,40 +198,45 @@ expr: $(EXP_EXE)
 ######################################################################
 
 PROGRAM_FILES=c:/Program Files (x86)
+!IF "$(CPU)" == "AMD64"
+PROGRAM_FILES=C:/Program Files
+!ENDIF
+
+OUTPUT_DIR=$(PROGRAM_FILES)/Mobius 2
 
 # copy the initial install config files to the installation directory
 initconfig:
-	-mkdir -p "$(PROGRAM_FILES)/Mobius 2"
-	cp install/config/mobius.xml "$(PROGRAM_FILES)/Mobius 2"
-	cp install/config/ui.xml "$(PROGRAM_FILES)/Mobius 2"
-	cp install/config/host.xml "$(PROGRAM_FILES)/Mobius 2"
+	IF NOT EXIST "$(OUTPUT_DIR)" (mkdir "$(OUTPUT_DIR)")
+	copy install/config/mobius.xml "$(PROGRAM_FILES)/Mobius 2"
+	copy install/config/ui.xml "$(PROGRAM_FILES)/Mobius 2"
+	copy install/config/host.xml "$(PROGRAM_FILES)/Mobius 2"
 
 # restore the development configration
 devconfig:
-	-mkdir -p "$(PROGRAM_FILES)/Mobius 2"
-	cp config/mobius.xml "$(PROGRAM_FILES)/Mobius 2"
-	cp config/ui.xml "$(PROGRAM_FILES)/Mobius 2"
-	cp install/config/host.xml "$(PROGRAM_FILES)/Mobius 2"
+	IF NOT EXIST "$(OUTPUT_DIR)" (mkdir "$(OUTPUT_DIR)")
+	copy config/mobius.xml "$(PROGRAM_FILES)/Mobius 2"
+	copy config/ui.xml "$(PROGRAM_FILES)/Mobius 2"
+	copy install/config/host.xml "$(PROGRAM_FILES)/Mobius 2"
 
 # save the current config files as the development config
 saveconfig:
-	cp "$(PROGRAM_FILES)/Mobius 2/mobius.xml" config
-	cp "$(PROGRAM_FILES)/Mobius 2/ui.xml" config
+	copy "$(PROGRAM_FILES)/Mobius 2/mobius.xml" config
+	copy "$(PROGRAM_FILES)/Mobius 2/ui.xml" config
 
 # install the unit test configuration
 unitconfig:
-	-mkdir -p "$(PROGRAM_FILES)/Mobius 2"
-	cp config/unitmobius.xml "$(PROGRAM_FILES)/Mobius 2/mobius.xml"
-	cp config/unitui.xml "$(PROGRAM_FILES)/Mobius 2/ui.xml"
-	cp install/config/host.xml "$(PROGRAM_FILES)/Mobius 2"
+	IF NOT EXIST "$(OUTPUT_DIR)" (mkdir "$(OUTPUT_DIR)")
+	copy config/unitmobius.xml "$(PROGRAM_FILES)/Mobius 2/mobius.xml"
+	copy config/unitui.xml "$(PROGRAM_FILES)/Mobius 2/ui.xml"
+	copy install/config/host.xml "$(PROGRAM_FILES)/Mobius 2"
 
 saveunitconfig:
-	cp "$(PROGRAM_FILES)/Mobius 2/mobius.xml" config/unitmobius.xml
-	cp "$(PROGRAM_FILES)/Mobius 2/ui.xml" config/unitui.xml
+	copy "$(PROGRAM_FILES)/Mobius 2/mobius.xml" config/unitmobius.xml
+	copy "$(PROGRAM_FILES)/Mobius 2/ui.xml" config/unitui.xml
 
 restoreconfig:
-	cp saveui.xml "$(PROGRAM_FILES)/Mobius 2/ui.xml" 
-	cp savemobius.xml "$(PROGRAM_FILES)/Mobius 2/mobius.xml" 
+	copy saveui.xml "$(PROGRAM_FILES)/Mobius 2/ui.xml" 
+	copy savemobius.xml "$(PROGRAM_FILES)/Mobius 2/mobius.xml" 
 
 ######################################################################
 #
@@ -250,33 +255,34 @@ clean: standardclean
 	@cd ..
 
 execlean:
-	rm -f *.exe
-	rm -f *.dll
-	rm -f *.lib
+	del -f *.exe
+	del -f *.dll
+	del -f *.lib
 
 vstclean:
-	rm -f $(VST_DLL)
-	rm -f $(VST2_DLL)
-	rm -f $(VST_OBJS)
-	rm -f $(VST1_OBJS)
-	rm -f $(VST2_OBJS)
+	del -f $(VST_DLL)
+	del -f $(VST2_DLL)
+	del -f $(VST_OBJS)
+	del -f $(VST1_OBJS)
+	del -f $(VST2_OBJS)
 
 # Refresh the installation directory with new versions of the executables
 
 vst: export
 
 export:
-	-mkdir -p "$(PROGRAM_FILES)/Mobius 2"
-	cp $(VST_DLL) "$(PROGRAM_FILES)/VstPlugins"
-	cp MobiusVst2.pdb "$(PROGRAM_FILES)/VstPlugins"
-	cp $(UI_EXE) "$(PROGRAM_FILES)/Mobius 2"
-	cp Catalog_* "$(PROGRAM_FILES)/Mobius 2"
-	cp $(VST_DLL) "$(PROGRAM_FILES)/Mobius 2"
-	cp install/config/host.xml "$(PROGRAM_FILES)/Mobius 2"
+	IF NOT EXIST "$(OUTPUT_DIR)" (mkdir "$(OUTPUT_DIR)")
+	copy $(VST_DLL) "$(PROGRAM_FILES)/VstPlugins"
+	copy MobiusVst2.pdb "$(PROGRAM_FILES)/VstPlugins"
+	copy $(UI_EXE) "$(OUTPUT_DIR)"
+	copy Catalog_* "$(OUTPUT_DIR)"
+	copy $(VST_DLL) "$(OUTPUT_DIR)"
+	copy mobius.pdb "$(OUTPUT_DIR)"
+	copy "install\config\host.xml" "$(OUTPUT_DIR)"
 
 # have to start distributing this!!
 #msvc:
-#	cp "$(PROGRAM_FILES)/Microsoft Visual Studio 8/VC/redist/x86/Microsoft.VC80.CRT/msvcr80.dll" c:/windows/system32
+#	copy "$(PROGRAM_FILES)/Microsoft Visual Studio 8/VC/redist/x86/Microsoft.VC80.CRT/msvcr80.dll" c:/windows/system32
 #
 
 ######################################################################

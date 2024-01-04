@@ -86,7 +86,7 @@ PUBLIC Dimension* GroupBox::getPreferredSize(Window* w)
 		if (tm != NULL) {
 			// it will be rendered with about a char of padding on the left
 			// adjust for two on either side
-			int chars = 4 + ((mText != NULL) ? strlen(mText) : 0);
+			size_t chars = 4 + ((mText != NULL) ? strlen(mText) : 0);
 			mPreferred->width = chars * tm->getMaxWidth();
 
 			int fontHeight = tm->getHeight() + tm->getExternalLeading();
@@ -94,7 +94,7 @@ PUBLIC Dimension* GroupBox::getPreferredSize(Window* w)
 		}
 		else {
 			// must be mac, just guess since we don't use these yet
-			int chars = 4 + ((mText != NULL) ? strlen(mText) : 0);
+			size_t chars = 4 + ((mText != NULL) ? strlen(mText) : 0);
 
 			mPreferred->width = chars * 16;
 			int fontHeight = 20;
@@ -176,7 +176,7 @@ PUBLIC void WindowsGroupBox::open()
                 // don't really need this since we can't generate events
                 // but be consistent
                 subclassWindowProc();
-                SetWindowLong(mHandle, GWL_USERDATA, (LONG)this);
+                SetWindowLongPtr(mHandle, GWLP_USERDATA, (LONG_PTR)this);
 				mGroupBox->initVisibility();
             }
         }

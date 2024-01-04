@@ -3595,9 +3595,11 @@ PUBLIC void FocusButton::mousePressed(MouseEvent *e)
 	a->setTargetTrack(mTrack);
 
 	// Trigger id will be the address of the component
-	a->id = (long)this;
+	//a->id = (long)this; //bug in 64bit
+  a->id = (uintptr_t)this;
 	a->trigger = TriggerUI;
 	a->triggerMode = TriggerModeOnce;
+
 
 	// NOTE: This will toggle and is not necessarily the same as our
 	// mPushed state.  It doesn't really matter since we'll update
@@ -3883,10 +3885,13 @@ PUBLIC void TrackGroupButton::mousePressed(MouseEvent *e)
 	// Action takes a 1 based track number, which is what we have
 	a->setTargetTrack(mTrack);
 
+
 	// Trigger id will be the address of the component
-	a->id = (long)this;
+	//a->id = (long)this; //bug in 64bit
+  a->id = (uintptr_t)this;
 	a->trigger = TriggerUI;
 	a->triggerMode = TriggerModeOnce;
+
 
 	mMobius->doAction(a);
 
@@ -5823,15 +5828,18 @@ LoopStack::LoopStack(MobiusInterface *m, int track)
 	// will be updated per track later
 	mLoopCount = 0;
 
+
 	// initialize the stub action
 	mAction = m->newAction();
 	mAction->setFunction(LoopN);
 	mAction->setTargetTrack(track);
 	// Trigger id will be the address of the component
-	mAction->id = (long)this;
+	//mAction->id = (long)this;
+  mAction->id = (uintptr_t)this;
 	mAction->trigger = TriggerUI;
 	// we're not passing down up transitions of the mouse button
 	mAction->triggerMode = TriggerModeOnce;
+
 }
 
 LoopStack::~LoopStack()

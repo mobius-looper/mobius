@@ -1575,7 +1575,7 @@ PRIVATE void UI::loadConfiguration()
         delete d;
     }
     else {
-        //Trace(2, "Reading UI configuration from %s\n", mUIConfigFile);
+        Trace(2, "Reading UI configuration from %s\n", mUIConfigFile);
         printf("Reading UI configuration file: %s\n", mUIConfigFile);
         uitrace("parsing UI config\n");
         mUIConfig = new UIConfig(xml);

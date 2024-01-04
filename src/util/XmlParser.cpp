@@ -665,7 +665,7 @@ PRIVATE void XmlMiniParser::shiftLookahead(int max)
 
 PRIVATE int XmlMiniParser::compareLookahead(const char *pattern)
 {
-	int len = strlen(pattern);
+	size_t len = strlen(pattern);
 
 	if (len >= MAX_XML_LOOKAHEAD)
 	  throwException(ERR_XMLP_INTERNAL, "Lookahead overflow");
@@ -1155,7 +1155,7 @@ PRIVATE void XmlMiniParser::parseEntityName(void)
 PRIVATE char *XmlMiniParser::copyString(const char *src)
 {
 	char *copy;
-	int len;
+	size_t len;
 
 	copy = NULL;
 	if (src != NULL) {

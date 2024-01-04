@@ -893,7 +893,7 @@ PUBLIC void WindowsTable::open()
               printf("Unable to create Table control\n");
             else {
                 subclassWindowProc();
-                SetWindowLong(mHandle, GWL_USERDATA, (LONG)this);
+                SetWindowLongPtr(mHandle, GWLP_USERDATA, (LONG_PTR)this);
 				mTable->initVisibility();
 
                 // capture state set during construction

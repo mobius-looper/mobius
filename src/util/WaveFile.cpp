@@ -584,7 +584,7 @@ PRIVATE void WaveFile::processDataChunk(FILE* fp, long size)
 	memset(data, 0, size);
 
 	// read the raw bytes all at once, we'll swap them later if necessary
-	long count = fread(data, 1, size, fp);
+	size_t count = fread(data, 1, size, fp);
 
 	if (count != size) {
         mError = AUF_ERROR_EOF;
